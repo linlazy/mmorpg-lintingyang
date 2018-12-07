@@ -3,6 +3,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -13,7 +14,7 @@
   <groupId>com.linlazy</groupId>
   <artifactId>mmorpg-lintingyang</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <packaging>pom</packaging>
   <description>Demo project for Spring Boot</description>
 
   <name>mmorpg-lintingyang</name>
@@ -44,6 +45,26 @@
       <artifactId>guava</artifactId>
       <version>23.0</version>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/io.netty/netty-all -->
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-all</artifactId>
+      <version>4.1.32.Final</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.4</version>
+      <scope>provided</scope>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>fastjson</artifactId>
+      <version>1.2.54</version>
+    </dependency>
+
 
   </dependencies>
 
