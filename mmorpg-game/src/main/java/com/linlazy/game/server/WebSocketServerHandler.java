@@ -30,6 +30,7 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
         if(webSocketFrame instanceof TextWebSocketFrame){
             String text = ((TextWebSocketFrame) webSocketFrame).text();
             JSONObject jsonObject = JSON.parseObject(text);
+            GameRouter.handleRoute(jsonObject);
         }
 
     }
