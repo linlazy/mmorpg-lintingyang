@@ -2,6 +2,7 @@ package com.linlazy.game.server;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.linlazy.game.module.common.Result;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpRequest;
@@ -29,10 +30,17 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 
         if(webSocketFrame instanceof TextWebSocketFrame){
             String text = ((TextWebSocketFrame) webSocketFrame).text();
-            JSONObject jsonObject = JSON.parseObject(text);
-            GameRouter.handleRoute(jsonObject);
-        }
+            JSONObject jsonObjectRequest = JSON.parseObject(text);
 
+            Result<?> result = GameRouter.handleRoute(jsonObjectRequest);
+
+            JSONObject jsonObjectResponse = new JSONObject();
+            jsonObjectResponse.put("code",result.getCode());
+            jsonObjectResponse.put("data",result.getData());
+
+            TextWebSocketFrame textWebSocketFrame = new TextWebSocketFrame(jsonObjectResponse.toJSONString());
+            channelHandlerContext.writeAndFlush(textWebSocketFrame);
+        }
     }
 
     private void handleHttpRequest(ChannelHandlerContext channelHandlerContext, FullHttpRequest httpRequest) {

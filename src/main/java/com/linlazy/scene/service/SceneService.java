@@ -5,10 +5,12 @@ import com.linlazy.scene.config.SceneConfigService;
 import com.linlazy.scene.constants.SceneCode;
 import com.linlazy.scene.dao.SceneDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * 玩家场景服务类
  */
+@Component
 public class SceneService {
 
     @Autowired

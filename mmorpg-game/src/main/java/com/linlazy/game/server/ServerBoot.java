@@ -17,7 +17,7 @@ public class ServerBoot {
     private static final NioEventLoopGroup workGroup = new NioEventLoopGroup();
     private static int port = 41235;
 
-    public static void main( String[] args ) {
+    public static void start() {
 
         ServerBootstrap serverBootstrap = new ServerBootstrap();
 //        doBind(serverBootstrap,port);
@@ -44,27 +44,4 @@ public class ServerBoot {
         });
     }
 
-//    private static void doBind(final ServerBootstrap serverBootstrap, final int port) {
-//        ChannelFuture channelFuture = serverBootstrap.group(bossGroup, workGroup)
-//                .channel(NioServerSocketChannel.class)
-//                .option(ChannelOption.SO_BACKLOG, 1024)
-//                .childOption(ChannelOption.SO_KEEPALIVE, true)
-//                .childOption(ChannelOption.TCP_NODELAY, true)
-//                .childHandler(new ChannelInitializer<SocketChannel>() {
-//                    @Override
-//                    protected void initChannel(SocketChannel socketChannel) throws Exception {
-//                        socketChannel.pipeline().addLast(new Spliter(Integer.MAX_VALUE));
-//                        socketChannel.pipeline().addLast(new PacketDecoder());
-//                        socketChannel.pipeline().addLast(new LoginRequestHandler());
-//                    }
-//                }).bind(port);
-//
-//        channelFuture.addListener(future -> {
-//            if(future.isSuccess()){
-//                System.out.println(String.format("bind port [%d] success",port));
-//            }else {
-//                doBind(serverBootstrap,port + 1);
-//            }
-//        });
-//    }
 }
