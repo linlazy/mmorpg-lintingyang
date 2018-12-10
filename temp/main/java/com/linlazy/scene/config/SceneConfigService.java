@@ -1,4 +1,4 @@
-package com.linlazy.game.module.scene.config;
+package com.linlazy.scene.config;
 
 
 import com.google.common.collect.Sets;
