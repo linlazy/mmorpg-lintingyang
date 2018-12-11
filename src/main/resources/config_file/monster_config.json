@@ -1,0 +1,14 @@
+[
+  {
+    "monsterId": 1,
+    "name": "竹叶青",
+    "hp": 100,
+    "sceneIds": [1,2,3]
+  },
+  {
+    "monsterId": 2,
+    "name": "黑水玄蛇",
+    "hp": 1000,
+    "sceneIds": [1,2,3]
+  }
+]

@@ -61,4 +61,15 @@ public class SceneHandler {
         long actorId = jsonObject.getLong("actorId");
         return sceneService.getCurrentInfo(actorId);
     }
+
+//    /**
+//     * 对话NPC
+//     * @param jsonObject
+//     * @return
+//     */
+//    @Cmd("talkNPC")
+//    public Result<?> talkNPC(JSONObject jsonObject){
+//        long actorId = jsonObject.getLong("actorId");
+//        return sceneService.talkNPC(actorId);
+//    }
 }

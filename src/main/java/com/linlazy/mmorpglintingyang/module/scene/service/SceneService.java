@@ -121,4 +121,14 @@ public class SceneService {
 
         return Result.success(entitySet);
     }
+
+    /**
+     * 对话NPC
+     * @param actorId
+     * @param npcId
+     * @return
+     */
+    public Result<?> talkNPC(long actorId,int npcId) {
+        return Result.success("你好我是");
+    }
 }

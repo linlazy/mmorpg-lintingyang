@@ -14,7 +14,6 @@ import java.util.Map;
 @Component
 public class SceneConfigService {
 
-//    private final static Set<SceneConfig>  sceneConfigSet= new HashSet<>();
 
     private final static Map<Integer,SceneConfig> sceneConfigMap= new HashMap<>();
     //需要根据ID 获取配置，set 改为map

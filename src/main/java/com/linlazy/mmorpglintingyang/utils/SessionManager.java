@@ -50,4 +50,8 @@ public class SessionManager {
     public static boolean isOnline(long actorId){
         return actorIdChannelMap.get(actorId) != null;
     }
+
+    public static Channel getChannel(long actorId) {
+        return null;
+    }
 }
