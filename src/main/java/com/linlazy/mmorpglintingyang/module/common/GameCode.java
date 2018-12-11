@@ -5,5 +5,5 @@ public interface GameCode {
     /**
      * 参数错误
      */
-    int ARGS_ERROR = 1;
+    String ARGS_ERROR = "参数错误";
 }

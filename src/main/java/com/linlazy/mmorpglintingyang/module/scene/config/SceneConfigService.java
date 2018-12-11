@@ -3,7 +3,6 @@ package com.linlazy.mmorpglintingyang.module.scene.config;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.Sets;
 import com.linlazy.mmorpglintingyang.module.common.ConfigFile;
 import com.linlazy.mmorpglintingyang.module.common.ConfigFileManager;
 import org.springframework.stereotype.Component;
@@ -28,12 +27,17 @@ public class SceneConfigService {
 
     private static Map<Integer,JSONObject> map = new HashMap<>();
 
+    private int initSceneId;
+
     @PostConstruct
     public void init(){
         JSONArray jsonArray = sceneConfigFile.getJsonArray();
         for(int i = 0; i < jsonArray.size(); i++){
             JSONObject jsonObject = jsonArray.getJSONObject(i);
             map.put(jsonObject.getInteger("sceneId"),jsonObject);
+            if(jsonObject.getBoolean("init")!= null){
+                initSceneId = jsonObject.getIntValue("sceneId");
+            }
         }
     }
 
@@ -71,7 +75,19 @@ public class SceneConfigService {
         return false;
     }
 
-    public Collection<JSONObject> getInfo() {
+    /**
+     * 获取所有场景信息
+     * @return
+     */
+    public Collection<JSONObject> getAllInfo() {
         return map.values();
+    }
+
+    /**
+     * 获取初始化场景Id
+     * @return
+     */
+    public  int getInitSceneId() {
+        return initSceneId;
     }
 }

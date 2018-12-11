@@ -33,6 +33,7 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
             String text = ((TextWebSocketFrame) webSocketFrame).text();
             JSONObject jsonObjectRequest = JSON.parseObject(text);
 
+            jsonObjectRequest.put("channel",channelHandlerContext.channel());
             Result<?> result = GameRouter.handleRoute(jsonObjectRequest);
 
             JSONObject jsonObjectResponse = new JSONObject();

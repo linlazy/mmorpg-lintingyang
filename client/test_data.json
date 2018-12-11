@@ -1,0 +1,6 @@
+[
+  {"module":"scene","command":"enter","actorId":1},
+  {"module":"user","command":"login","username":"lwhile","password":123456},
+  {"module":"user","command":"logout","actorId":1},
+  {"module":"scene","command":"info","actorId":1}
+]

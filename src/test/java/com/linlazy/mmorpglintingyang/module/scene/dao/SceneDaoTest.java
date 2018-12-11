@@ -18,4 +18,12 @@ public class SceneDaoTest {
         Scene scene = sceneDao.getScene(4194306);
     }
 
+    @Test
+    public void addScene(){
+        Scene scene = new Scene();
+        scene.setActorId(4194306);
+        scene.setSceneId(1);
+        sceneDao.addScene(scene);
+    }
+
 }

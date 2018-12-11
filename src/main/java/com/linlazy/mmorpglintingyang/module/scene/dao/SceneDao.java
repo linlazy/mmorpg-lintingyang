@@ -1,6 +1,7 @@
 package com.linlazy.mmorpglintingyang.module.scene.dao;
 
 import com.linlazy.mmorpglintingyang.module.scene.entity.Scene;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -20,4 +21,7 @@ public interface SceneDao {
 
     @Update({"update ",TABLE," set sceneId = #{sceneId} where actorId = #{actorId}"})
     void updateScene(Scene scene);
+
+    @Insert("insert into scene(actorId,sceneId)values(#{actorId},#{sceneId})")
+    void addScene(Scene scene);
 }

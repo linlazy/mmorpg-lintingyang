@@ -2,6 +2,7 @@ package com.linlazy.mmorpglintingyang.server.route;
 
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.module.common.Result;
+import com.linlazy.mmorpglintingyang.utils.SessionManager;
 import com.linlazy.mmorpglintingyang.utils.SpringContextUtil;
 
 import java.lang.reflect.InvocationTargetException;
@@ -29,6 +30,15 @@ public class GameRouter {
                     String command = jsonObject.getString("command");
                     if(cmd.value().equals(command)){
                         //执行处理方法
+
+                        //权限
+                        if(cmd.auth()){
+                            long actorId = jsonObject.getLong("actorId");
+                            if(!SessionManager.isOnline(actorId)){
+                                return Result.valueOf("未登录，无权限执行此操作");
+                            }
+                        }
+
                         try {
                             return  (Result<?>) method.invoke(moduleHandler,jsonObject);
                         } catch (IllegalAccessException e) {

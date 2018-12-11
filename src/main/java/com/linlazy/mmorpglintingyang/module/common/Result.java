@@ -5,7 +5,7 @@ package com.linlazy.mmorpglintingyang.module.common;
  */
 public class Result<T> {
 
-    private static final String SUCCESS = "success";
+    private static final String SUCCESS = "操作成功";
 
     private String code;
 
