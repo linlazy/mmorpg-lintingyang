@@ -1,14 +1,16 @@
 package com.linlazy.mmorpglintingyang.module.common;
 
 
-public enum RewardType {
+/**
+ * 道具类型
+ */
+public interface RewardType {
     /**
-     * 装备
+     * 红药
      */
-    EQUIP,
+    int HP = 1;
     /**
-     * 消耗品
+     * 蓝药
      */
-    CONSUMABLES
-
+    int MP = 2;
 }

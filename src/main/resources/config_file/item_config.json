@@ -4,6 +4,7 @@
     "name": "一级红药",
     "desc": "恢复5点hp",
     "resume": 5,
+    "rewardType": 1,
     "superPosition": 50
   },
   {
@@ -11,6 +12,7 @@
     "name": "一级蓝药",
     "desc": "恢复5点mp",
     "resume": 5,
+    "rewardType": 2,
     "superPosition": 50
   },
   {
@@ -18,6 +20,7 @@
     "name": "修复水晶",
     "desc": "恢复5点耐久度",
     "resume": 5,
+    "rewardType": 3,
     "superPosition": 50
   }
 ]

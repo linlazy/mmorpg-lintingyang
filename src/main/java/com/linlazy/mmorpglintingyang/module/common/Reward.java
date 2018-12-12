@@ -4,10 +4,7 @@ import lombok.Data;
 
 @Data
 public class Reward {
-    /**
-     * 奖励ID
-     */
-    private int rewardId;
+
 
     /**
      * 奖励数量
@@ -17,10 +14,9 @@ public class Reward {
     /**
      * 奖励类型
      */
-    private RewardType rewardType;
+    private int rewardType;
 
-    public Reward(int rewardId, int count, RewardType rewardType) {
-        this.rewardId = rewardId;
+    public Reward(int count, int rewardType) {
         this.count = count;
         this.rewardType = rewardType;
     }
