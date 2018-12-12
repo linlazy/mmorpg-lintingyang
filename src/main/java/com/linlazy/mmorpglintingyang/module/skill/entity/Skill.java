@@ -13,7 +13,6 @@ import java.util.Set;
 public class Skill {
 
     private long actorId;
-
     /**
      * 玩家技能信息
      */

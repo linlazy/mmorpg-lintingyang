@@ -20,7 +20,10 @@ public class SkillDaoTest {
 
     @Test
     public void getSkill() {
-        Skill skill = skillDao.getSkill(4194306);
+        Skill skill = skillDao.getSkill(3);
+        Set<SkillInfo> skillInfoSet = skill.getSkillInfoSet();
+        skillInfoSet.add(new SkillInfo(2,2));
+        System.out.println(JSONObject.toJSONString(skillInfoSet));
     }
 
     @Test

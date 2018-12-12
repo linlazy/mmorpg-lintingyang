@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Update;
 public interface SkillDao {
 
 
-    @Select("select * from skill where actorId = #{actorId}")
+    @Select("select * from skill where actorId = #{actorId} limit 1")
     Skill getSkill(long actorId);
 
     @Insert("insert into skill (actorId,skills)values(#{actorId},#{skills})")

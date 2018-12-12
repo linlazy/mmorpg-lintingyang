@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.module.common.Result;
 import com.linlazy.mmorpglintingyang.utils.SessionManager;
 import com.linlazy.mmorpglintingyang.utils.SpringContextUtil;
+import io.netty.channel.Channel;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -34,8 +35,14 @@ public class GameRouter {
                         //权限
                         if(cmd.auth()){
                             long actorId = jsonObject.getLong("actorId");
+
                             if(!SessionManager.isOnline(actorId)){
                                 return Result.valueOf("未登录，无权限执行此操作");
+                            }
+
+                            Channel channel = jsonObject.getObject("channel", Channel.class);
+                            if(SessionManager.getActorId(channel) != actorId){
+                                return Result.valueOf("参数错误");
                             }
                         }
 

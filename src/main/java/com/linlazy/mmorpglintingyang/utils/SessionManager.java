@@ -4,6 +4,7 @@ import io.netty.channel.Channel;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -37,10 +38,21 @@ public class SessionManager {
      */
     public static void unBind(Channel channel){
         long actorId = channelActorIdMap.get(channel);
-        actorIdChannelMap.remove(actorId);
 
+        actorIdChannelMap.remove(actorId);
         channelActorIdMap.remove(channel);
     }
+
+    /**
+     * 通道是否已绑定用户
+     * @param
+     * @return
+     */
+    public static boolean isBind(Channel channel){
+        return channelActorIdMap.get(channel) != null;
+    }
+
+
 
     /**
      * 用户是否在线
@@ -52,6 +64,14 @@ public class SessionManager {
     }
 
     public static Channel getChannel(long actorId) {
-        return null;
+        return actorIdChannelMap.get(actorId);
+    }
+
+    public static long getActorId(Channel channel){
+        return channelActorIdMap.get(channel);
+    }
+
+    public static Set<Long> getOnlineActorIds() {
+        return actorIdChannelMap.keySet();
     }
 }

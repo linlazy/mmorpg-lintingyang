@@ -3,12 +3,14 @@ package com.linlazy.mmorpglintingyang.module.scene.push;
 
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.module.common.PushHelper;
+import com.linlazy.mmorpglintingyang.module.scene.entity.model.SceneEntityInfo;
 
 public class ScenePushHelper {
 
-    public void pushMonster(long actorId,String data){
+    public static void pushMonster(long actorId, SceneEntityInfo data){
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("push","scene");
+        jsonObject.put("monster",data);
         PushHelper.push(actorId,jsonObject);
     }
 }

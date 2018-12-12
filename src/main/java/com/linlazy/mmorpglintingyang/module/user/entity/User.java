@@ -27,4 +27,12 @@ public class User {
      * 状态
      */
     private int status;
+    /**
+     * 红
+     */
+    private int hp;
+    /**
+     * 蓝
+     */
+    private int mp;
 }

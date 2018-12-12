@@ -1,9 +1,12 @@
 [
+  {"module":"user","command":"register","username":"linlazy","password":123456,"confirm_password": 123456},
   {"module":"user","command":"login","username":"lwhile","password":123456},
   {"module":"user","command":"logout","actorId":3},
 
   {"module":"scene","command":"enter","actorId":3},
-  {"module":"scene","command":"info","actorId":3},
+  {"module":"scene","command":"getAllInfo","actorId":3},
+  {"module":"scene","command":"getCurrentInfo","actorId":3},
+  {"module":"scene","command":"move","actorId":3,"target_scene_id": 2},
 
   {"module":"skill","command":"getAllSkillInfo","actorId":3},
   {"module":"skill","command":"getSkillInfo","actorId":3},

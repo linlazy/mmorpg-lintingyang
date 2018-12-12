@@ -28,7 +28,4 @@ public class SceneEntity {
         return entitySet;
     }
 
-    public void setEntities(String entities) {
-        this.entities = JSON.toJSONString(entitySet);
-    }
 }

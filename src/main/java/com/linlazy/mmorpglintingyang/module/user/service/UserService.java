@@ -33,15 +33,23 @@ public class UserService {
             return Result.valueOf("用户名不存在");
         }
 
+
+
         //判断是否已登录
         if(SessionManager.isOnline(user.getActorId())){
-            return Result.success();
+            return Result.valueOf("已登录");
+        }
+
+        //原通道账号解绑
+        if(SessionManager.isBind(channel)){
+            SessionManager.unBind(channel);
         }
 
         //todo 加密
         if(!user.getPassword().equals(password)){
             return Result.valueOf("用户名或密码不正确");
         }
+
 
         SessionManager.bind(user.getActorId(),channel);
         return Result.success();

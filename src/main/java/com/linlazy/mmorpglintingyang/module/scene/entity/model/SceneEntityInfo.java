@@ -29,9 +29,11 @@ public class SceneEntityInfo {
 
     public void attacked(int decreaseHP){
         synchronized (this){
-            if(decreaseHP > this.hp){
+            if(decreaseHP >= this.hp){
                 this.hp = 0 ;
                 this.status = SceneEntityTypeStatus.DEATH;
+            }else {
+                this.hp = this.hp -decreaseHP;
             }
         }
     }
@@ -40,6 +42,13 @@ public class SceneEntityInfo {
     public SceneEntityInfo(long entityId, int entityType) {
         this.entityId = entityId;
         this.entityType = entityType;
+    }
+
+    public SceneEntityInfo(long entityId, int entityType, int status, int hp) {
+        this.entityId = entityId;
+        this.entityType = entityType;
+        this.status = status;
+        this.hp = hp;
     }
 
     @Override

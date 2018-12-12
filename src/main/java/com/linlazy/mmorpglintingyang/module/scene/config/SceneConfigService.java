@@ -5,11 +5,13 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.module.common.ConfigFile;
 import com.linlazy.mmorpglintingyang.module.common.ConfigFileManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,6 +20,8 @@ import java.util.Map;
 @Component
 public class SceneConfigService {
 
+    @Autowired
+    private MonsterConfigService monsterConfigService;
 
     private static ConfigFile sceneConfigFile;
 
@@ -90,4 +94,14 @@ public class SceneConfigService {
     public  int getInitSceneId() {
         return initSceneId;
     }
+
+    /**
+     * 获取场景怪物配置
+     * @param sceneId
+     * @return
+     */
+    public List<JSONObject> getMonsterBySceneId(int sceneId){
+        return monsterConfigService.getMonsterBySceneId(sceneId);
+    }
+
 }

@@ -2,11 +2,15 @@
   {
     "skillId":1,
     "name": "回风拂柳",
-    "attack":50
+    "attack":50,
+    "cd": 1,
+    "mp": 5
   },
   {
     "skillId": 2,
     "name": "剑荡八荒",
-    "attack": 100
+    "attack": 100,
+    "cd": 2,
+    "mp": 10
   }
 ]
