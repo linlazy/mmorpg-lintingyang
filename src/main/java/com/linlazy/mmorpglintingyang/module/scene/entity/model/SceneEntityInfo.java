@@ -1,5 +1,6 @@
 package com.linlazy.mmorpglintingyang.module.scene.entity.model;
 
+import com.linlazy.mmorpglintingyang.module.scene.constants.SceneEntityTypeStatus;
 import lombok.Data;
 
 import java.util.Objects;
@@ -7,9 +8,34 @@ import java.util.Objects;
 @Data
 public class SceneEntityInfo {
 
-    private long entityId;
 
+    /**
+     * 实体ID
+     */
+    private long entityId;
+    /**
+     * 实体类型
+     */
     private int entityType;
+    /**
+     * 实体状态
+     */
+    private int status;
+
+    /**
+     * 实体血量
+     */
+    private int hp;
+
+    public void attacked(int decreaseHP){
+        synchronized (this){
+            if(decreaseHP > this.hp){
+                this.hp = 0 ;
+                this.status = SceneEntityTypeStatus.DEATH;
+            }
+        }
+    }
+
 
     public SceneEntityInfo(long entityId, int entityType) {
         this.entityId = entityId;

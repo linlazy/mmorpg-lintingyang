@@ -101,7 +101,7 @@ public class SceneService {
      * @param actorId
      * @return
      */
-    public Result<?> getCurrentInfo(long actorId) {
+    public Set<SceneEntityInfo> getCurrentInfo(long actorId) {
 
         Scene scene = sceneDao.getScene(actorId);
         //初始化场景
@@ -119,7 +119,7 @@ public class SceneService {
         }
         Set<SceneEntityInfo> entitySet = sceneEntity.getEntitySet();
 
-        return Result.success(entitySet);
+        return entitySet;
     }
 
     /**

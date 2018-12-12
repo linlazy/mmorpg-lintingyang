@@ -1,0 +1,12 @@
+[
+  {
+    "skillId":1,
+    "name": "回风拂柳",
+    "attack":50
+  },
+  {
+    "skillId": 2,
+    "name": "剑荡八荒",
+    "attack": 100
+  }
+]

@@ -56,4 +56,7 @@ public class MonsterConfigService {
         return sceneMonsterMap.get(sceneId);
     }
 
+    public JSONObject getMonsterConfig(int monsterId) {
+        return null;
+    }
 }

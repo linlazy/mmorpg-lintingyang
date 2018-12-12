@@ -1,6 +1,12 @@
 [
-  {"module":"scene","command":"enter","actorId":1},
   {"module":"user","command":"login","username":"lwhile","password":123456},
-  {"module":"user","command":"logout","actorId":1},
-  {"module":"scene","command":"info","actorId":1}
+  {"module":"user","command":"logout","actorId":3},
+
+  {"module":"scene","command":"enter","actorId":3},
+  {"module":"scene","command":"info","actorId":3},
+
+  {"module":"skill","command":"getAllSkillInfo","actorId":3},
+  {"module":"skill","command":"getSkillInfo","actorId":3},
+  {"module":"skill","command":"gainSkill","actorId":3,"skillId": 1},
+  {"module":"skill","command":"attack","actorId":3,"skillId": 1,"monsterId": 1}
 ]

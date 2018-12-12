@@ -59,7 +59,7 @@ public class SceneHandler {
     @Cmd("getCurrentInfo")
     public Result<?> getCurrentInfo(JSONObject jsonObject){
         long actorId = jsonObject.getLong("actorId");
-        return sceneService.getCurrentInfo(actorId);
+        return Result.success(sceneService.getCurrentInfo(actorId));
     }
 
 //    /**
