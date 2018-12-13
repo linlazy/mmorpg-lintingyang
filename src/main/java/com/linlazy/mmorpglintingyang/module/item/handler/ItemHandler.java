@@ -22,4 +22,41 @@ public class ItemHandler {
         Integer num = jsonObject.getInteger("num");
         return itemService.useItem(actorId,itemId,num == null? 1 : num);
     }
+
+
+    /**
+     * 获取玩家道具信息
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("getActorItemInfo")
+    public Result<?> getActorItemInfo(JSONObject jsonObject){
+        long actorId = jsonObject.getLongValue("actorId");
+        return itemService.getActorItemInfo(actorId);
+    }
+
+    /**
+     * 获得道具
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("addItem")
+    public Result<?> addItem(JSONObject jsonObject){
+        long actorId = jsonObject.getLongValue("actorId");
+        int itemId = jsonObject.getIntValue("itemId");
+        int num = jsonObject.getIntValue("num");
+        return itemService.addItem(actorId,itemId,num);
+    }
+
+    /**
+     * 整理背包
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("arrangeBackPack")
+    public Result<?> arrangeBackPack(JSONObject jsonObject){
+        long actorId = jsonObject.getLongValue("actorId");
+        return itemService.arrangeBackPack(actorId);
+    }
+
 }

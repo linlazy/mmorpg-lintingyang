@@ -1,4 +1,4 @@
-package com.linlazy.mmorpglintingyang.module.item.config;
+package com.linlazy.mmorpglintingyang.module.item.manager.config;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;

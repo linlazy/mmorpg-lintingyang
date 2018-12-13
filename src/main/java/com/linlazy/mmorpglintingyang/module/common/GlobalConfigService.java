@@ -35,4 +35,12 @@ public class GlobalConfigService {
     public long getHPResumeIntervalMills(){
         return jsonObject.getIntValue("HP_resumeInterval")*1000;
     }
+
+    /**
+     * 获取背包最大格子数
+     * @return
+     */
+    public int getPackageMaxLatticeNum(){
+        return jsonObject.getIntValue("packageMaxLatticeNum");
+    }
 }

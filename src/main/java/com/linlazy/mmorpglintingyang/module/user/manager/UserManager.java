@@ -43,4 +43,8 @@ public class UserManager {
         }
         return userDao.getUser(actorId);
     }
+
+    public void updateUser(User user) {
+        userDao.updateUser(user);
+    }
 }

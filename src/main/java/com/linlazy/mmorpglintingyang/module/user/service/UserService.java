@@ -94,4 +94,8 @@ public class UserService {
     public  User  getUser(long actorId){
        return userManager.getUser(actorId);
     }
+
+    public void updateUser(User user) {
+        userManager.updateUser(user);
+    }
 }

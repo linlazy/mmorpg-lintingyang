@@ -5,10 +5,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.module.common.Result;
 import com.linlazy.mmorpglintingyang.module.scene.constants.SceneCode;
 import com.linlazy.mmorpglintingyang.module.scene.constants.SceneEntityType;
+import com.linlazy.mmorpglintingyang.module.scene.manager.SceneManager;
 import com.linlazy.mmorpglintingyang.module.scene.manager.entity.Scene;
 import com.linlazy.mmorpglintingyang.module.scene.manager.entity.model.SceneEntityInfo;
-import com.linlazy.mmorpglintingyang.module.scene.manager.SceneManager;
-import com.linlazy.mmorpglintingyang.module.user.manager.entity.User;
 import com.linlazy.mmorpglintingyang.module.user.service.UserService;
 import com.linlazy.mmorpglintingyang.utils.SessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,16 +44,18 @@ public class SceneService {
         if(!sceneManager.canMoveToTarget(actorId,targetSceneId)){
             return Result.valueOf(SceneCode.SCENE_NOT_MOVE);
         }
-        // 3 更新玩家所处场景为targetSceneId
-        Scene scene = sceneManager.getScene(actorId);
-        scene.setSceneId(targetSceneId);
-        sceneManager.updateScene(scene);
+
 
         SceneEntityInfo sceneEntityInfo = new SceneEntityInfo(actorId, SceneEntityType.Player);
+        Scene scene = sceneManager.getScene(actorId);
         //原场景中移除实体
         sceneManager.removeSceneEntityInfo(scene.getSceneId(),sceneEntityInfo);
         //新场景中增加实体
         sceneManager.addSceneEntityInfo(targetSceneId,sceneEntityInfo);
+
+        // 4 更新玩家所处场景为targetSceneId
+        scene.setSceneId(targetSceneId);
+        sceneManager.updateScene(scene);
         return Result.success();
     }
 
@@ -87,10 +88,9 @@ public class SceneService {
      * @return
      */
     public Set<SceneEntityInfo> getCurrentInfo(long actorId) {
-        Set<SceneEntityInfo> sceneEntityInfoSet = sceneManager.getCurrentInfo(actorId);
-        //玩家自身
-        User user = userService.getUser(actorId);
-        sceneEntityInfoSet.add(new SceneEntityInfo(actorId,SceneEntityType.Player,user.getStatus(),user.getHp()));
+        //获取当前场景怪物实体信息
+        Set<SceneEntityInfo> sceneEntityInfoSet = sceneManager.getCurrentMonsterInfo(actorId);
+
         return sceneEntityInfoSet;
     }
 
@@ -116,7 +116,7 @@ public class SceneService {
      */
     public SceneEntityInfo getMonsterInfo(long actorId,int monsterId) {
 
-        Set<SceneEntityInfo> currentInfo = sceneManager.getCurrentInfo(actorId);
+        Set<SceneEntityInfo> currentInfo = sceneManager.getCurrentMonsterInfo(actorId);
         for(SceneEntityInfo sceneEntityInfo: currentInfo){
             if(sceneEntityInfo.getEntityId() == monsterId
                     && sceneEntityInfo.getEntityType() == SceneEntityType.Monster){

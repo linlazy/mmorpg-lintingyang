@@ -8,6 +8,8 @@ import com.linlazy.mmorpglintingyang.module.scene.push.ScenePushHelper;
 import com.linlazy.mmorpglintingyang.module.scene.service.SceneService;
 import com.linlazy.mmorpglintingyang.module.skill.manager.SkillManager;
 import com.linlazy.mmorpglintingyang.module.skill.manager.entity.model.SkillInfo;
+import com.linlazy.mmorpglintingyang.module.user.manager.entity.User;
+import com.linlazy.mmorpglintingyang.module.user.service.UserService;
 import com.linlazy.mmorpglintingyang.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,6 +21,8 @@ public class SkillService {
 
     @Autowired
     private SceneService sceneService;
+    @Autowired
+    private UserService userService;
     @Autowired
     private SkillManager skillManager;
 
@@ -42,9 +46,24 @@ public class SkillService {
 
         //玩家是否具备该技能
         SkillInfo skillInfo = skillManager.getActorSkillInfo(actorId,skillId);
+        System.out.println(skillInfo);
         if( skillInfo == null){
             return Result.valueOf("玩家不具备该技能");
         }
+
+        //技能冷却
+        System.out.println("当前时间"+ DateUtils.getNowMillis());
+        if(DateUtils.getNowMillis() < skillInfo.getNextCDResumeTime()){
+            return Result.valueOf("技能CD中...");
+        }
+
+        //是否蓝足够
+        int consumeMP = skillManager.getConsumeMP(skillId);
+        User user = userService.getUser(actorId);
+        if(user.getMp() < consumeMP){
+            return Result.valueOf("mp不足");
+        }
+        user.modifyMP(-consumeMP);
 
         SceneEntityInfo monsterInfo = sceneService.getMonsterInfo(actorId,monsterId);
         if(monsterInfo == null){
@@ -58,14 +77,19 @@ public class SkillService {
         sceneService.updateSceneEntityInfo(scene.getSceneId(),monsterInfo);
         //存档技能CD
         long nextCDResumeTime = DateUtils.getNowMillis() +skillManager.getSkillCDMills(skillId);
+        System.out.println("old[nextCDResumeTime]："+ skillInfo.getNextCDResumeTime() + " new[nextCDResumeTime]:"+ nextCDResumeTime);
         skillInfo.setNextCDResumeTime(nextCDResumeTime);
         skillManager.updateSkillInfo(actorId,skillInfo);
+        //存档蓝
+        userService.updateUser(user);
 
         //通知其它玩家
-        Set<Long> actorIds = sceneService.getCurrentSceneOnlineActorIds(scene.getSceneId());
-        for(Long pushActorId: actorIds){
-            if(pushActorId != actorId){
-                ScenePushHelper.pushMonster(pushActorId,monsterInfo);
+        if(monsterInfo.getHp() == 0){
+            Set<Long> actorIds = sceneService.getCurrentSceneOnlineActorIds(scene.getSceneId());
+            for(Long pushActorId: actorIds){
+                if(pushActorId != actorId){
+                    ScenePushHelper.pushMonster(pushActorId,monsterInfo);
+                }
             }
         }
         return Result.success(monsterInfo);

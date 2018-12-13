@@ -1,6 +1,5 @@
 package com.linlazy.mmorpglintingyang.module.skill.manager.entity.model;
 
-import com.linlazy.mmorpglintingyang.utils.DateUtils;
 import lombok.Data;
 
 import java.util.Objects;
@@ -20,7 +19,16 @@ public class SkillInfo {
     /**
      *  下一次技能冷却回复时间
      */
-    private long nextCDResumeTime = DateUtils.getNowMillis();
+    private long nextCDResumeTime;
+
+    public SkillInfo() {
+    }
+
+    public SkillInfo(int skillId, int level, long nextCDResumeTime) {
+        this.skillId = skillId;
+        this.level = level;
+        this.nextCDResumeTime = nextCDResumeTime;
+    }
 
     public SkillInfo(int skillId, int level) {
         this.skillId = skillId;
@@ -31,9 +39,6 @@ public class SkillInfo {
         this.skillId = skillId;
     }
 
-    public boolean isResumeCD(){
-        return DateUtils.getNowMillis() >= nextCDResumeTime;
-    }
 
     @Override
     public boolean equals(Object o) {

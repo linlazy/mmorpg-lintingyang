@@ -77,7 +77,9 @@ public class SceneManager {
      */
     public void removeSceneEntityInfo(int sceneId, SceneEntityInfo sceneEntityInfo){
         SceneEntity sceneEntity = sceneEntityDao.getSceneEntity(sceneId);
-        sceneEntity.getEntitySet().remove(sceneEntityInfo);
+        Set<SceneEntityInfo> entitySet = sceneEntity.getEntitySet();
+        entitySet.remove(sceneEntityInfo);
+        sceneEntity.setEntities(JSONObject.toJSONString(entitySet));
         sceneEntityDao.updateSceneEntity(sceneEntity);
     }
 
@@ -88,7 +90,9 @@ public class SceneManager {
      */
     public void addSceneEntityInfo(int sceneId, SceneEntityInfo sceneEntityInfo){
         SceneEntity sceneEntity = sceneEntityDao.getSceneEntity(sceneId);
-        sceneEntity.getEntitySet().add(sceneEntityInfo);
+        Set<SceneEntityInfo> entitySet = sceneEntity.getEntitySet();
+        entitySet.add(sceneEntityInfo);
+        sceneEntity.setEntities(JSONObject.toJSONString(entitySet));
         sceneEntityDao.updateSceneEntity(sceneEntity);
     }
 
@@ -121,7 +125,7 @@ public class SceneManager {
      * @param actorId
      * @return
      */
-    public Set<SceneEntityInfo> getCurrentInfo(long actorId) {
+    public Set<SceneEntityInfo> getCurrentMonsterInfo(long actorId) {
         Scene scene = this.getScene(actorId);
         SceneEntity sceneEntity = this.getSceneEntity(scene.getSceneId());
         return sceneEntity.getEntitySet();

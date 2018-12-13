@@ -23,7 +23,9 @@ public class Skill {
 
     public Set<SkillInfo> getSkillInfoSet() {
         if(!StringUtils.isEmpty(skills)){
-            skillInfoSet = JSON.parseObject(skills, new TypeReference<HashSet<SkillInfo>>() {});
+            HashSet<SkillInfo> skillInfoSeta = JSON.parseObject(skills, new TypeReference<HashSet<SkillInfo>>() {
+            });
+            skillInfoSet = skillInfoSeta;
         }
         return skillInfoSet;
     }

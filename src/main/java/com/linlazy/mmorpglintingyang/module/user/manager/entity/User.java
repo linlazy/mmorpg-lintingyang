@@ -60,7 +60,7 @@ public class User {
         return true;
     }
 
-    private void modifyMP(int mp) {
+    public void modifyMP(int mp) {
         synchronized (this){
             this.mp += mp;
             if(this.mp <0){

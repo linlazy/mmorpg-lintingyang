@@ -43,6 +43,8 @@ public class SkillManager {
         Skill skill = skillDao.getSkill(actorId);
         if(skill == null){
             skill = new Skill();
+            skill.setActorId(actorId);
+            skillDao.addSkill(skill);
         }
         return skill.getSkillInfoSet();
     }
@@ -120,5 +122,9 @@ public class SkillManager {
      */
     public JSONArray getSkillConfigInfo() {
         return skillConfigService.getSkillConfigInfo();
+    }
+
+    public int getConsumeMP(int skillId) {
+        return skillConfigService.getSkillConfig(skillId).getIntValue("mp");
     }
 }
