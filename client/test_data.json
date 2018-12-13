@@ -2,14 +2,15 @@
   {"module":"user","command":"register","username":"linlazy","password":123456,"confirm_password": 123456},
   {"module":"user","command":"login","username":"lwhile","password":123456},
   {"module":"user","command":"logout","actorId":3},
+  {"module":"user","command":"getInfo","actorId":3},
 
   {"module":"scene","command":"enter","actorId":3},
-  {"module":"scene","command":"getAllInfo","actorId":3},
+  {"module":"scene","command":"getAllConfigInfo","actorId":3},
   {"module":"scene","command":"getCurrentInfo","actorId":3},
   {"module":"scene","command":"move","actorId":3,"target_scene_id": 2},
 
   {"module":"skill","command":"getAllSkillInfo","actorId":3},
   {"module":"skill","command":"getSkillInfo","actorId":3},
-  {"module":"skill","command":"gainSkill","actorId":3,"skillId": 1},
-  {"module":"skill","command":"attack","actorId":3,"skillId": 1,"monsterId": 1}
+  {"module":"skill","command":"upgradeSkill","actorId":3,"skillId": 1},
+  {"module":"skill","command":"attackMonster","actorId":3,"skillId": 1,"monsterId": 1}
 ]

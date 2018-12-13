@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.module.common.ConfigFile;
 import com.linlazy.mmorpglintingyang.module.common.ConfigFileManager;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
@@ -12,6 +13,7 @@ import java.util.Map;
 /**
  * 道具配置服务类
  */
+@Component
 public class ItemConfigService {
 
     private static ConfigFile itemConfigFile;

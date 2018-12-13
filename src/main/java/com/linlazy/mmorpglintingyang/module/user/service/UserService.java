@@ -1,21 +1,19 @@
 package com.linlazy.mmorpglintingyang.module.user.service;
 
 import com.linlazy.mmorpglintingyang.module.common.Result;
-import com.linlazy.mmorpglintingyang.module.user.dao.UserDao;
-import com.linlazy.mmorpglintingyang.module.user.entity.User;
+import com.linlazy.mmorpglintingyang.module.user.manager.UserManager;
+import com.linlazy.mmorpglintingyang.module.user.manager.entity.User;
 import com.linlazy.mmorpglintingyang.utils.SessionManager;
 import io.netty.channel.Channel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.UUID;
-
 @Component
 public class UserService {
 
     @Autowired
-    private UserDao userDao;
+    private UserManager userManager;
 
     public Result<?> login(String username, String password, Channel channel) {
 
@@ -28,7 +26,7 @@ public class UserService {
             return Result.valueOf("密码不能为空");
         }
 
-        User user = userDao.getUserByUsername(username);
+        User user = userManager.getUserByUsername(username);
         if(user == null){
             return Result.valueOf("用户名不存在");
         }
@@ -74,23 +72,26 @@ public class UserService {
             return Result.valueOf("俩次输入密码不一致");
         }
 
-        User user = userDao.getUserByUsername(username);
+        User user = userManager.getUserByUsername(username);
         if(user != null){
             return Result.valueOf("用户名已存在");
         }
 
         //注册
         user = new User();
-        Long maxActorId = userDao.getMaxActorId();
-        if(maxActorId == null){
-            maxActorId = Long.valueOf(0);
-        }
-        user.setActorId(maxActorId + 1);
         user.setUsername(username);
         user.setPassword(password);
-        user.setToken(UUID.randomUUID().toString().substring(0,20));
-        userDao.createUser(user);
+        userManager.createUser(user);
         return Result.success();
     }
 
+
+    /**
+     * 获取玩家信息
+     * @param actorId
+     * @return
+     */
+    public  User  getUser(long actorId){
+       return userManager.getUser(actorId);
+    }
 }

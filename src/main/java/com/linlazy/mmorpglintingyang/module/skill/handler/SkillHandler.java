@@ -20,30 +20,30 @@ public class SkillHandler {
      * 获取所有技能配置信息
      * @return
      */
-    @Cmd("getAllSkillInfo")
-    public Result<?> getAllSkillInfo(JSONObject jsonObject){
-        return skillService.getAllSkillInfo();
+    @Cmd("getAllSkillConfigInfo")
+    public Result<?> getAllSkillConfigInfo(JSONObject jsonObject){
+        return skillService.getAllSkillConfigInfo();
     }
 
     /**
      * 获取玩家技能配置
      * @return
      */
-    @Cmd("getSkillInfo")
+    @Cmd("getActorSkillInfoSet")
     public Result<?> getSkillInfo(JSONObject jsonObject){
         long actorId = jsonObject.getLong("actorId");
-        return skillService.getSkillInfo(actorId);
+        return skillService.getActorSkillInfoSet(actorId);
     }
 
     /**
-     * 获得技能
+     * 升级技能
      * @return
      */
-    @Cmd("gainSkill")
-    public Result<?> gainSkill(JSONObject jsonObject){
+    @Cmd("upgradeSkill")
+    public Result<?> upgradeSkill(JSONObject jsonObject){
         long actorId = jsonObject.getLongValue("actorId");
         int skillId = jsonObject.getIntValue("skillId");
-        return skillService.gainSkill(actorId,skillId);
+        return skillService.upgradeSkill(actorId,skillId);
     }
 
 
@@ -53,11 +53,11 @@ public class SkillHandler {
      * @param jsonObject
      * @return
      */
-    @Cmd("attack")
-    public Result<?> attack(JSONObject jsonObject){
+    @Cmd("attackMonster")
+    public Result<?> attackMonster(JSONObject jsonObject){
         long actorId = jsonObject.getLongValue("actorId");
         int skillId = jsonObject.getIntValue("skillId");
         int monsterId = jsonObject.getIntValue("monsterId");
-        return skillService.attack(actorId,skillId,monsterId);
+        return skillService.attackMonster(actorId,skillId,monsterId);
     }
 }

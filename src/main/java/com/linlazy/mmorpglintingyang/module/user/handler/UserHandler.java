@@ -54,4 +54,15 @@ public class UserHandler {
         Channel channel = jsonObject.getObject("channel",Channel.class);
         return userService.logout(channel);
     }
+
+    /**
+     * 获取玩家信息
+     * @param jsonObject
+     * @return
+     */
+    @Cmd(value = "getInfo")
+    public Result<?> getInfo(JSONObject jsonObject){
+        long actorId = jsonObject.getLongValue("actorId");
+        return Result.success(userService.getUser(actorId));
+    }
 }

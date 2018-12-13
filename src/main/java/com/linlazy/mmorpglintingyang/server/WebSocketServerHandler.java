@@ -35,7 +35,9 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 
             jsonObjectRequest.put("channel",channelHandlerContext.channel());
             Result<?> result = GameRouter.handleRoute(jsonObjectRequest);
-
+            if(result == null){
+                throw new RuntimeException(String.format("not match !, module[%s],cmd[%s]",jsonObjectRequest.getString("module"),jsonObjectRequest.getString("command")));
+            }
             JSONObject jsonObjectResponse = new JSONObject();
             jsonObjectResponse.put("code",result.getCode());
             jsonObjectResponse.put("data",result.getData());

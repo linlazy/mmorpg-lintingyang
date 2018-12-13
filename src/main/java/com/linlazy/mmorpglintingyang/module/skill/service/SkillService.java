@@ -1,18 +1,14 @@
 package com.linlazy.mmorpglintingyang.module.skill.service;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.module.common.Result;
-import com.linlazy.mmorpglintingyang.module.scene.config.MonsterConfigService;
-import com.linlazy.mmorpglintingyang.module.scene.dao.SceneEntityDao;
-import com.linlazy.mmorpglintingyang.module.scene.entity.Scene;
-import com.linlazy.mmorpglintingyang.module.scene.entity.model.SceneEntityInfo;
+import com.linlazy.mmorpglintingyang.module.scene.manager.entity.Scene;
+import com.linlazy.mmorpglintingyang.module.scene.manager.entity.model.SceneEntityInfo;
 import com.linlazy.mmorpglintingyang.module.scene.push.ScenePushHelper;
 import com.linlazy.mmorpglintingyang.module.scene.service.SceneService;
-import com.linlazy.mmorpglintingyang.module.skill.config.SkillConfigService;
-import com.linlazy.mmorpglintingyang.module.skill.dao.SkillDao;
-import com.linlazy.mmorpglintingyang.module.skill.entity.Skill;
-import com.linlazy.mmorpglintingyang.module.skill.entity.model.SkillInfo;
+import com.linlazy.mmorpglintingyang.module.skill.manager.SkillManager;
+import com.linlazy.mmorpglintingyang.module.skill.manager.entity.model.SkillInfo;
+import com.linlazy.mmorpglintingyang.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,25 +18,16 @@ import java.util.Set;
 public class SkillService {
 
     @Autowired
-    private SkillConfigService skillConfigService;
-
-    @Autowired
-    private MonsterConfigService monsterConfigService;
-
-    @Autowired
-    private SkillDao skillDao;
-    @Autowired
     private SceneService sceneService;
     @Autowired
-    private SceneEntityDao sceneEntityDao;
-
+    private SkillManager skillManager;
 
     /**
      * 获取技能配置信息
      * @return
      */
-    public Result<?> getAllSkillInfo() {
-        JSONArray skillConfigInfo = skillConfigService.getSkillConfigInfo();
+    public Result<?> getAllSkillConfigInfo() {
+        JSONArray skillConfigInfo = skillManager.getSkillConfigInfo();
         return Result.success(skillConfigInfo);
     }
 
@@ -51,22 +38,11 @@ public class SkillService {
      * @param monsterId
      * @return
      */
-    public Result<?> attack(long actorId, int skillId, int monsterId) {
-
-        //参数校验
-        JSONObject skillConfig = skillConfigService.getSkillConfig(skillId);
-        if(skillConfig == null){
-            return Result.valueOf("参数错误");
-        }
+    public Result<?> attackMonster(long actorId, int skillId, int monsterId) {
 
         //玩家是否具备该技能
-        Skill skill = skillDao.getSkill(actorId);
-        if(skill == null){
-            skill = new Skill();
-            skill.setActorId(actorId);
-        }
-        Set<SkillInfo> skillInfoSet = skill.getSkillInfoSet();
-        if( !skillInfoSet.contains(new SkillInfo(skillId))){
+        SkillInfo skillInfo = skillManager.getActorSkillInfo(actorId,skillId);
+        if( skillInfo == null){
             return Result.valueOf("玩家不具备该技能");
         }
 
@@ -75,16 +51,18 @@ public class SkillService {
             return Result.valueOf("当前场景无此怪物");
         }
 
-        //获取技能攻击力
-        int attack = skillConfig.getIntValue("attack");
-        //怪物被攻击
+        //存档怪物
+        int attack = skillManager.getSkillAttack(actorId,skillId);
         monsterInfo.attacked(attack);
-        //存档
         Scene scene = sceneService.getScene(actorId);
         sceneService.updateSceneEntityInfo(scene.getSceneId(),monsterInfo);
-        Set<Long> actorIds = sceneService.getCurrentSceneOnlineActorIds(scene.getSceneId());
+        //存档技能CD
+        long nextCDResumeTime = DateUtils.getNowMillis() +skillManager.getSkillCDMills(skillId);
+        skillInfo.setNextCDResumeTime(nextCDResumeTime);
+        skillManager.updateSkillInfo(actorId,skillInfo);
 
         //通知其它玩家
+        Set<Long> actorIds = sceneService.getCurrentSceneOnlineActorIds(scene.getSceneId());
         for(Long pushActorId: actorIds){
             if(pushActorId != actorId){
                 ScenePushHelper.pushMonster(pushActorId,monsterInfo);
@@ -95,34 +73,22 @@ public class SkillService {
 
 
 
-    public Result<?> getSkillInfo(long actorId) {
-        Skill skill = skillDao.getSkill(actorId);
-        if(skill == null){
-            skill = new Skill();
-        }
-        return Result.success(skill.getSkillInfoSet());
+    /**
+     * 获取玩家技能信息集
+     * @param actorId
+     * @return
+     */
+    public  Result<?> getActorSkillInfoSet(long actorId) {
+        return Result.success(skillManager.getActorSkillInfoSet(actorId));
     }
 
     /**
-     * 获得技能
+     * 升级技能
      * @param actorId
      * @param skillId
      * @return
      */
-    public Result<?> gainSkill(long actorId, int skillId) {
-
-        Skill skill = skillDao.getSkill(actorId);
-        if( skill == null){
-            skill = new Skill();
-            skill.setActorId(actorId);
-            skillDao.addSkill(skill);
-        }
-
-        Set<SkillInfo> skillInfoSet = skill.getSkillInfoSet();
-        skillInfoSet.add(new SkillInfo(skillId,1));
-        System.out.println(skillInfoSet);
-        skill.setSkills(JSONObject.toJSONString(skillInfoSet));
-        skillDao.updateSkill(skill);
-        return Result.success(skillInfoSet);
+    public Result<?> upgradeSkill(long actorId, int skillId) {
+        return Result.success(skillManager.upgradeSkill(actorId,skillId));
     }
 }

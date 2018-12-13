@@ -22,9 +22,9 @@ public class SceneHandler {
      * @param jsonObject
      * @return
      */
-    @Cmd("getAllInfo")
+    @Cmd("getAllConfigInfo")
     public Result<?> info(JSONObject jsonObject){
-        return sceneService.getAllInfo();
+        return sceneService.getAllConfigInfo();
     }
 
 
@@ -62,14 +62,4 @@ public class SceneHandler {
         return Result.success(sceneService.getCurrentInfo(actorId));
     }
 
-//    /**
-//     * 对话NPC
-//     * @param jsonObject
-//     * @return
-//     */
-//    @Cmd("talkNPC")
-//    public Result<?> talkNPC(JSONObject jsonObject){
-//        long actorId = jsonObject.getLong("actorId");
-//        return sceneService.talkNPC(actorId);
-//    }
 }

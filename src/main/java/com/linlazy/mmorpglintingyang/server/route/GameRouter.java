@@ -28,36 +28,37 @@ public class GameRouter {
                 Method[] methods = moduleHandler.getClass().getMethods();
                 for(Method method :methods){
                     Cmd cmd = method.getAnnotation(Cmd.class);
-                    String command = jsonObject.getString("command");
-                    if(cmd.value().equals(command)){
-                        //执行处理方法
+                    if(cmd != null){
+                        String command = jsonObject.getString("command");
+                        if(cmd.value().equals(command)){
+                            //执行处理方法
 
-                        //权限
-                        if(cmd.auth()){
-                            long actorId = jsonObject.getLong("actorId");
+                            //权限
+                            if(cmd.auth()){
+                                long actorId = jsonObject.getLong("actorId");
 
-                            if(!SessionManager.isOnline(actorId)){
-                                return Result.valueOf("未登录，无权限执行此操作");
+                                if(!SessionManager.isOnline(actorId)){
+                                    return Result.valueOf("未登录，无权限执行此操作");
+                                }
+
+                                Channel channel = jsonObject.getObject("channel", Channel.class);
+                                if(SessionManager.getActorId(channel) != actorId){
+                                    return Result.valueOf("参数错误");
+                                }
                             }
 
-                            Channel channel = jsonObject.getObject("channel", Channel.class);
-                            if(SessionManager.getActorId(channel) != actorId){
-                                return Result.valueOf("参数错误");
+                            try {
+                                return  (Result<?>) method.invoke(moduleHandler,jsonObject);
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            } catch (InvocationTargetException e) {
+                                e.printStackTrace();
                             }
-                        }
-
-                        try {
-                            return  (Result<?>) method.invoke(moduleHandler,jsonObject);
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
-                        } catch (InvocationTargetException e) {
-                            e.printStackTrace();
                         }
                     }
                 }
             }
         }
-
         return null;
     }
 }
