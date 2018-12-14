@@ -11,7 +11,7 @@ public interface ItemDao {
     @Select("select * from item where actorId = #{actorId},itemId = #{itemId}")
     Item getItem(long actorId,int item);
 
-    @Update("update item set count = #{count} where actorId = #{actorId},itemId = #{itemId}")
+    @Update("update item set count = #{count} where actorId = #{actorId} and itemId = #{itemId}")
     void updateItem(Item item);
 
 

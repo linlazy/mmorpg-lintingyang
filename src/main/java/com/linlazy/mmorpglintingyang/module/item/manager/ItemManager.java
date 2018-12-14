@@ -108,10 +108,12 @@ public class ItemManager {
                 if(ItemIdUtil.getBaseItemId(backPack[backPackIndex].getItemId()) == baseItemId){
                     totalNum =totalNum + (superPosition -backPack[backPackIndex].getCount());
                 }
+            }else {
+                totalNum +=superPosition;
             }
         }
 
-        return totalNum >= num;
+        return totalNum < num;
     }
 
     /**
@@ -135,15 +137,18 @@ public class ItemManager {
      * @param actorId
      */
     public void arrangeBackPack(long actorId) {
-        Item[] backPack = actorIdBackPackMap.get(actorId);
+        Item[] backPack =getActorBackPack(actorId);
         // 构建 [baseItemId + ":" + orderId]与数量映射结果
         Map<String, Integer> baseItemIdOrderIdCountMap = new HashMap<>();
         for(int backPackIndex = 0; backPackIndex <backPack.length; backPackIndex++){
-            String baseItemIdOrderIdKey = ItemIdUtil.getBaseItemIdOrderIdKey(backPack[backPackIndex].getItemId());
-            baseItemIdOrderIdCountMap.computeIfAbsent(baseItemIdOrderIdKey, k -> new Integer(0));
-            int totalCount = baseItemIdOrderIdCountMap.get(baseItemIdOrderIdKey);
-            totalCount += backPack[backPackIndex].getCount();
-            baseItemIdOrderIdCountMap.put(baseItemIdOrderIdKey,totalCount);
+
+            if(backPack[backPackIndex] != null){
+                String baseItemIdOrderIdKey = ItemIdUtil.getBaseItemIdOrderIdKey(backPack[backPackIndex].getItemId());
+                baseItemIdOrderIdCountMap.putIfAbsent(baseItemIdOrderIdKey, 0);
+                int totalCount = baseItemIdOrderIdCountMap.get(baseItemIdOrderIdKey);
+                totalCount += backPack[backPackIndex].getCount();
+                baseItemIdOrderIdCountMap.put(baseItemIdOrderIdKey,totalCount);
+            }
         }
 
         //放进背包
@@ -159,7 +164,7 @@ public class ItemManager {
 
             //计算物品叠加上限所占据格子数
             int times= entry.getValue()/superPosition;
-            for(int i = 1; i < times ; i++){
+            for(int i = 1; i <= times ; i++){
                 long newItemId = ItemIdUtil.getNewItemId(orderId, backPackIndex, baseItemId);
                 arrangeBackPack[backPackIndex++] = new Item(actorId,newItemId,superPosition);
             }
@@ -177,7 +182,9 @@ public class ItemManager {
         itemDao.deleteActorItems(actorId);
         //添加新背包
         for(int i = 0 ; i <arrangeBackPack.length; i++){
-            itemDao.addItem(arrangeBackPack[i]);
+            if(arrangeBackPack[i] != null){
+                itemDao.addItem(arrangeBackPack[i]);
+            }
         }
     }
 
@@ -199,7 +206,7 @@ public class ItemManager {
                 Item newItem = new Item(actorId, newItemId, 1);
                 //更新背包，存档
                 backPack[backPackIndex] =newItem;
-                itemDao.updateItem(newItem);
+                itemDao.addItem(newItem);
                 //更新自增序列
                 actorIdBaseItemIdMaxOrderIdMap.get(actorId).put(baseItemId,maxOrderId + 1);
             }
@@ -216,27 +223,54 @@ public class ItemManager {
     public void addSuperPositionItem(long actorId,int baseItemId,int num){
         JSONObject itemConfig = itemConfigService.getItemConfig(baseItemId);
 
-        Item[] backPack = actorIdBackPackMap.get(actorId);
-        for(int backPackIndex = 0; backPackIndex < backPack.length; backPackIndex++){
-            //从索引0到索引最大，查找配置ID
-            if(ItemIdUtil.getBaseItemId(backPack[backPackIndex].getItemId()) == baseItemId){
-                int superPosition = itemConfig.getIntValue("superPosition");
-                int count = backPack[backPackIndex].getCount();
+        Item[] backPack = getActorBackPack(actorId);
+        //从索引0到索引最大，查找配置ID
+        int backPackIndex =0;
+        for(backPackIndex = 0; backPackIndex < backPack.length; backPackIndex++){
+            if(backPack[backPackIndex] != null){
+                if(ItemIdUtil.getBaseItemId(backPack[backPackIndex].getItemId()) == baseItemId){
+                    int superPosition = itemConfig.getIntValue("superPosition");
+                    int count = backPack[backPackIndex].getCount();
 
-                //未超过可叠加上限
-                if(count + num <= superPosition){
-                    backPack[backPackIndex].setCount(count + num);
+                    //未超过可叠加上限
+                    if(count + num <= superPosition){
+                        backPack[backPackIndex].setCount(count + num);
+                        //存档
+                        itemDao.updateItem(backPack[backPackIndex]);
+                        break;
+                    }
+
+                    backPack[backPackIndex].setCount(superPosition);
+                    num = num - (superPosition - count);
                     //存档
                     itemDao.updateItem(backPack[backPackIndex]);
-                    break;
                 }
-
-                backPack[backPackIndex].setCount(superPosition);
-                num = num - (superPosition - count);
-                //存档
-                itemDao.updateItem(backPack[backPackIndex]);
             }
+        }
 
+        //道具在背包中不存在
+        if(backPackIndex >= backPack.length){
+            for(backPackIndex = 0; backPackIndex < backPack.length; backPackIndex++){
+                if(backPack[backPackIndex] == null){
+
+                    int superPosition = itemConfig.getIntValue("superPosition");
+                    long newItemId = ItemIdUtil.getNewItemId(0,backPackIndex,baseItemId);
+                    //未超过可叠加上限
+                    if(num <= superPosition){
+                        Item item = new Item(actorId, newItemId, num);
+                        backPack[backPackIndex] = item;
+                        //存档
+                        itemDao.addItem(backPack[backPackIndex]);
+                        break;
+                    }
+
+                    Item item = new Item(actorId, newItemId, superPosition);
+                    backPack[backPackIndex] = item;
+                    //存档
+                    itemDao.addItem(backPack[backPackIndex]);
+                    num = num - superPosition;
+                }
+            }
         }
     }
 
