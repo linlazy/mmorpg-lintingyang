@@ -47,22 +47,23 @@ public class ItemService {
      * @return
      */
     public Result<?> getActorItemInfo(long actorId) {
-        return Result.success(itemManager.getItemInfo(actorId));
+        return Result.success(itemManager.getActorBackPack(actorId));
     }
 
     /**
      * 获得道具
      * @param actorId
-     * @param itemId
+     * @param baseItemId
      * @param num
      * @return
      */
-    public Result<?> addItem(long actorId, int itemId, int num) {
-        //是否背包已满，道具不存在或已到达叠加数，且没有多余格子
-        if(itemManager.isFullPackage(actorId,itemId,num)){
+    public Result<?> addItem(long actorId, int baseItemId, int num) {
+
+        //是否背包已满
+        if(itemManager.isFullBackPack(actorId,baseItemId,num)){
             return Result.valueOf("背包已满");
         }
-
+        itemManager.addItem(actorId,baseItemId,num);
         return Result.success();
     }
 

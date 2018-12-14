@@ -12,5 +12,10 @@
   {"module":"skill","command":"getAllSkillInfo","actorId":3},
   {"module":"skill","command":"getSkillInfo","actorId":3},
   {"module":"skill","command":"upgradeSkill","actorId":3,"skillId": 1},
-  {"module":"skill","command":"attackMonster","actorId":3,"skillId": 1,"monsterId": 1}
+  {"module":"skill","command":"attackMonster","actorId":3,"skillId": 1,"monsterId": 1},
+
+  {"module":"item","command":"getBackPackInfo","actorId":3},
+  {"module":"item","command":"arrangeBackPack","actorId":3},
+  {"module":"item","command":"useItem","actorId":3,"baseItemId": 1,"backPackIndex": 1,"orderId": 1,"num": 1},
+  {"module":"item","command":"addItem","actorId":3,"baseItemId": 1,"num": 1}
 ]

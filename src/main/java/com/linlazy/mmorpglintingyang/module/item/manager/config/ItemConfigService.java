@@ -22,28 +22,18 @@ public class ItemConfigService {
         itemConfigFile =  ConfigFileManager.use("config_file/item_config.json");
     }
 
-    //构建道具ID与道具类型映射
-    private static final Map<Integer,Integer> itemIdRewardTypeMap = new HashMap<>();
+    private static  final Map<Integer,JSONObject> map = new HashMap<>();
 
     @PostConstruct
     public void init(){
         JSONArray jsonArray = itemConfigFile.getJsonArray();
         for(int i = 0; i < jsonArray.size(); i++){
             JSONObject jsonObject = jsonArray.getJSONObject(i);
-            itemIdRewardTypeMap.put(jsonObject.getInteger("itemId"),jsonObject.getIntValue("RewardType"));
+            map.put(jsonObject.getInteger("itemId"),jsonObject);
         }
     }
 
-    /**
-     * 获取道具类型
-     * @param itemId
-     * @return
-     */
-    public int getRewardTypeByItemId(int itemId){
-        return itemIdRewardTypeMap.get(itemId);
-    }
-
     public JSONObject getItemConfig(int itemId) {
-        return null;
+        return map.get(itemId);
     }
 }

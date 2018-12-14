@@ -23,13 +23,12 @@ public class ItemHandler {
         return itemService.useItem(actorId,itemId,num == null? 1 : num);
     }
 
-
     /**
      * 获取玩家道具信息
      * @param jsonObject
      * @return
      */
-    @Cmd("getActorItemInfo")
+    @Cmd("getBackPackInfo")
     public Result<?> getActorItemInfo(JSONObject jsonObject){
         long actorId = jsonObject.getLongValue("actorId");
         return itemService.getActorItemInfo(actorId);
@@ -43,7 +42,7 @@ public class ItemHandler {
     @Cmd("addItem")
     public Result<?> addItem(JSONObject jsonObject){
         long actorId = jsonObject.getLongValue("actorId");
-        int itemId = jsonObject.getIntValue("itemId");
+        int itemId = jsonObject.getIntValue("baseItemId");
         int num = jsonObject.getIntValue("num");
         return itemService.addItem(actorId,itemId,num);
     }

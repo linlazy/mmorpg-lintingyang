@@ -13,13 +13,60 @@ public class ItemIdUtil {
     }
 
     /**
+     * 获取策划配置ID
+     * @param baseItemIdOrderId
+     * @return
+     */
+    public static int getBaseItemId(String baseItemIdOrderId){
+        return Integer.parseInt(baseItemIdOrderId.split(":")[0]);
+    }
+
+    /**
      * 自增序号，背包索引，策划配置ID组成唯一ID
-     * @param order
-     * @param index
+     * @param orderId
+     * @param backPackIndex
      * @param baseItemId
      * @return
      */
-    public static long getNewItemId(int order, int index, int baseItemId) {
-        return 0;
+    public static long getNewItemId(int orderId, int backPackIndex, int baseItemId) {
+        return orderId << 40 + backPackIndex << 28 + baseItemId;
+    }
+
+    /**
+     * 自增序号
+     * @param itemId
+     * @return
+     */
+    public static int getOrderId(long itemId) {
+        //取高24位做orderId
+        return (int) ((itemId >>40) &0xffffff);
+    }
+
+    /**
+     * 背包索引
+     * @param itemId
+     * @return
+     */
+    public static int getBackPackIndex(long itemId) {
+        //取中12位做backPackIndex
+        return (int) ((itemId >> 28) & 0xfff);
+    }
+
+    /**
+     * 获取策划配置自增序号key
+     * @param itemId
+     * @return
+     */
+    public static String getBaseItemIdOrderIdKey(long itemId) {
+        return getBaseItemId(itemId) + ":" + getOrderId(itemId);
+    }
+
+    /**
+     * 获取自增序号
+     * @param baseItemIdOrderId
+     * @return
+     */
+    public static int getOrderId(String baseItemIdOrderId) {
+        return Integer.parseInt(baseItemIdOrderId.split(":")[1]);
     }
 }

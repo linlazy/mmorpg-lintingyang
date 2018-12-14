@@ -1,9 +1,7 @@
 package com.linlazy.mmorpglintingyang.module.item.manager.dao;
 
 import com.linlazy.mmorpglintingyang.module.item.manager.entity.Item;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.Set;
 
@@ -19,4 +17,10 @@ public interface ItemDao {
 
     @Select("select * from item where actorId = #{actorId}")
     Set<Item> getItemSet(long actorId);
+
+    @Delete("delete from item where actorId = #{actorId}")
+    void deleteActorItems(long actorId);
+
+    @Insert("insert into item(actorId,itemId,count,ext)values(#{actorId},#{itemId},#{count},#{ext})")
+    void addItem(Item item);
 }

@@ -7,7 +7,7 @@ public class Item {
 
     private long actorId;
     /**
-     * order(序号32位) + index(10位背包位置索引) + baseItemId(2位策划配置ID2)
+     * order(序号22位) + index(10位背包位置索引) + baseItemId(322位策划配置ID)
      */
     private long itemId;
 
@@ -22,5 +22,12 @@ public class Item {
         this.actorId = actorId;
         this.itemId = itemId;
         this.count = count;
+    }
+
+    public Item(long actorId, long itemId, int count, String ext) {
+        this.actorId = actorId;
+        this.itemId = itemId;
+        this.count = count;
+        this.ext = ext;
     }
 }

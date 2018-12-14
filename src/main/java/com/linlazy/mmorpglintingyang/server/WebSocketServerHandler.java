@@ -39,6 +39,8 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
                 throw new RuntimeException(String.format("not match !, module[%s],cmd[%s]",jsonObjectRequest.getString("module"),jsonObjectRequest.getString("command")));
             }
             JSONObject jsonObjectResponse = new JSONObject();
+            jsonObjectResponse.put("module",jsonObjectRequest.getString("module"));
+            jsonObjectResponse.put("command",jsonObjectRequest.getString("command"));
             jsonObjectResponse.put("code",result.getCode());
             jsonObjectResponse.put("data",result.getData());
 
