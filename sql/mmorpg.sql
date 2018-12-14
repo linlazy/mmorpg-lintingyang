@@ -10,10 +10,22 @@ Target Server Type    : MYSQL
 Target Server Version : 50724
 File Encoding         : 65001
 
-Date: 2018-12-12 17:40:15
+Date: 2018-12-14 18:39:39
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for item
+-- ----------------------------
+DROP TABLE IF EXISTS `item`;
+CREATE TABLE `item` (
+  `actorId` bigint(20) NOT NULL,
+  `itemId` bigint(64) NOT NULL,
+  `count` int(11) DEFAULT NULL,
+  `ext` text,
+  PRIMARY KEY (`actorId`,`itemId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Table structure for scene
@@ -54,5 +66,10 @@ CREATE TABLE `user` (
   `username` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   `token` varchar(255) DEFAULT NULL,
+  `level` int(11) DEFAULT NULL,
+  `mp` int(11) DEFAULT NULL,
+  `hp` int(11) DEFAULT NULL,
+  `MPNextResumeTime` bigint(13) DEFAULT NULL,
+  `HPNextResumeTime` bigint(13) DEFAULT NULL,
   PRIMARY KEY (`actorId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
