@@ -131,7 +131,8 @@ public class ItemManager {
      * @return
      */
     private boolean isNonSuperPositionFullPackage(long actorId, int baseItemId){
-        Item[] backPack = actorIdBackPackMap.get(actorId);
+
+        Item[] backPack = getActorBackPack(actorId);
         for(int backPackIndex = 0; backPackIndex < backPack.length; backPackIndex++){
             if(backPack[backPackIndex] == null){
                 return true;

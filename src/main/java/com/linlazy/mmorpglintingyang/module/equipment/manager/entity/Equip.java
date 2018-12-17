@@ -12,7 +12,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class Equip extends Item {
+public class Equip{
+
+    private Item item;
+
+    private long equipId;
+
+    public Equip(Item item) {
+        this.item = item;
+        this.equipId = item.getItemId();
+    }
 
     /**
      * 装备状态
@@ -23,38 +32,45 @@ public class Equip extends Item {
      * 加成
      */
     List<Addition> additionList = new ArrayList<>();
-
-    public Equip(long actorId, long itemId, int count) {
-        super(actorId, itemId, count);
-    }
-
-    public Equip(long actorId, long itemId, int count, String ext) {
-        super(actorId, itemId, count, ext);
-    }
-
     public int getStatus() {
-        JSONObject jsonObject = JSON.parseObject(this.ext);
-        this.status = jsonObject.getIntValue("status");
+        JSONObject jsonObject = JSON.parseObject(this.item.getExt());
+        if(jsonObject != null){
+            this.status = jsonObject.getIntValue("status");
+        }
         return this.status;
     }
 
     public void setStatus(int status) {
 
-        JSONObject jsonObject = JSON.parseObject(this.ext);
+        JSONObject jsonObject = JSON.parseObject(item.getExt());
+        if(jsonObject == null){
+            jsonObject = new JSONObject();
+        }
         jsonObject.put("status",status);
-        this.ext = JSONObject.toJSONString(jsonObject);
+        item.setExt(JSONObject.toJSONString(jsonObject));
 
         this.status = status;
     }
 
     public  List<Addition> getAdditionList() {
-        JSONObject jsonObject = JSON.parseObject(this.ext);
-        JSONObject additionsJsonObject = jsonObject.getObject("additions", JSONObject.class);
-        String additions = JSONObject.toJSONString(additionsJsonObject);
-        if(!StringUtils.isEmpty(additions)){
-            additionList = JSONObject.parseObject(additions,new TypeReference<ArrayList<Addition>>(){});
+        JSONObject jsonObject = JSON.parseObject(item.getExt());
+        if(jsonObject != null){
+            JSONObject additionsJsonObject = jsonObject.getObject("additions", JSONObject.class);
+            if(additionsJsonObject != null){
+                String additions = JSONObject.toJSONString(additionsJsonObject);
+                if(!StringUtils.isEmpty(additions)){
+                    additionList = JSONObject.parseObject(additions,new TypeReference<ArrayList<Addition>>(){});
+                }
+            }
         }
         return additionList;
     }
 
+    public long getEquipId() {
+        return equipId;
+    }
+
+    public void setEquipId(long equipId) {
+        this.equipId = equipId;
+    }
 }

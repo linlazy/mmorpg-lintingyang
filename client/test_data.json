@@ -17,5 +17,7 @@
   {"module":"item","command":"getBackPackInfo","actorId":3},
   {"module":"item","command":"arrangeBackPack","actorId":3},
   {"module":"item","command":"useItem","actorId":3,"itemId": 1,"num": 1},
-  {"module":"item","command":"addItem","actorId":3,"baseItemId": 1,"num": 1}
+  {"module":"item","command":"addItem","actorId":3,"baseItemId": 1,"num": 1},
+
+  {"module":"equipment","command":"equip","actorId":3,"itemId": 4}
 ]

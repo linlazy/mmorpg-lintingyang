@@ -1,11 +1,13 @@
 package com.linlazy.mmorpglintingyang.module.equipment.manager;
 
 import com.alibaba.fastjson.JSONObject;
-import com.linlazy.mmorpglintingyang.module.equipment.constants.EquipStatus;
 import com.linlazy.mmorpglintingyang.module.common.addition.Addition;
 import com.linlazy.mmorpglintingyang.module.common.addition.AdditionService;
+import com.linlazy.mmorpglintingyang.module.equipment.constants.EquipStatus;
 import com.linlazy.mmorpglintingyang.module.equipment.manager.entity.Equip;
+import com.linlazy.mmorpglintingyang.module.item.constants.ItemType;
 import com.linlazy.mmorpglintingyang.module.item.manager.ItemManager;
+import com.linlazy.mmorpglintingyang.module.item.manager.entity.Item;
 import com.linlazy.mmorpglintingyang.utils.ItemIdUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,9 +29,39 @@ public class EquipManager {
      */
     private Map<Long, Map<Integer,Equip>> map = new HashMap<>();
 
-    public Equip getEquipment(long actorId, long equipId) {
+    /**
+     * 玩家装备集合
+     * @param actorId
+     * @return
+     */
+    private  Map<Integer,Equip> initActorEquipment(long actorId){
+        map.computeIfAbsent(actorId, k -> new HashMap<>());
+        return map.get(actorId);
+    }
 
-        return (Equip) itemManager.getItem(actorId,equipId);
+    public Map<Integer,Equip> getActorEqupment(long actorId){
+        return initActorEquipment(actorId);
+    }
+
+
+    /**
+     * 获取装备
+     * @param actorId
+     * @param equipId
+     * @return
+     *
+     */
+    public Equip getEquipment(long actorId, long equipId) {
+        JSONObject itemConfig = itemManager.getItemConfig(ItemIdUtil.getBaseItemId(equipId));
+        if(itemConfig.getIntValue("itemType") != ItemType.Equip){
+            return null;
+        }
+        Item item = itemManager.getItem(actorId, equipId);
+        if(item == null){
+            return null;
+        }
+
+        return new Equip(itemManager.getItem(actorId, equipId));
     }
 
     /**
@@ -37,7 +69,7 @@ public class EquipManager {
      * @param equip
      */
     public void unDressEquipment(long actorId,Equip equip) {
-        int baseItemId = ItemIdUtil.getBaseItemId(equip.getItemId());
+        int baseItemId = ItemIdUtil.getBaseItemId(equip.getEquipId());
         JSONObject itemConfig = itemManager.getItemConfig(baseItemId);
         int equipType = itemConfig.getIntValue("equipType");
         map.get(actorId).remove(equipType);
@@ -46,7 +78,7 @@ public class EquipManager {
         additionService.removeAddition(actorId,additions);
         //更新装备状态
         equip.setStatus(EquipStatus.UnEquiped);
-        itemManager.updateItem(equip);
+        itemManager.updateItem(equip.getItem());
     }
 
 
@@ -60,7 +92,7 @@ public class EquipManager {
         int baseItemId = ItemIdUtil.getBaseItemId(newEquipId);
         JSONObject itemConfig = itemManager.getItemConfig(baseItemId);
         int equipType = itemConfig.getIntValue("equipType");
-        return map.get(actorId).get(equipType);
+        return getActorEqupment(actorId).get(equipType);
     }
 
     /**
@@ -68,7 +100,7 @@ public class EquipManager {
      * @param equipment
      */
     public void dressEquipment(long actorId,Equip equipment) {
-        int baseItemId = ItemIdUtil.getBaseItemId(equipment.getItemId());
+        int baseItemId = ItemIdUtil.getBaseItemId(equipment.getEquipId());
         JSONObject itemConfig = itemManager.getItemConfig(baseItemId);
         int equipType = itemConfig.getIntValue("equipType");
         map.get(actorId).put(equipType,equipment);
@@ -78,6 +110,6 @@ public class EquipManager {
         additionService.addAddition(actorId,additions);
         //更新装备状态
         equipment.setStatus(EquipStatus.Equiped);
-        itemManager.updateItem(equipment);
+        itemManager.updateItem(equipment.getItem());
     }
 }

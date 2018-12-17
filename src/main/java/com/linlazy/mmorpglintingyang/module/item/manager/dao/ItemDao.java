@@ -8,10 +8,10 @@ import java.util.Set;
 @Mapper
 public interface ItemDao {
 
-    @Select("select * from item where actorId = #{actorId},itemId = #{itemId}")
+    @Select("select * from item where actorId = #{actorId} and itemId = #{itemId}")
     Item getItem(long actorId,long itemId);
 
-    @Update("update item set count = #{count} where actorId = #{actorId} and itemId = #{itemId}")
+    @Update("update item set count = #{count},ext = #{ext} where actorId = #{actorId} and itemId = #{itemId}")
     void updateItem(Item item);
 
 

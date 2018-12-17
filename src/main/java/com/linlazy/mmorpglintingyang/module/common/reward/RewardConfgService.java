@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.server.common.ConfigFile;
 import com.linlazy.mmorpglintingyang.server.common.ConfigFileManager;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
@@ -12,6 +13,7 @@ import java.util.Map;
 /**
  * 奖励配置服务
  */
+@Component
 public class RewardConfgService {
 
     private static ConfigFile rewardConfigFile;

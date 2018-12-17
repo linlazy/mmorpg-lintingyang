@@ -6,8 +6,10 @@ import com.linlazy.mmorpglintingyang.module.equipment.service.EquipmentService;
 import com.linlazy.mmorpglintingyang.server.route.Cmd;
 import com.linlazy.mmorpglintingyang.server.route.Module;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Module("equipment")
+@Component
 public class EquipmentHandler {
 
     @Autowired
@@ -43,8 +45,9 @@ public class EquipmentHandler {
     @Cmd("equip")
     public Result<?> equip(JSONObject jsonObject){
         long actorId = jsonObject.getLongValue("actorId");
-        long itemId = jsonObject.getLongValue("itemId");
-        return Result.success();
+        long equipId = jsonObject.getLongValue("itemId");
+
+        return equipmentService.equip(actorId,equipId);
     }
 
     /**

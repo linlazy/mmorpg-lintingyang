@@ -1,5 +1,6 @@
 package com.linlazy.mmorpglintingyang.module.user.service;
 
+import com.linlazy.mmorpglintingyang.module.common.addition.Addition;
 import com.linlazy.mmorpglintingyang.server.common.Result;
 import com.linlazy.mmorpglintingyang.module.user.manager.UserManager;
 import com.linlazy.mmorpglintingyang.module.user.manager.entity.User;
@@ -99,4 +100,7 @@ public class UserService {
         userManager.updateUser(user);
     }
 
+    public void addOrRemoveAddition(long actorId, Addition addition) {
+        userManager.addOrRemoveAddition(actorId,addition);
+    }
 }

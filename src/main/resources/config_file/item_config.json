@@ -1,6 +1,7 @@
 [
   {
     "itemId":1,
+    "itemType": 2,
     "name": "一级红药",
     "desc": "恢复5点hp",
     "rewards": "[[1,5]]",
@@ -8,6 +9,7 @@
   },
   {
     "itemId":2,
+    "itemType": 2,
     "name": "一级蓝药",
     "desc": "恢复5点mp",
     "rewards": "[[1,5]]",
@@ -15,6 +17,7 @@
   },
   {
     "itemId":3,
+    "itemType": 2,
     "name": "修复水晶",
     "desc": "恢复5点耐久度",
     "rewards": "[[1,5]]",
@@ -22,7 +25,8 @@
   },
   {
     "itemId":4,
-    "equipType": "武器",
+    "itemType": 1,
+    "equipType": 1,
     "name": "短剑",
     "level": 5,
     "profession": "战士",
@@ -31,7 +35,8 @@
     "attackUp": 95
   },  {
   "itemId":5,
-  "equipType": "衣服",
+  "itemType": 1,
+  "equipType": 2,
   "name": "轻型战甲",
   "level": 2,
   "profession": "战士",
