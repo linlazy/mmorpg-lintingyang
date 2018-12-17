@@ -1,7 +1,7 @@
 package com.linlazy.mmorpglintingyang.module.skill.service;
 
 import com.alibaba.fastjson.JSONArray;
-import com.linlazy.mmorpglintingyang.module.common.Result;
+import com.linlazy.mmorpglintingyang.server.common.Result;
 import com.linlazy.mmorpglintingyang.module.scene.manager.entity.Scene;
 import com.linlazy.mmorpglintingyang.module.scene.manager.entity.model.SceneEntityInfo;
 import com.linlazy.mmorpglintingyang.module.scene.push.ScenePushHelper;

@@ -1,4 +1,4 @@
-package com.linlazy.mmorpglintingyang.module.addition;
+package com.linlazy.mmorpglintingyang.module.common.addition;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.linlazy.mmorpglintingyang.module.event;
+package com.linlazy.mmorpglintingyang.module.common.event;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.linlazy.mmorpglintingyang.module.common;
+package com.linlazy.mmorpglintingyang.server.common;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;

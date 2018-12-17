@@ -2,7 +2,7 @@ package com.linlazy.mmorpglintingyang.module.scene.push;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.linlazy.mmorpglintingyang.module.common.PushHelper;
+import com.linlazy.mmorpglintingyang.server.common.PushHelper;
 import com.linlazy.mmorpglintingyang.module.scene.manager.entity.model.SceneEntityInfo;
 
 public class ScenePushHelper {

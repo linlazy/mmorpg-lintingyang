@@ -1,6 +1,6 @@
 package com.linlazy.mmorpglintingyang.module.equipment.service;
 
-import com.linlazy.mmorpglintingyang.module.common.Result;
+import com.linlazy.mmorpglintingyang.server.common.Result;
 import com.linlazy.mmorpglintingyang.module.equipment.constants.EquipStatus;
 import com.linlazy.mmorpglintingyang.module.equipment.manager.EquipManager;
 import com.linlazy.mmorpglintingyang.module.equipment.manager.entity.Equip;

@@ -1,4 +1,4 @@
-package com.linlazy.mmorpglintingyang.module.reward;
+package com.linlazy.mmorpglintingyang.module.common.reward;
 
 import com.linlazy.mmorpglintingyang.module.item.manager.ItemManager;
 import com.linlazy.mmorpglintingyang.module.user.manager.UserManager;

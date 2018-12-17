@@ -1,7 +1,7 @@
 package com.linlazy.mmorpglintingyang.module.user.handler;
 
 import com.alibaba.fastjson.JSONObject;
-import com.linlazy.mmorpglintingyang.module.common.Result;
+import com.linlazy.mmorpglintingyang.server.common.Result;
 import com.linlazy.mmorpglintingyang.module.user.service.UserService;
 import com.linlazy.mmorpglintingyang.server.route.Cmd;
 import com.linlazy.mmorpglintingyang.server.route.Module;

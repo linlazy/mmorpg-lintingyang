@@ -3,8 +3,8 @@ package com.linlazy.mmorpglintingyang.module.scene.manager.config;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.linlazy.mmorpglintingyang.module.common.ConfigFile;
-import com.linlazy.mmorpglintingyang.module.common.ConfigFileManager;
+import com.linlazy.mmorpglintingyang.server.common.ConfigFile;
+import com.linlazy.mmorpglintingyang.server.common.ConfigFileManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

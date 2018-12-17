@@ -1,10 +1,10 @@
 package com.linlazy.mmorpglintingyang.module.user.manager;
 
-import com.linlazy.mmorpglintingyang.module.common.GlobalConfigService;
-import com.linlazy.mmorpglintingyang.module.addition.Addition;
-import com.linlazy.mmorpglintingyang.module.addition.AdditionType;
-import com.linlazy.mmorpglintingyang.module.reward.Reward;
-import com.linlazy.mmorpglintingyang.module.reward.RewardID;
+import com.linlazy.mmorpglintingyang.server.common.GlobalConfigService;
+import com.linlazy.mmorpglintingyang.module.common.addition.Addition;
+import com.linlazy.mmorpglintingyang.module.common.addition.AdditionType;
+import com.linlazy.mmorpglintingyang.module.common.reward.Reward;
+import com.linlazy.mmorpglintingyang.module.common.reward.RewardID;
 import com.linlazy.mmorpglintingyang.module.user.manager.dao.UserDao;
 import com.linlazy.mmorpglintingyang.module.user.manager.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.linlazy.mmorpglintingyang.module.common;
+package com.linlazy.mmorpglintingyang.server.common;
 
 import java.util.concurrent.ConcurrentHashMap;
 

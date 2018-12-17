@@ -1,4 +1,4 @@
-package com.linlazy.mmorpglintingyang.module.reward;
+package com.linlazy.mmorpglintingyang.module.common.reward;
 
 import lombok.Data;
 

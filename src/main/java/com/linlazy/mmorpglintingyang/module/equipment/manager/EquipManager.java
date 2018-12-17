@@ -2,8 +2,8 @@ package com.linlazy.mmorpglintingyang.module.equipment.manager;
 
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.module.equipment.constants.EquipStatus;
-import com.linlazy.mmorpglintingyang.module.addition.Addition;
-import com.linlazy.mmorpglintingyang.module.addition.AdditionService;
+import com.linlazy.mmorpglintingyang.module.common.addition.Addition;
+import com.linlazy.mmorpglintingyang.module.common.addition.AdditionService;
 import com.linlazy.mmorpglintingyang.module.equipment.manager.entity.Equip;
 import com.linlazy.mmorpglintingyang.module.item.manager.ItemManager;
 import com.linlazy.mmorpglintingyang.utils.ItemIdUtil;

@@ -2,9 +2,9 @@ package com.linlazy.mmorpglintingyang.module.item.manager.config;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.linlazy.mmorpglintingyang.module.common.ConfigFile;
-import com.linlazy.mmorpglintingyang.module.common.ConfigFileManager;
-import com.linlazy.mmorpglintingyang.module.reward.Reward;
+import com.linlazy.mmorpglintingyang.server.common.ConfigFile;
+import com.linlazy.mmorpglintingyang.server.common.ConfigFileManager;
+import com.linlazy.mmorpglintingyang.module.common.reward.Reward;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;

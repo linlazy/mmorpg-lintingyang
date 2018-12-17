@@ -2,7 +2,7 @@ package com.linlazy.mmorpglintingyang.module.scene.service;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.linlazy.mmorpglintingyang.module.common.Result;
+import com.linlazy.mmorpglintingyang.server.common.Result;
 import com.linlazy.mmorpglintingyang.module.scene.constants.SceneCode;
 import com.linlazy.mmorpglintingyang.module.scene.constants.SceneEntityType;
 import com.linlazy.mmorpglintingyang.module.scene.manager.SceneManager;

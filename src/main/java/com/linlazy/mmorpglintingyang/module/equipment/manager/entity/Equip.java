@@ -3,7 +3,7 @@ package com.linlazy.mmorpglintingyang.module.equipment.manager.entity;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
-import com.linlazy.mmorpglintingyang.module.addition.Addition;
+import com.linlazy.mmorpglintingyang.module.common.addition.Addition;
 import com.linlazy.mmorpglintingyang.module.item.manager.entity.Item;
 import lombok.Data;
 import org.springframework.util.StringUtils;

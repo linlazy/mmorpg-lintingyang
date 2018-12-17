@@ -1,9 +1,9 @@
 package com.linlazy.mmorpglintingyang.module.item.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.linlazy.mmorpglintingyang.module.common.Result;
-import com.linlazy.mmorpglintingyang.module.reward.Reward;
-import com.linlazy.mmorpglintingyang.module.reward.RewardService;
+import com.linlazy.mmorpglintingyang.server.common.Result;
+import com.linlazy.mmorpglintingyang.module.common.reward.Reward;
+import com.linlazy.mmorpglintingyang.module.common.reward.RewardService;
 import com.linlazy.mmorpglintingyang.module.item.manager.ItemManager;
 import com.linlazy.mmorpglintingyang.module.item.manager.config.ItemConfigService;
 import com.linlazy.mmorpglintingyang.module.item.manager.dao.ItemDao;
