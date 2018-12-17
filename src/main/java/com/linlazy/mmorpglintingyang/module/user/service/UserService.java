@@ -98,4 +98,5 @@ public class UserService {
     public void updateUser(User user) {
         userManager.updateUser(user);
     }
+
 }

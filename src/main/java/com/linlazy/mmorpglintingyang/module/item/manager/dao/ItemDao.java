@@ -9,7 +9,7 @@ import java.util.Set;
 public interface ItemDao {
 
     @Select("select * from item where actorId = #{actorId},itemId = #{itemId}")
-    Item getItem(long actorId,int item);
+    Item getItem(long actorId,long itemId);
 
     @Update("update item set count = #{count} where actorId = #{actorId} and itemId = #{itemId}")
     void updateItem(Item item);
@@ -23,4 +23,6 @@ public interface ItemDao {
 
     @Insert("insert into item(actorId,itemId,count,ext)values(#{actorId},#{itemId},#{count},#{ext})")
     void addItem(Item item);
+
+    void deleteItem(Item item);
 }

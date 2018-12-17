@@ -28,6 +28,25 @@ public class User {
      * 状态
      */
     private int status;
+
+    /**
+     * 物理攻击下限
+     */
+    private long physicalAttackDown;
+    /**
+     * 物理攻击上限
+     */
+    private long physicalAttackUp;
+
+    /**
+     * 魔法攻击下限
+     */
+    private long magicAttackDown;
+    /**
+     * 魔法攻击上限
+     */
+    private long magicAttackUp;
+
     /**
      * 红
      */
@@ -67,5 +86,30 @@ public class User {
                 this.mp = 0;
             }
         }
+    }
+
+    public void modifyHP(int hp) {
+        synchronized (this){
+            this.hp += hp;
+            if(this.hp <0){
+                this.hp = 0;
+            }
+        }
+    }
+
+    public void modifyPhysicalAttack(int count) {
+
+    }
+
+    public void modifyMagicAttack(int count) {
+
+    }
+
+    public void modifyPhysicalDefense(int count) {
+
+    }
+
+    public void modifyMagicDefense(int count) {
+
     }
 }

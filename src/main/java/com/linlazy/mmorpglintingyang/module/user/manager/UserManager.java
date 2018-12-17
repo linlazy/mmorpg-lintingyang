@@ -1,6 +1,10 @@
 package com.linlazy.mmorpglintingyang.module.user.manager;
 
 import com.linlazy.mmorpglintingyang.module.common.GlobalConfigService;
+import com.linlazy.mmorpglintingyang.module.addition.Addition;
+import com.linlazy.mmorpglintingyang.module.addition.AdditionType;
+import com.linlazy.mmorpglintingyang.module.reward.Reward;
+import com.linlazy.mmorpglintingyang.module.reward.RewardID;
 import com.linlazy.mmorpglintingyang.module.user.manager.dao.UserDao;
 import com.linlazy.mmorpglintingyang.module.user.manager.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,4 +51,39 @@ public class UserManager {
     public void updateUser(User user) {
         userDao.updateUser(user);
     }
+
+    public void addOrConsumeReward(long actorId, Reward reward) {
+        User user = userDao.getUser(actorId);
+        switch (reward.getRewardId()){
+            case RewardID.HP:
+                user.modifyHP(reward.getCount());
+                break;
+            case RewardID.MP:
+                user.modifyMP(reward.getCount());
+                break;
+            default:
+                System.out.println("error not implement");
+        }
+    }
+
+    public void addOrRemoveAddition(long actorId, Addition addition) {
+        User user = userDao.getUser(actorId);
+        switch (addition.getAdditionType()){
+            case AdditionType.PhysicalAttack:
+                user.modifyPhysicalAttack(addition.getCount());
+                break;
+            case AdditionType.MagicAttack:
+                user.modifyMagicAttack(addition.getCount());
+                break;
+            case AdditionType.PhysicalDefense:
+                user.modifyPhysicalDefense(addition.getCount());
+                break;
+            case AdditionType.MagicDefense:
+                user.modifyMagicDefense(addition.getCount());
+                break;
+            default:
+                System.out.println("error not implement");
+        }
+    }
+
 }

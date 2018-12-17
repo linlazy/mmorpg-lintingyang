@@ -1,17 +1,20 @@
 package com.linlazy.mmorpglintingyang.module.item.manager;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.module.common.GlobalConfigService;
 import com.linlazy.mmorpglintingyang.module.item.manager.config.ItemConfigService;
 import com.linlazy.mmorpglintingyang.module.item.manager.dao.ItemDao;
 import com.linlazy.mmorpglintingyang.module.item.manager.entity.Item;
+import com.linlazy.mmorpglintingyang.module.item.manager.model.BackpackIndexCount;
+import com.linlazy.mmorpglintingyang.module.reward.Reward;
+import com.linlazy.mmorpglintingyang.module.reward.RewardConfgService;
 import com.linlazy.mmorpglintingyang.utils.ItemIdUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class ItemManager {
@@ -23,6 +26,8 @@ public class ItemManager {
     private GlobalConfigService globalConfigService;
     @Autowired
     private ItemConfigService itemConfigService;
+    @Autowired
+    private RewardConfgService rewardConfgService;
 
     /**
      * baseItemId与orderId映射
@@ -35,6 +40,15 @@ public class ItemManager {
      */
     private Map<Long,Item[]> actorIdBackPackMap = new HashMap<>();
 
+    /**
+     * 玩家策划配置ID（可叠加物品背包索引数量）映射
+     */
+    private Map<Long,Map<Integer,List<BackpackIndexCount>>> actorIdBackpackIndexCountMap = new HashMap<>();
+
+    /**
+     * 玩家策划配置ID（可叠加物品总数）映射
+     */
+    private Map<Long,Map<Integer,Integer>>  getActorIdBaseItemIdTotalMap = new HashMap<>();
 
 
     /**
@@ -69,12 +83,6 @@ public class ItemManager {
         return items;
     }
 
-    /**
-     * 使用不可叠加道具
-     */
-    public void useItem(long actorId,long itemId){
-
-    }
 
     /**
      * 获取背包信息
@@ -96,7 +104,7 @@ public class ItemManager {
      * @param num
      * @return
      */
-    public boolean isSuperPositionFullPackage(long actorId, int baseItemId, int num) {
+    private boolean isSuperPositionFullPackage(long actorId, int baseItemId, int num) {
         //计算玩家背包可放置该物品的总数量
         int totalNum = 0;
         Item[] backPack = getActorBackPack(actorId);
@@ -122,7 +130,7 @@ public class ItemManager {
      * @param baseItemId
      * @return
      */
-    public boolean isNonSuperPositionFullPackage(long actorId, int baseItemId){
+    private boolean isNonSuperPositionFullPackage(long actorId, int baseItemId){
         Item[] backPack = actorIdBackPackMap.get(actorId);
         for(int backPackIndex = 0; backPackIndex < backPack.length; backPackIndex++){
             if(backPack[backPackIndex] == null){
@@ -195,7 +203,7 @@ public class ItemManager {
      * @param actorId
      * @param baseItemId
      */
-    public void addNonSuperPositionItem(long actorId,int baseItemId) {
+    private void addNonSuperPositionItem(long actorId,int baseItemId) {
 
         //遍历数组，找空格子
         Item[] backPack = actorIdBackPackMap.get(actorId);
@@ -220,7 +228,7 @@ public class ItemManager {
      * @param baseItemId
      * @param num
      */
-    public void addSuperPositionItem(long actorId,int baseItemId,int num){
+    private void addSuperPositionItem(long actorId,int baseItemId,int num){
         JSONObject itemConfig = itemConfigService.getItemConfig(baseItemId);
 
         Item[] backPack = getActorBackPack(actorId);
@@ -285,6 +293,12 @@ public class ItemManager {
         }
     }
 
+    /**
+     * 增加道具
+     * @param actorId
+     * @param baseItemId
+     * @param num
+     */
     public void addItem(long actorId, int baseItemId, int num) {
         JSONObject itemConfig = itemConfigService.getItemConfig(baseItemId);
         //可叠加
@@ -294,5 +308,89 @@ public class ItemManager {
         }else {
            addNonSuperPositionItem(actorId,baseItemId);
         }
+    }
+
+
+    /**
+     * 获取可叠加物品总数
+     * @param actorId
+     * @param baseItemId
+     * @return
+     */
+    public int getSuperPositionTotal(long actorId, int baseItemId) {
+        return  getActorIdBaseItemIdTotalMap.get(actorId).get(baseItemId);
+    }
+
+    /**
+     * 获取策划配置ID奖励
+     * @param baseItemId
+     * @return
+     */
+    public List<Reward> getRewards(int baseItemId) {
+        List<Reward> rewardList = new ArrayList<>();
+
+        JSONObject itemConfig = itemConfigService.getItemConfig(baseItemId);
+        String rewards = itemConfig.getString("rewards");
+        JSONArray jsonArray = JSON.parseArray(rewards);
+        for(int i = 0 ; i < jsonArray.size(); i++){
+            Reward reward = new Reward();
+
+            JSONArray jsonArray1 = jsonArray.getJSONArray(i);
+            int rewardId = jsonArray1.getIntValue(0);
+            int rewardCount = jsonArray1.getIntValue(1);
+
+            reward.setRewardId(rewardId);
+            reward.setCount(rewardCount);
+            reward.setRewardDBType(rewardConfgService.getRewardDBType(rewardId));
+
+            rewardList.add(reward);
+        }
+
+        return rewardList;
+    }
+
+    /**
+     * 增加道具奖励
+     * @param actorId
+     * @param reward
+     */
+    public void addReward(long actorId, Reward reward) {
+        int baseItemId = reward.getRewardId();
+        addItem(actorId,baseItemId,reward.getCount());
+    }
+
+    /**
+     * 消耗背包道具
+     * @param actorId
+     * @param baseItemId
+     * @param consumeNum
+     */
+    public void consumeBackPackItem(long actorId,int baseItemId,int consumeNum) {
+        Item[] actorBackPack = getActorBackPack(actorId);
+        List<BackpackIndexCount> backpackIndexCounts = actorIdBackpackIndexCountMap.get(actorId).get(baseItemId);
+        for(BackpackIndexCount backpackIndexCount: backpackIndexCounts){
+            if(backpackIndexCount.getCount() > consumeNum){
+                actorBackPack[backpackIndexCount.getBackPackIndex()].setCount(backpackIndexCount.getCount() - consumeNum);
+                itemDao.updateItem(actorBackPack[backpackIndexCount.getBackPackIndex()]);
+                break;
+            }
+
+            //更新背包
+            consumeNum -= backpackIndexCount.getCount();
+            itemDao.deleteItem(actorBackPack[backpackIndexCount.getBackPackIndex()]);
+            actorBackPack[backpackIndexCount.getBackPackIndex()] = null;
+        }
+    }
+
+    public Item getItem(long actorId, long itemId) {
+        return itemDao.getItem(actorId,itemId);
+    }
+
+    public JSONObject getItemConfig(int baseItemId) {
+        return itemConfigService.getItemConfig(baseItemId);
+    }
+
+    public void updateItem(Item item) {
+        itemDao.updateItem(item);
     }
 }

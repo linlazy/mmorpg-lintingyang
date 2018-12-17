@@ -2,7 +2,8 @@ package com.linlazy.mmorpglintingyang.module.item.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.module.common.Result;
-import com.linlazy.mmorpglintingyang.module.common.RewardService;
+import com.linlazy.mmorpglintingyang.module.reward.Reward;
+import com.linlazy.mmorpglintingyang.module.reward.RewardService;
 import com.linlazy.mmorpglintingyang.module.item.manager.ItemManager;
 import com.linlazy.mmorpglintingyang.module.item.manager.config.ItemConfigService;
 import com.linlazy.mmorpglintingyang.module.item.manager.dao.ItemDao;
@@ -23,26 +24,29 @@ public class ItemService {
     private RewardService rewardService;
     @Autowired
     private ItemDao itemDao;
-
     @Autowired
     private ItemManager itemManager;
 
-    public Result<?> useItem(long actorId, int itemId,int consumeNum) {
-//        Item item = itemDao.getItem(actorId, itemId);
-//        if(item == null || item.getCount() < consumeNum){
-//            Result.valueOf("道具不足");
-//        }
-//
-//
-//        itemConfigService.getItemConfig(itemId);
-//        //发奖励
-////
-////        Reward reward = new Reward();
-////        rewardService.addReward(reward);
-//
-//        //存档
-//        item.setCount(item.getCount() -consumeNum);
-//        itemDao.updateItem(item);
+    /**
+     * 使用道具
+     * @param actorId
+     * @param itemId
+     * @param consumeNum
+     * @return
+     */
+    public Result<?> useItem(long actorId, long itemId,int consumeNum) {
+        int baseItemId = ItemIdUtil.getBaseItemId(itemId);
+
+        int count = itemManager.getSuperPositionTotal(actorId,baseItemId);
+        if(count <consumeNum){
+            return Result.valueOf("道具不足");
+        }
+        //扣除消耗
+        itemManager.consumeBackPackItem(actorId,ItemIdUtil.getBaseItemId(itemId),consumeNum);
+        //获取使用道具获得的奖励列表
+        List<Reward> rewardList = itemManager.getRewards(baseItemId);
+        //发奖励
+        rewardService.addRewardList(actorId,rewardList);
         return Result.success();
     }
 
@@ -59,13 +63,10 @@ public class ItemService {
             if(actorBackPack[backPackIndex] != null){
                 Item item = actorBackPack[backPackIndex];
                 long itemId = item.getItemId();
-                int baseItemId = ItemIdUtil.getBaseItemId(itemId);
-                int orderId = ItemIdUtil.getOrderId(itemId);
                 int count = item.getCount();
 
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("baseItemId",baseItemId);
-                jsonObject.put("orderId",orderId);
+                jsonObject.put("itemId",itemId);
                 jsonObject.put("count",count);
                 jsonObject.put("backPackIndex",backPackIndex);
 

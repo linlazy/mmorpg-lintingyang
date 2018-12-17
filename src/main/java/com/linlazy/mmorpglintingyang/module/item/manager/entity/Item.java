@@ -16,7 +16,7 @@ public class Item {
     /**
      * 扩展属性
      */
-    private String ext;
+    protected String ext;
 
     public Item(long actorId, long itemId, int count) {
         this.actorId = actorId;
@@ -30,4 +30,6 @@ public class Item {
         this.count = count;
         this.ext = ext;
     }
+
+
 }

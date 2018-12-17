@@ -3,24 +3,38 @@
     "itemId":1,
     "name": "一级红药",
     "desc": "恢复5点hp",
-    "resume": 5,
-    "rewardType": 1,
+    "rewards": "[[1,5]]",
     "superPosition": 50
   },
   {
     "itemId":2,
     "name": "一级蓝药",
     "desc": "恢复5点mp",
-    "resume": 5,
-    "rewardType": 2,
+    "rewards": "[[1,5]]",
     "superPosition": 50
   },
   {
     "itemId":3,
     "name": "修复水晶",
     "desc": "恢复5点耐久度",
-    "resume": 5,
-    "rewardType": 3,
+    "rewards": "[[1,5]]",
     "superPosition": 50
-  }
+  },
+  {
+    "itemId":4,
+    "equipType": "武器",
+    "name": "短剑",
+    "level": 5,
+    "profession": "战士",
+    "sex": "男",
+    "attackDown": 50,
+    "attackUp": 95
+  },  {
+  "itemId":5,
+  "equipType": "衣服",
+  "name": "轻型战甲",
+  "level": 2,
+  "profession": "战士",
+  "sex": "男"
+}
 ]

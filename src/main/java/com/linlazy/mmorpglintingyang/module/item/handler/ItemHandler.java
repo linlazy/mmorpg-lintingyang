@@ -18,9 +18,9 @@ public class ItemHandler {
     @Cmd("useItem")
     public Result<?> useItem(JSONObject jsonObject){
         long actorId = jsonObject.getLongValue("actorId");
-        int itemId = jsonObject.getIntValue("itemId");
-        Integer num = jsonObject.getInteger("num");
-        return itemService.useItem(actorId,itemId,num == null? 1 : num);
+        int backPackIndex = jsonObject.getIntValue("backPackIndex");
+        Integer num = jsonObject.getIntValue("num");
+        return itemService.useItem(actorId,backPackIndex,num == null? 1 : num);
     }
 
     /**
