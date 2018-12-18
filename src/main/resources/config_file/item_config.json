@@ -12,7 +12,7 @@
     "itemType": 2,
     "name": "一级蓝药",
     "desc": "恢复5点mp",
-    "rewards": "[[1,5]]",
+    "rewards": "[[2,5]]",
     "superPosition": 50
   },
   {

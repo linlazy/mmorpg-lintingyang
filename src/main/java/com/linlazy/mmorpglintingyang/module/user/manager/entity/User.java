@@ -79,21 +79,23 @@ public class User {
         return true;
     }
 
-    public void modifyMP(int mp) {
+    public int modifyMP(int mp) {
         synchronized (this){
             this.mp += mp;
             if(this.mp <0){
                 this.mp = 0;
             }
+            return this.mp;
         }
     }
 
-    public void modifyHP(int hp) {
+    public int modifyHP(int hp) {
         synchronized (this){
             this.hp += hp;
             if(this.hp <0){
                 this.hp = 0;
             }
+            return this.hp;
         }
     }
 

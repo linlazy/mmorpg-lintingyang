@@ -10,6 +10,8 @@ import com.linlazy.mmorpglintingyang.module.user.manager.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Component
@@ -52,18 +54,24 @@ public class UserManager {
         userDao.updateUser(user);
     }
 
-    public void addOrConsumeReward(long actorId, Reward reward) {
+    public Map<Integer,Integer> addOrConsumeReward(long actorId, Reward reward) {
+        Map<Integer,Integer> map = new HashMap<>();
+
         User user = userDao.getUser(actorId);
         switch (reward.getRewardId()){
             case RewardID.HP:
-                user.modifyHP(reward.getCount());
+                int hp = user.modifyHP(reward.getCount());
+                map.put(RewardID.HP,hp);
                 break;
             case RewardID.MP:
-                user.modifyMP(reward.getCount());
+                int mp = user.modifyMP(reward.getCount());
+                map.put(RewardID.MP,mp);
                 break;
             default:
                 System.out.println("error not implement");
         }
+        userDao.updateUser(user);
+        return map;
     }
 
     public void addOrRemoveAddition(long actorId, Addition addition) {

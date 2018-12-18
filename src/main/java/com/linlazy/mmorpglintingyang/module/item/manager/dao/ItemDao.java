@@ -23,6 +23,6 @@ public interface ItemDao {
 
     @Insert("insert into item(actorId,itemId,count,ext)values(#{actorId},#{itemId},#{count},#{ext})")
     void addItem(Item item);
-
+    @Delete("delete from item where actorId = #{actorId} and itemId = #{itemId}")
     void deleteItem(Item item);
 }
