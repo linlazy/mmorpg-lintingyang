@@ -1,10 +1,12 @@
 package com.linlazy.mmorpglintingyang.module.equipment.manager;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.linlazy.mmorpglintingyang.module.common.addition.Addition;
 import com.linlazy.mmorpglintingyang.module.common.addition.AdditionService;
 import com.linlazy.mmorpglintingyang.module.equipment.constants.EquipStatus;
-import com.linlazy.mmorpglintingyang.module.equipment.manager.entity.Equip;
+import com.linlazy.mmorpglintingyang.module.equipment.handler.dto.EquipDTO;
+import com.linlazy.mmorpglintingyang.module.equipment.manager.domain.Equip;
 import com.linlazy.mmorpglintingyang.module.item.constants.ItemType;
 import com.linlazy.mmorpglintingyang.module.item.manager.ItemManager;
 import com.linlazy.mmorpglintingyang.module.item.manager.entity.Item;
@@ -12,6 +14,7 @@ import com.linlazy.mmorpglintingyang.utils.ItemIdUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +81,7 @@ public class EquipManager {
         additionService.removeAddition(actorId,additions);
         //更新装备状态
         equip.setStatus(EquipStatus.UnEquiped);
-        itemManager.updateItem(equip.getItem());
+        itemManager.updateItem(equip.convertItem());
     }
 
 
@@ -110,6 +113,71 @@ public class EquipManager {
         additionService.addAddition(actorId,additions);
         //更新装备状态
         equipment.setStatus(EquipStatus.Equiped);
-        itemManager.updateItem(equipment.getItem());
+        itemManager.updateItem(equipment.convertItem());
+    }
+
+    /**
+     * 修复装备耐久度
+     * @param actorId 玩家ID
+     * @param equipId 装备ID
+     */
+    public Equip fixEquipment(long actorId, long equipId) {
+        int durability = this.getEquipConfigDurability(equipId);
+        Equip equipment = this.getEquipment(actorId, equipId);
+        equipment.setDurability(durability);
+        itemManager.updateItem(equipment.convertItem());
+        return equipment;
+    }
+
+
+    /**
+     * 获取装备耐久度
+     * @param itemId
+     * @return
+     */
+    public int getEquipConfigDurability(long itemId) {
+        JSONObject itemConfig = itemManager.getItemConfig(ItemIdUtil.getBaseItemId(itemId));
+        return  itemConfig.getIntValue("durability");
+    }
+
+
+    /**
+     * 消耗装备耐久度
+     */
+    public Equip consumeDurability(long actorId,long equipId){
+        JSONObject equipConfig = itemManager.getItemConfig(ItemIdUtil.getBaseItemId(equipId));
+        int consumeDurability = equipConfig.getIntValue("consumeDurability");
+
+        //获取装备
+        Equip equipment = this.getEquipment(actorId, equipId);
+        //扣除装备耐久度
+        equipment.modifyDurability(-consumeDurability);
+        itemManager.updateItem(equipment.convertItem());
+        return equipment;
+    }
+
+    /**
+     * 增加装备
+     * @param actorId
+     * @param baseItemId
+     * @return
+     */
+    public EquipDTO addEquip(long actorId, int baseItemId){
+        Equip equip = new Equip();
+        long newEquipId = itemManager.getNonSuperPositionNewItemId(actorId, baseItemId);
+        equip.setEquipId(newEquipId);
+        equip.setActorId(actorId);
+
+        JSONObject equipConfig = itemManager.getItemConfig(baseItemId);
+        int durability = equipConfig.getIntValue("durability");
+        equip.setDurability(durability);
+
+        String additions = equipConfig.getString("additions");
+        ArrayList<Addition> additionsList = JSONObject.parseObject(additions, new TypeReference<ArrayList<Addition>>() {
+        });
+        equip.setAdditionList(additionsList);
+
+        itemManager.addItem(equip.convertItem());
+        return new EquipDTO(equip);
     }
 }

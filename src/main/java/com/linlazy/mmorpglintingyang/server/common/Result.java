@@ -45,4 +45,8 @@ public class Result<T> {
         result.setCode(failCode);
         return result;
     }
+
+    public boolean isFail(){
+        return !code.equals(SUCCESS);
+    }
 }

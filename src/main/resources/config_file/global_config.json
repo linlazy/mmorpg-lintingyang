@@ -2,6 +2,6 @@
   {
     "MP_resumeInterval": 3,
     "HP_resumeInterval": 3,
-    "packageMaxLatticeNum": 5
+    "packageMaxLatticeNum": 56
   }
 ]

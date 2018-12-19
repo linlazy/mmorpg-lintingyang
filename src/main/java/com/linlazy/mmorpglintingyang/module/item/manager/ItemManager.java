@@ -3,6 +3,8 @@ package com.linlazy.mmorpglintingyang.module.item.manager;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.linlazy.mmorpglintingyang.module.backpack.BackPack;
+import com.linlazy.mmorpglintingyang.module.backpack.ItemDo;
 import com.linlazy.mmorpglintingyang.module.common.reward.Reward;
 import com.linlazy.mmorpglintingyang.module.common.reward.RewardConfgService;
 import com.linlazy.mmorpglintingyang.module.item.manager.config.ItemConfigService;
@@ -10,6 +12,7 @@ import com.linlazy.mmorpglintingyang.module.item.manager.dao.ItemDao;
 import com.linlazy.mmorpglintingyang.module.item.manager.domain.BackpackCell;
 import com.linlazy.mmorpglintingyang.module.item.manager.entity.Item;
 import com.linlazy.mmorpglintingyang.server.common.GlobalConfigService;
+import com.linlazy.mmorpglintingyang.server.common.Result;
 import com.linlazy.mmorpglintingyang.utils.ItemIdUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -36,7 +39,7 @@ public class ItemManager {
      * @param baseItemId
      * @return
      */
-    private int getBaseItemIdMaxOrderId(long actorId,int baseItemId){
+    public int getBaseItemIdMaxOrderId(long actorId,int baseItemId){
         Set<Item> itemSet = itemDao.getItemSet(actorId);
         return itemSet.stream()
                 .map(BackpackCell::new)
@@ -143,25 +146,38 @@ public class ItemManager {
      * @param actorId
      * @param baseItemId
      */
-    private  List<BackpackCell> addNonSuperPositionItem(long actorId, int baseItemId,int num) {
+    private Result<List<BackpackCell>> addNonSuperPositionItem(long actorId, int baseItemId, int num) {
         List<BackpackCell> result = new ArrayList<>();
 
         Set<BackpackCell> actorBackPack = getActorBackPack(actorId);
-        for(int backPackIndex = 0; backPackIndex < globalConfigService.getPackageMaxLatticeNum() && num > 0; backPackIndex++){
+
+        while(num >=0){
+            int spaceBackPackIndex = getSpaceBackPackIndex(actorId);
+
+            int baseItemIdMaxOrderId = getBaseItemIdMaxOrderId(actorId, baseItemId);
+            long newItemId =ItemIdUtil.getNewItemId(baseItemIdMaxOrderId + 1,spaceBackPackIndex,baseItemId);
+            Item item = new Item(actorId,newItemId,1);
+            BackpackCell backpackCell = new BackpackCell(item);
+            itemDao.addItem(backpackCell.convert2Item());
+
+            result.add(backpackCell);
+            num--;
+        }
+        return Result.success(result);
+    }
+
+    /**
+     * 获取背包空格子索引
+     * @return
+     */
+    public int getSpaceBackPackIndex(long actorId){
+        Set<BackpackCell> actorBackPack = getActorBackPack(actorId);
+        for(int backPackIndex = 0; backPackIndex < globalConfigService.getPackageMaxLatticeNum(); backPackIndex++){
             if(!actorBackPack.contains(new BackpackCell(backPackIndex))){
-
-                int baseItemIdMaxOrderId = getBaseItemIdMaxOrderId(actorId, baseItemId);
-                long newItemId =ItemIdUtil.getNewItemId(baseItemIdMaxOrderId + 1,backPackIndex,baseItemId);
-                Item item = new Item(actorId,newItemId,1);
-                BackpackCell backpackCell = new BackpackCell(item);
-                itemDao.addItem(backpackCell.convert2Item());
-
-                result.add(backpackCell);
-                num--;
+                return backPackIndex;
             }
         }
-
-        return result;
+        return -1;
     }
 
     /**
@@ -171,7 +187,7 @@ public class ItemManager {
      * @param num
      * @param superPosition
      */
-    private List<BackpackCell> addSuperPositionItem(long actorId, int baseItemId, int num, int superPosition){
+    private Result<List<BackpackCell>> addSuperPositionItem(long actorId, int baseItemId, int num, int superPosition){
         List<BackpackCell> result = new ArrayList<>();
 
         Set<BackpackCell> actorBackPack = getActorBackPack(actorId);
@@ -188,7 +204,7 @@ public class ItemManager {
                 itemDao.updateItem(backpackCell.convert2Item());
 
                 result.add(backpackCell);
-                return result;
+                return Result.success(result);
             }
 
             //格子未满，但超过叠加上限
@@ -212,7 +228,8 @@ public class ItemManager {
                     //存档
                     itemDao.addItem(backpackCell.convert2Item());
                     result.add(backpackCell);
-                    return result;
+                    return Result.success(result);
+
                 }
 
                 Item item = new Item(actorId, newItemId, superPosition);
@@ -223,7 +240,7 @@ public class ItemManager {
                 result.add(backpackCell);
             }
         }
-        return result;
+        return Result.success(result);
     }
 
     /**
@@ -252,9 +269,10 @@ public class ItemManager {
      * @param baseItemId
      * @param num
      */
-    public List<BackpackCell> addItem(long actorId, int baseItemId, int num) {
+    public Result<List<BackpackCell>> addItem(long actorId, int baseItemId, int num) {
 
         JSONObject itemConfig = itemConfigService.getItemConfig(baseItemId);
+
         if(itemConfig.getInteger("superPosition") != null){
             //可叠加
              return addSuperPositionItem(actorId,baseItemId,num,itemConfig.getIntValue("superPosition"));
@@ -362,5 +380,42 @@ public class ItemManager {
 
     public void updateItem(Item item) {
         itemDao.updateItem(item);
+    }
+
+    public void addItem(Item item) {
+        itemDao.addItem(item);
+    }
+
+    /**
+     * 获取非可叠加物品itemId
+     * @param actorId
+     * @param baseItemId
+     * @return
+     */
+    public long getNonSuperPositionNewItemId(long actorId, int baseItemId){
+        int spaceBackPackIndex = getSpaceBackPackIndex(actorId);
+        int baseItemIdMaxOrderId = getBaseItemIdMaxOrderId(actorId, baseItemId);
+        return ItemIdUtil.getNewItemId(baseItemIdMaxOrderId + 1, spaceBackPackIndex, baseItemId);
+    }
+
+
+
+
+    /**
+     * 整理背包
+     * @param actorId
+     */
+    public void arrange(long actorId){
+        BackPack backPack = new BackPack(actorId);
+        backPack.arrange();
+    }
+
+    /**
+     * 放置道具进背包
+     * @param actorId
+     */
+    public void pushBackPack(long actorId, ItemDo itemDo){
+        BackPack backPack = new BackPack(actorId);
+        backPack.pushBackPack(itemDo);
     }
 }

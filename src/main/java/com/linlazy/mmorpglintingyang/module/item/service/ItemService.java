@@ -1,5 +1,6 @@
 package com.linlazy.mmorpglintingyang.module.item.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.module.common.reward.Reward;
 import com.linlazy.mmorpglintingyang.module.common.reward.RewardService;
 import com.linlazy.mmorpglintingyang.module.item.handler.dto.BackpackCellDTO;
@@ -7,6 +8,7 @@ import com.linlazy.mmorpglintingyang.module.item.manager.ItemManager;
 import com.linlazy.mmorpglintingyang.module.item.manager.config.ItemConfigService;
 import com.linlazy.mmorpglintingyang.module.item.manager.dao.ItemDao;
 import com.linlazy.mmorpglintingyang.module.item.manager.domain.BackpackCell;
+import com.linlazy.mmorpglintingyang.module.item.service.additem.AbstractAddItem;
 import com.linlazy.mmorpglintingyang.server.common.Result;
 import com.linlazy.mmorpglintingyang.utils.ItemIdUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +35,12 @@ public class ItemService {
      * 使用道具
      * @param actorId
      * @param itemId
-     * @param consumeNum
+     * @param jsonObject
      * @return
      */
-    public Result<?> useItem(long actorId, long itemId,int consumeNum) {
+    public Result<?> useItem(long actorId,long itemId,JSONObject jsonObject) {
         int baseItemId = ItemIdUtil.getBaseItemId(itemId);
+        int consumeNum = jsonObject.getIntValue("num");
 
         long count = itemManager.getSuperPositionTotal(actorId, baseItemId);
         if(count <consumeNum){
@@ -85,11 +88,11 @@ public class ItemService {
             return Result.valueOf("背包已满");
         }
 
-        List<BackpackCell> backpackCells = itemManager.addItem(actorId, baseItemId, num);
-        List<BackpackCellDTO> backpackCellDTOList = backpackCells.stream()
-                .map(BackpackCellDTO::new)
-                .collect(Collectors.toList());
-        return Result.success(backpackCellDTOList);
+        JSONObject itemConfig = itemConfigService.getItemConfig(baseItemId);
+        int itemType =  itemConfig.getIntValue("itemType");
+        AbstractAddItem abstractAddItem = AbstractAddItem.getAbstractItemType(itemType);
+
+        return Result.success(abstractAddItem.addItem(actorId,baseItemId,num));
     }
 
     /**
@@ -105,5 +108,19 @@ public class ItemService {
                 .map(BackpackCellDTO::new)
                 .collect(Collectors.toList());
         return Result.success(backpackCellDTOList);
+    }
+
+
+    /**
+     * 消耗背包道具
+     * @param actorId
+     * @param itemId
+     * @param consumeNum
+     */
+    public Result<List<BackpackCellDTO>> consumeBackPackItem(long actorId,long itemId,int consumeNum) {
+        int baseItemId = ItemIdUtil.getBaseItemId(itemId);
+        return Result.success(itemManager.consumeBackPackItem(actorId,baseItemId,consumeNum).stream()
+                .map(BackpackCellDTO::new)
+                .collect(Collectors.toList()));
     }
 }

@@ -5,5 +5,6 @@ import lombok.Data;
 @Data
 public class Addition {
     private int additionType;
-    private int count;
+    private int down;
+    private int up;
 }

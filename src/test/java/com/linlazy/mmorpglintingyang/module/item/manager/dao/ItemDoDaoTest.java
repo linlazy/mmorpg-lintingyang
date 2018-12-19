@@ -11,7 +11,7 @@ import java.util.Set;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ItemDaoTest {
+public class ItemDoDaoTest {
 
     @Autowired
     private ItemDao itemDao;

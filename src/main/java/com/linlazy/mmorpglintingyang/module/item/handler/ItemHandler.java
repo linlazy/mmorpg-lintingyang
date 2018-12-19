@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-@Module("item")
+@Module("itemDo")
 public class ItemHandler {
 
     @Autowired
@@ -18,9 +18,7 @@ public class ItemHandler {
     @Cmd("useItem")
     public Result<?> useItem(JSONObject jsonObject){
         long actorId = jsonObject.getLongValue("actorId");
-        long itemId = jsonObject.getIntValue("itemId");
-        int num = jsonObject.getIntValue("num");
-        return itemService.useItem(actorId,itemId, num);
+        return itemService.useItem(actorId,jsonObject);
     }
 
     /**

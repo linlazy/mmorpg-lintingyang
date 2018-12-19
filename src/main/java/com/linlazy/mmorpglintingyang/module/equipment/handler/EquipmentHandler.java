@@ -61,4 +61,17 @@ public class EquipmentHandler {
         long equipId = jsonObject.getLongValue("itemId");
         return equipmentService.unEquip(actorId,equipId);
     }
+
+
+    /**
+     * 修理装备
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("fixEquipment")
+    public Result<?> fixEquipment(JSONObject jsonObject){
+        long actorId = jsonObject.getLongValue("actorId");
+        long equipId = jsonObject.getLongValue("equipId");
+        return equipmentService.fixEquipment(actorId,equipId);
+    }
 }

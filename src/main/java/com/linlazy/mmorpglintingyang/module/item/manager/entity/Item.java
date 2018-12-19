@@ -18,6 +18,9 @@ public class Item {
      */
     protected String ext;
 
+    public Item() {
+    }
+
     public Item(long actorId, long itemId, int count) {
         this.actorId = actorId;
         this.itemId = itemId;

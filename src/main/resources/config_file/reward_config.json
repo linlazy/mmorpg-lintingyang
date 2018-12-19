@@ -1,15 +1,15 @@
 [
   {
     "rewardName":"HP",
-    "rewardId": 1,
+    "rewardId": 60000,
     "rewardDBType": 1
   },  {
     "rewardName":"MP",
-    "rewardId": 2,
+    "rewardId": 60001,
     "rewardDBType": 1
   },  {
     "rewardName":"装备耐久度",
-    "rewardId": 3,
+    "rewardId": 60003,
     "rewardDBType": 2
   }
 ]
