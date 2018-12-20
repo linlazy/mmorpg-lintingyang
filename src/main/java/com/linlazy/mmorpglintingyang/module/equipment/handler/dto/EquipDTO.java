@@ -1,7 +1,7 @@
 package com.linlazy.mmorpglintingyang.module.equipment.handler.dto;
 
 import com.linlazy.mmorpglintingyang.module.common.addition.Addition;
-import com.linlazy.mmorpglintingyang.module.equipment.manager.domain.Equip;
+import com.linlazy.mmorpglintingyang.module.equipment.manager.domain.EquipDo;
 import lombok.Data;
 
 import java.util.List;
@@ -32,11 +32,11 @@ public class EquipDTO {
      */
     private int durability;
 
-    public EquipDTO(Equip equip) {
-        this.actorId = equip.getActorId();
-        this.equipId = equip.getEquipId();
-        this.durability = equip.getDurability();
-        this.additionList = equip.getAdditionList();
+    public EquipDTO(EquipDo equipDo) {
+        this.actorId = equipDo.getActorId();
+        this.equipId = equipDo.getEquipId();
+        this.durability = equipDo.getDurability();
+        this.additionList = equipDo.getAdditionList();
     }
 
 }

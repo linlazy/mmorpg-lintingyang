@@ -8,21 +8,21 @@ import java.util.Set;
 @Mapper
 public interface ItemDao {
 
-    @Select("select * from itemDo where actorId = #{actorId} and itemId = #{itemId}")
+    @Select("select * from item where actorId = #{actorId} and itemId = #{itemId}")
     Item getItem(long actorId,long itemId);
 
-    @Update("update itemDo set count = #{count},ext = #{ext} where actorId = #{actorId} and itemId = #{itemId}")
+    @Update("update item set count = #{count},ext = #{ext} where actorId = #{actorId} and itemId = #{itemId}")
     void updateItem(Item item);
 
 
-    @Select("select * from itemDo where actorId = #{actorId}")
+    @Select("select * from item where actorId = #{actorId}")
     Set<Item> getItemSet(long actorId);
 
-    @Delete("delete from itemDo where actorId = #{actorId}")
+    @Delete("delete from item where actorId = #{actorId}")
     void deleteActorItems(long actorId);
 
-    @Insert("insert into itemDo(actorId,itemId,count,ext)values(#{actorId},#{itemId},#{count},#{ext})")
+    @Insert("insert into item(actorId,itemId,count,ext)values(#{actorId},#{itemId},#{count},#{ext})")
     void addItem(Item item);
-    @Delete("delete from itemDo where actorId = #{actorId} and itemId = #{itemId}")
+    @Delete("delete from item where actorId = #{actorId} and itemId = #{itemId}")
     void deleteItem(Item item);
 }

@@ -1,12 +1,17 @@
 package com.linlazy.mmorpglintingyang.module.equipment.service;
 
-import com.linlazy.mmorpglintingyang.module.equipment.constants.EquipStatus;
+import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.module.equipment.handler.dto.EquipDTO;
 import com.linlazy.mmorpglintingyang.module.equipment.handler.dto.FixEquipmentDTO;
 import com.linlazy.mmorpglintingyang.module.equipment.manager.EquipManager;
-import com.linlazy.mmorpglintingyang.module.equipment.manager.domain.Equip;
+import com.linlazy.mmorpglintingyang.module.equipment.manager.domain.EquipDo;
+import com.linlazy.mmorpglintingyang.module.item.constants.ItemType;
+import com.linlazy.mmorpglintingyang.module.item.manager.config.ItemConfigService;
+import com.linlazy.mmorpglintingyang.module.item.manager.dao.ItemDao;
+import com.linlazy.mmorpglintingyang.module.item.manager.entity.Item;
 import com.linlazy.mmorpglintingyang.module.item.service.ItemService;
 import com.linlazy.mmorpglintingyang.server.common.Result;
+import com.linlazy.mmorpglintingyang.utils.ItemIdUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +20,10 @@ public class EquipmentService {
 
     @Autowired
     private EquipManager equipManager;
+    @Autowired
+    private ItemDao itemDao;
+    @Autowired
+    private ItemConfigService itemConfigService;
 
     @Autowired
     private ItemService itemService;
@@ -25,20 +34,18 @@ public class EquipmentService {
      * @return
      */
     public Result<?> equip(long actorId, long equipId){
-        //校验
-        Equip equipment = equipManager.getEquipment(actorId, equipId);
-        if(equipment == null || equipment.getStatus() == EquipStatus.Equiped){
+        JSONObject itemConfig = itemConfigService.getItemConfig(ItemIdUtil.getBaseItemId(equipId));
+        if(itemConfig.getIntValue("itemType") != ItemType.Equip){
             return Result.valueOf("参数有误");
         }
 
-        // 1 查找原穿着装备
-        Equip equip = equipManager.findOldDressedEquip(actorId,equipId);
-        // 2 卸下装备 ，更新旧装备状态 去掉装备加成
-        if(equip != null){
-            equipManager.unDressEquipment(actorId,equip);
+        Item item = itemDao.getItem(actorId, equipId);
+        EquipDo equipDo = new EquipDo(item);
+        if(equipDo == null || equipDo.isDressed()){
+            return Result.valueOf("参数有误");
         }
-        // 3 穿着装备 ，装备加成 更新新装备状态
-        equipManager.dressEquipment(actorId,equipment);
+
+        equipManager.dressEquipment(actorId,equipDo);
         return Result.success();
     }
 
@@ -50,11 +57,17 @@ public class EquipmentService {
      * @return
      */
     public Result<?> unEquip(long actorId, long equipId) {
-        Equip equipment = equipManager.getEquipment(actorId, equipId);
-        if(equipment == null || equipment.getStatus() == EquipStatus.UnEquiped){
+        JSONObject itemConfig = itemConfigService.getItemConfig(ItemIdUtil.getBaseItemId(equipId));
+        if(itemConfig.getIntValue("itemType") != ItemType.Equip){
             return Result.valueOf("参数有误");
         }
-        equipManager.unDressEquipment(actorId,equipment);
+
+        Item item = itemDao.getItem(actorId, equipId);
+        EquipDo equipDo = new EquipDo(item);
+        if(equipDo == null || !equipDo.isDressed()){
+            return Result.valueOf("参数有误");
+        }
+        equipManager.unDressEquipment(actorId,equipDo);
         return Result.success();
     }
 
@@ -66,23 +79,18 @@ public class EquipmentService {
      */
     public Result<FixEquipmentDTO> fixEquipment(long actorId, long equipId) {
         //校验
-        Equip equipment = equipManager.getEquipment(actorId, equipId);
-        if(equipment == null){
+        JSONObject itemConfig = itemConfigService.getItemConfig(ItemIdUtil.getBaseItemId(equipId));
+        if(itemConfig.getIntValue("itemType") != ItemType.Equip){
             return Result.valueOf("参数有误");
         }
 
+
         FixEquipmentDTO fixEquipmentDTO = new FixEquipmentDTO();
         //修复耐久度
-        Equip equip = equipManager.fixEquipment(actorId, equipId);
-        fixEquipmentDTO.setEquipDTO(new EquipDTO(equip));
+        EquipDo equipDo = equipManager.fixEquipment(actorId, equipId);
+        fixEquipmentDTO.setEquipDTO(new EquipDTO(equipDo));
 
         return Result.success(fixEquipmentDTO);
     }
 
-    /**
-     * 消耗装备耐久度
-     */
-    public Equip consumeDurability(long actorId,long equipId){
-        return equipManager.consumeDurability(actorId,equipId);
-    }
 }

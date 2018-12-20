@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-@Module("itemDo")
+@Module("item")
 public class ItemHandler {
 
     @Autowired
@@ -18,7 +18,8 @@ public class ItemHandler {
     @Cmd("useItem")
     public Result<?> useItem(JSONObject jsonObject){
         long actorId = jsonObject.getLongValue("actorId");
-        return itemService.useItem(actorId,jsonObject);
+        int itemId = jsonObject.getIntValue("itemId");
+        return itemService.useItem(actorId,itemId,jsonObject);
     }
 
     /**
@@ -37,12 +38,12 @@ public class ItemHandler {
      * @param jsonObject
      * @return
      */
-    @Cmd("addItem")
-    public Result<?> addItem(JSONObject jsonObject){
+    @Cmd("pushBackPack")
+    public Result<?> pushBackPack(JSONObject jsonObject){
         long actorId = jsonObject.getLongValue("actorId");
         int itemId = jsonObject.getIntValue("baseItemId");
         int num = jsonObject.getIntValue("num");
-        return itemService.addItem(actorId,itemId,num);
+        return itemService.pushBackPack(actorId,itemId,num);
     }
 
     /**

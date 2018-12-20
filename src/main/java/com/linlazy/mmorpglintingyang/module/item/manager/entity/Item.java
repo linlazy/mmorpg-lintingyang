@@ -7,7 +7,7 @@ public class Item {
 
     private long actorId;
     /**
-     * order(序号22位) + index(10位背包位置索引) + baseItemId(322位策划配置ID)
+     * order(序号24位) + index(12位背包位置索引) + baseItemId(28位策划配置ID)
      */
     private long itemId;
 

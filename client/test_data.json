@@ -9,15 +9,14 @@
   {"module":"scene","command":"getCurrentInfo","actorId":3},
   {"module":"scene","command":"move","actorId":3,"target_scene_id": 2},
 
-  {"module":"skill","command":"getAllSkillInfo","actorId":3},
-  {"module":"skill","command":"getSkillInfo","actorId":3},
-  {"module":"skill","command":"upgradeSkill","actorId":3,"skillId": 1},
-  {"module":"skill","command":"attackMonster","actorId":3,"skillId": 1,"monsterId": 1},
+  {"module":"fight","command":"attack","actorId":3,"skillId": 1,"monsterId": 1},
+  {"module":"fight","command":"dressSkill","actorId":3,"skillId": 1},
+  {"module":"fight","command":"gainSkill","actorId":3,"skillId": 1},
 
   {"module":"item","command":"getBackPackInfo","actorId":3},
   {"module":"item","command":"arrangeBackPack","actorId":3},
   {"module":"item","command":"useItem","actorId":3,"itemId": 1,"num": 1},
-  {"module":"item","command":"addItem","actorId":3,"baseItemId": 1,"num": 1},
+  {"module":"item","command":"pushBackPack","actorId":3,"baseItemId": 1,"num": 1},
 
   {"module":"equipment","command":"equip","actorId":3,"itemId": 1100585369604},
   {"module":"equipment","command":"unequip","actorId":3,"itemId": 4}

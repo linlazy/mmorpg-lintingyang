@@ -1,12 +1,11 @@
 package com.linlazy.mmorpglintingyang.module.user.manager;
 
-import com.linlazy.mmorpglintingyang.server.common.GlobalConfigService;
 import com.linlazy.mmorpglintingyang.module.common.addition.Addition;
-import com.linlazy.mmorpglintingyang.module.common.addition.AdditionType;
 import com.linlazy.mmorpglintingyang.module.common.reward.Reward;
 import com.linlazy.mmorpglintingyang.module.common.reward.RewardID;
 import com.linlazy.mmorpglintingyang.module.user.manager.dao.UserDao;
 import com.linlazy.mmorpglintingyang.module.user.manager.entity.User;
+import com.linlazy.mmorpglintingyang.server.common.GlobalConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -75,23 +74,23 @@ public class UserManager {
     }
 
     public void addOrRemoveAddition(long actorId, Addition addition) {
-        User user = userDao.getUser(actorId);
-        switch (addition.getAdditionType()){
-            case AdditionType.PhysicalAttack:
-                user.modifyPhysicalAttack(addition.getCount());
-                break;
-            case AdditionType.MagicAttack:
-                user.modifyMagicAttack(addition.getCount());
-                break;
-            case AdditionType.PhysicalDefense:
-                user.modifyPhysicalDefense(addition.getCount());
-                break;
-            case AdditionType.MagicDefense:
-                user.modifyMagicDefense(addition.getCount());
-                break;
-            default:
-                System.out.println("error not implement");
-        }
+//        User user = userDao.getUser(actorId);
+//        switch (addition.getAdditionType()){
+//            case AdditionType.PhysicalAttack:
+//                user.modifyPhysicalAttack(addition.getCount());
+//                break;
+//            case AdditionType.MagicAttack:
+//                user.modifyMagicAttack(addition.getCount());
+//                break;
+//            case AdditionType.PhysicalDefense:
+//                user.modifyPhysicalDefense(addition.getCount());
+//                break;
+//            case AdditionType.MagicDefense:
+//                user.modifyMagicDefense(addition.getCount());
+//                break;
+//            default:
+//                System.out.println("error not implement");
+//        }
     }
 
 }
