@@ -12,8 +12,9 @@ public class EquipDurability {
 
         if(equipDo.getDurability() + addDurability< equipDo.getDurabilityUp()){
             equipDo.setDurability(equipDo.getDurabilityUp());
+        }else {
+            equipDo.setDurability(equipDo.getDurabilityUp());
         }
-        equipDo.setBad(false);
         return equipDo;
     }
 
@@ -25,7 +26,6 @@ public class EquipDurability {
 
         if(equipDo.getDurability() < consumeDurability){
             equipDo.setDurability(0);
-            equipDo.setBad(true);
         }else {
             equipDo.setDurability(equipDo.getDurability() - consumeDurability);
         }

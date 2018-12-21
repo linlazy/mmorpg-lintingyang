@@ -9,7 +9,6 @@ import com.linlazy.mmorpglintingyang.module.item.constants.ItemType;
 import com.linlazy.mmorpglintingyang.module.item.manager.config.ItemConfigService;
 import com.linlazy.mmorpglintingyang.module.item.manager.dao.ItemDao;
 import com.linlazy.mmorpglintingyang.module.item.manager.entity.Item;
-import com.linlazy.mmorpglintingyang.module.item.service.ItemService;
 import com.linlazy.mmorpglintingyang.server.common.Result;
 import com.linlazy.mmorpglintingyang.utils.ItemIdUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +24,6 @@ public class EquipmentService {
     @Autowired
     private ItemConfigService itemConfigService;
 
-    @Autowired
-    private ItemService itemService;
     /**
      * 装备
      * @param actorId
@@ -45,7 +42,7 @@ public class EquipmentService {
             return Result.valueOf("参数有误");
         }
 
-        equipManager.dressEquipment(actorId,equipDo);
+        equipManager.dressEquipment(actorId,equipId);
         return Result.success();
     }
 
@@ -67,7 +64,7 @@ public class EquipmentService {
         if(equipDo == null || !equipDo.isDressed()){
             return Result.valueOf("参数有误");
         }
-        equipManager.unDressEquipment(actorId,equipDo);
+        equipManager.unDressEquipment(actorId,equipId);
         return Result.success();
     }
 

@@ -12,6 +12,11 @@ public class User {
     private long actorId;
 
     /**
+     * 玩家所在场景
+     */
+    private int sceneId;
+
+    /**
      * 令牌
      */
     private String token;

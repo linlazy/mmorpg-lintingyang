@@ -13,20 +13,8 @@ import org.springframework.stereotype.Component;
 @Module("scene")
 public class SceneHandler {
 
-
     @Autowired
     private SceneService sceneService;
-
-    /**
-     * 获取场景信息
-     * @param jsonObject
-     * @return
-     */
-    @Cmd("getAllConfigInfo")
-    public Result<?> info(JSONObject jsonObject){
-        return sceneService.getAllConfigInfo();
-    }
-
 
     /**
      * 移动场景
@@ -36,7 +24,7 @@ public class SceneHandler {
     @Cmd("move")
     public Result<?> move(JSONObject jsonObject){
         long actorId = jsonObject.getLong("actorId");
-        int targetSceneId = jsonObject.getIntValue("target_scene_id");
+        int targetSceneId = jsonObject.getIntValue("targetSceneId");
         return sceneService.moveTo(actorId,targetSceneId);
     }
 
@@ -52,14 +40,25 @@ public class SceneHandler {
     }
 
     /**
-     * 获取当前场景的实体信息
+     *  获取当前场景实体信息
      * @param jsonObject
      * @return
      */
-    @Cmd("getCurrentInfo")
-    public Result<?> getCurrentInfo(JSONObject jsonObject){
+    @Cmd("aoi")
+    public Result<?> aoi(JSONObject jsonObject){
         long actorId = jsonObject.getLong("actorId");
-        return Result.success(sceneService.getCurrentInfo(actorId));
+        return sceneService.aoi(actorId,jsonObject);
     }
 
+    /**
+     *  对话npc
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("talk")
+    public Result<?> talk(JSONObject jsonObject){
+        long actorId = jsonObject.getLong("actorId");
+        int npcId = jsonObject.getIntValue("npcId");
+        return sceneService.talk(actorId,npcId);
+    }
 }

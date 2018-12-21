@@ -37,11 +37,14 @@ public class UserManager {
         Long maxActorId = this.getMaxActorId();
         user.setActorId(maxActorId + 1);
         user.setToken(UUID.randomUUID().toString().substring(0,20));
+        int initScene = globalConfigService.getInitScene();
+        user.setSceneId(initScene);
         userDao.createUser(user);
     }
 
     public User getUser(long actorId) {
         User user = userDao.getUser(actorId);
+
         boolean isResume = user.resumeMP(globalConfigService.getMPResumeIntervalMills());
         if(isResume){
             userDao.updateUser(user);

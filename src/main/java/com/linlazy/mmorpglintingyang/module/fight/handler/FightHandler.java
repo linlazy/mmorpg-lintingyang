@@ -38,28 +38,4 @@ public class FightHandler {
          long actorId = jsonObject.getLongValue("actorId");
         return Result.success(fightService.attacked(actorId,sourceId,jsonObject));
     }
-
-    /**
-     * 穿戴技能
-     * @param jsonObject
-     * @return
-     */
-    @Cmd("dressSkill")
-    public Result<?> dressSkill(JSONObject jsonObject){
-        int skillId = jsonObject.getIntValue("skillId");
-        long actorId = jsonObject.getLongValue("actorId");
-        return fightService.dressSkill(actorId,skillId,jsonObject);
-    }
-
-    /**
-     * 获得技能
-     * @param jsonObject
-     * @return
-     */
-    @Cmd("gainSkill")
-    public Result<?> gainSkill(JSONObject jsonObject){
-        int skillId = jsonObject.getIntValue("skillId");
-        long actorId = jsonObject.getLongValue("actorId");
-        return fightService.gainSkill(actorId,skillId,jsonObject);
-    }
 }

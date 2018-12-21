@@ -1,17 +1,19 @@
 [
   {"module":"user","command":"register","username":"linlazy","password":123456,"confirm_password": 123456},
-  {"module":"user","command":"login","username":"lwhile","password":123456},
+  {"module":"user","command":"login","username":"linlazy","password":123456},
   {"module":"user","command":"logout","actorId":3},
   {"module":"user","command":"getInfo","actorId":3},
 
-  {"module":"scene","command":"enter","actorId":3},
-  {"module":"scene","command":"getAllConfigInfo","actorId":3},
-  {"module":"scene","command":"getCurrentInfo","actorId":3},
-  {"module":"scene","command":"move","actorId":3,"target_scene_id": 2},
+  {"module":"scene","command":"enter","actorId":7},
+  {"module":"scene","command":"aoi","actorId":7},
+  {"module":"scene","command":"aoi","actorId":7,"closeOwn": true},
+  {"module":"scene","command":"move","actorId":7,"targetSceneId": 2},
+  {"module":"scene","command":"talk","actorId":7,"npcId": 1},
 
   {"module":"fight","command":"attack","actorId":3,"skillId": 1,"monsterId": 1},
-  {"module":"fight","command":"dressSkill","actorId":3,"skillId": 1},
-  {"module":"fight","command":"gainSkill","actorId":3,"skillId": 1},
+
+  {"module":"skill","command":"dress","actorId":3,"skillId": 1},
+  {"module":"skill","command":"levelUp","actorId":3,"skillId": 1},
 
   {"module":"item","command":"getBackPackInfo","actorId":3},
   {"module":"item","command":"arrangeBackPack","actorId":3},

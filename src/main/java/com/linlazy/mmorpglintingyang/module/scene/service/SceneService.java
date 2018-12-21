@@ -2,20 +2,13 @@ package com.linlazy.mmorpglintingyang.module.scene.service;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.linlazy.mmorpglintingyang.server.common.Result;
-import com.linlazy.mmorpglintingyang.module.scene.constants.SceneCode;
-import com.linlazy.mmorpglintingyang.module.scene.constants.SceneEntityType;
+import com.linlazy.mmorpglintingyang.module.scene.domain.SceneDo;
+import com.linlazy.mmorpglintingyang.module.scene.dto.SceneDTO;
 import com.linlazy.mmorpglintingyang.module.scene.manager.SceneManager;
-import com.linlazy.mmorpglintingyang.module.scene.manager.entity.Scene;
-import com.linlazy.mmorpglintingyang.module.scene.manager.entity.model.SceneEntityInfo;
-import com.linlazy.mmorpglintingyang.module.user.service.UserService;
-import com.linlazy.mmorpglintingyang.utils.SessionManager;
+import com.linlazy.mmorpglintingyang.module.scene.validator.SceneValidator;
+import com.linlazy.mmorpglintingyang.server.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * 玩家场景服务类
@@ -27,7 +20,8 @@ public class SceneService {
     private SceneManager sceneManager;
 
     @Autowired
-    private UserService userService;
+    private SceneValidator sceneValidator;
+
 
     /**
      * 移动到某个场景
@@ -35,39 +29,18 @@ public class SceneService {
      */
     public Result<?> moveTo(long actorId,int targetSceneId){
 
-        // 1 target场景存在
-        if( !sceneManager.hasScene(targetSceneId)){
-            return Result.valueOf(SceneCode.SCENE_NOT_EXIST);
+        // 1 target场景是否存在
+        if( !sceneValidator.hasScene(targetSceneId)){
+            return Result.valueOf("场景不存在");
         }
 
-        // 2 玩家所处场景可以移动到target场景
-        if(!sceneManager.canMoveToTarget(actorId,targetSceneId)){
-            return Result.valueOf(SceneCode.SCENE_NOT_MOVE);
+        // 2 能否移动到target场景
+        if(!sceneValidator.canMoveToScene(actorId,targetSceneId)){
+            return Result.valueOf("无法移动到目标场景");
         }
 
-
-        SceneEntityInfo sceneEntityInfo = new SceneEntityInfo(actorId, SceneEntityType.Player);
-        Scene scene = sceneManager.getScene(actorId);
-        //原场景中移除实体
-        sceneManager.removeSceneEntityInfo(scene.getSceneId(),sceneEntityInfo);
-        //新场景中增加实体
-        sceneManager.addSceneEntityInfo(targetSceneId,sceneEntityInfo);
-
-        // 4 更新玩家所处场景为targetSceneId
-        scene.setSceneId(targetSceneId);
-        sceneManager.updateScene(scene);
-        return Result.success();
+        return sceneManager.moveToScene(actorId,targetSceneId);
     }
-
-    /**
-     * 获取所有场景信息
-     * @return
-     */
-    public Result<?> getAllConfigInfo() {
-        Collection<JSONObject> info = sceneManager.getAllConfigInfo();
-        return Result.success(info);
-    }
-
 
     /**
      * 进入场景
@@ -75,68 +48,24 @@ public class SceneService {
      * @return
      */
     public Result<?> enter(long actorId) {
-        //场景实体变化
-        Scene scene = sceneManager.getScene(actorId);
-        SceneEntityInfo sceneEntityInfo = new SceneEntityInfo(actorId, SceneEntityType.Player);
-        sceneManager.addSceneEntityInfo(scene.getSceneId(),sceneEntityInfo);
-        return Result.success();
+       return sceneManager.enter(actorId);
     }
 
-    /**
-     * 获取当前场景实体信息
-     * @param actorId
-     * @return
-     */
-    public Set<SceneEntityInfo> getCurrentInfo(long actorId) {
-        //获取当前场景怪物实体信息
-        Set<SceneEntityInfo> sceneEntityInfoSet = sceneManager.getCurrentMonsterInfo(actorId);
+    public Result<?> aoi(long actorId, JSONObject jsonObject) {
 
-        return sceneEntityInfoSet;
-    }
-
-
-    /**
-     * 更新场景实体
-     * @param sceneId
-     * @param sceneEntityInfo
-     */
-    public void updateSceneEntityInfo(int sceneId,SceneEntityInfo sceneEntityInfo){
-        sceneManager.updateSceneEntityInfo(sceneId,sceneEntityInfo);
-    }
-
-    public Scene getScene(long actorId) {
-        return sceneManager.getScene(actorId);
-    }
-
-    /**
-     * 获取怪物当前信息
-     * @param actorId
-     * @param monsterId
-     * @return
-     */
-    public SceneEntityInfo getMonsterInfo(long actorId,int monsterId) {
-
-        Set<SceneEntityInfo> currentInfo = sceneManager.getCurrentMonsterInfo(actorId);
-        for(SceneEntityInfo sceneEntityInfo: currentInfo){
-            if(sceneEntityInfo.getEntityId() == monsterId
-                    && sceneEntityInfo.getEntityType() == SceneEntityType.Monster){
-                return sceneEntityInfo;
-            }
+        SceneDo sceneDo = sceneManager.getSceneDoByActorId(actorId);
+        SceneDTO sceneDTO = new SceneDTO(sceneDo);
+        if(jsonObject.getBooleanValue("closeOwn")) {
+            sceneDTO.getActorIdSet().remove(actorId);
         }
-        return null;
+        return Result.success(sceneDTO);
     }
 
-
-    public Set<Long> getCurrentSceneOnlineActorIds(int sceneId) {
-        Set<Long> resultSet = new HashSet<>();
-
-        Set<Long> onlineActorIds = SessionManager.getOnlineActorIds();
-        for(Long actorId: onlineActorIds){
-            Scene scene = sceneManager.getScene(actorId);
-            if(scene != null && scene.getSceneId() == sceneId){
-                resultSet.add(actorId);
-            }
+    public Result<?> talk(long actorId,int npcId) {
+        // 1 当前场景是否存在
+        if( !sceneValidator.hasNPC(actorId,npcId)){
+            return Result.valueOf("当前场景不存在此npc");
         }
-        return resultSet;
+        return Result.success("和npc对话");
     }
 }

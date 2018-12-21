@@ -43,4 +43,12 @@ public class GlobalConfigService {
     public int getPackageMaxLatticeNum(){
         return jsonObject.getIntValue("packageMaxLatticeNum");
     }
+
+    /**
+     * 获取玩家初始场景
+     * @return
+     */
+    public int getInitScene(){
+        return jsonObject.getIntValue("initScene");
+    }
 }
