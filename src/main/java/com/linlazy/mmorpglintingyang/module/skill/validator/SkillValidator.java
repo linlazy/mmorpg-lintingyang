@@ -3,10 +3,12 @@ package com.linlazy.mmorpglintingyang.module.skill.validator;
 import com.linlazy.mmorpglintingyang.module.skill.dao.SkillDao;
 import com.linlazy.mmorpglintingyang.module.skill.entity.Skill;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * 技能校验器
  */
+@Component
 public class SkillValidator {
 
     @Autowired

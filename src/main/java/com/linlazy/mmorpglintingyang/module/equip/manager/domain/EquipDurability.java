@@ -1,4 +1,4 @@
-package com.linlazy.mmorpglintingyang.module.equipment.manager.domain;
+package com.linlazy.mmorpglintingyang.module.equip.manager.domain;
 
 /**
  * 装备耐久度领域类

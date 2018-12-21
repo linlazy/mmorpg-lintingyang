@@ -1,7 +1,7 @@
 package com.linlazy.mmorpglintingyang.module.fight.service.strategy;
 
 import com.alibaba.fastjson.JSONObject;
-import com.linlazy.mmorpglintingyang.module.equipment.manager.domain.DressedEquip;
+import com.linlazy.mmorpglintingyang.module.equip.manager.domain.DressedEquip;
 import com.linlazy.mmorpglintingyang.module.fight.domain.AttackedTargetSet;
 import com.linlazy.mmorpglintingyang.server.common.Result;
 import com.linlazy.mmorpglintingyang.utils.SpringContextUtil;

@@ -1,6 +1,6 @@
-package com.linlazy.mmorpglintingyang.module.equipment.handler.dto;
+package com.linlazy.mmorpglintingyang.module.equip.dto;
 
-import com.linlazy.mmorpglintingyang.module.equipment.manager.domain.EquipDo;
+import com.linlazy.mmorpglintingyang.module.equip.manager.domain.EquipDo;
 import lombok.Data;
 
 @Data

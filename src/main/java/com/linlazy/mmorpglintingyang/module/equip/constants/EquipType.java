@@ -1,4 +1,4 @@
-package com.linlazy.mmorpglintingyang.module.equipment.constants;
+package com.linlazy.mmorpglintingyang.module.equip.constants;
 
 public interface EquipType {
     /**

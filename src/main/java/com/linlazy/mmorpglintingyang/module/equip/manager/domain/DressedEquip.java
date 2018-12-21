@@ -1,6 +1,6 @@
-package com.linlazy.mmorpglintingyang.module.equipment.manager.domain;
+package com.linlazy.mmorpglintingyang.module.equip.manager.domain;
 
-import com.linlazy.mmorpglintingyang.module.equipment.constants.EquipType;
+import com.linlazy.mmorpglintingyang.module.equip.constants.EquipType;
 import com.linlazy.mmorpglintingyang.module.item.manager.dao.ItemDao;
 import com.linlazy.mmorpglintingyang.utils.RandomUtils;
 import lombok.Data;

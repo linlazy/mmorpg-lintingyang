@@ -21,5 +21,7 @@
   {"module":"item","command":"pushBackPack","actorId":3,"baseItemId": 1,"num": 1},
 
   {"module":"equipment","command":"equip","actorId":3,"itemId": 1100585369604},
-  {"module":"equipment","command":"unequip","actorId":3,"itemId": 4}
+  {"module":"equipment","command":"unequip","actorId":3,"itemId": 4},
+
+  {"module":"chat","command":"send","actorId":3,"chatType": 1,"content": "聊天内容"}
 ]

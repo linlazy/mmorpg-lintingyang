@@ -1,8 +1,8 @@
-package com.linlazy.mmorpglintingyang.module.equipment.manager;
+package com.linlazy.mmorpglintingyang.module.equip.manager;
 
-import com.linlazy.mmorpglintingyang.module.equipment.manager.domain.EquipDo;
-import com.linlazy.mmorpglintingyang.module.equipment.manager.domain.EquipDurability;
-import com.linlazy.mmorpglintingyang.module.equipment.manager.domain.EquipUpgrade;
+import com.linlazy.mmorpglintingyang.module.equip.manager.domain.EquipDo;
+import com.linlazy.mmorpglintingyang.module.equip.manager.domain.EquipDurability;
+import com.linlazy.mmorpglintingyang.module.equip.manager.domain.EquipUpgrade;
 import com.linlazy.mmorpglintingyang.module.item.manager.dao.ItemDao;
 import com.linlazy.mmorpglintingyang.module.item.manager.entity.Item;
 import org.springframework.beans.factory.annotation.Autowired;

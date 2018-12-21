@@ -1,10 +1,10 @@
-package com.linlazy.mmorpglintingyang.module.equipment.service;
+package com.linlazy.mmorpglintingyang.module.equip.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.linlazy.mmorpglintingyang.module.equipment.handler.dto.EquipDTO;
-import com.linlazy.mmorpglintingyang.module.equipment.handler.dto.FixEquipmentDTO;
-import com.linlazy.mmorpglintingyang.module.equipment.manager.EquipManager;
-import com.linlazy.mmorpglintingyang.module.equipment.manager.domain.EquipDo;
+import com.linlazy.mmorpglintingyang.module.equip.dto.EquipDTO;
+import com.linlazy.mmorpglintingyang.module.equip.dto.FixEquipmentDTO;
+import com.linlazy.mmorpglintingyang.module.equip.manager.EquipManager;
+import com.linlazy.mmorpglintingyang.module.equip.manager.domain.EquipDo;
 import com.linlazy.mmorpglintingyang.module.item.constants.ItemType;
 import com.linlazy.mmorpglintingyang.module.item.manager.config.ItemConfigService;
 import com.linlazy.mmorpglintingyang.module.item.manager.dao.ItemDao;

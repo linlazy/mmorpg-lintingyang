@@ -1,4 +1,4 @@
-package com.linlazy.mmorpglintingyang.module.equipment.manager.domain;
+package com.linlazy.mmorpglintingyang.module.equip.manager.domain;
 
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.module.item.manager.config.ItemConfigService;

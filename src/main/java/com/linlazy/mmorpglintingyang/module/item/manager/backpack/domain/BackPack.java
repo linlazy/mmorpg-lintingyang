@@ -17,7 +17,7 @@ public class BackPack {
 
     private GlobalConfigService globalConfigService = SpringContextUtil.getApplicationContext().getBean(GlobalConfigService.class);
 
-    private ItemDao itemDao = SpringContextUtil.getApplicationContext().getBean(ItemDao.class);;
+    private ItemDao itemDao = SpringContextUtil.getApplicationContext().getBean(ItemDao.class);
 
     /**
      * 玩家

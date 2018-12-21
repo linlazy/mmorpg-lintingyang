@@ -1,14 +1,14 @@
-package com.linlazy.mmorpglintingyang.module.equipment.handler;
+package com.linlazy.mmorpglintingyang.module.equip.handler;
 
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.server.common.Result;
-import com.linlazy.mmorpglintingyang.module.equipment.service.EquipmentService;
+import com.linlazy.mmorpglintingyang.module.equip.service.EquipmentService;
 import com.linlazy.mmorpglintingyang.server.route.Cmd;
 import com.linlazy.mmorpglintingyang.server.route.Module;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Module("equipment")
+@Module("equip")
 @Component
 public class EquipmentHandler {
 

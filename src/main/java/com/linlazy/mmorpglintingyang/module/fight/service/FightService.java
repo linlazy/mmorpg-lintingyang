@@ -22,9 +22,11 @@ public class FightService {
 
         int skill = jsonObject.getIntValue("skillId");
         if(skill == 0){
+            //普通攻击
             AttackStrategy attackStrategy = AttackStrategy.newAttackStrategyCommon();
             return attackStrategy.attack(actorId,jsonObject);
         }else {
+            //技能攻击
             AttackStrategy attackStrategy = AttackStrategy.newAttackStrategySkill();
             return attackStrategy.attack(actorId,jsonObject);
         }
