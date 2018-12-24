@@ -9,5 +9,9 @@ public enum EventType {
     /**
      * 玩家攻击伤害
      */
-    ATTACK
+    ATTACK,
+    /**
+     * 登录
+     */
+    LOGIN
 }

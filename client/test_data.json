@@ -1,7 +1,7 @@
 [
   {"module":"user","command":"register","username":"linlazy","password":123456,"confirm_password": 123456},
   {"module":"user","command":"login","username":"linlazy","password":123456},
-  {"module":"user","command":"logout","actorId":3},
+  {"module":"user","command":"logout","actorId":8},
   {"module":"user","command":"getInfo","actorId":3},
 
   {"module":"scene","command":"enter","actorId":7},
@@ -23,5 +23,5 @@
   {"module":"equipment","command":"equip","actorId":3,"itemId": 1100585369604},
   {"module":"equipment","command":"unequip","actorId":3,"itemId": 4},
 
-  {"module":"chat","command":"send","actorId":3,"chatType": 1,"content": "聊天内容"}
+  {"module":"chat","command":"send","actorId":7,"targetId":8,"chatType": 1,"content": "聊天内容"}
 ]

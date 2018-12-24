@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ChatService {
     public Result<?> sendChat(long actorId, JSONObject jsonObject) {
-        int chatType = 1;
+        int chatType = jsonObject.getIntValue("chatType");
         ChatChannel chatChannel = ChatChannel.getChatChannel(chatType);
         return chatChannel.sendChat(actorId,jsonObject);
     }

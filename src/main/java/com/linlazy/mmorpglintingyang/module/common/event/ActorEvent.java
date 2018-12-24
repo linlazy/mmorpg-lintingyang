@@ -4,9 +4,12 @@ import lombok.Data;
 
 @Data
 public class ActorEvent<T> {
-    private EventType eventType;
-
     private long actorId;
-
+    private EventType eventType;
     private T data;
+
+    public ActorEvent(long actorId, EventType eventType) {
+        this.actorId = actorId;
+        this.eventType = eventType;
+    }
 }

@@ -1,6 +1,9 @@
 package com.linlazy.mmorpglintingyang.module.user.service;
 
 import com.linlazy.mmorpglintingyang.module.common.addition.Addition;
+import com.linlazy.mmorpglintingyang.module.common.event.ActorEvent;
+import com.linlazy.mmorpglintingyang.module.common.event.EventBusHolder;
+import com.linlazy.mmorpglintingyang.module.common.event.EventType;
 import com.linlazy.mmorpglintingyang.server.common.GlobalConfigService;
 import com.linlazy.mmorpglintingyang.server.common.Result;
 import com.linlazy.mmorpglintingyang.module.user.manager.UserManager;
@@ -54,6 +57,8 @@ public class UserService {
 
 
         SessionManager.bind(user.getActorId(),channel);
+
+        EventBusHolder.post(new ActorEvent<>(user.getActorId(), EventType.LOGIN));
         return Result.success();
     }
 
