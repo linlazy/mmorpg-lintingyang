@@ -1,12 +1,24 @@
 package com.linlazy.mmorpglintingyang.module.copy.domain;
 
 import com.linlazy.mmorpglintingyang.module.common.reward.Reward;
+import lombok.Data;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+@Data
 public class CopyDo {
+
+    /**
+     * 副本ID标识
+     */
+    private int copyId;
+
+
+    /**
+     * 场景ID
+     */
+    private int sceneId;
 
     /**
      * 是否结束

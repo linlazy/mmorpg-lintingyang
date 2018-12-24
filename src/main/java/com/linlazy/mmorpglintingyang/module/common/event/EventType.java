@@ -20,5 +20,14 @@ public enum EventType {
     /**
      * 退出副本
      */
-    QUIT_COPY
+    QUIT_COPY,
+
+    /**
+     * 副本挑战成功
+     */
+    COPY_SUCCESS,
+    /**
+     * 副本挑战失败
+     */
+    COPY_FAIL
 }
