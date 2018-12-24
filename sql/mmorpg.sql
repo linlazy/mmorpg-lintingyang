@@ -10,10 +10,37 @@ Target Server Type    : MYSQL
 Target Server Version : 50724
 File Encoding         : 65001
 
-Date: 2018-12-14 18:39:39
+Date: 2018-12-24 16:59:08
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for chat
+-- ----------------------------
+DROP TABLE IF EXISTS `chat`;
+CREATE TABLE `chat` (
+  `chatId` bigint(20) NOT NULL,
+  `sourceId` bigint(20) DEFAULT NULL,
+  `receiver` bigint(20) DEFAULT NULL,
+  `content` varchar(255) DEFAULT NULL,
+  `chatType` int(11) DEFAULT NULL,
+  PRIMARY KEY (`chatId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for email
+-- ----------------------------
+DROP TABLE IF EXISTS `email`;
+CREATE TABLE `email` (
+  `emailId` bigint(64) NOT NULL,
+  `type` int(11) DEFAULT NULL,
+  `senderId` bigint(64) DEFAULT NULL,
+  `sendTime` bigint(20) DEFAULT NULL,
+  `receiverId` bigint(64) DEFAULT NULL,
+  `expireTime` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`emailId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Table structure for item
@@ -28,33 +55,16 @@ CREATE TABLE `item` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
--- Table structure for scene
--- ----------------------------
-DROP TABLE IF EXISTS `scene`;
-CREATE TABLE `scene` (
-  `actorId` bigint(20) NOT NULL,
-  `sceneId` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`actorId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- ----------------------------
--- Table structure for scene_entity
--- ----------------------------
-DROP TABLE IF EXISTS `scene_entity`;
-CREATE TABLE `scene_entity` (
-  `sceneId` int(11) NOT NULL,
-  `entities` text,
-  PRIMARY KEY (`sceneId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- ----------------------------
 -- Table structure for skill
 -- ----------------------------
 DROP TABLE IF EXISTS `skill`;
 CREATE TABLE `skill` (
   `actorId` bigint(20) NOT NULL,
-  `skills` text,
-  PRIMARY KEY (`actorId`)
+  `skillId` int(11) NOT NULL,
+  `level` int(11) NOT NULL,
+  `dressed` bit(1) NOT NULL,
+  `nextCDResumeTimes` bigint(20) NOT NULL,
+  PRIMARY KEY (`actorId`,`skillId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
@@ -66,10 +76,11 @@ CREATE TABLE `user` (
   `username` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   `token` varchar(255) DEFAULT NULL,
+  `sceneId` int(11) DEFAULT NULL,
   `level` int(11) DEFAULT NULL,
   `mp` int(11) DEFAULT NULL,
   `hp` int(11) DEFAULT NULL,
   `MPNextResumeTime` bigint(13) DEFAULT NULL,
   `HPNextResumeTime` bigint(13) DEFAULT NULL,
   PRIMARY KEY (`actorId`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;

@@ -77,4 +77,13 @@ public class SceneConfigService {
         return false;
     }
 
+
+    /**
+     * 获取副本配置
+     * @param sceneId
+     * @return
+     */
+    public JSONObject getCopyConfig(int sceneId) {
+        return map.get(sceneId);
+    }
 }

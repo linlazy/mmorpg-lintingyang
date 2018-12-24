@@ -1,1 +1,16 @@
-[{"sceneId":1,"name":"起始之地","neighborSet":[2]},{"sceneId":2,"name":"村子","neighborSet":[1,3]},{"sceneId":3,"name":"野外","neighborSet":[2]}]
+[
+  {"sceneId":1,"name":"起始之地","neighborSet":[2]},
+  {"sceneId":2,"name":"村子","neighborSet":[1,3,4]},
+  {"sceneId":3,"name":"野外","neighborSet":[2]},
+  {"sceneId":4,
+    "name":"黄巾前锋营",
+    "neighborSet":[2],
+    "times": 300,
+    "rewards": [[1,50],[2,50]],
+    "copy": {
+        "bossId": 1,
+        "bossName": "何曼",
+        "attack": 50
+      }
+  }
+]

@@ -1,5 +1,6 @@
 package com.linlazy.mmorpglintingyang.server.common;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Component;
 
@@ -50,5 +51,21 @@ public class GlobalConfigService {
      */
     public int getInitScene(){
         return jsonObject.getIntValue("initScene");
+    }
+
+
+    /**
+     * 是否为副本场景
+     * @param sceneId
+     * @return
+     */
+    public boolean isCopy(int sceneId) {
+        JSONArray copySceneIds = jsonObject.getJSONArray("copySceneIds");
+        for(int i=0 ; i < copySceneIds.size(); i++){
+            if(copySceneIds.getIntValue(i) == sceneId){
+                return true;
+            }
+        }
+        return false;
     }
 }

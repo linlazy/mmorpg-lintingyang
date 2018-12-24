@@ -12,4 +12,10 @@ public class ActorEvent<T> {
         this.actorId = actorId;
         this.eventType = eventType;
     }
+
+    public ActorEvent(long actorId, EventType eventType,T data) {
+        this.actorId = actorId;
+        this.eventType = eventType;
+        this.data = data;
+    }
 }

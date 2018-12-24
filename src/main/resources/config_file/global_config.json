@@ -3,6 +3,7 @@
     "MP_resumeInterval": 3,
     "HP_resumeInterval": 3,
     "packageMaxLatticeNum": 56,
-    "initScene": 1
+    "initScene": 1,
+    "copySceneIds": [4]
   }
 ]

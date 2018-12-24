@@ -1,6 +1,9 @@
 package com.linlazy.mmorpglintingyang.module.common.event;
 
 public enum EventType {
+    /**
+     * 进入场景
+     */
     SCENE_ENTER,
     /**
      * 玩家受到伤害
@@ -13,5 +16,9 @@ public enum EventType {
     /**
      * 登录
      */
-    LOGIN
+    LOGIN,
+    /**
+     * 退出副本
+     */
+    QUIT_COPY
 }
