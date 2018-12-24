@@ -1,10 +1,9 @@
 package com.linlazy.mmorpglintingyang.module.email.service;
 
-import com.linlazy.mmorpglintingyang.module.common.reward.Reward;
+import com.alibaba.fastjson.JSONObject;
+import com.linlazy.mmorpglintingyang.module.email.service.template.EmailTemplate;
 import com.linlazy.mmorpglintingyang.server.common.Result;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class EmailService {
@@ -16,14 +15,13 @@ public class EmailService {
      *
      * 发送邮件
      * @param actorId
-     * @param targetId
+     * @param jsonObject
      * @return
      */
-    public Result<?> sendEmail(long actorId, long targetId) {
-
-        //获取奖励
-
-        return Result.success();
+    public Result<?> sendEmail(long actorId,JSONObject jsonObject) {
+        int emailTemplateId = jsonObject.getIntValue("emailTemplateId");
+        EmailTemplate emailTemplate = EmailTemplate.getEmailTemplate(emailTemplateId);
+        return emailTemplate.sendEmail(actorId,jsonObject);
     }
 
     /**

@@ -7,7 +7,7 @@ import com.linlazy.mmorpglintingyang.module.item.manager.backpack.domain.BackPac
 import com.linlazy.mmorpglintingyang.module.item.manager.backpack.domain.ItemDo;
 import com.linlazy.mmorpglintingyang.module.item.manager.backpack.response.BackPackInfo;
 import com.linlazy.mmorpglintingyang.module.common.reward.Reward;
-import com.linlazy.mmorpglintingyang.module.common.reward.RewardConfgService;
+import com.linlazy.mmorpglintingyang.module.common.reward.RewardConfigService;
 import com.linlazy.mmorpglintingyang.module.item.manager.config.ItemConfigService;
 import com.linlazy.mmorpglintingyang.module.item.manager.dao.ItemDao;
 import com.linlazy.mmorpglintingyang.module.item.manager.entity.Item;
@@ -31,7 +31,7 @@ public class ItemManager {
     @Autowired
     private ItemConfigService itemConfigService;
     @Autowired
-    private RewardConfgService rewardConfgService;
+    private RewardConfigService rewardConfigService;
 
     /**
      * 获取背包信息
@@ -115,7 +115,7 @@ public class ItemManager {
 
             reward.setRewardId(rewardId);
             reward.setCount(rewardCount);
-            reward.setRewardDBType(rewardConfgService.getRewardDBType(rewardId));
+            reward.setRewardDBType(rewardConfigService.getRewardDBType(rewardId));
 
             rewardList.add(reward);
         }

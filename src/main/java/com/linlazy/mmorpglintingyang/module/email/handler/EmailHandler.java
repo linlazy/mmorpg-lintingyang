@@ -24,8 +24,7 @@ public class EmailHandler {
     @Cmd("send")
     public Result<?> send(JSONObject jsonObject){
         long actorId = jsonObject.getLongValue("actorId");
-        long targetId = jsonObject.getLongValue("targetId");
-        return emailService.sendEmail(actorId,targetId);
+        return emailService.sendEmail(actorId,jsonObject);
     }
     /**
      * 读取邮件

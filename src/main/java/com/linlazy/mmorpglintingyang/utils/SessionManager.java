@@ -74,4 +74,8 @@ public class SessionManager {
     public static Set<Long> getOnlineActorIds() {
         return actorIdChannelMap.keySet();
     }
+
+    public static Set<Channel> getOnlineChannelSet(){
+        return channelActorIdMap.keySet();
+    }
 }

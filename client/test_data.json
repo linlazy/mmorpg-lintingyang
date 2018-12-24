@@ -23,5 +23,14 @@
   {"module":"equipment","command":"equip","actorId":3,"itemId": 1100585369604},
   {"module":"equipment","command":"unequip","actorId":3,"itemId": 4},
 
-  {"module":"chat","command":"send","actorId":7,"targetId":8,"chatType": 1,"content": "聊天内容"}
+  {"module":"chat","command":"send","actorId":7,"targetId":8,"chatType": 1,"content": "聊天内容"},
+
+  {"module":"email","command":"send","actorId":7,"emailTemplateId": 1},
+
+  {"module":"team","command":"inviteJoin","actorId":7,"targetId": 8},
+  {"module":"team","command":"rejectJoin","actorId":7,"targetId": 8},
+  {"module":"team","command":"acceptJoin","actorId":7,"targetId": 8},
+  {"module":"team","command":"appointCaptain","actorId":7,"targetId": 8},
+  {"module":"team","command":"leave","actorId":7},
+  {"module":"team","command":"shotOff","actorId":7,"targetId": 8}
 ]

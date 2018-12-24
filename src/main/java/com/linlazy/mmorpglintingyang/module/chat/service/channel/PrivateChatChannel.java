@@ -53,6 +53,9 @@ public class PrivateChatChannel extends ChatChannel{
                         .collect(Collectors.toSet());
                 ChatPushHelper.pushChatContent(actorEvent.getActorId(),chatDTOS);
             }
+
+            //推送后删除
+            chatDao.deleteChatSet(actorEvent.getActorId(),ChatType.PRIVATE);
         }
     }
 
