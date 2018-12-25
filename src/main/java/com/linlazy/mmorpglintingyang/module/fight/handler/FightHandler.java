@@ -21,7 +21,7 @@ public class FightHandler {
      * @param jsonObject
      * @return
      */
-    @Cmd("attack")
+    @Cmd("attackPlayerDo")
     public Result<?> attack(JSONObject jsonObject){
         long actorId = jsonObject.getLongValue("actorId");
         return fightService.attack(actorId,jsonObject);
@@ -32,7 +32,7 @@ public class FightHandler {
      * @param jsonObject
      * @return
      */
-    @Cmd("attacked")
+    @Cmd("attackedFromBoss")
     public Result<?> attacked(JSONObject jsonObject){
          int sourceId = jsonObject.getIntValue("sourceId");
          long actorId = jsonObject.getLongValue("actorId");

@@ -3,7 +3,6 @@ package com.linlazy.mmorpglintingyang.module.copy.service;
 import com.google.common.eventbus.Subscribe;
 import com.linlazy.mmorpglintingyang.module.common.event.ActorEvent;
 import com.linlazy.mmorpglintingyang.module.common.event.EventBusHolder;
-import com.linlazy.mmorpglintingyang.module.copy.domain.CopyDo;
 import com.linlazy.mmorpglintingyang.module.copy.manager.CopyManager;
 import com.linlazy.mmorpglintingyang.server.common.GlobalConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,47 +30,36 @@ public class CopyService {
     public void listenEvent(ActorEvent actorEvent){
 
         switch (actorEvent.getEventType()){
-            case SCENE_ENTER://进入场景副本
-                int sceneId = (int) actorEvent.getData();
-                if(globalConfigService.isCopy(sceneId)){
-                    handleEnterScene(actorEvent,sceneId);
-                }
+            case ENTER_COPY_SCENE://进入场景副本
+                handleCopyEnterScene(actorEvent);
                 break;
-            case ATTACK:
-                sceneId = (int) actorEvent.getData();
-                if(globalConfigService.isCopy(sceneId)){
-                    handleAttack(actorEvent,sceneId);
-                }
+            case COPY_ACTOR_DEAD://副本玩家死亡
+                handleCopyActorDead(actorEvent);
                 break;
-            case ATTACKED:
-                sceneId = (int) actorEvent.getData();
-                if(globalConfigService.isCopy(sceneId)){
-                    handleAttacked(actorEvent,sceneId);
-                }
+            case COPY_BOSS_DEAD://副本BOSS死亡
+                handleCopyBOSSDead(actorEvent);
                 break;
-            case QUIT_COPY:
+            case QUIT_COPY://退出副本
                 handleQuitCopy(actorEvent);
                 break;
-            case COPY_SUCCESS:
+            case COPY_SUCCESS://挑战成功
                 handleCopySuccess(actorEvent);
                 break;
-            case COPY_FAIL:
+            case COPY_FAIL://挑战失败
                 handleCopyFail(actorEvent);
                 break;
         }
 
     }
 
-    private void handleAttacked(ActorEvent actorEvent, int sceneId) {
-
-    }
-
-    private void handleAttack(ActorEvent actorEvent, int sceneId) {
-
+    private void handleCopyBOSSDead(ActorEvent actorEvent) {
+        int copyId = (int) actorEvent.getData();
+        copyManager.handleCopyBOSSDead(copyId);
     }
 
     private void handleCopyFail(ActorEvent actorEvent) {
-
+        int copyId = (int) actorEvent.getData();
+        copyManager.copyFail(copyId);
     }
 
     private void handleCopySuccess(ActorEvent actorEvent) {
@@ -88,14 +76,26 @@ public class CopyService {
         copyManager.quitCopy(copyId);
     }
 
+
     /**
-     * 处理进入场景事件
+     * 处理进入副本场景事件
      * @param actorEvent
-     * @param sceneId
+     *
      */
-    private void handleEnterScene(ActorEvent actorEvent, int sceneId) {
-        CopyDo copyDo = copyManager.initCopy(actorEvent.getActorId(), sceneId);
-        copyManager.startQuitCopyScheduled(copyDo);
+    private void handleCopyEnterScene(ActorEvent actorEvent) {
+        int sceneId = (int) actorEvent.getData();
+        if(copyManager.notCopyFor(actorEvent.getActorId())){
+           copyManager.createCopy(actorEvent.getActorId(), sceneId);
+        }
+    }
+
+    /**
+     * 处理副本玩家死亡事件
+     * @param actorEvent
+     */
+    private void handleCopyActorDead(ActorEvent actorEvent) {
+        int copyId = (int) actorEvent.getData();
+        copyManager.handleCopyActorDead(copyId);
     }
 
 }

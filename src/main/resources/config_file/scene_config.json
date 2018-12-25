@@ -7,10 +7,11 @@
     "neighborSet":[2],
     "times": 300,
     "rewards": [[1,50],[2,50]],
-    "copy": {
+    "boss": {
         "bossId": 1,
         "bossName": "何曼",
-        "attack": 50
+        "attack": 50,
+        "hp": 1000
       }
   }
 ]

@@ -3,6 +3,7 @@ package com.linlazy.mmorpglintingyang.module.common.reward;
 import com.linlazy.mmorpglintingyang.module.item.manager.ItemManager;
 import com.linlazy.mmorpglintingyang.module.user.manager.UserManager;
 import com.linlazy.mmorpglintingyang.module.user.push.UserPushHelper;
+import com.linlazy.mmorpglintingyang.server.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,5 +33,27 @@ public class RewardService {
 
             }
         }
+    }
+
+
+    /**
+     * 是否足够消耗
+     * @param actorId
+     * @param reward
+     */
+    public Result<?> isEnoughtConsuem(long actorId, Reward reward) {
+        Map<Integer, Integer> attrChangeMap;
+
+        switch (reward.getRewardId()){
+            case RewardID.HP:
+
+                break;
+            case RewardID.MP:
+                break;
+            default:
+                itemManager.addReward(actorId,reward);
+        }
+
+        return Result.success();
     }
 }

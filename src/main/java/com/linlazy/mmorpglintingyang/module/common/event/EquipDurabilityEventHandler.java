@@ -23,13 +23,13 @@ public class EquipDurabilityEventHandler {
         if(actorEvent.getEventType().equals(EventType.ATTACKED)){
             int attacked = (int)actorEvent.getData();
 
-//            new DressedEquip(actorEvent.getActorId()).consumeDurabilityWithAttacked(attacked);
+//            new DressedEquip(actorEvent.getActorId()).consumeDurabilityWithAttacked(attackedFromBoss);
         }
 
         //如果攻击生效，则穿戴装备减少耐久度
         if(actorEvent.getEventType().equals(EventType.ATTACK)){
             int attack = (int)actorEvent.getData();
-//            new DressedEquip(actorEvent.getActorId()).consumeDurabilityWithAttacked(attack);
+//            new DressedEquip(actorEvent.getActorId()).consumeDurabilityWithAttacked(attackPlayerDo);
         }
     }
 }

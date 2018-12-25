@@ -29,7 +29,7 @@ public class SkillDo {
         this.actorId = skill.getActorId();
         this.skillId = skill.getSkillId();
         JSONObject skillConfig = skillConfigService.getSkillConfig(this.skillId);
-        this.attack = skillConfig.getIntValue("attack");
+        this.attack = skillConfig.getIntValue("attackPlayerDo");
     }
 
     public int computeFinalAttack() {

@@ -29,5 +29,17 @@ public enum EventType {
     /**
      * 副本挑战失败
      */
-    COPY_FAIL
+    COPY_FAIL,
+    /**
+     * 副本玩家死亡
+     */
+    COPY_ACTOR_DEAD,
+    /**
+     * 进入副本
+     */
+    ENTER_COPY_SCENE,
+    /**
+     * 副本BOSS死亡
+     */
+    COPY_BOSS_DEAD
 }

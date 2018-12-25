@@ -13,4 +13,9 @@ public interface RewardID {
      * 装备耐久度
      */
     int Durability = 3;
+
+    /**
+     * 金币
+     */
+    int GOLD = 4;
 }
