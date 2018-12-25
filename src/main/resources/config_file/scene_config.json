@@ -1,6 +1,6 @@
 [
   {"sceneId":1,"name":"起始之地","neighborSet":[2]},
-  {"sceneId":2,"name":"村子","neighborSet":[1,3,4]},
+  {"sceneId":2,"name":"村子","neighborSet":[1,3,4,5]},
   {"sceneId":3,"name":"野外","neighborSet":[2]},
   {"sceneId":4,
     "name":"黄巾前锋营",
@@ -13,5 +13,10 @@
         "attack": 50,
         "hp": 1000
       }
+  },
+  {
+    "sceneId":5,
+    "name":"巴郡",
+    "neighborSet":[2]
   }
 ]

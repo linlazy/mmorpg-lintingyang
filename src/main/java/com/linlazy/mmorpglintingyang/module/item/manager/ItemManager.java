@@ -129,7 +129,7 @@ public class ItemManager {
      * @param reward
      */
     public void addReward(long actorId, Reward reward) {
-        int baseItemId = reward.getRewardId();
+        int baseItemId = (int) reward.getRewardId();
         pushBackPack(actorId,baseItemId,reward.getCount());
     }
 
@@ -158,4 +158,7 @@ public class ItemManager {
     }
 
 
+    public Item getItem(long actorId, long itemId) {
+        return itemDao.getItem(actorId,itemId);
+    }
 }

@@ -9,7 +9,7 @@ public class Reward {
      * 奖励ID
      */
 
-    private int rewardId;
+    private long rewardId;
     /**
      * 奖励数量
      */
@@ -23,7 +23,7 @@ public class Reward {
     public Reward() {
     }
 
-    public Reward(int rewardId, int count, int rewardDBType) {
+    public Reward(long rewardId, int count, int rewardDBType) {
         this.rewardId = rewardId;
         this.count = count;
         this.rewardDBType = rewardDBType;

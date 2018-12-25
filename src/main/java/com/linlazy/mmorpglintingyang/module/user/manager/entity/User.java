@@ -30,6 +30,16 @@ public class User {
     private String password;
 
     /**
+     * 金币
+     */
+    private long gold;
+
+    /**
+     * 等级
+     */
+    private int level;
+
+    /**
      * 状态
      */
     private int status;
@@ -118,5 +128,9 @@ public class User {
 
     public void modifyMagicDefense(int count) {
 
+    }
+
+    public int modifyGold(int count) {
+        return 0;
     }
 }

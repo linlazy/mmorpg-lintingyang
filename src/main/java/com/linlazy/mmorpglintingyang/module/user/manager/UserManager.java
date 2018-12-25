@@ -56,22 +56,23 @@ public class UserManager {
         userDao.updateUser(user);
     }
 
-    public Map<Integer,Integer> addOrConsumeReward(long actorId, Reward reward) {
-        Map<Integer,Integer> map = new HashMap<>();
+    public Map<Long,Integer> addOrConsumeReward(long actorId, Reward reward) {
+        Map<Long,Integer> map = new HashMap<>();
 
         User user = userDao.getUser(actorId);
-        switch (reward.getRewardId()){
-            case RewardID.HP:
-                int hp = user.modifyHP(reward.getCount());
-                map.put(RewardID.HP,hp);
-                break;
-            case RewardID.MP:
-                int mp = user.modifyMP(reward.getCount());
-                map.put(RewardID.MP,mp);
-                break;
-            default:
-                System.out.println("error not implement");
+        if (reward.getRewardId() == RewardID.HP) {
+            int hp = user.modifyHP(reward.getCount());
+            map.put(RewardID.HP,hp);
+        } else if(reward.getRewardId() == RewardID.MP){
+            int mp = user.modifyMP(reward.getCount());
+            map.put(RewardID.MP,mp);
+        } else if(reward.getRewardId() == RewardID.GOLD){
+            int gold = user.modifyGold(reward.getCount());
+            map.put(RewardID.GOLD,gold);
+        }else {
+            System.out.println("error not implement");
         }
+
         userDao.updateUser(user);
         return map;
     }

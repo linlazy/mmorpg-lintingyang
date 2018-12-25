@@ -4,6 +4,7 @@ package com.linlazy.mmorpglintingyang.module.scene.service;
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.module.scene.domain.SceneDo;
 import com.linlazy.mmorpglintingyang.module.scene.dto.SceneDTO;
+import com.linlazy.mmorpglintingyang.module.scene.manager.NPCManager;
 import com.linlazy.mmorpglintingyang.module.scene.manager.SceneManager;
 import com.linlazy.mmorpglintingyang.module.scene.validator.SceneValidator;
 import com.linlazy.mmorpglintingyang.server.common.Result;
@@ -21,6 +22,9 @@ public class SceneService {
 
     @Autowired
     private SceneValidator sceneValidator;
+
+    @Autowired
+    private NPCManager npcManager;
 
 
     /**
@@ -61,11 +65,19 @@ public class SceneService {
         return Result.success(sceneDTO);
     }
 
-    public Result<?> talk(long actorId,int npcId) {
+    /**
+     * 对话NPC
+     * @param actorId
+     * @param npcId
+     * @param jsonObject
+     * @return
+     */
+    public Result<?> talk(long actorId, int npcId, JSONObject jsonObject) {
         // 1 当前场景是否存在
         if( !sceneValidator.hasNPC(actorId,npcId)){
             return Result.valueOf("当前场景不存在此npc");
         }
+
         return Result.success("和npc对话");
     }
 }

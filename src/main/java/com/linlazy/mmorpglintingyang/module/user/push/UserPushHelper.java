@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class UserPushHelper {
 
-    public static void pushActorAttrChange(long actorId, Map<Integer,Integer> changeAttr){
+    public static void pushActorAttrChange(long actorId, Map<Long,Integer> changeAttr){
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("push","user");
         jsonObject.put("attrChange",changeAttr);

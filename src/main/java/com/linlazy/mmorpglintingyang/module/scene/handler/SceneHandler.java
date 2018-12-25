@@ -59,6 +59,6 @@ public class SceneHandler {
     public Result<?> talk(JSONObject jsonObject){
         long actorId = jsonObject.getLong("actorId");
         int npcId = jsonObject.getIntValue("npcId");
-        return sceneService.talk(actorId,npcId);
+        return sceneService.talk(actorId,npcId,jsonObject);
     }
 }

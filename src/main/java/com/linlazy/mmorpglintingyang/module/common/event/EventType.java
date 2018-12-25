@@ -41,5 +41,10 @@ public enum EventType {
     /**
      * 副本BOSS死亡
      */
-    COPY_BOSS_DEAD
+    COPY_BOSS_DEAD,
+
+    /**
+     * 竞技场玩家被杀死
+     */
+    ARENA_ACTOR_KILLED
 }

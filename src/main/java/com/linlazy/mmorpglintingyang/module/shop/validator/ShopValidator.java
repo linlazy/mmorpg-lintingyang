@@ -28,10 +28,11 @@ public class ShopValidator {
         Reward reward = new Reward();
         reward.setRewardId(RewardID.GOLD);
         reward.setCount(consumeNum * num);
-        Result<?> enoughtConsuem = rewardService.isEnoughtConsuem(actorId, reward);
-        if(enoughtConsuem.isFail()){
+        Result<?> enoughConsume = rewardService.isEnoughConsume(actorId, reward);
+        if(enoughConsume.isFail()){
             return true;
         }
         return false;
     }
+
 }
