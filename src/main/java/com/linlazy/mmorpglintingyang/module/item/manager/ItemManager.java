@@ -50,7 +50,7 @@ public class ItemManager {
      * @return
      */
     public boolean isFullBackPack(long actorId, int baseItemId, int num) {
-        ItemDo itemDo = new ItemDo();
+        ItemDo itemDo = new ItemDo(baseItemId);
         //客户端数据
         itemDo.setActorId(actorId);
         itemDo.setBaseItemId(baseItemId);
@@ -65,7 +65,7 @@ public class ItemManager {
      * @param num
      */
     public Result<BackPackInfo> pushBackPack(long actorId, int baseItemId, int num) {
-        ItemDo itemDo = new ItemDo();
+        ItemDo itemDo = new ItemDo(baseItemId);
         //客户端数据
         itemDo.setActorId(actorId);
         itemDo.setBaseItemId(baseItemId);
@@ -83,8 +83,7 @@ public class ItemManager {
      * @return
      */
     public long getItemTotal(long actorId, long itemId) {
-        ItemDo itemDo = new ItemDo();
-        itemDo.setItemId(itemId);
+        ItemDo itemDo = new ItemDo(itemId);
 
         Set<Item> itemSet = itemDao.getItemSet(actorId);
         return itemSet.stream()
@@ -140,9 +139,8 @@ public class ItemManager {
      * @param consumeNum
      */
     public Result<BackPackInfo> consumeBackPackItem(long actorId,long itemId,int consumeNum) {
-        ItemDo itemDo = new ItemDo();
+        ItemDo itemDo = new ItemDo(itemId);
         itemDo.setActorId(actorId);
-        itemDo.setItemId(itemId);
         itemDo.setCount(consumeNum);
 
         BackPackInfo backPackInfo = new BackPack(actorId).popBackPack(itemDo);

@@ -11,17 +11,18 @@
   {"module":"scene","command":"talk","actorId":7,"npcId": 1},
 
   {"module":"fight","command":"attack","actorId":3,"skillId": 1,"monsterId": 1},
+  {"module":"fight","command":"attack","actorId":7,"skillId": 1,"targetId": 8},
 
   {"module":"skill","command":"dress","actorId":3,"skillId": 1},
   {"module":"skill","command":"levelUp","actorId":3,"skillId": 1},
 
-  {"module":"item","command":"getBackPackInfo","actorId":3},
+  {"module":"item","command":"getBackPackInfo","actorId":7},
   {"module":"item","command":"arrangeBackPack","actorId":3},
   {"module":"item","command":"useItem","actorId":3,"itemId": 1,"num": 1},
-  {"module":"item","command":"pushBackPack","actorId":3,"baseItemId": 1,"num": 1},
+  {"module":"item","command":"pushBackPack","actorId":7,"baseItemId": 4,"num": 1},
 
-  {"module":"equipment","command":"equip","actorId":3,"itemId": 1100585369604},
-  {"module":"equipment","command":"unequip","actorId":3,"itemId": 4},
+  {"module":"equip","command":"equip","actorId":3,"itemId": 1100585369604},
+  {"module":"equip","command":"unequip","actorId":3,"itemId": 4},
 
   {"module":"chat","command":"send","actorId":7,"targetId":8,"chatType": 1,"content": "聊天内容"},
 

@@ -1,5 +1,6 @@
 package com.linlazy.mmorpglintingyang.module.copy.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.eventbus.Subscribe;
 import com.linlazy.mmorpglintingyang.module.common.event.ActorEvent;
 import com.linlazy.mmorpglintingyang.module.common.event.EventBusHolder;
@@ -53,17 +54,20 @@ public class CopyService {
     }
 
     private void handleCopyBOSSDead(ActorEvent actorEvent) {
-        int copyId = (int) actorEvent.getData();
+        JSONObject jsonObject = (JSONObject)actorEvent.getData();
+        int copyId = jsonObject.getIntValue("copyId");
         copyManager.handleCopyBOSSDead(copyId);
     }
 
     private void handleCopyFail(ActorEvent actorEvent) {
-        int copyId = (int) actorEvent.getData();
+        JSONObject jsonObject = (JSONObject)actorEvent.getData();
+        int copyId = jsonObject.getIntValue("copyId");
         copyManager.copyFail(copyId);
     }
 
     private void handleCopySuccess(ActorEvent actorEvent) {
-        int copyId = (int) actorEvent.getData();
+        JSONObject jsonObject = (JSONObject)actorEvent.getData();
+        int copyId = jsonObject.getIntValue("copyId");
         copyManager.copySuccess(copyId);
     }
 
@@ -72,7 +76,8 @@ public class CopyService {
      * @param actorEvent
      */
     private void handleQuitCopy(ActorEvent actorEvent) {
-        int copyId = (int) actorEvent.getData();
+        JSONObject jsonObject = (JSONObject)actorEvent.getData();
+        int copyId = jsonObject.getIntValue("copyId");
         copyManager.quitCopy(copyId);
     }
 
@@ -83,7 +88,8 @@ public class CopyService {
      *
      */
     private void handleCopyEnterScene(ActorEvent actorEvent) {
-        int sceneId = (int) actorEvent.getData();
+        JSONObject jsonObject = (JSONObject)actorEvent.getData();
+        int sceneId = jsonObject.getIntValue("sceneId");
         if(copyManager.notCopyFor(actorEvent.getActorId())){
            copyManager.createCopy(actorEvent.getActorId(), sceneId);
         }
@@ -94,7 +100,8 @@ public class CopyService {
      * @param actorEvent
      */
     private void handleCopyActorDead(ActorEvent actorEvent) {
-        int copyId = (int) actorEvent.getData();
+        JSONObject jsonObject = (JSONObject)actorEvent.getData();
+        int copyId = jsonObject.getIntValue("copyId");
         copyManager.handleCopyActorDead(copyId);
     }
 

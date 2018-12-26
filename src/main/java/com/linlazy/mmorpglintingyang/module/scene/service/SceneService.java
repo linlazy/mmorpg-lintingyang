@@ -57,7 +57,7 @@ public class SceneService {
 
     public Result<?> aoi(long actorId, JSONObject jsonObject) {
 
-        SceneDo sceneDo = sceneManager.getSceneDoByActorId(actorId);
+        SceneDo sceneDo = sceneManager.getSceneDo(actorId);
         SceneDTO sceneDTO = new SceneDTO(sceneDo);
         if(jsonObject.getBooleanValue("closeOwn")) {
             sceneDTO.getActorIdSet().remove(actorId);

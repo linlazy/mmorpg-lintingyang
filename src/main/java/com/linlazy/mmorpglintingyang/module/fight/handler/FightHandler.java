@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class FightHandler {
 
-
     @Autowired
     private FightService fightService;
 
@@ -21,21 +20,10 @@ public class FightHandler {
      * @param jsonObject
      * @return
      */
-    @Cmd("attackPlayerDo")
+    @Cmd("attack")
     public Result<?> attack(JSONObject jsonObject){
         long actorId = jsonObject.getLongValue("actorId");
         return fightService.attack(actorId,jsonObject);
     }
 
-    /**
-     *  受到攻击
-     * @param jsonObject
-     * @return
-     */
-    @Cmd("attackedFromBoss")
-    public Result<?> attacked(JSONObject jsonObject){
-         int sourceId = jsonObject.getIntValue("sourceId");
-         long actorId = jsonObject.getLongValue("actorId");
-        return Result.success(fightService.attacked(actorId,sourceId,jsonObject));
-    }
 }

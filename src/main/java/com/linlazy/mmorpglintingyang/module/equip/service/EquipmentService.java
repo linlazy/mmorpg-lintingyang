@@ -6,6 +6,7 @@ import com.linlazy.mmorpglintingyang.module.equip.dto.FixEquipmentDTO;
 import com.linlazy.mmorpglintingyang.module.equip.manager.EquipManager;
 import com.linlazy.mmorpglintingyang.module.equip.manager.domain.EquipDo;
 import com.linlazy.mmorpglintingyang.module.item.constants.ItemType;
+import com.linlazy.mmorpglintingyang.module.item.manager.backpack.domain.ItemDo;
 import com.linlazy.mmorpglintingyang.module.item.manager.config.ItemConfigService;
 import com.linlazy.mmorpglintingyang.module.item.manager.dao.ItemDao;
 import com.linlazy.mmorpglintingyang.module.item.manager.entity.Item;
@@ -37,7 +38,7 @@ public class EquipmentService {
         }
 
         Item item = itemDao.getItem(actorId, equipId);
-        EquipDo equipDo = new EquipDo(item);
+        EquipDo equipDo = new EquipDo(new ItemDo(item));
         if(equipDo == null || equipDo.isDressed()){
             return Result.valueOf("参数有误");
         }
@@ -60,7 +61,7 @@ public class EquipmentService {
         }
 
         Item item = itemDao.getItem(actorId, equipId);
-        EquipDo equipDo = new EquipDo(item);
+        EquipDo equipDo = new EquipDo(new ItemDo(item));
         if(equipDo == null || !equipDo.isDressed()){
             return Result.valueOf("参数有误");
         }

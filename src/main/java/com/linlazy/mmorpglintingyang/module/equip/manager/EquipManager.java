@@ -3,6 +3,7 @@ package com.linlazy.mmorpglintingyang.module.equip.manager;
 import com.linlazy.mmorpglintingyang.module.equip.manager.domain.EquipDo;
 import com.linlazy.mmorpglintingyang.module.equip.manager.domain.EquipDurability;
 import com.linlazy.mmorpglintingyang.module.equip.manager.domain.EquipUpgrade;
+import com.linlazy.mmorpglintingyang.module.item.manager.backpack.domain.ItemDo;
 import com.linlazy.mmorpglintingyang.module.item.manager.dao.ItemDao;
 import com.linlazy.mmorpglintingyang.module.item.manager.entity.Item;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +24,9 @@ public class EquipManager {
      */
     public void unDressEquipment(long actorId, long equipId) {
         Item item = itemDao.getItem(actorId, equipId);
-        EquipDo equipDo = new EquipDo(item);
+        EquipDo equipDo = new EquipDo(new ItemDo(item));
         equipDo.setDressed(false);
-        itemDao.updateItem(equipDo.convertItem());
+        itemDao.updateItem(equipDo.convertItemDo().convertItem());
     }
 
     /**
@@ -34,10 +35,11 @@ public class EquipManager {
      */
     public void dressEquipment(long actorId,long equipId) {
         Item item = itemDao.getItem(actorId, equipId);
-        EquipDo equipDo = new EquipDo(item);
+        EquipDo equipDo = new EquipDo(new ItemDo(item));
 
         //已穿戴装备
         Set<EquipDo> dressedEquipDoSet = itemDao.getItemSet(actorId).stream()
+                .map(ItemDo::new)
                 .map(EquipDo::new)
                 .filter(equipDo1 -> equipDo1.isDressed())
                 .collect(Collectors.toSet());
@@ -46,13 +48,13 @@ public class EquipManager {
         for(EquipDo dressEquipDo : dressedEquipDoSet){
             if(dressEquipDo.getType() == equipDo.getType()){
                 dressEquipDo.setDressed(false);
-                itemDao.updateItem(dressEquipDo.convertItem());
+                itemDao.updateItem(dressEquipDo.convertItemDo().convertItem());
             }
         }
 
         //更新装备为已穿戴
         equipDo.setDressed(true);
-        itemDao.updateItem(equipDo.convertItem());
+        itemDao.updateItem(equipDo.convertItemDo().convertItem());
     }
 
     /**
@@ -62,9 +64,9 @@ public class EquipManager {
      */
     public EquipDo fixEquipment(long actorId, long equipId) {
         Item item = itemDao.getItem(actorId, equipId);
-        EquipDo equipDo = new EquipDo(item);
+        EquipDo equipDo = new EquipDo(new ItemDo(item));
         EquipDurability.fixEquip(equipDo,equipDo.getDurabilityUp());
-        itemDao.updateItem(equipDo.convertItem());
+        itemDao.updateItem(equipDo.convertItemDo().convertItem());
         return equipDo;
     }
 
@@ -75,9 +77,9 @@ public class EquipManager {
     public EquipDo consumeDurability(long actorId, long equipId,int consumeDurability){
 
         Item item = itemDao.getItem(actorId, equipId);
-        EquipDo equipDo = new EquipDo(item);
+        EquipDo equipDo = new EquipDo(new ItemDo(item));
         EquipDurability.consumeDurability(equipDo, consumeDurability);
-        itemDao.updateItem( equipDo.convertItem());
+        itemDao.updateItem( equipDo.convertItemDo().convertItem());
         return equipDo;
     }
 
@@ -89,7 +91,7 @@ public class EquipManager {
      */
     public  EquipDo upgradeEquip(long actorId ,long equipId){
         Item item = itemDao.getItem(actorId, equipId);
-        EquipDo equipDo = new EquipDo(item);
+        EquipDo equipDo = new EquipDo(new ItemDo(item));
         EquipDo upgrade = EquipUpgrade.upgrade(equipDo);
         return upgrade;
     }

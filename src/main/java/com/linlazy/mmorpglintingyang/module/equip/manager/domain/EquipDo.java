@@ -1,8 +1,8 @@
 package com.linlazy.mmorpglintingyang.module.equip.manager.domain;
 
 import com.alibaba.fastjson.JSONObject;
+import com.linlazy.mmorpglintingyang.module.item.manager.backpack.domain.ItemDo;
 import com.linlazy.mmorpglintingyang.module.item.manager.config.ItemConfigService;
-import com.linlazy.mmorpglintingyang.module.item.manager.entity.Item;
 import com.linlazy.mmorpglintingyang.utils.ItemIdUtil;
 import com.linlazy.mmorpglintingyang.utils.SpringContextUtil;
 import lombok.Data;
@@ -19,6 +19,10 @@ public class EquipDo {
      * 装备ID
      */
     private long equipId;
+    /**
+     *
+     */
+    private int baseItemId;
     /**
      * 是否装备
      */
@@ -71,17 +75,19 @@ public class EquipDo {
 
 
     public EquipDo(int baseItemId) {
+        this.baseItemId =baseItemId;
         initConfig(baseItemId);
     }
     public EquipDo(long equipId) {
         this.equipId =equipId;
-        int baseItemId = ItemIdUtil.getBaseItemId(equipId);
+        this.baseItemId = ItemIdUtil.getBaseItemId(equipId);
         initConfig(baseItemId);
     }
 
-    public EquipDo(Item item) {
+    public EquipDo(ItemDo item) {
         this.actorId = item.getActorId();
         this.equipId = item.getItemId();
+        this.baseItemId = item.getBaseItemId();
         String ext = item.getExt();
         if(!StringUtils.isEmpty(ext)){
             JSONObject jsonObject = JSONObject.parseObject(ext);
@@ -89,7 +95,7 @@ public class EquipDo {
             this.level = jsonObject.getIntValue("level");
             this.dressed =jsonObject.getBooleanValue("dressed");
         }
-        int baseItemId = ItemIdUtil.getBaseItemId(equipId);
+        this.baseItemId = ItemIdUtil.getBaseItemId(equipId);
         initConfig(baseItemId);
     }
 
@@ -113,11 +119,10 @@ public class EquipDo {
         initConfig(baseItemId);
     }
 
-    public Item convertItem(){
-        Item item = new Item();
-        item.setItemId(this.equipId);
-        item.setActorId(this.actorId);
-        item.setCount(1);
+    public ItemDo convertItemDo(){
+        ItemDo itemDo = new ItemDo(this.equipId);
+        itemDo.setActorId(this.actorId);
+        itemDo.setCount(1);
 
         JSONObject jsonObject = new JSONObject();
         //耐久度
@@ -128,8 +133,8 @@ public class EquipDo {
         jsonObject.put("level",this.level);
 
         String ext = JSONObject.toJSONString(jsonObject);
-        item.setExt(ext);
-        return item;
+        itemDo.setExt(ext);
+        return itemDo;
     }
 
 }

@@ -2,18 +2,23 @@ package com.linlazy.mmorpglintingyang.module.fight.service.strategy;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Sets;
+import com.linlazy.mmorpglintingyang.module.fight.attack.actor.Attack;
+import com.linlazy.mmorpglintingyang.module.fight.defense.actor.Defense;
 import com.linlazy.mmorpglintingyang.module.fight.domain.AttackedTargetSet;
-import com.linlazy.mmorpglintingyang.module.skill.config.SkillConfigService;
-import com.linlazy.mmorpglintingyang.module.skill.dao.SkillDao;
-import com.linlazy.mmorpglintingyang.module.skill.domain.SkillDo;
-import com.linlazy.mmorpglintingyang.module.skill.entity.Skill;
+import com.linlazy.mmorpglintingyang.module.fight.validator.FightValidtor;
 import com.linlazy.mmorpglintingyang.module.scene.domain.SceneDo;
 import com.linlazy.mmorpglintingyang.module.scene.domain.SceneEntityDo;
+import com.linlazy.mmorpglintingyang.module.scene.domain.ScenePlayerDo;
 import com.linlazy.mmorpglintingyang.module.scene.manager.SceneManager;
+import com.linlazy.mmorpglintingyang.module.skill.config.SkillConfigService;
+import com.linlazy.mmorpglintingyang.module.skill.dao.SkillDao;
+import com.linlazy.mmorpglintingyang.module.skill.entity.Skill;
 import com.linlazy.mmorpglintingyang.module.user.manager.dao.UserDao;
 import com.linlazy.mmorpglintingyang.module.user.manager.entity.User;
 import com.linlazy.mmorpglintingyang.server.common.Result;
 import com.linlazy.mmorpglintingyang.utils.DateUtils;
+import com.linlazy.mmorpglintingyang.utils.SessionManager;
+import com.linlazy.mmorpglintingyang.utils.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +33,9 @@ public class SkillAttackStrategy extends AttackStrategy {
     private SkillConfigService skillConfigService;
     @Autowired
     private SceneManager sceneManager;
+
+    @Autowired
+    private FightValidtor fightValidtor;
 
     @Override
     protected Result<?> isCanAttack(long actorId, JSONObject jsonObject) {
@@ -49,6 +57,17 @@ public class SkillAttackStrategy extends AttackStrategy {
         if(user.getMp() < consumeMP){
             return Result.valueOf("mp不足");
         }
+
+
+        long targetId = jsonObject.getLongValue("targetId");
+        if(targetId != 0){
+            if(fightValidtor.isDifferentScene(actorId,targetId)){
+                return Result.valueOf("处于不同场景");
+            }
+            if(!SessionManager.isOnline(targetId)){
+                return Result.valueOf("被攻击玩家不在线");
+            }
+        }
         return Result.success();
     }
 
@@ -56,28 +75,30 @@ public class SkillAttackStrategy extends AttackStrategy {
     protected AttackedTargetSet computeAttackedTarget(long actorId, JSONObject jsonObject) {
         AttackedTargetSet attackedTargetSet = new AttackedTargetSet();
 
-        SceneDo sceneDo = sceneManager.getSceneDoByActorId(actorId);
+        SceneDo sceneDo = sceneManager.getSceneDo(actorId);
 
         //攻击目标
         int targetId = jsonObject.getIntValue("targetId");
-        SceneEntityDo sceneEntityDo = sceneDo.getSceneEntityDoSet().stream()
-                .filter(sceneEntityDo1 -> sceneEntityDo1.getSceneEntityId() == targetId)
-                .findAny().get();
+        User user = userDao.getUser(targetId);
+        SceneEntityDo sceneEntityDo = new SceneEntityDo(new ScenePlayerDo(user));
         attackedTargetSet.setSceneEntityDos(Sets.newHashSet(sceneEntityDo));
 
         return attackedTargetSet;
     }
 
     @Override
-    protected int computeAttack(long actorId, JSONObject jsonObject) {
-        //装备伤害
-        int equipAttack = dressedEquip.computeAttack(actorId);
-        //技能伤害
-        int skillId = jsonObject.getIntValue("skillId");
-        Skill skill = skillDao.getSkill(actorId, skillId);
-        SkillDo skillDo = new SkillDo(skill);
-        int skillAttack = skillDo.computeFinalAttack();
-        return equipAttack + skillAttack;
+    protected int computeDamage(long actorId, JSONObject jsonObject) {
+        int finalAttack = SpringContextUtil.getApplicationContext().getBeansOfType(Attack.class).values().stream()
+                .map(attack -> attack.computeAttack(actorId,jsonObject))
+                .reduce(0,(a,b) -> a + b);
+
+        long targetId = jsonObject.getLongValue("targetId");
+        int finalDefense = SpringContextUtil.getApplicationContext().getBeansOfType(Defense.class).values().stream()
+                .map(defense -> defense.computeDefense(targetId))
+                .reduce(0,(a,b) -> a + b);
+
+        int damage = finalAttack - finalDefense;
+        return damage <= 0 ? 1:damage;
     }
 
 }

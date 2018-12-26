@@ -27,7 +27,7 @@ public class ArenaService {
     public void listenEvent(ActorEvent actorEvent){
 
         switch (actorEvent.getEventType()){
-            case ARENA_ACTOR_KILLED:
+            case ARENA_ACTOR_DEAD:
                 handleArenaActorKilled(actorEvent);
                 break;
         }

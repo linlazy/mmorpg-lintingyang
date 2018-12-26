@@ -25,6 +25,11 @@ public class NpcDo {
     private String name;
 
     /**
+     * 当前血量
+     */
+    private int hp;
+
+    /**
      * 谈话进度
      */
     private Map<Integer, List<String>> talkProcess = new HashMap<>();

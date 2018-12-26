@@ -1,6 +1,7 @@
 package com.linlazy.mmorpglintingyang.module.equip.manager.domain;
 
 import com.linlazy.mmorpglintingyang.module.equip.constants.EquipType;
+import com.linlazy.mmorpglintingyang.module.item.manager.backpack.domain.ItemDo;
 import com.linlazy.mmorpglintingyang.module.item.manager.dao.ItemDao;
 import com.linlazy.mmorpglintingyang.utils.RandomUtils;
 import lombok.Data;
@@ -26,6 +27,7 @@ public class DressedEquip {
      */
     public void consumeDurabilityWithAttack(long actorId,int attack){
         itemDao.getItemSet(actorId).stream()
+            .map(ItemDo::new)
             .map(EquipDo::new)
             .filter(equipDo -> equipDo.isDressed())
             .filter(equipDo -> equipDo.getType() == EquipType.Arms)
@@ -33,7 +35,7 @@ public class DressedEquip {
             .ifPresent(
                 equipDo ->  {
                 EquipDurability.consumeDurability(equipDo,attack);
-                itemDao.updateItem(equipDo.convertItem());
+                itemDao.updateItem(equipDo.convertItemDo().convertItem());
                 }
             );
     }
@@ -44,13 +46,14 @@ public class DressedEquip {
      */
     public void consumeDurabilityWithAttacked(long actorId,int attacked){
         List<EquipDo> collect = itemDao.getItemSet(actorId).stream()
+                .map(ItemDo::new)
                 .map(EquipDo::new)
                 .filter(equipDo -> equipDo.isDressed())
                 .filter(equipDo -> equipDo.getType() != EquipType.Arms)
                 .collect(Collectors.toList());
         EquipDo equipDo = RandomUtils.randomElement(collect);
         EquipDurability.consumeDurability(equipDo,attacked);
-        itemDao.updateItem(equipDo.convertItem());
+        itemDao.updateItem(equipDo.convertItemDo().convertItem());
     }
 
 
@@ -61,6 +64,7 @@ public class DressedEquip {
      */
     public int computeAttack(long actorId) {
         return itemDao.getItemSet(actorId).stream()
+                .map(ItemDo::new)
                 .map(EquipDo::new)
                 .filter(equipDo -> equipDo.isDressed())
                 .map(equipDo -> equipDo.getPhysicalAttack())

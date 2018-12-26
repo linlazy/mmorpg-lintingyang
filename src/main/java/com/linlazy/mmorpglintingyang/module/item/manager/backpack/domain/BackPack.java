@@ -1,10 +1,13 @@
 package com.linlazy.mmorpglintingyang.module.item.manager.backpack.domain;
 
+import com.linlazy.mmorpglintingyang.module.equip.manager.domain.EquipDo;
+import com.linlazy.mmorpglintingyang.module.item.constants.ItemType;
 import com.linlazy.mmorpglintingyang.module.item.manager.backpack.response.BackPackInfo;
 import com.linlazy.mmorpglintingyang.module.item.manager.backpack.response.BackPackLatticeDTO;
 import com.linlazy.mmorpglintingyang.module.item.manager.dao.ItemDao;
 import com.linlazy.mmorpglintingyang.module.item.manager.entity.Item;
 import com.linlazy.mmorpglintingyang.server.common.GlobalConfigService;
+import com.linlazy.mmorpglintingyang.utils.ItemIdUtil;
 import com.linlazy.mmorpglintingyang.utils.SpringContextUtil;
 
 import java.util.*;
@@ -167,21 +170,11 @@ public class BackPack {
 
             //放置非折叠物品进背包
         }else {
-            pushNonSuperPositionBackPack(itemDo);
+            List<BackPackLattice> backPackLattices = pushNonSuperPositionBackPack(itemDo);
+            List<BackPackLatticeDTO> collect = backPackLattices.stream().map(BackPackLattice::convertBackPackLatticeDTO).collect(Collectors.toList());
+            backPackInfo.setBackPackLatticeDTOS(collect);
         }
 
-        //存单背包
-        itemDao.deleteActorItems(actorId);
-        this.actorBackPack.stream()
-                .map(BackPackLattice::getItemDo)
-                .map(ItemDo::convertItem)
-                .forEachOrdered(item -> itemDao.addItem(item));
-
-        //返回数据
-        List<BackPackLatticeDTO> backPackLatticeDTOList = actorBackPack.stream()
-                .map(BackPackLattice::convertBackPackLatticeDTO)
-                .collect(Collectors.toList());
-        backPackInfo.setBackPackLatticeDTOS(backPackLatticeDTOList);
         return backPackInfo;
     }
 
@@ -231,10 +224,31 @@ public class BackPack {
      * 放置非折叠物品进背包
      * @param itemDo
      */
-    private void pushNonSuperPositionBackPack(ItemDo itemDo) {
-        BackPackLattice spaceBackPackLattice = findSpaceBackPackLattice();
-        spaceBackPackLattice.setItemDo(itemDo);
-        actorBackPack.add(spaceBackPackLattice);
+    private List<BackPackLattice> pushNonSuperPositionBackPack(ItemDo itemDo) {
+        List<BackPackLattice> result = new ArrayList<>();
+
+        for(int i = 0; i < itemDo.getCount(); i ++){
+            BackPackLattice spaceBackPackLattice = findSpaceBackPackLattice();
+
+            int maxOrderId = actorBackPack.stream()
+                    .map(BackPackLattice::getItemDo)
+                    .filter(itemDo1 -> itemDo1.getBaseItemId() == itemDo.getBaseItemId())
+                    .map(ItemDo::getOrderId)
+                    .max(Integer::compareTo).orElse(0);
+            long newItemId = ItemIdUtil.getNewItemId(maxOrderId + 1, spaceBackPackLattice.getIndex(), itemDo.getBaseItemId());
+            itemDo.setItemId(newItemId);
+            if(itemDo.getItemType() == ItemType.Equip){
+                itemDao.addItem(new EquipDo(itemDo).convertItemDo().convertItem());
+            }else {
+                itemDao.addItem(itemDo.convertItem());
+            }
+
+            spaceBackPackLattice.setItemDo(itemDo);
+            actorBackPack.add(spaceBackPackLattice);
+            result.add(spaceBackPackLattice);
+        }
+
+        return result;
     }
 
     /**

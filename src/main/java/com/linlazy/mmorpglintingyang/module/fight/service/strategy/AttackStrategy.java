@@ -28,18 +28,18 @@ public abstract class AttackStrategy {
         }
 
         //计算最终伤害值
-        int attack = computeAttack(actorId,jsonObject);
+        int damage = computeDamage(actorId,jsonObject);
         // 已穿戴装备耐久度消耗
-        dressedEquip.consumeDurabilityWithAttack(actorId,attack);
+        dressedEquip.consumeDurabilityWithAttack(actorId,damage);
         // 受攻击目标集合 血量消耗
         AttackedTargetSet attackedEntitySet = computeAttackedTarget(actorId,jsonObject);
-        attackedEntitySet.attacked(attack);
+        attackedEntitySet.attacked(damage,jsonObject);
         return Result.success();
     }
 
     protected abstract AttackedTargetSet computeAttackedTarget(long actorId, JSONObject jsonObject);
 
-    protected abstract int computeAttack(long actorId, JSONObject jsonObject);
+    protected abstract int computeDamage(long actorId, JSONObject jsonObject);
 
 
     protected   Result<?> isCanAttack(long actorId, JSONObject jsonObject){

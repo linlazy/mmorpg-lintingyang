@@ -3,6 +3,7 @@ package com.linlazy.mmorpglintingyang.module.item.manager.backpack.domain;
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.module.item.manager.config.ItemConfigService;
 import com.linlazy.mmorpglintingyang.module.item.manager.entity.Item;
+import com.linlazy.mmorpglintingyang.utils.ItemIdUtil;
 import com.linlazy.mmorpglintingyang.utils.SpringContextUtil;
 import lombok.Data;
 
@@ -14,7 +15,10 @@ import java.util.Objects;
 @Data
 public class ItemDo{
 
-
+    /**
+     * 标识
+     */
+    private long itemId;
     /**
      * 背包索引
      */
@@ -49,11 +53,17 @@ public class ItemDo{
     private  boolean superPosition = true;
 
     /**
+     * 道具类型
+     */
+    private int itemType;
+
+    /**
      * 扩展属性
      */
     private String ext;
 
     public void setItemId(long itemId){
+        this.itemId =itemId;
         this.setBaseItemId((int) (itemId & 0xfffffff));
         this.setBackPackIndex((int) ((itemId >> 28) & 0xfff));
         this.setOrderId((int) ((itemId >>40) &0xffffff));
@@ -71,14 +81,43 @@ public class ItemDo{
         this.setSuperPositionUp(superPositionUp);
     }
 
-    public ItemDo() {
+    private ItemDo() {
     }
 
+    public ItemDo(long itemId) {
+        this.itemId = itemId;
+        this.baseItemId = ItemIdUtil.getBaseItemId(itemId);
+        initConfig(baseItemId);
+    }
+
+    public ItemDo(int baseItemId) {
+        this.baseItemId =baseItemId;
+        initConfig(baseItemId);
+    }
+
+    /**
+     * 初始化配置数据
+     */
+    private void initConfig(int baseItemId) {
+        ItemConfigService itemConfigService = SpringContextUtil.getApplicationContext().getBean(ItemConfigService.class);
+        JSONObject itemConfig = itemConfigService.getItemConfig(baseItemId);
+        this.itemType = itemConfig.getIntValue("itemType");
+    }
     public ItemDo(Item item) {
+        this.itemId = item.getItemId();
+        this.baseItemId = ItemIdUtil.getBaseItemId(itemId);
+        this.backPackIndex = ItemIdUtil.getOrderId(itemId);
+        this.orderId = ItemIdUtil.getOrderId(itemId);
+
+        this.actorId = item.getActorId();
+        this.count = item.getCount();
+        this.ext = item.getExt();
+        initConfig(baseItemId);
     }
 
     ItemDo clonez(){
         ItemDo itemDo = new ItemDo();
+        itemDo.setItemId(itemId);
         itemDo.setActorId(actorId);
         itemDo.setOrderId(orderId);
         itemDo.setBackPackIndex(backPackIndex);
@@ -98,8 +137,7 @@ public class ItemDo{
 
     public Item convertItem(){
          Item item = new Item();
-        long itemId = (orderId << 40) + (backPackIndex << 28) + baseItemId;
-        item.setItemId(itemId);
+        item.setItemId(this.itemId);
         item.setActorId(this.actorId);
         item.setCount(this.count);
         item.setExt(ext);

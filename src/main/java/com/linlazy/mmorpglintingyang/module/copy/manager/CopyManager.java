@@ -8,13 +8,11 @@ import com.linlazy.mmorpglintingyang.module.common.event.EventType;
 import com.linlazy.mmorpglintingyang.module.common.reward.Reward;
 import com.linlazy.mmorpglintingyang.module.common.reward.RewardService;
 import com.linlazy.mmorpglintingyang.module.copy.domain.CopyDo;
-import com.linlazy.mmorpglintingyang.module.copy.domain.CopyPlayerDo;
 import com.linlazy.mmorpglintingyang.module.scene.config.SceneConfigService;
 import com.linlazy.mmorpglintingyang.module.scene.manager.SceneManager;
 import com.linlazy.mmorpglintingyang.module.team.domain.TeamDo;
 import com.linlazy.mmorpglintingyang.module.team.manager.TeamManager;
 import com.linlazy.mmorpglintingyang.module.user.manager.UserManager;
-import com.linlazy.mmorpglintingyang.module.user.manager.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +24,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Component
 public class CopyManager {
@@ -75,13 +72,7 @@ public class CopyManager {
         //初始化副本玩家
         TeamDo actorTeamDo = teamManager.getActorTeamDo(actorId);
         Set<Long> teamIdSet = actorTeamDo.getTeamIdSet();
-        Set<CopyPlayerDo> copyPlayerDoSet = teamIdSet.stream()
-                .map(playerId -> {
-                    User user = userManager.getUser(actorId);
-                    actorIdCopyIdMap.put(actorId,copyDo.getCopyId());
-                    return new CopyPlayerDo(user);
-                }).collect(Collectors.toSet());
-        copyDo.setCopyPlayerDoSet(copyPlayerDoSet);
+        copyDo.setCopyPlayerIdSet(teamIdSet);
         copyDo.setSceneId(sceneId);
         copyIdCopyDoMap.put(maxCopyId,copyDo);
 
@@ -112,9 +103,9 @@ public class CopyManager {
         CopyDo copyDo = copyIdCopyDoMap.get(copyId);
         //发放奖励
         List<Reward> rewardList = copyDo.getRewardList();
-         copyDo.getCopyPlayerDoSet().stream()
-         .forEach(copyPlayerDo -> {
-             rewardService.addRewardList(copyPlayerDo.getActorId(),rewardList);
+         copyDo.getCopyPlayerIdSet().stream()
+         .forEach(actorId -> {
+             rewardService.addRewardList(actorId,rewardList);
          });
 
          EventBusHolder.post(new ActorEvent<>(0,EventType.QUIT_COPY,copyId));

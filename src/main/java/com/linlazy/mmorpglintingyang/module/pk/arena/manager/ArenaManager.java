@@ -1,19 +1,15 @@
 package com.linlazy.mmorpglintingyang.module.pk.arena.manager;
 
-import com.linlazy.mmorpglintingyang.module.pk.arena.domain.ArenaDo;
 import com.linlazy.mmorpglintingyang.module.pk.arena.domain.ArenaPlayerDo;
+import com.linlazy.mmorpglintingyang.module.pk.arena.entity.Arena;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class ArenaManager {
 
-    private int maxArenaId = 0;
-
-
-    private Map<Integer, ArenaDo> arenaIdArenaDoMap = new HashMap<>();
+    @Autowired
+    private ArenaDao arenaDao;
 
     /**
      * 处理竞技场玩家被击杀
@@ -22,25 +18,20 @@ public class ArenaManager {
      * @param killedId
      */
     public void handleArenaActorKilled(int arenaId, int killId, int killedId) {
-        ArenaDo arenaDo = arenaIdArenaDoMap.get(arenaId);
-
-
-        //击杀玩家得100分
-        ArenaPlayerDo killArenaPlayerDo = arenaDo.getArenaPlayerDoSet().stream()
-                .filter(arenaPlayerDo -> arenaPlayerDo.getActorId() == killId)
-                .findFirst().get();
+        //击杀玩家得100分,击杀数加一
+        Arena killArena = arenaDao.getArena(arenaId,killId);
+        ArenaPlayerDo killArenaPlayerDo = new ArenaPlayerDo(killArena);
         killArenaPlayerDo.modifyScore(100);
+        killArenaPlayerDo.increaseKillNum();
+        arenaDao.updateArena(killArenaPlayerDo.convertArena());
 
-
-        //被击杀扣50分
-        ArenaPlayerDo killedArenaPlayerDo = arenaDo.getArenaPlayerDoSet().stream()
-                .filter(arenaPlayerDo -> arenaPlayerDo.getActorId() == killedId)
-                .findFirst().get();
+        //被击玩家杀扣50分,被击杀数加一
+        Arena killedArena = arenaDao.getArena(arenaId,killId);
+        ArenaPlayerDo killedArenaPlayerDo = new ArenaPlayerDo(killedArena);
         killedArenaPlayerDo.modifyScore(-50);
+        killedArenaPlayerDo.increaseKilledNum();
+        arenaDao.updateArena(killedArenaPlayerDo.convertArena());
 
     }
 
-    public ArenaDo getArenaDo(long arenaId) {
-        return arenaIdArenaDoMap.get(arenaId);
-    }
 }

@@ -5,6 +5,7 @@ import com.linlazy.mmorpglintingyang.module.common.reward.Reward;
 import com.linlazy.mmorpglintingyang.module.copy.manager.CopyManager;
 import com.linlazy.mmorpglintingyang.module.scene.config.SceneConfigService;
 import com.linlazy.mmorpglintingyang.module.scene.manager.SceneManager;
+import com.linlazy.mmorpglintingyang.module.user.manager.UserManager;
 import com.linlazy.mmorpglintingyang.utils.RewardUtils;
 import com.linlazy.mmorpglintingyang.utils.SpringContextUtil;
 import lombok.Data;
@@ -31,7 +32,7 @@ public class CopyDo {
     /**
      * 副本玩家
      */
-    private Set<CopyPlayerDo> copyPlayerDoSet = new HashSet<>();
+    private Set<Long> copyPlayerIdSet = new HashSet<>();
 
     /**
      * 副本boss集合
@@ -41,6 +42,10 @@ public class CopyDo {
 
     @Autowired
     private CopyManager copyManager;
+
+
+    @Autowired
+    private UserManager userManager;
 
     /**
      * 获取通过副本奖励
@@ -58,8 +63,8 @@ public class CopyDo {
      * @return
      */
     public boolean isAllActorDead(){
-        return copyPlayerDoSet.stream()
-                .allMatch(copyPlayerDo -> copyPlayerDo.getHp() == 0);
+        return copyPlayerIdSet.stream()
+                .allMatch(actorId -> userManager.getUser(actorId).getHp() == 0);
     }
 
     /**
@@ -68,25 +73,8 @@ public class CopyDo {
      */
     public boolean isAllBOSSDead(){
         return copyBossDoSet.stream()
-                .allMatch(copyBossDo -> copyBossDo.getHp() == 0);
+                .allMatch(copyBossDo -> copyBossDo.isDead());
     }
-
-    //创建副本
-    // 启动定时退出副本调度
-
-    //玩家攻击事件
-
-    //boss 攻击事件
-
-
-    // 玩家全部死亡
-    // 挑战失败
-    // 玩家退出副本 (取消定时退出副本调度 清除副本)
-
-    // BOSS全部死亡
-    //挑战成功
-    //发放奖励
-    // 玩家退出副本 (取消定时退出副本调度 清除副本)
 
     /**
      * 退出副本
@@ -100,8 +88,7 @@ public class CopyDo {
 
         //副本玩家移动到目标场景
         SceneManager sceneManager = SpringContextUtil.getApplicationContext().getBean(SceneManager.class);
-        this.copyPlayerDoSet.stream()
-                .map(CopyPlayerDo::getActorId)
+        this.copyPlayerIdSet.stream()
                 .forEach(actorId ->{
                     sceneManager.moveToScene(actorId,targetSceneId);
                     copyManager.quitCopy(actorId);

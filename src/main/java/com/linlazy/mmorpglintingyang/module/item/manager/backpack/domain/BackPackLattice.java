@@ -21,6 +21,7 @@ public class BackPackLattice {
     ItemDo itemDo;
 
     public BackPackLattice(ItemDo itemDo) {
+        this.index = itemDo.getBackPackIndex();
         this.itemDo = itemDo;
     }
 
@@ -36,6 +37,9 @@ public class BackPackLattice {
 
     public BackPackLatticeDTO convertBackPackLatticeDTO(){
         BackPackLatticeDTO backPackLatticeDTO = new BackPackLatticeDTO(this);
+        backPackLatticeDTO.setIndex(this.index);
+        backPackLatticeDTO.setCount(this.itemDo.getCount());
+        backPackLatticeDTO.setItemId(this.itemDo.getItemId());
         return backPackLatticeDTO;
     }
 

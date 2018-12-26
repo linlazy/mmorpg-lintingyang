@@ -35,11 +35,11 @@ public class SceneManager {
 
        //原场景中移除玩家
        User user = userManager.getUser(actorId);
-       SceneDo sceneDo = getSceneDoByActorId(actorId);
+       SceneDo sceneDo = getSceneDo(actorId);
        sceneDo.getActorIdSet().remove(actorId);
 
        //新场景中增加玩家
-       SceneDo targetSceneDo = getSceneDoBySceneId(targetSceneId);
+       SceneDo targetSceneDo = getSceneDo(actorId);
        targetSceneDo.getActorIdSet().add(actorId);
 
        user.setSceneId(targetSceneId);
@@ -53,40 +53,37 @@ public class SceneManager {
      * @return
      */
     public Result<?> enter(long actorId) {
-        SceneDo sceneDo = getSceneDoByActorId(actorId);
+        SceneDo sceneDo = getSceneDo(actorId);
         sceneDo.getActorIdSet().add(actorId);
 
         return Result.success(sceneDo);
     }
 
-
-    public SceneDo getSceneDoByActorId(long actorId) {
+    public SceneDo getSceneDo(long actorId) {
         User user = userManager.getUser(actorId);
-        SceneDo sceneDo  = getSceneDoBySceneId(user.getSceneId());
-        return sceneDo;
-    }
-
-    private SceneDo getSceneDoBySceneId(int sceneId) {
-        SceneDo sceneDo = map.get(sceneId);
+        SceneDo sceneDo = map.get(user.getSceneId());
         if(sceneDo == null){
             sceneDo = new SceneDo();
 
-            sceneDo.setSceneId(sceneId);
+            sceneDo.setSceneId(user.getSceneId());
 
             Set<SceneEntityDo> sceneEntityDoSet = sceneDo.getSceneEntityDoSet();
             //初始化怪物
-            Set<MonsterDo> monsterDoSet = monsterManager.getMonsterBySceneId(sceneId);
+            Set<MonsterDo> monsterDoSet = monsterManager.getMonsterBySceneId(user.getSceneId());
             sceneEntityDoSet.addAll( monsterDoSet.stream()
                     .map(SceneEntityDo::new)
                     .collect(Collectors.toSet()));
 
             //初始化NPC
-            Set<NpcDo> npcDoSet = npcManager.getNPCDoBySceneId(sceneId);
+            Set<NpcDo> npcDoSet = npcManager.getNPCDoBySceneId(user.getSceneId());
             sceneEntityDoSet.addAll( npcDoSet.stream()
                     .map(SceneEntityDo::new)
                     .collect(Collectors.toSet()));
 
-            map.put(sceneId,sceneDo);
+            //初始化玩家
+            Set<Long> actorIdSet = sceneDo.getActorIdSet();
+            actorIdSet.add(user.getActorId());
+            map.put(user.getSceneId(),sceneDo);
         }
 
         return sceneDo;

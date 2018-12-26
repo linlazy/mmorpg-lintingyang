@@ -68,4 +68,19 @@ public class GlobalConfigService {
         }
         return false;
     }
+
+    /**
+     * 该场景是否为竞技场
+     * @param sceneId
+     * @return
+     */
+    public boolean isArena(int sceneId) {
+        JSONArray copySceneIds = jsonObject.getJSONArray("arenaSceneIds");
+        for(int i=0 ; i < copySceneIds.size(); i++){
+            if(copySceneIds.getIntValue(i) == sceneId){
+                return true;
+            }
+        }
+        return false;
+    }
 }

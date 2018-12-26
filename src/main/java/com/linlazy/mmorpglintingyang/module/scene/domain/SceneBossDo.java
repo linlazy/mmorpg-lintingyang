@@ -3,7 +3,7 @@ package com.linlazy.mmorpglintingyang.module.scene.domain;
 import lombok.Data;
 
 @Data
-public class MonsterDo {
+public class SceneBossDo {
 
     /**
      * 场景ID
@@ -11,9 +11,9 @@ public class MonsterDo {
     private int sceneId;
 
     /**
-     * 怪物ID
+     * bossID
      */
-    private long monsterId;
+    private long bossId;
 
     /**
      * 是否死亡

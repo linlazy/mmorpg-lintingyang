@@ -4,6 +4,7 @@ import com.linlazy.mmorpglintingyang.module.common.addition.Addition;
 import com.linlazy.mmorpglintingyang.module.common.event.ActorEvent;
 import com.linlazy.mmorpglintingyang.module.common.event.EventBusHolder;
 import com.linlazy.mmorpglintingyang.module.common.event.EventType;
+import com.linlazy.mmorpglintingyang.module.scene.service.SceneService;
 import com.linlazy.mmorpglintingyang.server.common.GlobalConfigService;
 import com.linlazy.mmorpglintingyang.server.common.Result;
 import com.linlazy.mmorpglintingyang.module.user.manager.UserManager;
@@ -21,6 +22,8 @@ public class UserService {
     private UserManager userManager;
     @Autowired
     private GlobalConfigService globalConfigService;
+    @Autowired
+    private SceneService sceneService;
 
     public Result<?> login(String username, String password, Channel channel) {
 
@@ -59,6 +62,7 @@ public class UserService {
         SessionManager.bind(user.getActorId(),channel);
 
         EventBusHolder.post(new ActorEvent<>(user.getActorId(), EventType.LOGIN));
+        sceneService.enter(user.getActorId());
         return Result.success();
     }
 
