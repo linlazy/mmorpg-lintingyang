@@ -1,5 +1,6 @@
 package com.linlazy.mmorpglintingyang.module.user.manager;
 
+import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.module.common.addition.Addition;
 import com.linlazy.mmorpglintingyang.module.common.reward.Reward;
 import com.linlazy.mmorpglintingyang.module.common.reward.RewardID;
@@ -97,4 +98,16 @@ public class UserManager {
 //        }
     }
 
+
+    /**
+     * 处理玩家受到伤害
+     * @param actorId
+     * @param jsonObject
+     */
+    public void handleActorDamage(long actorId, JSONObject jsonObject) {
+        int damage = jsonObject.getIntValue("damage");
+        User user = userDao.getUser(actorId);
+        user.modifyHP(-damage);
+        userDao.updateUser(user);
+    }
 }

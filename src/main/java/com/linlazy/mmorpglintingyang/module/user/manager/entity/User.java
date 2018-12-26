@@ -107,7 +107,7 @@ public class User {
     public int modifyHP(int hp) {
         synchronized (this){
             this.hp += hp;
-            if(this.hp <0){
+            if(this.hp < 0){
                 this.hp = 0;
             }
             return this.hp;

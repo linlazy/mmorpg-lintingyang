@@ -12,6 +12,7 @@
 
   {"module":"fight","command":"attack","actorId":3,"skillId": 1,"monsterId": 1},
   {"module":"fight","command":"attack","actorId":7,"skillId": 1,"targetId": 8},
+  {"module":"fight","command":"attack","actorId":7,"skillId": 1,"targetId": 8,"arenaId": 1},
 
   {"module":"skill","command":"dress","actorId":3,"skillId": 1},
   {"module":"skill","command":"levelUp","actorId":3,"skillId": 1},

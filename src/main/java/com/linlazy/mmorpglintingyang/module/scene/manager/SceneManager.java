@@ -38,12 +38,12 @@ public class SceneManager {
        SceneDo sceneDo = getSceneDo(actorId);
        sceneDo.getActorIdSet().remove(actorId);
 
-       //新场景中增加玩家
-       SceneDo targetSceneDo = getSceneDo(actorId);
-       targetSceneDo.getActorIdSet().add(actorId);
 
        user.setSceneId(targetSceneId);
        userManager.updateUser(user);
+       //新场景中增加玩家
+       SceneDo targetSceneDo = getSceneDo(actorId);
+       targetSceneDo.getActorIdSet().add(actorId);
        return Result.success();
    }
 

@@ -20,13 +20,25 @@ public class ArenaManager {
     public void handleArenaActorKilled(int arenaId, int killId, int killedId) {
         //击杀玩家得100分,击杀数加一
         Arena killArena = arenaDao.getArena(arenaId,killId);
+        if(killArena == null){
+            killArena =new Arena();
+            killArena.setActorId(killId);
+            killArena.setArenaId(arenaId);
+            arenaDao.addArena(killArena);
+        }
         ArenaPlayerDo killArenaPlayerDo = new ArenaPlayerDo(killArena);
         killArenaPlayerDo.modifyScore(100);
         killArenaPlayerDo.increaseKillNum();
         arenaDao.updateArena(killArenaPlayerDo.convertArena());
 
         //被击玩家杀扣50分,被击杀数加一
-        Arena killedArena = arenaDao.getArena(arenaId,killId);
+        Arena killedArena = arenaDao.getArena(arenaId,killedId);
+        if(killedArena == null){
+            killedArena =new Arena();
+            killedArena.setActorId(killedId);
+            killedArena.setArenaId(arenaId);
+            arenaDao.addArena(killedArena);
+        }
         ArenaPlayerDo killedArenaPlayerDo = new ArenaPlayerDo(killedArena);
         killedArenaPlayerDo.modifyScore(-50);
         killedArenaPlayerDo.increaseKilledNum();

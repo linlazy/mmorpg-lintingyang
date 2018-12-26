@@ -3,6 +3,7 @@ package com.linlazy.mmorpglintingyang.module.scene.config;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
 import com.linlazy.mmorpglintingyang.server.common.ConfigFile;
 import com.linlazy.mmorpglintingyang.server.common.ConfigFileManager;
 import org.springframework.stereotype.Component;
@@ -52,7 +53,11 @@ public class NpcConfigService {
      * @return
      */
     public List<JSONObject> getNpcBySceneId(int sceneId){
-        return sceneNpcMap.get(sceneId);
+        List<JSONObject> jsonObjects = sceneNpcMap.get(sceneId);
+        if(jsonObjects == null){
+            jsonObjects = Lists.newArrayList();
+        }
+        return jsonObjects;
     }
 
     public boolean hasNPC(int sceneId, int npcId) {

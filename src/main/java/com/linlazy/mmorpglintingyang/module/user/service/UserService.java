@@ -1,5 +1,7 @@
 package com.linlazy.mmorpglintingyang.module.user.service;
 
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.eventbus.Subscribe;
 import com.linlazy.mmorpglintingyang.module.common.addition.Addition;
 import com.linlazy.mmorpglintingyang.module.common.event.ActorEvent;
 import com.linlazy.mmorpglintingyang.module.common.event.EventBusHolder;
@@ -15,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.PostConstruct;
+
 @Component
 public class UserService {
 
@@ -24,6 +28,22 @@ public class UserService {
     private GlobalConfigService globalConfigService;
     @Autowired
     private SceneService sceneService;
+
+
+    @PostConstruct
+    public void init(){
+        EventBusHolder.register(this);
+    }
+
+    @Subscribe
+    public void listenEvent(ActorEvent actorEvent){
+        switch (actorEvent.getEventType()){
+            case ACTOR_DAMAGE:
+                handleActorDamage(actorEvent);
+        }
+    }
+
+
 
     public Result<?> login(String username, String password, Channel channel) {
 
@@ -114,5 +134,16 @@ public class UserService {
 
     public void addOrRemoveAddition(long actorId, Addition addition) {
         userManager.addOrRemoveAddition(actorId,addition);
+    }
+
+
+    /**
+     * 处理玩家受到伤害事件
+     * @param actorEvent
+     */
+    private void handleActorDamage(ActorEvent actorEvent) {
+        JSONObject jsonObject = (JSONObject) actorEvent.getData();
+        long actorId = actorEvent.getActorId();
+        userManager.handleActorDamage(actorId,jsonObject);
     }
 }

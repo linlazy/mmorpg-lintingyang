@@ -6,8 +6,8 @@ import com.linlazy.mmorpglintingyang.module.common.event.EventBusHolder;
 import com.linlazy.mmorpglintingyang.module.common.event.EventType;
 import com.linlazy.mmorpglintingyang.module.scene.constants.SceneEntityType;
 import com.linlazy.mmorpglintingyang.server.common.GlobalConfigService;
+import com.linlazy.mmorpglintingyang.utils.SpringContextUtil;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 场景实体类
@@ -45,8 +45,7 @@ public class SceneEntityDo {
      */
     private int hp;
 
-    @Autowired
-    private GlobalConfigService globalConfigService;
+    private GlobalConfigService globalConfigService = SpringContextUtil.getApplicationContext().getBean(GlobalConfigService.class);
 
     public SceneEntityDo(MonsterDo monsterDo) {
         this.sceneId = monsterDo.getSceneId();
@@ -81,7 +80,7 @@ public class SceneEntityDo {
 
 
     public void attacked(int damage, JSONObject jsonObject){
-        this.hp += damage;
+        this.hp -= damage;
         if(this.hp < 0){
             this.hp = 0;
             EventBusHolder.post(new ActorEvent(0,EventType.SCENE_ENTITY_DEAD,jsonObject));
@@ -93,10 +92,27 @@ public class SceneEntityDo {
 
             //若为竞技场场景，触发竞技场场景相关的死亡事件
             if(globalConfigService.isArena(sceneId)){
+
+                jsonObject.put("killId",jsonObject.getLongValue("actorId"));
+                jsonObject.put("killedId",jsonObject.getLongValue("targetId"));
                 triggerArenaDeadEvent(jsonObject);
             }
 
         }
+
+        //玩家受到伤害事件
+        if(sceneEntityType == SceneEntityType.Player){
+            jsonObject.put("damage",damage);
+            triggerActorDamageEvent(jsonObject);
+        }
+    }
+
+    /**
+     * 玩家受到伤害事件
+     * @param jsonObject
+     */
+    private void triggerActorDamageEvent(JSONObject jsonObject) {
+        EventBusHolder.post(new ActorEvent<>(sceneEntityId,EventType.ACTOR_DAMAGE,jsonObject));
     }
 
     /**

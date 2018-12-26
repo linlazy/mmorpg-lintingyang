@@ -50,5 +50,9 @@ public enum EventType {
     /**
      * 场景实体死亡
      */
-   SCENE_ENTITY_DEAD;
+   SCENE_ENTITY_DEAD,
+    /**
+     * 玩家受到伤害
+     */
+    ACTOR_DAMAGE
 }

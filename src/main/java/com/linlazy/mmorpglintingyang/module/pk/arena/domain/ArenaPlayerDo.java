@@ -26,7 +26,6 @@ public class ArenaPlayerDo {
      */
     private int score;
 
-
     /**
      * 击杀人数
      */
@@ -46,6 +45,7 @@ public class ArenaPlayerDo {
         this.actorId = arena.getActorId();
         this.killNum = arena.getKillNum();
         this.killedNum = arena.getKilledNum();
+        this.score = arena.getScore();
     }
 
 
@@ -63,6 +63,11 @@ public class ArenaPlayerDo {
 
     public Arena convertArena() {
         Arena arena = new Arena();
+        arena.setArenaId(arenaId);
+        arena.setActorId(actorId);
+        arena.setKilledNum(killedNum);
+        arena.setKillNum(killNum);
+        arena.setScore(score);
         return arena;
     }
 

@@ -3,6 +3,7 @@ package com.linlazy.mmorpglintingyang.module.scene.config;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
 import com.linlazy.mmorpglintingyang.server.common.ConfigFile;
 import com.linlazy.mmorpglintingyang.server.common.ConfigFileManager;
 import org.springframework.stereotype.Component;
@@ -53,7 +54,11 @@ public class MonsterConfigService {
      * @return
      */
     public List<JSONObject> getMonsterBySceneId(int sceneId){
-        return sceneMonsterMap.get(sceneId);
+        List<JSONObject> jsonObjects = sceneMonsterMap.get(sceneId);
+        if(jsonObjects == null){
+            jsonObjects = Lists.newArrayList();
+        }
+        return jsonObjects;
     }
 
 }
