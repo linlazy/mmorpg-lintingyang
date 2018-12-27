@@ -1,11 +1,13 @@
 package com.linlazy.mmorpglintingyang.module.scene.domain;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
 import com.linlazy.mmorpglintingyang.module.common.event.ActorEvent;
 import com.linlazy.mmorpglintingyang.module.common.event.EventBusHolder;
 import com.linlazy.mmorpglintingyang.module.common.event.EventType;
 import com.linlazy.mmorpglintingyang.module.fight.defense.Defense;
 import com.linlazy.mmorpglintingyang.module.scene.constants.SceneEntityType;
+import com.linlazy.mmorpglintingyang.module.scene.push.ScenePushHelper;
 import com.linlazy.mmorpglintingyang.server.common.GlobalConfigService;
 import com.linlazy.mmorpglintingyang.utils.SpringContextUtil;
 import lombok.Data;
@@ -46,7 +48,7 @@ public class SceneEntityDo {
      */
     private int hp;
 
-    private GlobalConfigService globalConfigService = SpringContextUtil.getApplicationContext().getBean(GlobalConfigService.class);
+
 
     public SceneEntityDo(MonsterDo monsterDo) {
         this.sceneId = monsterDo.getSceneId();
@@ -81,13 +83,15 @@ public class SceneEntityDo {
 
 
     public void attacked(int attack, JSONObject jsonObject){
+
+         GlobalConfigService globalConfigService = SpringContextUtil.getApplicationContext().getBean(GlobalConfigService.class);
         int entityType = jsonObject.getIntValue("entityType");
         long entityId = jsonObject.getLongValue("entityId");
         int defense = Defense.computeDefense(entityType, entityId, jsonObject);
         int damage = attack > defense?attack - defense: 1;
 
         this.hp -= damage;
-        if(this.hp < 0){
+        if(this.hp <= 0){
             this.hp = 0;
             EventBusHolder.post(new ActorEvent(0,EventType.SCENE_ENTITY_DEAD,jsonObject));
 
@@ -104,6 +108,11 @@ public class SceneEntityDo {
                 triggerArenaDeadEvent(jsonObject);
             }
 
+            //怪物死亡事件
+            if(sceneEntityType == SceneEntityType.Monster){
+                jsonObject.put("damage",damage);
+                triggerMonsterDeadEvent(jsonObject);
+            }
         }
 
         //玩家受到伤害事件
@@ -111,7 +120,13 @@ public class SceneEntityDo {
             jsonObject.put("damage",damage);
             triggerActorDamageEvent(jsonObject);
         }
+        ScenePushHelper.pushMonster(jsonObject.getLongValue("actorId"), Lists.newArrayList(this));
+    }
 
+    private void triggerMonsterDeadEvent(JSONObject jsonObject) {
+        jsonObject.put("sceneId",sceneId);
+        jsonObject.put("monsterDo",this);
+        EventBusHolder.post(new ActorEvent(0,EventType.SCENE_MONSTER_DEAD,jsonObject));
     }
 
 

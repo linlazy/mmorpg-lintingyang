@@ -28,12 +28,11 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class CopyManager {
 
-    ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
+    ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(20);
 
     @Autowired
     private SceneConfigService sceneConfigService;
 
-    private ScheduledFuture<?> scheduledFuture;
 
     @Autowired
     private TeamManager teamManager;
@@ -50,6 +49,7 @@ public class CopyManager {
     private Map<Integer, CopyDo> copyIdCopyDoMap = new HashMap<>();
     private Map<Long,Integer> actorIdCopyIdMap = new HashMap<>();
 
+    private Map<Integer,ScheduledFuture> copyIdScheduledFutureMap = new HashMap<>();
     /**
      * 退出副本
      */
@@ -57,6 +57,8 @@ public class CopyManager {
         CopyDo copyDo = copyIdCopyDoMap.get(copyId);
         copyDo.quitCopy();
         copyIdCopyDoMap.remove(copyId);
+        ScheduledFuture scheduledFuture = copyIdScheduledFutureMap.remove(copyId);
+        scheduledFuture.cancel(true);
     }
 
 
@@ -90,12 +92,13 @@ public class CopyManager {
         int times = copyConfig.getIntValue("times");
         //到达时间后挑战结束,退出副本触发事件
 
-        scheduledFuture = scheduledExecutorService.scheduleWithFixedDelay((Runnable) () -> {
+        ScheduledFuture<?> scheduledFuture = scheduledExecutorService.scheduleWithFixedDelay((Runnable) () -> {
 
             EventBusHolder.post(new ActorEvent<>(0, EventType.QUIT_COPY, copyDo.getCopyId()));
 
         }, 0L, times, TimeUnit.SECONDS);
 
+        copyIdScheduledFutureMap.put(copyDo.getCopyId(),scheduledFuture);
         return copyDo;
     }
 

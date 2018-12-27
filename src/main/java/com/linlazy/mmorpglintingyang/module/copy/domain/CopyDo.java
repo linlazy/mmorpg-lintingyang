@@ -93,5 +93,6 @@ public class CopyDo {
                     sceneManager.moveToScene(actorId,targetSceneId);
                     copyManager.quitCopy(actorId);
                 });
+
     }
 }

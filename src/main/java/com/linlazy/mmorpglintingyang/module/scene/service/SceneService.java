@@ -2,14 +2,25 @@ package com.linlazy.mmorpglintingyang.module.scene.service;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
+import com.google.common.eventbus.Subscribe;
+import com.linlazy.mmorpglintingyang.module.common.event.ActorEvent;
+import com.linlazy.mmorpglintingyang.module.common.event.EventBusHolder;
 import com.linlazy.mmorpglintingyang.module.scene.domain.SceneDo;
+import com.linlazy.mmorpglintingyang.module.scene.domain.SceneEntityDo;
 import com.linlazy.mmorpglintingyang.module.scene.dto.SceneDTO;
 import com.linlazy.mmorpglintingyang.module.scene.manager.NPCManager;
 import com.linlazy.mmorpglintingyang.module.scene.manager.SceneManager;
+import com.linlazy.mmorpglintingyang.module.scene.push.ScenePushHelper;
 import com.linlazy.mmorpglintingyang.module.scene.validator.SceneValidator;
+import com.linlazy.mmorpglintingyang.module.user.manager.UserManager;
 import com.linlazy.mmorpglintingyang.server.common.Result;
+import com.linlazy.mmorpglintingyang.utils.SessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.util.Set;
 
 /**
  * 玩家场景服务类
@@ -25,6 +36,41 @@ public class SceneService {
 
     @Autowired
     private NPCManager npcManager;
+    @Autowired
+    private UserManager userManager;
+
+
+    @PostConstruct
+    public void init(){
+        EventBusHolder.register(this);
+    }
+
+    @Subscribe
+    public void listenEvent(ActorEvent actorEvent){
+        switch (actorEvent.getEventType()){
+            case SCENE_MONSTER_DEAD:
+                handlerSceneMonsterDead(actorEvent);
+        }
+    }
+
+    /**
+     * 处理场景怪物死亡事件
+     * @param actorEvent
+     */
+    private void handlerSceneMonsterDead(ActorEvent actorEvent) {
+        JSONObject jsonObject = (JSONObject) actorEvent.getData();
+        long actorId = jsonObject.getLongValue("actorId");
+        Set<Long> onlineActorIds = SessionManager.getOnlineActorIds();
+        onlineActorIds.stream()
+                .filter(onlineActorId -> onlineActorId !=actorId)
+                .forEach(onlineActorId ->{
+                    if(userManager.getUser(onlineActorId).getSceneId() ==jsonObject.getIntValue("sceneId")){
+                        SceneEntityDo monsterDo = jsonObject.getObject("monsterDo", SceneEntityDo.class);
+                        ScenePushHelper.pushMonster(onlineActorId, Lists.newArrayList(monsterDo));
+                    }
+                });
+
+    }
 
 
     /**

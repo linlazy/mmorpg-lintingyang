@@ -13,7 +13,7 @@ public abstract class Defense {
                 return ActorDefense.computeFinalDefense(entityId,jsonObject);
             case SceneEntityType
                     .Monster:
-                return ActorDefense.computeFinalDefense(entityId,jsonObject);
+                return 0;
         }
         return 0;
     }

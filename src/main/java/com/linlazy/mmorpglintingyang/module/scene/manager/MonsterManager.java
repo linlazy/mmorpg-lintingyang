@@ -29,10 +29,12 @@ public class MonsterManager {
             JSONObject sceneMonsterConfig = sceneMonsterConfigs.get(i);
             int monsterId = sceneMonsterConfig.getIntValue("monsterId");
             String name = sceneMonsterConfig.getString("name");
+            int hp = sceneMonsterConfig.getIntValue("hp");
             MonsterDo monsterDo = new MonsterDo();
             monsterDo.setMonsterId(monsterId);
             monsterDo.setName(name);
             monsterDo.setSceneId(sceneId);
+            monsterDo.setHp(hp);
 
             monsterDoSet.add(monsterDo);
         }

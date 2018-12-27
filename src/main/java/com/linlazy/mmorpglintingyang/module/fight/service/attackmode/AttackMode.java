@@ -4,8 +4,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.module.fight.attack.actor.ActorAttack;
 import com.linlazy.mmorpglintingyang.module.fight.service.canattacked.CanAttacked;
 import com.linlazy.mmorpglintingyang.module.fight.service.sceneentity.SceneEntityDoFactory;
+import com.linlazy.mmorpglintingyang.module.scene.constants.SceneEntityType;
+import com.linlazy.mmorpglintingyang.module.scene.domain.SceneDo;
 import com.linlazy.mmorpglintingyang.module.scene.domain.SceneEntityDo;
+import com.linlazy.mmorpglintingyang.module.scene.manager.SceneManager;
 import com.linlazy.mmorpglintingyang.server.common.Result;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
@@ -27,6 +31,9 @@ public abstract class AttackMode {
     public static AttackMode getAttackMode(int attackMode){
         return map.get(attackMode);
     }
+
+    @Autowired
+    private SceneManager sceneManager;
 
     public  Result<?> attack(long actorId, JSONObject jsonObject){
         Result<?> result = isCanAttack(actorId,jsonObject);
@@ -50,7 +57,17 @@ public abstract class AttackMode {
         Set SceneEntityDoSet = new HashSet();
 
         int entityType = jsonObject.getIntValue("entityType");
-        SceneEntityDo sceneEntityDo =SceneEntityDoFactory.newSceneEntityDo(entityType,jsonObject);
+        long entityId = jsonObject.getLongValue("entityId");
+
+        SceneEntityDo sceneEntityDo = null;
+        if(entityType == SceneEntityType.Player){
+             sceneEntityDo =SceneEntityDoFactory.newPlayerSceneEntityDo(entityId);
+        }else {
+            SceneDo sceneDo = sceneManager.getSceneDo(actorId);
+            sceneEntityDo = sceneDo.getSceneEntityDoSet().stream()
+                    .filter(sceneEntityDo1 -> sceneEntityDo1.getSceneEntityId() == entityId && sceneEntityDo1.getSceneEntityType() == entityType)
+                    .findFirst().get();
+        }
         SceneEntityDoSet.add(sceneEntityDo);
 
         return SceneEntityDoSet;
