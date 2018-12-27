@@ -22,7 +22,7 @@ public class GlobalConfigService {
     }
 
     /**
-     * 获取MP回复间隔
+     * 获取MP回复间隔,每次回复1点MP
      * @return
      */
     public long getMPResumeIntervalMills(){

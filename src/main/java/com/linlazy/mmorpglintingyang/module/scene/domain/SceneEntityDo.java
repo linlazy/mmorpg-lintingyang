@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.module.common.event.ActorEvent;
 import com.linlazy.mmorpglintingyang.module.common.event.EventBusHolder;
 import com.linlazy.mmorpglintingyang.module.common.event.EventType;
+import com.linlazy.mmorpglintingyang.module.fight.defense.Defense;
 import com.linlazy.mmorpglintingyang.module.scene.constants.SceneEntityType;
 import com.linlazy.mmorpglintingyang.server.common.GlobalConfigService;
 import com.linlazy.mmorpglintingyang.utils.SpringContextUtil;
@@ -79,7 +80,12 @@ public class SceneEntityDo {
     }
 
 
-    public void attacked(int damage, JSONObject jsonObject){
+    public void attacked(int attack, JSONObject jsonObject){
+        int entityType = jsonObject.getIntValue("entityType");
+        long entityId = jsonObject.getLongValue("entityId");
+        int defense = Defense.computeDefense(entityType, entityId, jsonObject);
+        int damage = attack > defense?attack - defense: 1;
+
         this.hp -= damage;
         if(this.hp < 0){
             this.hp = 0;
@@ -94,7 +100,7 @@ public class SceneEntityDo {
             if(globalConfigService.isArena(sceneId)){
 
                 jsonObject.put("killId",jsonObject.getLongValue("actorId"));
-                jsonObject.put("killedId",jsonObject.getLongValue("targetId"));
+                jsonObject.put("killedId",jsonObject.getLongValue("entityId"));
                 triggerArenaDeadEvent(jsonObject);
             }
 
@@ -105,7 +111,9 @@ public class SceneEntityDo {
             jsonObject.put("damage",damage);
             triggerActorDamageEvent(jsonObject);
         }
+
     }
+
 
     /**
      * 玩家受到伤害事件

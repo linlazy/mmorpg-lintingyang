@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * 装备防御力 = 基础防御力 + 装备等级 * 6
  */
 @Component
-public class EquipDefense extends Defense{
+public class EquipActorDefense extends ActorDefense {
 
     @Autowired
     private ItemDao itemDao;
@@ -20,16 +20,16 @@ public class EquipDefense extends Defense{
     private ItemConfigService itemConfigService;
 
     @Override
-    public int defenseType() {
-        return DefenseType.EQUIP;
+    public int actorDefenseType() {
+        return ActorDefenseType.EQUIP;
     }
 
     @Override
-    public int computeDefense(long actorId) {
+    public int computeDefense(long actorId,JSONObject jsonObject) {
         return itemDao.getItemSet(actorId).stream()
                 .map(ItemDo::new)
                 .map(EquipDo::new)
-                .filter(equipDo -> equipDo.isDressed())
+                .filter(equipDo -> equipDo.isDressed() && equipDo.getDurability() > 0)
                 .map(equipDo -> {
                     JSONObject itemConfig = itemConfigService.getItemConfig(equipDo.getBaseItemId());
                     int defense = itemConfig.getIntValue("defense");

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  * 玩家等级攻击力 = 玩家等级 * 20
  */
 @Component
-public class LevelAttack extends Attack{
+public class LevelActorAttack extends ActorAttack {
 
     @Autowired
     private UserDao userDao;

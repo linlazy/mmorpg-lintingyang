@@ -1,6 +1,6 @@
 package com.linlazy.mmorpglintingyang.module.fight.defense.actor;
 
-public interface DefenseType {
+public interface ActorDefenseType {
     /**
      * 等级
      */

@@ -12,12 +12,13 @@ import org.springframework.stereotype.Component;
  * 装备攻击力 = 基础攻击力 + 装备等级 * 6
  */
 @Component
-public class EquipAttack extends Attack{
+public class EquipActorAttack extends ActorAttack {
 
     @Autowired
     private ItemDao itemDao;
     @Autowired
     private ItemConfigService itemConfigService;
+
 
     @Override
     public int attackType() {
@@ -25,15 +26,22 @@ public class EquipAttack extends Attack{
     }
 
     @Override
+    public boolean isValid(long actorId,JSONObject jsonObject){
+        return true;
+    }
+
+    @Override
     public int computeAttack(long actorId, JSONObject jsonObject) {
+
         return itemDao.getItemSet(actorId).stream()
                 .map(ItemDo::new)
-               .map(EquipDo::new)
-               .filter(equipDo -> equipDo.isDressed())
-               .map(equipDo -> {
-                   JSONObject itemConfig = itemConfigService.getItemConfig(equipDo.getBaseItemId());
-                   int attack = itemConfig.getIntValue("attack");
-                   return attack + equipDo.getLevel() * 6;
-               }).reduce(0,(a,b) -> a + b);
+                .map(EquipDo::new)
+                .filter(equipDo -> equipDo.isDressed()&&equipDo.getDurability()>0)
+                .map(equipDo -> {
+                    JSONObject itemConfig = itemConfigService.getItemConfig(equipDo.getBaseItemId());
+                    int attack = itemConfig.getIntValue("attack");
+                    return attack + equipDo.getLevel() * 6;
+                }).reduce(0,(a,b) -> a + b);
     }
+
 }

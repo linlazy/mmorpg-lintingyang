@@ -2,17 +2,15 @@ package com.linlazy.mmorpglintingyang.module.fight.attack.actor;
 
 public interface AttackType {
     /**
-     * 等级
-     */
-    int  LEVEL = 1;
-
-    /**
      * 装备
      */
-    int  EQUIP = 2;
-
+    int EQUIP = 1;
     /**
-     * 技能
+     * 玩家等级
      */
-    int  SKILL = 3;
+    int LEVEL = 2;
+    /**
+     * 玩家技能
+     */
+    int SKILL = 3;
 }
