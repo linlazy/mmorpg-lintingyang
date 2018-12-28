@@ -11,6 +11,7 @@ public class ScenePlayerDo {
     private long actorId;
     private String name;
     private int hp;
+    private int copyId;
 
     public ScenePlayerDo(User user) {
         this.sceneId = user.getSceneId();

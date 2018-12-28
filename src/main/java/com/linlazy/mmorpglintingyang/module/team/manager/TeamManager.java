@@ -5,6 +5,8 @@ import com.linlazy.mmorpglintingyang.module.team.domain.TeamDo;
 import com.linlazy.mmorpglintingyang.module.team.push.TeamPushHelper;
 import com.linlazy.mmorpglintingyang.server.common.Result;
 import com.linlazy.mmorpglintingyang.utils.RandomUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -14,6 +16,8 @@ import java.util.stream.Collectors;
 
 @Component
 public class TeamManager {
+
+    private Logger logger = LoggerFactory.getLogger(TeamManager.class);
 
     private static final Map<Long, TeamDo> actorIdTeamDoMap = new ConcurrentHashMap<>();
 
@@ -29,6 +33,8 @@ public class TeamManager {
 
         //推送通知对方
         TeamPushHelper.pushTeam(targetId,TeamOperationType.INVITE_JOIN);
+        logger.debug("actorId:{},teamInfo:{}",actorId,teamDo);
+        System.out.println("aa");
         return Result.success();
     }
 
@@ -53,6 +59,9 @@ public class TeamManager {
 
         //推送通知对方
         TeamPushHelper.pushTeam(targetId,TeamOperationType.ACCEPT_JOIN);
+
+        logger.debug("actorId:{},teamInfo:{}",actorId,actorTeamDo);
+        logger.debug("actorId:{},teamInfo:{}",targetId,targetTeamDo);
         return Result.success();
     }
 
@@ -76,6 +85,7 @@ public class TeamManager {
         if(teamDo == null){
             teamDo = new TeamDo();
             teamDo.setActorId(actorId);
+            actorIdTeamDoMap.put(actorId,teamDo);
         }
         return teamDo;
     }

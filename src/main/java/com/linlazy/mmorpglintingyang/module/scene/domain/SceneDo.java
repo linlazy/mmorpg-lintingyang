@@ -13,6 +13,11 @@ public class SceneDo {
     private int  sceneId;
 
     /**
+     * 副本ID
+     */
+    private int copyId;
+
+    /**
      * 场景所在玩家集合
      */
     private Set<Long> actorIdSet = new HashSet<>();
@@ -21,4 +26,12 @@ public class SceneDo {
      * 场景实体集合（非玩家）
      */
     private Set<SceneEntityDo> sceneEntityDoSet = new HashSet<>();
+
+    public Set<SceneEntityDo> getSceneEntityDoSet() {
+        return sceneEntityDoSet;
+    }
+
+    public void setSceneEntityDoSet(Set<SceneEntityDo> sceneEntityDoSet) {
+        this.sceneEntityDoSet = sceneEntityDoSet;
+    }
 }

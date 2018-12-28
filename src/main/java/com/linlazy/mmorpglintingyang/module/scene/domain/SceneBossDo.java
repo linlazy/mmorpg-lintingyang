@@ -11,6 +11,11 @@ public class SceneBossDo {
     private int sceneId;
 
     /**
+     * 副本ID
+     */
+    private int copyId;
+
+    /**
      * bossID
      */
     private long bossId;

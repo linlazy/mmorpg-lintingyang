@@ -3,6 +3,7 @@ package com.linlazy.mmorpglintingyang.module.team.service;
 import com.linlazy.mmorpglintingyang.module.team.manager.TeamManager;
 import com.linlazy.mmorpglintingyang.module.team.validator.TeamValidator;
 import com.linlazy.mmorpglintingyang.server.common.Result;
+import com.linlazy.mmorpglintingyang.utils.SessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +23,9 @@ public class TeamService {
      */
     public Result<?> inviteJoin(long actorId, long targetId) {
 
+        if(!SessionManager.isOnline(targetId)){
+            return Result.valueOf("玩家不在线");
+        }
         //人员已满
         Result<?> result = teamValidator.isFull(actorId);
         if(result.isFail()){

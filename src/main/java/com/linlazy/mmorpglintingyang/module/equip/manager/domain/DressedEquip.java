@@ -23,9 +23,8 @@ public class DressedEquip {
 
     /**
      *
-     * @param attack 伤害
      */
-    public void consumeDurabilityWithAttack(long actorId,int attack){
+    public void consumeDurabilityWithAttack(long actorId){
         itemDao.getItemSet(actorId).stream()
             .map(ItemDo::new)
             .map(EquipDo::new)
@@ -34,7 +33,7 @@ public class DressedEquip {
             .findFirst()
             .ifPresent(
                 equipDo ->  {
-                EquipDurability.consumeDurability(equipDo,attack);
+                EquipDurability.consumeDurability(equipDo,1);
                 itemDao.updateItem(equipDo.convertItemDo().convertItem());
                 }
             );
@@ -42,9 +41,8 @@ public class DressedEquip {
 
     /**
      *
-     * @param attacked 受到的伤害
      */
-    public void consumeDurabilityWithAttacked(long actorId,int attacked){
+    public void consumeDurabilityWithAttacked(long actorId){
         List<EquipDo> collect = itemDao.getItemSet(actorId).stream()
                 .map(ItemDo::new)
                 .map(EquipDo::new)
@@ -52,22 +50,9 @@ public class DressedEquip {
                 .filter(equipDo -> equipDo.getType() != EquipType.Arms)
                 .collect(Collectors.toList());
         EquipDo equipDo = RandomUtils.randomElement(collect);
-        EquipDurability.consumeDurability(equipDo,attacked);
+        EquipDurability.consumeDurability(equipDo,1);
         itemDao.updateItem(equipDo.convertItemDo().convertItem());
     }
 
 
-    /**
-     * 计算伤害
-     * @param actorId
-     * @return
-     */
-    public int computeAttack(long actorId) {
-        return itemDao.getItemSet(actorId).stream()
-                .map(ItemDo::new)
-                .map(EquipDo::new)
-                .filter(equipDo -> equipDo.isDressed())
-                .map(equipDo -> equipDo.getPhysicalAttack())
-                .reduce(0, (a, b) -> a + b);
-    }
 }

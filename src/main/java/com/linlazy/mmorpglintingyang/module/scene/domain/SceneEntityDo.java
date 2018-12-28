@@ -23,6 +23,8 @@ public class SceneEntityDo {
      */
     private int sceneId;
 
+    private int copyId;
+
     /**
      * 场景实体ID
      */
@@ -32,11 +34,6 @@ public class SceneEntityDo {
      * 场景实体类型
      */
     private int sceneEntityType;
-
-    /**
-     * 是否死亡
-     */
-    private boolean dead;
 
     /**
      * 实体名称
@@ -71,6 +68,7 @@ public class SceneEntityDo {
         this.name = scenePlayerDo.getName();
         this.sceneEntityType = SceneEntityType.Player;
         this.hp =scenePlayerDo.getHp();
+        this.copyId = scenePlayerDo.getCopyId();
     }
 
     public SceneEntityDo(SceneBossDo sceneBossDo) {
@@ -79,6 +77,7 @@ public class SceneEntityDo {
         this.name = sceneBossDo.getName();
         this.sceneEntityType = SceneEntityType.Boss;
         this.hp =sceneBossDo.getHp();
+        this.copyId = sceneBossDo.getCopyId();
     }
 
 
@@ -120,7 +119,12 @@ public class SceneEntityDo {
             jsonObject.put("damage",damage);
             triggerActorDamageEvent(jsonObject);
         }
-        ScenePushHelper.pushMonster(jsonObject.getLongValue("actorId"), Lists.newArrayList(this));
+
+        if(jsonObject.getLongValue("actorId") != 0){
+            EventBusHolder.post(new ActorEvent<>(jsonObject.getLongValue("actorId"),EventType.ATTACK));
+            ScenePushHelper.pushSceneEntityDamage(jsonObject.getLongValue("actorId"), Lists.newArrayList(this));
+
+        }
     }
 
     private void triggerMonsterDeadEvent(JSONObject jsonObject) {
@@ -156,10 +160,12 @@ public class SceneEntityDo {
     private void triggerCopyDeadEvent(JSONObject jsonObject) {
         //玩家死亡
         if(sceneEntityType == SceneEntityType.Player){
+            jsonObject.put("copyId",copyId);
             EventBusHolder.post(new ActorEvent(sceneEntityId, EventType.COPY_ACTOR_DEAD,jsonObject));
         }
         //BOSS死亡
         if(sceneEntityType == SceneEntityType.Boss){
+            jsonObject.put("copyId",copyId);
             EventBusHolder.post(new ActorEvent(sceneEntityId, EventType.COPY_BOSS_DEAD,jsonObject));
         }
     }

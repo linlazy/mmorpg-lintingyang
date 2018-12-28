@@ -7,19 +7,25 @@ import com.linlazy.mmorpglintingyang.module.common.event.EventBusHolder;
 import com.linlazy.mmorpglintingyang.module.common.event.EventType;
 import com.linlazy.mmorpglintingyang.module.common.reward.Reward;
 import com.linlazy.mmorpglintingyang.module.common.reward.RewardService;
+import com.linlazy.mmorpglintingyang.module.config.BossConfigService;
 import com.linlazy.mmorpglintingyang.module.copy.domain.CopyDo;
 import com.linlazy.mmorpglintingyang.module.scene.config.SceneConfigService;
+import com.linlazy.mmorpglintingyang.module.scene.constants.SceneEntityType;
+import com.linlazy.mmorpglintingyang.module.scene.domain.SceneBossDo;
+import com.linlazy.mmorpglintingyang.module.scene.domain.SceneEntityDo;
+import com.linlazy.mmorpglintingyang.module.scene.domain.ScenePlayerDo;
 import com.linlazy.mmorpglintingyang.module.scene.manager.SceneManager;
 import com.linlazy.mmorpglintingyang.module.team.domain.TeamDo;
 import com.linlazy.mmorpglintingyang.module.team.manager.TeamManager;
 import com.linlazy.mmorpglintingyang.module.user.manager.UserManager;
+import com.linlazy.mmorpglintingyang.module.user.manager.entity.User;
+import com.linlazy.mmorpglintingyang.utils.RandomUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -33,6 +39,8 @@ public class CopyManager {
     @Autowired
     private SceneConfigService sceneConfigService;
 
+    @Autowired
+    private BossConfigService bossConfigService;
 
     @Autowired
     private TeamManager teamManager;
@@ -43,22 +51,24 @@ public class CopyManager {
     @Autowired
     private RewardService rewardService;
 
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private static int maxCopyId = 0;
 
     private Map<Integer, CopyDo> copyIdCopyDoMap = new HashMap<>();
     private Map<Long,Integer> actorIdCopyIdMap = new HashMap<>();
 
-    private Map<Integer,ScheduledFuture> copyIdScheduledFutureMap = new HashMap<>();
+    private Map<Integer,ScheduledFuture> copyIdScheduleMap = new HashMap<>();
+
     /**
      * 退出副本
      */
     public void quitCopy(int copyId){
+        ScheduledFuture scheduledFuture = copyIdScheduleMap.remove(copyId);
+        scheduledFuture.cancel(true);
         CopyDo copyDo = copyIdCopyDoMap.get(copyId);
         copyDo.quitCopy();
         copyIdCopyDoMap.remove(copyId);
-        ScheduledFuture scheduledFuture = copyIdScheduledFutureMap.remove(copyId);
-        scheduledFuture.cancel(true);
     }
 
 
@@ -76,10 +86,63 @@ public class CopyManager {
         Set<Long> teamIdSet = actorTeamDo.getTeamIdSet();
         copyDo.setCopyPlayerIdSet(teamIdSet);
         copyDo.setSceneId(sceneId);
-        copyIdCopyDoMap.put(maxCopyId,copyDo);
 
-        //启动调度
+        //初始化副本怪物
+        Set<SceneEntityDo> sceneEntityDoSet = new HashSet<>();
+
+        List<JSONObject> bossConfigs = bossConfigService.getBossBySceneId(sceneId);
+        for(int i = 0 ; i < bossConfigs.size(); i ++){
+            JSONObject bossConfig = bossConfigs.get(i);
+
+            SceneBossDo bossDo = new SceneBossDo();
+            bossDo.setSceneId(sceneId);
+            bossDo.setBossId(bossConfig.getIntValue("bossId"));
+            bossDo.setName(bossConfig.getString("name"));
+            bossDo.setHp(bossConfig.getIntValue("hp"));
+            bossDo.setCopyId(maxCopyId);
+
+            sceneEntityDoSet.add(new SceneEntityDo(bossDo));
+        }
+        copyDo.setSceneEntitySet(sceneEntityDoSet);
+
+        copyIdCopyDoMap.put(maxCopyId,copyDo);
+        Set<Long> copyPlayerIdSet = copyDo.getCopyPlayerIdSet();
+        copyPlayerIdSet.stream()
+                .forEach(teamId ->{
+                    actorIdCopyIdMap.put(teamId,maxCopyId);
+                });
+
+        //启动Boss自动攻击调度
+        startBossAutoAttackScheduled(copyDo);
+        //启动调度`
         return startQuitCopyScheduled(copyDo);
+    }
+
+    private void startBossAutoAttackScheduled(CopyDo copyDo) {
+        ScheduledFuture<?> scheduledFuture = scheduledExecutorService.scheduleAtFixedRate(() -> {
+            //随机选择一位在场景中的玩家
+            Set<Long> copyPlayerIdSet = copyDo.getCopyPlayerIdSet();
+            Long targetId = RandomUtils.randomElement(copyPlayerIdSet);
+            User user = userManager.getUser(targetId);
+            SceneEntityDo sceneEntityDo = new SceneEntityDo(new ScenePlayerDo(user));
+            sceneEntityDo.setCopyId(copyDo.getCopyId());
+            // boss attack entityId entityType
+            copyDo.getSceneEntitySet().stream()
+                    .filter(sceneEntityDo1 -> sceneEntityDo1.getSceneEntityType() == SceneEntityType.Boss)
+                    .forEach(
+                            sceneEntityDo1 -> {
+                                JSONObject bossConfig = bossConfigService.getBossConfig((int) sceneEntityDo1.getSceneEntityId());
+                                int attack = bossConfig.getIntValue("attack");
+                                JSONObject jsonObject = new JSONObject();
+                                jsonObject.put("entityId", sceneEntityDo.getSceneEntityId());
+                                jsonObject.put("entityType", sceneEntityDo.getSceneEntityType());
+                                sceneEntityDo.attacked(attack, jsonObject);
+                            }
+                    );
+        }, 0L, 5L, TimeUnit.SECONDS);
+
+        copyIdScheduleMap.put(copyDo.getCopyId(),scheduledFuture);
+
     }
 
     /**
@@ -91,14 +154,13 @@ public class CopyManager {
         JSONObject copyConfig = sceneConfigService.getCopyConfig(copyDo.getSceneId());
         int times = copyConfig.getIntValue("times");
         //到达时间后挑战结束,退出副本触发事件
+         scheduledExecutorService.schedule(() -> {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("copyId",copyDo.getCopyId());
+            EventBusHolder.post(new ActorEvent<>(0, EventType.QUIT_COPY,jsonObject));
+             logger.debug("到达时间后挑战结束,退出副本触发事件");
+        }, times, TimeUnit.SECONDS);
 
-        ScheduledFuture<?> scheduledFuture = scheduledExecutorService.scheduleWithFixedDelay((Runnable) () -> {
-
-            EventBusHolder.post(new ActorEvent<>(0, EventType.QUIT_COPY, copyDo.getCopyId()));
-
-        }, 0L, times, TimeUnit.SECONDS);
-
-        copyIdScheduledFutureMap.put(copyDo.getCopyId(),scheduledFuture);
         return copyDo;
     }
 
@@ -121,7 +183,7 @@ public class CopyManager {
      * @return
      */
     public boolean notCopyFor(long actorId) {
-        return actorIdCopyIdMap.get(actorId) != null;
+        return actorIdCopyIdMap.get(actorId) == null;
     }
 
     /**
@@ -136,11 +198,26 @@ public class CopyManager {
         }
     }
 
-    public void quitCopy(Long actorId) {
+    /**
+     * 玩家退出副本
+     * @param actorId
+     */
+    public void quitCopy(long actorId) {
+        int copyId = actorIdCopyIdMap.get(actorId);
+        CopyDo copyDo = getCopyDo(copyId);
+        copyDo.getCopyPlayerIdSet().remove(actorId);
         actorIdCopyIdMap.remove(actorId);
     }
 
     public CopyDo getCopyDo(int copyId) {
+        return copyIdCopyDoMap.get(copyId);
+    }
+
+    public CopyDo getCopyDo(long actorId,int sceneId) {
+        if(this.notCopyFor(actorId)){
+            return createCopy(actorId,sceneId);
+        }
+        int copyId = actorIdCopyIdMap.get(actorId);
         return copyIdCopyDoMap.get(copyId);
     }
 

@@ -31,9 +31,6 @@ public class CopyService {
     public void listenEvent(ActorEvent actorEvent){
 
         switch (actorEvent.getEventType()){
-            case ENTER_COPY_SCENE://进入场景副本
-                handleCopyEnterScene(actorEvent);
-                break;
             case COPY_ACTOR_DEAD://副本玩家死亡
                 handleCopyActorDead(actorEvent);
                 break;
@@ -82,18 +79,6 @@ public class CopyService {
     }
 
 
-    /**
-     * 处理进入副本场景事件
-     * @param actorEvent
-     *
-     */
-    private void handleCopyEnterScene(ActorEvent actorEvent) {
-        JSONObject jsonObject = (JSONObject)actorEvent.getData();
-        int sceneId = jsonObject.getIntValue("sceneId");
-        if(copyManager.notCopyFor(actorEvent.getActorId())){
-           copyManager.createCopy(actorEvent.getActorId(), sceneId);
-        }
-    }
 
     /**
      * 处理副本玩家死亡事件

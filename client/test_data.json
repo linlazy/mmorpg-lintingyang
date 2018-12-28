@@ -7,7 +7,7 @@
   {"module":"scene","command":"enter","actorId":7},
   {"module":"scene","command":"aoi","actorId":7},
   {"module":"scene","command":"aoi","actorId":7,"closeOwn": true},
-  {"module":"scene","command":"move","actorId":7,"targetSceneId": 2},
+    {"module":"scene","command":"move","actorId":7,"targetSceneId": 2},
   {"module":"scene","command":"talk","actorId":7,"npcId": 1},
 
   {"module":"fight","command":"attack","actorId":7,"attackMode": 0,"entityType": 2,"entityId": 1},
@@ -16,6 +16,8 @@
   {"module":"fight","command":"attack","actorId":7,"attackMode": 1,"entityType": 1,"entityId": 8},
   {"module":"fight","command":"attack","actorId":7,"attackMode": 1,"entityType": 1,"entityId": 8,"skillId": 1},
   {"module":"fight","command":"attack","actorId":7,"attackMode": 1,"entityType": 1,"entityId": 8,"skillId": 1,"arenaId": 1},
+
+  {"module":"fight","command":"attack","actorId":7,"attackMode": 1,"entityType": 4,"entityId": 1,"skillId": 1},
 
   {"module":"skill","command":"dress","actorId":7,"skillId": 1},
   {"module":"skill","command":"levelUp","actorId":7,"skillId": 1},

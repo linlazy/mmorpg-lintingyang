@@ -14,4 +14,9 @@ public class ScenePushHelper {
         jsonObject.put("monster-dead",data);
         PushHelper.push(actorId,jsonObject);
     }
+    public static void pushSceneEntityDamage(long actorId, List<SceneEntityDo> data){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("sceneEntity-damage",data);
+        PushHelper.push(actorId,jsonObject);
+    }
 }

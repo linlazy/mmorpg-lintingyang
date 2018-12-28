@@ -1,9 +1,13 @@
 package com.linlazy.mmorpglintingyang.module.equip.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.eventbus.Subscribe;
+import com.linlazy.mmorpglintingyang.module.common.event.ActorEvent;
+import com.linlazy.mmorpglintingyang.module.common.event.EventBusHolder;
 import com.linlazy.mmorpglintingyang.module.equip.dto.EquipDTO;
 import com.linlazy.mmorpglintingyang.module.equip.dto.FixEquipmentDTO;
 import com.linlazy.mmorpglintingyang.module.equip.manager.EquipManager;
+import com.linlazy.mmorpglintingyang.module.equip.manager.domain.DressedEquip;
 import com.linlazy.mmorpglintingyang.module.equip.manager.domain.EquipDo;
 import com.linlazy.mmorpglintingyang.module.item.constants.ItemType;
 import com.linlazy.mmorpglintingyang.module.item.manager.backpack.domain.ItemDo;
@@ -15,8 +19,39 @@ import com.linlazy.mmorpglintingyang.utils.ItemIdUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+
 @Component
 public class EquipmentService {
+
+    @Autowired
+    private DressedEquip dressedEquip;
+
+    @PostConstruct
+    public void init(){
+        EventBusHolder.register(this);
+    }
+
+    @Subscribe
+    public void listenEvent(ActorEvent actorEvent){
+        switch (actorEvent.getEventType()){
+            case ATTACK:
+                //攻击凑效，减少武器耐久度
+                handleAttack(actorEvent);
+                break;
+            case ACTOR_DAMAGE:
+                handleAttacked(actorEvent);
+                break;
+        }
+    }
+
+    private void handleAttacked(ActorEvent actorEvent) {
+        dressedEquip.consumeDurabilityWithAttacked(actorEvent.getActorId());
+    }
+
+    private void handleAttack(ActorEvent actorEvent) {
+        dressedEquip.consumeDurabilityWithAttack(actorEvent.getActorId());
+    }
 
     @Autowired
     private EquipManager equipManager;

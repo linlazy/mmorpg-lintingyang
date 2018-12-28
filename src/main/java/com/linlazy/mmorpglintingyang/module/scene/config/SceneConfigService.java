@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.server.common.ConfigFile;
 import com.linlazy.mmorpglintingyang.server.common.ConfigFileManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -18,8 +17,6 @@ import java.util.Map;
 @Component
 public class SceneConfigService {
 
-    @Autowired
-    private MonsterConfigService monsterConfigService;
 
     private static ConfigFile sceneConfigFile;
 

@@ -5,14 +5,9 @@
   {"sceneId":4,
     "name":"黄巾前锋营",
     "neighborSet":[2],
-    "times": 300,
+    "times": 100,
     "rewards": [[1,50],[2,50]],
-    "boss": {
-        "bossId": 1,
-        "bossName": "何曼",
-        "attack": 50,
-        "hp": 1000
-      }
+    "bossIds":[1]
   },
   {
     "sceneId":5,

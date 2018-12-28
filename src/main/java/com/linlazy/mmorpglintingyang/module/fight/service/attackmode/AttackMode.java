@@ -54,7 +54,7 @@ public abstract class AttackMode {
 
 
     protected  Set<SceneEntityDo> getAttackedSceneEntity(long actorId, JSONObject jsonObject){
-        Set SceneEntityDoSet = new HashSet();
+        Set sceneEntityDoSet = new HashSet();
 
         int entityType = jsonObject.getIntValue("entityType");
         long entityId = jsonObject.getLongValue("entityId");
@@ -68,9 +68,12 @@ public abstract class AttackMode {
                     .filter(sceneEntityDo1 -> sceneEntityDo1.getSceneEntityId() == entityId && sceneEntityDo1.getSceneEntityType() == entityType)
                     .findFirst().get();
         }
-        SceneEntityDoSet.add(sceneEntityDo);
 
-        return SceneEntityDoSet;
+        if(sceneEntityDo.getHp() >0){
+            sceneEntityDoSet.add(sceneEntityDo);
+        }
+
+        return sceneEntityDoSet;
     }
 
     public Result<?> isCanAttack(long actorId, JSONObject jsonObject){

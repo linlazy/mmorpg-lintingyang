@@ -1,11 +1,18 @@
 package com.linlazy.mmorpglintingyang.module.scene.manager;
 
+import com.alibaba.fastjson.JSONObject;
+import com.linlazy.mmorpglintingyang.module.common.event.ActorEvent;
+import com.linlazy.mmorpglintingyang.module.common.event.EventBusHolder;
+import com.linlazy.mmorpglintingyang.module.common.event.EventType;
+import com.linlazy.mmorpglintingyang.module.copy.domain.CopyDo;
+import com.linlazy.mmorpglintingyang.module.copy.manager.CopyManager;
 import com.linlazy.mmorpglintingyang.module.scene.domain.MonsterDo;
 import com.linlazy.mmorpglintingyang.module.scene.domain.NpcDo;
 import com.linlazy.mmorpglintingyang.module.scene.domain.SceneDo;
 import com.linlazy.mmorpglintingyang.module.scene.domain.SceneEntityDo;
 import com.linlazy.mmorpglintingyang.module.user.manager.UserManager;
 import com.linlazy.mmorpglintingyang.module.user.manager.entity.User;
+import com.linlazy.mmorpglintingyang.server.common.GlobalConfigService;
 import com.linlazy.mmorpglintingyang.server.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,6 +31,11 @@ public class SceneManager {
     private MonsterManager monsterManager;
     @Autowired
     private NPCManager npcManager;
+
+    @Autowired
+    private CopyManager copyManager;
+    @Autowired
+    private GlobalConfigService globalConfigService;
 
     private Map<Integer,SceneDo> map = new HashMap<>();
 
@@ -56,36 +68,47 @@ public class SceneManager {
         SceneDo sceneDo = getSceneDo(actorId);
         sceneDo.getActorIdSet().add(actorId);
 
+        if(globalConfigService.isCopy(sceneDo.getSceneId())){
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("sceneId",sceneDo.getSceneId());
+            EventBusHolder.post(new ActorEvent<>(actorId, EventType.ENTER_COPY_SCENE));
+        }
         return Result.success(sceneDo);
     }
 
     public SceneDo getSceneDo(long actorId) {
         User user = userManager.getUser(actorId);
-        SceneDo sceneDo = map.get(user.getSceneId());
-        if(sceneDo == null){
-            sceneDo = new SceneDo();
+        int sceneId = user.getSceneId();
+        if(globalConfigService.isCopy(sceneId)){
+            CopyDo copyDo = copyManager.getCopyDo(actorId,sceneId);
+            return copyDo.convertSceneDo();
+        }else {
+            SceneDo sceneDo = map.get(sceneId);
+            if(sceneDo == null){
+                sceneDo = new SceneDo();
 
-            sceneDo.setSceneId(user.getSceneId());
+                sceneDo.setSceneId(sceneId);
 
-            Set<SceneEntityDo> sceneEntityDoSet = sceneDo.getSceneEntityDoSet();
-            //初始化怪物
-            Set<MonsterDo> monsterDoSet = monsterManager.getMonsterBySceneId(user.getSceneId());
-            sceneEntityDoSet.addAll( monsterDoSet.stream()
-                    .map(SceneEntityDo::new)
-                    .collect(Collectors.toSet()));
+                Set<SceneEntityDo> sceneEntityDoSet = sceneDo.getSceneEntityDoSet();
+                //初始化怪物
+                Set<MonsterDo> monsterDoSet = monsterManager.getMonsterBySceneId(sceneId);
+                sceneEntityDoSet.addAll( monsterDoSet.stream()
+                        .map(SceneEntityDo::new)
+                        .collect(Collectors.toSet()));
 
-            //初始化NPC
-            Set<NpcDo> npcDoSet = npcManager.getNPCDoBySceneId(user.getSceneId());
-            sceneEntityDoSet.addAll( npcDoSet.stream()
-                    .map(SceneEntityDo::new)
-                    .collect(Collectors.toSet()));
+                //初始化NPC
+                Set<NpcDo> npcDoSet = npcManager.getNPCDoBySceneId(sceneId);
+                sceneEntityDoSet.addAll( npcDoSet.stream()
+                        .map(SceneEntityDo::new)
+                        .collect(Collectors.toSet()));
 
-            //初始化玩家
-            Set<Long> actorIdSet = sceneDo.getActorIdSet();
-            actorIdSet.add(user.getActorId());
-            map.put(user.getSceneId(),sceneDo);
+                //初始化玩家
+                Set<Long> actorIdSet = sceneDo.getActorIdSet();
+                actorIdSet.add(user.getActorId());
+                map.put(sceneId,sceneDo);
+            }
+            return sceneDo;
         }
 
-        return sceneDo;
     }
 }

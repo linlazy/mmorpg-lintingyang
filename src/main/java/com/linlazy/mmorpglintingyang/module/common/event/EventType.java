@@ -6,11 +6,7 @@ public enum EventType {
      */
     SCENE_ENTER,
     /**
-     * 玩家受到伤害
-     */
-    ATTACKED,
-    /**
-     * 玩家攻击伤害
+     * 玩家攻击造成伤害
      */
     ATTACK,
     /**
@@ -58,5 +54,18 @@ public enum EventType {
     /**
      * 场景怪物死亡
      */
-    SCENE_MONSTER_DEAD
+    SCENE_MONSTER_DEAD,
+    /**
+     * 玩家等级提升事件
+     */
+    ACTOR_LEVEL_UP,
+
+    /**
+     * 任务触发事件
+     */
+    TASK_TRIGGER,
+    /**
+     * 任务完成事件
+     */
+    TASK_COMPLETE
 }

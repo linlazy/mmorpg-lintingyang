@@ -2,8 +2,11 @@ package com.linlazy.mmorpglintingyang.server;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.linlazy.mmorpglintingyang.server.common.LogoutListener;
 import com.linlazy.mmorpglintingyang.server.common.Result;
 import com.linlazy.mmorpglintingyang.server.route.GameRouter;
+import com.linlazy.mmorpglintingyang.utils.SessionManager;
+import com.linlazy.mmorpglintingyang.utils.SpringContextUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpRequest;
@@ -56,6 +59,17 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
         WebSocketServerHandshakerFactory webSocketServerHandshakerFactory = new WebSocketServerHandshakerFactory(location,null,true);
         WebSocketServerHandshaker webSocketServerHandshaker = webSocketServerHandshakerFactory.newHandshaker(httpRequest);
         webSocketServerHandshaker.handshake(channelHandlerContext.channel(),httpRequest);
+    }
+
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        long actorId = SessionManager.getActorId(ctx.channel());
+
+        SpringContextUtil.getApplicationContext().getBeansOfType(LogoutListener.class).values()
+                .stream().forEach(logoutListener -> logoutListener.logout(actorId));
+
+        SessionManager.unBind(ctx.channel());
     }
 
     @Override

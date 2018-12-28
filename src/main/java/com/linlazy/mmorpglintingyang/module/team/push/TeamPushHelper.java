@@ -11,6 +11,7 @@ public class TeamPushHelper {
         TeamDTO teamDTO = new TeamDTO();
         teamDTO.setSourceId(actorId);
         teamDTO.setTeamOperatorType(teamOperationType);
+
         jsonObject.put("team", teamDTO);
         PushHelper.push(actorId,jsonObject);
     }
