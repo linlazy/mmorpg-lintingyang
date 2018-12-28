@@ -1,35 +1,34 @@
-package com.linlazy.mmorpglintingyang.module.task.type;
+package com.linlazy.mmorpglintingyang.module.task.template;
 
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.eventbus.Subscribe;
+import com.google.common.collect.Sets;
 import com.linlazy.mmorpglintingyang.module.common.event.ActorEvent;
-import com.linlazy.mmorpglintingyang.module.common.event.EventBusHolder;
+import com.linlazy.mmorpglintingyang.module.common.event.EventType;
 import com.linlazy.mmorpglintingyang.module.user.manager.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
+import java.util.Set;
 
 /**
  * 等级升到N级
  */
 @Component
-public class Task1 {
+public class TaskTemplate1 extends TaskTemplate {
 
-    @PostConstruct
-    public void init(){
-        EventBusHolder.register(this);
+    @Override
+    public Set<EventType> likeEvent() {
+        return Sets.newHashSet(EventType.ACTOR_LEVEL_UP,EventType.TASK_TRIGGER);
     }
 
-    @Subscribe
-    public void listenEvent(ActorEvent actorEvent){
-        switch (actorEvent.getEventType()){
-            //玩家等级提升事件
-            case ACTOR_LEVEL_UP:
-                //任务触发事件
-            case TASK_TRIGGER:
-                handle(actorEvent);
+    private void handleTrigger(ActorEvent actorEvent) {
+        if(isTrigger(actorEvent)){
+
         }
+    }
+
+    private boolean isTrigger(ActorEvent actorEvent) {
+        return false;
     }
 
 
@@ -49,15 +48,15 @@ public class Task1 {
         //任务内容相关事件
 
         //是否满足前置条件
-        if(isReachCondition(actorEvent.getActorId(), (JSONObject) actorEvent.getData())){
-            //更新任务数据
-            updateTaskData();
-            //是否任务完成
-            if(isCompeled(actorEvent.getActorId(),(JSONObject) actorEvent.getData())){
-                updateTaskStatus(actorEvent.getActorId(),(JSONObject) actorEvent.getData());
-            }
-            //存档DB
-        }
+//        if(isReachCondition(actorEvent.getActorId(), (JSONObject) actorEvent.getData())){
+//            //更新任务数据
+//            updateTaskData();
+//            //是否任务完成
+//            if(isCompeled(actorEvent.getActorId(),(JSONObject) actorEvent.getData())){
+//                updateTaskStatus(actorEvent.getActorId(),(JSONObject) actorEvent.getData());
+//            }
+//            //存档DB
+//        }
 
         //任务开启事件
 
@@ -80,15 +79,6 @@ public class Task1 {
 
     }
 
-    /**
-     * 是否满足前置条件
-     * @param actorId
-     * @param data
-     * @return
-     */
-    private boolean isReachCondition(long actorId, JSONObject data) {
-        return false;
-    }
 
     private void updateTaskData() {
 
@@ -103,4 +93,6 @@ public class Task1 {
         int needLevel = taskConfig.getIntValue("level");
         return userManager.getUser(actorId).getLevel() >= needLevel;
     }
+
+
 }

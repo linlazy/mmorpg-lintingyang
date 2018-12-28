@@ -59,6 +59,10 @@ public enum EventType {
      * 玩家等级提升事件
      */
     ACTOR_LEVEL_UP,
+    /**
+     * 玩家金币改变事件
+     */
+    ACTOR_GOLD_CHANGE,
 
     /**
      * 任务触发事件

@@ -1,0 +1,10 @@
+[
+  {
+    "taskTemplateId": 1,
+    "description": "当前金币达到%d"
+  },
+  {
+    "taskTemplateId": 2,
+    "taskTemplate": "等级提升到%d级"
+  }
+]
