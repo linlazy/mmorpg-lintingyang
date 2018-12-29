@@ -1,10 +1,22 @@
 [
   {
     "taskTemplateId": 1,
-    "description": "当前金币达到%d"
+    "description": "等级升到N级"
   },
   {
     "taskTemplateId": 2,
-    "taskTemplate": "等级提升到%d级"
+    "description": " 当前金币达到xxx"
+  },
+  {
+    "taskTemplateId": 3,
+    "description": " 击杀xxx小怪N只"
+  },
+  {
+    "taskTemplateId": 4,
+    "description": " 穿戴装备等级总和达到XXX"
+  },
+  {
+    "taskTemplateId": 5,
+    "description": " 通过xxx副本"
   }
 ]

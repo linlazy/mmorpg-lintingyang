@@ -71,5 +71,9 @@ public enum EventType {
     /**
      * 任务完成事件
      */
-    TASK_COMPLETE
+    TASK_COMPLETE,
+    /**
+     * 穿戴装备
+     */
+    DRESS_EQUIP
 }

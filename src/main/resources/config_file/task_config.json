@@ -2,6 +2,37 @@
   {
     "taskId": 1,
     "taskTemplateId": 1,
-    "taskTemplateArgs": 300
+    "taskTemplateArgs": {
+      "level": 10
+    }
+  },
+  {
+    "taskId": 2,
+    "taskTemplateId": 2,
+    "taskTemplateArgs": {
+      "gold": 300
+    }
+  },
+  {
+    "taskId": 3,
+    "taskTemplateId": 3,
+    "taskTemplateArgs": {
+      "monsterId": 1,
+      "targetCount": 5
+    }
+  },
+  {
+    "taskId": 4,
+    "taskTemplateId": 4,
+    "taskTemplateArgs": {
+      "dressEquipLevelTotal": 20
+    }
+  },
+  {
+    "taskId": 5,
+    "taskTemplateId": 5,
+    "taskTemplateArgs": {
+      "copyId": 4
+    }
   }
 ]

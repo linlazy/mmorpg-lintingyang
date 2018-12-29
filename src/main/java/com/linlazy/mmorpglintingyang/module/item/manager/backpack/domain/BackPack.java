@@ -1,5 +1,7 @@
 package com.linlazy.mmorpglintingyang.module.item.manager.backpack.domain;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.module.equip.manager.domain.EquipDo;
 import com.linlazy.mmorpglintingyang.module.item.constants.ItemType;
 import com.linlazy.mmorpglintingyang.module.item.manager.backpack.response.BackPackInfo;
@@ -75,6 +77,53 @@ public class BackPack {
         }
     }
 
+    public boolean isFull(JSONArray jsonArray){
+        int needSpace = computeNeedSpace(jsonArray);
+        int totalSpace = globalConfigService.getPackageMaxLatticeNum() -actorBackPack.size();
+        return totalSpace < needSpace;
+    }
+
+    private int computeNeedSpace(JSONArray jsonArray) {
+        int needSpace = 0;
+        for(int i = 0; i < jsonArray.size(); i ++){
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            long itemId = jsonObject.getLongValue("itemId");
+            int num = jsonObject.getIntValue("num");
+            needSpace +=computeItemNeedSpace(itemId,num);
+        }
+
+        return needSpace;
+    }
+
+    private int computeItemNeedSpace(long itemId, int num) {
+        ItemDo itemDo = new ItemDo(itemId);
+        itemDo.setCount(num);
+        if(!itemDo.isSuperPosition()){
+            return itemDo.getCount();
+        }else {
+            return computeSuperNeedSpace(itemDo);
+        }
+    }
+
+    private int computeSuperNeedSpace(ItemDo itemDo) {
+        int needSpace = 0;
+
+        int ableNum = actorBackPack.stream()
+                .filter(backPackLattice -> backPackLattice.getItemDo().getBaseItemId() == itemDo.getBaseItemId())
+                .map(backPackLattice -> itemDo.getSuperPositionUp() - backPackLattice.getItemDo().getCount())
+                .reduce(0, (a, b) -> a + b);
+        //新放入的道具直接放在已放置的位置已足够
+        if(ableNum >= itemDo.getCount()){
+            return needSpace;
+        }
+
+        needSpace =(itemDo.getCount() -ableNum)/itemDo.getSuperPositionUp();
+        if(needSpace * itemDo.getSuperPositionUp() <itemDo.getCount() -ableNum){
+            needSpace++;
+        }
+        return needSpace;
+    }
+
     /**
      * 放置不可叠放物品是否满背包
      * @param itemDo
@@ -93,6 +142,9 @@ public class BackPack {
     private boolean isFullBackPackForSuperPosition(ItemDo itemDo) {
         //计算玩家背包可放置该物品的总数量 =
         //空格子数量 * 可叠放上限 + 已存放位置可放置数量总和
+
+
+        //物品数量
         int spaceNum = globalConfigService.getPackageMaxLatticeNum() -actorBackPack.size();
         long totalNum = spaceNum * itemDo.getSuperPositionUp() + actorBackPack.stream()
                 .filter(backPackLattice -> backPackLattice.getItemDo().getBaseItemId() == itemDo.getBaseItemId())

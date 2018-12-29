@@ -1,15 +1,29 @@
 package com.linlazy.mmorpglintingyang.module.task.trigger;
 
+import com.alibaba.fastjson.JSONObject;
+import com.linlazy.mmorpglintingyang.module.task.constants.TaskStatus;
+import com.linlazy.mmorpglintingyang.module.task.dao.TaskDao;
 import com.linlazy.mmorpglintingyang.module.task.domain.TaskDo;
+import com.linlazy.mmorpglintingyang.module.task.entity.Task;
+import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * 完成任务xxx,触发任务
+ */
 public class TaskTrigger1 extends TaskTrigger {
     @Override
     protected int triggerType() {
         return 1;
     }
 
+    @Autowired
+    private TaskDao taskDao;
+
     @Override
     public boolean isTrigger(TaskDo taskDo) {
-        return false;
+        JSONObject triggerArgs = taskDo.getTriggerArgs();
+        int taskId = triggerArgs.getIntValue("taskId");
+        Task task = taskDao.getTask(taskDo.getActorId(), taskId);
+        return task.getStatus() >= TaskStatus.COMPLETE_UNREWARD;
     }
 }
