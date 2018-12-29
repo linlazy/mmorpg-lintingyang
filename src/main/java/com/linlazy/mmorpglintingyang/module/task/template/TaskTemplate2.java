@@ -18,6 +18,11 @@ public class TaskTemplate2 extends TaskTemplate {
         return Sets.newHashSet(EventType.ACTOR_GOLD_CHANGE);
     }
 
+    @Override
+    protected int templateId() {
+        return 2;
+    }
+
     @Autowired
     private UserManager userManager;
 

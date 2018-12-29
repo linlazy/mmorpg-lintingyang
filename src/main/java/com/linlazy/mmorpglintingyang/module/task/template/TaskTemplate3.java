@@ -17,6 +17,11 @@ public class TaskTemplate3 extends TaskTemplate {
     }
 
     @Override
+    protected int templateId() {
+        return 3;
+    }
+
+    @Override
     public boolean isPreCondition(long actorId, JSONObject jsonObject, TaskDo taskDo) {
         int entityId = jsonObject.getIntValue("entityId");
         JSONObject data = taskDo.getData();
