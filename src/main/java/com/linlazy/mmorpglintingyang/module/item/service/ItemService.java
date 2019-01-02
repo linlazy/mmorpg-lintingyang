@@ -7,6 +7,7 @@ import com.linlazy.mmorpglintingyang.module.item.manager.ItemManager;
 import com.linlazy.mmorpglintingyang.module.item.manager.config.ItemConfigService;
 import com.linlazy.mmorpglintingyang.module.item.manager.dao.ItemDao;
 import com.linlazy.mmorpglintingyang.module.item.service.strategy.UseItemStrategy;
+import com.linlazy.mmorpglintingyang.module.item.validator.ItemValidator;
 import com.linlazy.mmorpglintingyang.server.common.Result;
 import com.linlazy.mmorpglintingyang.utils.ItemIdUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class ItemService {
     private ItemDao itemDao;
     @Autowired
     private ItemManager itemManager;
+    @Autowired
+    private ItemValidator itemValidator;
+
 
     /**
      * 使用道具
@@ -32,6 +36,11 @@ public class ItemService {
      * @return
      */
     public Result<?> useItem(long actorId,long itemId,JSONObject jsonObject) {
+
+        if(itemValidator.isLock(actorId)){
+            return Result.valueOf("当前处于交易状态，无法使用物品");
+        }
+
         int baseItemId = ItemIdUtil.getBaseItemId(itemId);
         JSONObject itemConfig = itemConfigService.getItemConfig(baseItemId);
         UseItemStrategy useItemStrategy = UseItemStrategy.newUseItemStrategy(itemConfig.getIntValue("useItem"));
@@ -58,6 +67,11 @@ public class ItemService {
      * @return 返回增加道具后，背包变化的信息
      */
     public Result<?> pushBackPack(long actorId, int baseItemId, int num) {
+
+        if(itemValidator.isLock(actorId)){
+            return Result.valueOf("当前处于交易状态，无法使用物品");
+        }
+
         //是否背包已满
         if(itemManager.isFullBackPack(actorId,baseItemId,num)){
             return Result.valueOf("背包已满");
@@ -72,6 +86,9 @@ public class ItemService {
      * @return
      */
     public Result<BackPackInfo> arrangeBackPack(long actorId) {
+        if(itemValidator.isLock(actorId)){
+            return Result.valueOf("当前处于交易状态，无法使用物品");
+        }
         BackPackInfo backPackInfo = itemManager.arrangeBackPack(actorId);
         return Result.success(backPackInfo);
     }
@@ -84,6 +101,9 @@ public class ItemService {
      * @param consumeNum
      */
     public Result<?> consumeBackPackItem(long actorId,long itemId,int consumeNum) {
+        if(itemValidator.isLock(actorId)){
+            return Result.valueOf("当前处于交易状态，无法使用物品");
+        }
         long count = itemManager.getItemTotal(actorId, itemId);
         if(count <consumeNum){
             return Result.valueOf("道具不足");

@@ -12,11 +12,12 @@
   {
     "itemId":2,
     "itemType": 1,
-    "name": "金创药（包）",
+    "name": "金创药",
     "level": 1,
-    "effect": "解包后可获得6个金创药",
+    "effect": "瞬间恢复500HP、100MP",
     "source": "随身商店，商城购买",
-    "rewards": "[[1,6]]"
+    "rewards": "[[60000,500],[60001,100]]",
+    "superPosition": 50
   },
   {
     "itemId":3,

@@ -6,12 +6,14 @@ import com.linlazy.mmorpglintingyang.module.common.event.EventType;
 import com.linlazy.mmorpglintingyang.module.task.domain.TaskDo;
 import com.linlazy.mmorpglintingyang.module.user.manager.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
 /**
  *  当前金币达到xxx
  */
+@Component
 public class TaskTemplate2 extends TaskTemplate {
     /**
      * 玩家金币改变事件

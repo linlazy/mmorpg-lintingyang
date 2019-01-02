@@ -11,6 +11,8 @@ import com.linlazy.mmorpglintingyang.module.item.manager.entity.Item;
 import com.linlazy.mmorpglintingyang.server.common.GlobalConfigService;
 import com.linlazy.mmorpglintingyang.utils.ItemIdUtil;
 import com.linlazy.mmorpglintingyang.utils.SpringContextUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,6 +21,9 @@ import java.util.stream.Collectors;
  * 玩家背包
  */
 public class BackPack {
+
+
+    private static Logger logger = LoggerFactory.getLogger(BackPack.class);
 
     private GlobalConfigService globalConfigService = SpringContextUtil.getApplicationContext().getBean(GlobalConfigService.class);
 
@@ -162,37 +167,40 @@ public class BackPack {
     public BackPackInfo popBackPack(ItemDo itemDo){
         BackPackInfo backPackInfo = new BackPackInfo();
 
+         List<BackPackLattice> backPackLattices = null;
         if(itemDo.isSuperPosition()){
-            popSuperPositionFromBackPack(itemDo);
+           backPackLattices = popSuperPositionFromBackPack(itemDo);
         }else {
-            popNonSuperPositionFromBackPack(itemDo);
+            backPackLattices = popNonSuperPositionFromBackPack(itemDo);
         }
 
-        //存单背包
-        itemDao.deleteActorItems(actorId);
-        this.actorBackPack.stream()
-                .map(BackPackLattice::getItemDo)
-                .map(ItemDo::convertItem)
-                .forEachOrdered(item -> itemDao.addItem(item));
-
-        //返回数据
-        List<BackPackLatticeDTO> backPackLatticeDTOList = actorBackPack.stream()
-                .map(BackPackLattice::convertBackPackLatticeDTO)
-                .collect(Collectors.toList());
+        List<BackPackLatticeDTO> backPackLatticeDTOList = backPackLattices.stream()
+            .map(BackPackLatticeDTO::new)
+            .collect(Collectors.toList());
         backPackInfo.setBackPackLatticeDTOS(backPackLatticeDTOList);
-
         return backPackInfo;
     }
 
-    private void popNonSuperPositionFromBackPack(ItemDo itemDo) {
+    private List<BackPackLattice> popNonSuperPositionFromBackPack(ItemDo itemDo) {
+        List<BackPackLattice> result = new ArrayList<>();
+
         for(BackPackLattice backPackLattice: actorBackPack){
             if(backPackLattice.getItemDo().getBackPackIndex() == itemDo.getBackPackIndex()){
                 actorBackPack.remove(backPackLattice);
+                itemDao.deleteItem(backPackLattice.getItemDo().convertItem());
+                backPackLattice.getItemDo().setCount(0);
+                result.add(backPackLattice);
             }
         }
+
+        return result;
     }
 
-    private void popSuperPositionFromBackPack(ItemDo itemDo) {
+    private  List<BackPackLattice> popSuperPositionFromBackPack(ItemDo itemDo) {
+
+        List<BackPackLattice> result = new ArrayList<>();
+
+
         List<BackPackLattice> backPackLatticeList = actorBackPack.stream()
                 .filter(backPackLattice -> backPackLattice.getItemDo().getBaseItemId() == itemDo.getBaseItemId())
                 .collect(Collectors.toList());
@@ -202,12 +210,20 @@ public class BackPack {
             //当前格子满足消耗
             if(backPackLattice.getItemDo().getCount() > itemDo.getCount()){
                 backPackLattice.getItemDo().setCount(backPackLattice.getItemDo().getCount() - consumeNum);
+                itemDao.updateItem(backPackLattice.getItemDo().convertItem());
+                logger.debug("backPackLattice：{}",backPackLattice);
+                result.add(backPackLattice);
                 break;
+
             }
             //否则，更新背包
             consumeNum -=backPackLattice.getItemDo().getCount();
             backPackLattice.getItemDo().setCount(0);
+            itemDao.updateItem(backPackLattice.getItemDo().convertItem());
+            logger.debug("backPackLattice：{}",backPackLattice);
+            result.add(backPackLattice);
         }
+        return result;
     }
 
     /**
@@ -218,8 +234,9 @@ public class BackPack {
 
         //放置折叠物品进背包
         if(itemDo.isSuperPosition()){
-            pushSuperPositionBackPack(itemDo);
-
+            List<BackPackLattice> backPackLattices = pushSuperPositionBackPack(itemDo);
+            List<BackPackLatticeDTO> collect = backPackLattices.stream().map(BackPackLattice::convertBackPackLatticeDTO).collect(Collectors.toList());
+            backPackInfo.setBackPackLatticeDTOS(collect);
             //放置非折叠物品进背包
         }else {
             List<BackPackLattice> backPackLattices = pushNonSuperPositionBackPack(itemDo);
@@ -295,6 +312,7 @@ public class BackPack {
                 itemDao.addItem(itemDo.convertItem());
             }
 
+            itemDo.setCount(1);
             spaceBackPackLattice.setItemDo(itemDo);
             actorBackPack.add(spaceBackPackLattice);
             result.add(spaceBackPackLattice);
@@ -329,7 +347,11 @@ public class BackPack {
      * 放置折叠物品进背包
      * @param itemDo
      */
-    private void pushSuperPositionBackPack(ItemDo itemDo) {
+    private  List<BackPackLattice> pushSuperPositionBackPack(ItemDo itemDo) {
+        itemDo.setItemId(itemDo.getBaseItemId());
+
+        List<BackPackLattice> result = new ArrayList<>();
+
 
         Set<BackPackLattice> backPackLatticeList = actorBackPack.stream()
                 .filter(itemDo1 -> itemDo1.getItemDo().getBaseItemIdOrderIdKey().equals(itemDo.getBaseItemIdOrderIdKey()))
@@ -344,6 +366,8 @@ public class BackPack {
             //未超过叠加数量
             if(count + addItemNum <= itemDo.getSuperPositionUp()){
                 backPackLattice.getItemDo().setCount(count + addItemNum);
+                itemDao.updateItem(backPackLattice.getItemDo().convertItem());
+                result.add(backPackLattice);
                 break;
             }
 
@@ -351,6 +375,8 @@ public class BackPack {
             addItemNum -= (itemDo.getSuperPositionUp() - count);
             actorBackPack.remove(backPackLattice);
             actorBackPack.add(backPackLattice);
+            itemDao.updateItem(backPackLattice.getItemDo().convertItem());
+            result.add(backPackLattice);
         }
 
         //放进空格子
@@ -358,9 +384,12 @@ public class BackPack {
         for(int i =1 ; i<= times; i ++){
             BackPackLattice spaceBackPackLattice = findSpaceBackPackLattice();
             ItemDo clonez = itemDo.clonez();
+            clonez.setItemId(itemDo.getBaseItemId());
             clonez.setCount(itemDo.getSuperPositionUp());
             spaceBackPackLattice.setItemDo(clonez);
             actorBackPack.add(spaceBackPackLattice);
+            itemDao.addItem(spaceBackPackLattice.getItemDo().convertItem());
+            result.add(spaceBackPackLattice);
         }
 
         //还有剩余,再放置一格
@@ -368,11 +397,17 @@ public class BackPack {
         if(remainCount > 0 ){
             BackPackLattice spaceBackPackLattice = findSpaceBackPackLattice();
             ItemDo clonez = itemDo.clonez();
+            clonez.setItemId(itemDo.getBaseItemId());
             clonez.setCount(remainCount);
             spaceBackPackLattice.setItemDo(clonez);
             actorBackPack.add(spaceBackPackLattice);
+            itemDao.addItem(spaceBackPackLattice.getItemDo().convertItem());
+            result.add(spaceBackPackLattice);
         }
 
+
+
+        return result;
     }
 
 

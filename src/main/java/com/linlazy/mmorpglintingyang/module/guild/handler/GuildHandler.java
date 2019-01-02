@@ -1,14 +1,19 @@
 package com.linlazy.mmorpglintingyang.module.guild.handler;
 
 import com.alibaba.fastjson.JSONObject;
+import com.linlazy.mmorpglintingyang.module.guild.service.GuildService;
 import com.linlazy.mmorpglintingyang.server.common.Result;
 import com.linlazy.mmorpglintingyang.server.route.Cmd;
 import com.linlazy.mmorpglintingyang.server.route.Module;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @Module("guild")
 public class GuildHandler {
+
+    @Autowired
+    private GuildService guildService;
 
     /**
      * 创建公会
@@ -17,18 +22,34 @@ public class GuildHandler {
      */
     @Cmd("createGuild")
     public Result<?> createGuild(JSONObject jsonObject){
-        return Result.success();
+        long actorId = jsonObject.getLongValue("actorId");
+        return guildService.createGuild(actorId);
     }
 
     /**
-     * 加入公会
+     * 申请加入公会
      * @param jsonObject
      * @return
      */
-    @Cmd("joinGuild")
-    public Result<?> joinGuild(JSONObject jsonObject){
-        return Result.success();
+    @Cmd("applyJoin")
+    public Result<?> applyJoin(JSONObject jsonObject){
+        long actorId = jsonObject.getLongValue("actorId");
+        long guildId = jsonObject.getLongValue("guildId");
+        return guildService.applyJoin(actorId,guildId);
     }
+
+    /**
+     * 同意加入公会
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("acceptJoin")
+    public Result<?> acceptJoin(JSONObject jsonObject){
+        long actorId = jsonObject.getLongValue("actorId");
+        long targetId = jsonObject.getLongValue("targetId");
+        return guildService.acceptJoin(actorId,targetId);
+    }
+
 
     /**
      * 退出公会
@@ -47,7 +68,10 @@ public class GuildHandler {
      */
     @Cmd("appoint")
     public Result<?> appoint(JSONObject jsonObject){
-        return Result.success();
+        long actorId = jsonObject.getLongValue("actorId");
+        long targetId = jsonObject.getLongValue("targetId");
+        int authLevel = jsonObject.getIntValue("authLevel");
+        return guildService.appoint(actorId,targetId,authLevel);
     }
 
 
@@ -58,6 +82,20 @@ public class GuildHandler {
      */
     @Cmd("shotOffGuild")
     public Result<?> shotOffGuild(JSONObject jsonObject){
-        return Result.success();
+        long actorId = jsonObject.getLongValue("actorId");
+        long targetId = jsonObject.getLongValue("targetId");
+        return guildService.shotOffGuild(actorId,targetId);
     }
+
+    /**
+     * 获取公会仓库信息
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("getGuildWareHouse")
+    public Result<?> getGuildWareHouse(JSONObject jsonObject){
+        long actorId = jsonObject.getLongValue("actorId");
+        return guildService.getGuildWareHouse(actorId);
+    }
+
 }

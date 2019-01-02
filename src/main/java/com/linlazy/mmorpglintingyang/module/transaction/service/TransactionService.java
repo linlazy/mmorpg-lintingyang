@@ -2,7 +2,7 @@ package com.linlazy.mmorpglintingyang.module.transaction.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.module.transaction.constants.TransactionOperatiorType;
-import com.linlazy.mmorpglintingyang.module.transaction.manager.TransactionManager;
+import com.linlazy.mmorpglintingyang.module.transaction.manager.TransactionsManager;
 import com.linlazy.mmorpglintingyang.module.transaction.push.TransactionPushHelper;
 import com.linlazy.mmorpglintingyang.module.transaction.validator.TransactionValidator;
 import com.linlazy.mmorpglintingyang.server.common.Result;
@@ -16,7 +16,7 @@ public class TransactionService {
     private TransactionValidator transactionValidator;
 
     @Autowired
-    private TransactionManager transactionManager;
+    private TransactionsManager transactionsManager;
 
      /**
      * 邀请交易
@@ -28,7 +28,7 @@ public class TransactionService {
         if(transactionValidator.isTrading(actorId,targetId)){
             return Result.valueOf("玩家已处于交易状态");
         }
-        return  transactionManager.inviteTrade(actorId,targetId);
+        return  transactionsManager.inviteTrade(actorId,targetId);
     }
 
     public Result<?> rejectTrade(long actorId, long targetId) {
@@ -48,7 +48,7 @@ public class TransactionService {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("sourceId",actorId);
         TransactionPushHelper.pushTransactionOperation(targetId, TransactionOperatiorType.ACCEPT,jsonObject);
-        return transactionManager.acceptTrade(actorId,targetId);
+        return transactionsManager.acceptTrade(actorId,targetId);
     }
 
     /**
@@ -58,7 +58,7 @@ public class TransactionService {
      * @return
      */
     public Result<?> lockTrade(long actorId, JSONObject jsonObject) {
-        return transactionManager.lockTrade(actorId,jsonObject);
+        return transactionsManager.lockTrade(actorId,jsonObject);
     }
 
 
@@ -69,6 +69,7 @@ public class TransactionService {
      * @return
      */
     public Result<?> enterTrade(long actorId, JSONObject jsonObject) {
-        return transactionManager.enterTrade(actorId,jsonObject);
+
+        return transactionsManager.enterTrade(actorId,jsonObject);
     }
 }

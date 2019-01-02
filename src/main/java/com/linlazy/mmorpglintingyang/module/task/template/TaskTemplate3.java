@@ -4,12 +4,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Sets;
 import com.linlazy.mmorpglintingyang.module.common.event.EventType;
 import com.linlazy.mmorpglintingyang.module.task.domain.TaskDo;
+import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
 /**
  *  击杀xxx小怪N只
  */
+@Component
 public class TaskTemplate3 extends TaskTemplate {
     /**
      * 关心场景怪物死亡事件

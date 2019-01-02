@@ -8,12 +8,14 @@ import com.linlazy.mmorpglintingyang.module.item.manager.dao.ItemDao;
 import com.linlazy.mmorpglintingyang.module.item.manager.entity.Item;
 import com.linlazy.mmorpglintingyang.module.task.domain.TaskDo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
 /**
  *  穿戴装备等级总和达到XXX
  */
+@Component
 public class TaskTemplate4 extends TaskTemplate {
     /**
      * 关心任务触发，穿戴装备事件

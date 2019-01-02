@@ -1,24 +1,21 @@
-package com.linlazy.mmorpglintingyang.module.transaction.validator;
+package com.linlazy.mmorpglintingyang.module.item.validator;
 
 import com.linlazy.mmorpglintingyang.module.transaction.manager.TransactionsManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TransactionValidator {
+public class ItemValidator {
 
     @Autowired
     private TransactionsManager transactionsManager;
 
-
     /**
-     * 玩家是否处于正在交易状态
+     * 当前物品处于交易状态
      * @param actorId
-     * @param targetId
      * @return
      */
-    public boolean isTrading(long actorId,long targetId){
-        return transactionsManager.isTrading(actorId) || transactionsManager.isTrading(targetId);
+    public boolean isLock(long actorId){
+        return transactionsManager.isLock(actorId);
     }
-
 }

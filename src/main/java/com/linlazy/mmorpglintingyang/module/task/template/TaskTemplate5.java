@@ -4,12 +4,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Sets;
 import com.linlazy.mmorpglintingyang.module.common.event.EventType;
 import com.linlazy.mmorpglintingyang.module.task.domain.TaskDo;
+import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
 /**
  *  通过某个副本
  */
+@Component
 public class TaskTemplate5 extends TaskTemplate {
     /**
      * 关心任务触发，穿戴装备事件

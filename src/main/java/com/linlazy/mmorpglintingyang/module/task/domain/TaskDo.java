@@ -5,6 +5,8 @@ import com.linlazy.mmorpglintingyang.module.task.constants.TaskStatus;
 import com.linlazy.mmorpglintingyang.module.task.entity.Task;
 import com.linlazy.mmorpglintingyang.module.task.trigger.TaskTrigger;
 import lombok.Data;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalTime;
@@ -12,6 +14,8 @@ import java.time.format.DateTimeFormatter;
 
 @Data
 public class TaskDo {
+
+    private static Logger logger = LoggerFactory.getLogger(TaskDo.class);
 
     /**
      * 任务唯一标识
@@ -88,7 +92,8 @@ public class TaskDo {
         if(!StringUtils.isEmpty(triggerArgs)){
             this.triggerArgs = JSONObject.parseObject(triggerArgs);
         }
-        DateTimeFormatter dateTimeFormatter =DateTimeFormatter.ofPattern("2018-12-30");
+        DateTimeFormatter dateTimeFormatter =DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        logger.debug("taskConfig:{}",taskConfig);
         this.beginTime = LocalTime.parse(taskConfig.getString("beginTime"),dateTimeFormatter);
         this.endTime =  LocalTime.parse(taskConfig.getString("endTime"),dateTimeFormatter);
     }

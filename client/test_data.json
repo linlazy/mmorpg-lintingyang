@@ -7,7 +7,7 @@
   {"module":"scene","command":"enter","actorId":7},
   {"module":"scene","command":"aoi","actorId":7},
   {"module":"scene","command":"aoi","actorId":7,"closeOwn": true},
-    {"module":"scene","command":"move","actorId":7,"targetSceneId": 2},
+  {"module":"scene","command":"move","actorId":7,"targetSceneId": 2},
   {"module":"scene","command":"talk","actorId":7,"npcId": 1},
 
   {"module":"fight","command":"attack","actorId":7,"attackMode": 0,"entityType": 2,"entityId": 1},
@@ -39,5 +39,16 @@
   {"module":"team","command":"acceptJoin","actorId":7,"targetId": 8},
   {"module":"team","command":"appointCaptain","actorId":7,"targetId": 8},
   {"module":"team","command":"leave","actorId":7},
-  {"module":"team","command":"shotOff","actorId":7,"targetId": 8}
+  {"module":"team","command":"shotOff","actorId":7,"targetId": 8},
+
+
+  {"module":"transaction","command":"inviteTrade","actorId":7,"targetId": 8},
+  {"module":"transaction","command":"rejectTrade","actorId":8,"targetId": 7},
+  {"module":"transaction","command":"acceptTrade","actorId":8,"targetId": 7},
+  {"module":"transaction","command":"lockTrade","actorId":8,"items": [
+    {"itemId": 1,"num": 4}
+  ]},
+  {"module":"transaction","command":"enterTrade","actorId":7},
+
+  {"module":"guild","command":"createGuild","actorId":7}
 ]
