@@ -15,6 +15,8 @@ public class BackPackLattice {
      */
     private int index;
 
+
+    private int backpackType;
     /**
      * 道具
      */

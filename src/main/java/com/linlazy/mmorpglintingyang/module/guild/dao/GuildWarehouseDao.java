@@ -4,6 +4,8 @@ import com.linlazy.mmorpglintingyang.module.guild.entity.GuildWarehouse;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.Set;
+
 /**
  * 公会仓库访问类
  */
@@ -11,5 +13,5 @@ import org.apache.ibatis.annotations.Select;
 public interface GuildWarehouseDao {
 
     @Select("select * from guild_warehouse where guidId = #{guildId}")
-    GuildWarehouse getGuildWarehouse(long guildId);
+    Set<GuildWarehouse> getGuildWarehouse(long guildId);
 }

@@ -98,4 +98,16 @@ public class GuildHandler {
         return guildService.getGuildWareHouse(actorId);
     }
 
+
+    /**
+     * 捐献金币
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("donateGold")
+    public Result<?> donateGold(JSONObject jsonObject){
+        long actorId = jsonObject.getLongValue("actorId");
+        int gold = jsonObject.getIntValue("gold");
+        return guildService.donateGold(actorId,gold);
+    }
 }

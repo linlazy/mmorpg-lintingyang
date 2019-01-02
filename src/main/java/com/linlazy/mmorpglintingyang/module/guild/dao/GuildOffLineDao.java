@@ -12,6 +12,4 @@ public interface GuildOffLineDao {
     "values (#{guildId},#{receiver},#{sourceId},#{type})"})
     void addGuildOffLine(GuildOffLine guildOffLine);
 
-
-
 }

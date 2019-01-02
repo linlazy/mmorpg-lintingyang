@@ -14,10 +14,6 @@ public class GuildWarehouse {
     private long guildId;
 
     /**
-     * 金币
-     */
-    private int gold;
-    /**
      * 道具ID
      */
     private long itemId;
@@ -31,4 +27,5 @@ public class GuildWarehouse {
      * 扩展属性
      */
     private String ext;
+
 }

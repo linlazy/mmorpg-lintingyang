@@ -1,6 +1,7 @@
 package com.linlazy.mmorpglintingyang.module.item.manager.backpack.domain;
 
 import com.alibaba.fastjson.JSONObject;
+import com.linlazy.mmorpglintingyang.module.guild.entity.GuildWarehouse;
 import com.linlazy.mmorpglintingyang.module.item.manager.config.ItemConfigService;
 import com.linlazy.mmorpglintingyang.module.item.manager.entity.Item;
 import com.linlazy.mmorpglintingyang.utils.ItemIdUtil;
@@ -143,6 +144,12 @@ public class ItemDo{
         item.setExt(ext);
         return item;
     }
+
+    public GuildWarehouse convertGuildWarehouse(){
+        GuildWarehouse guildWarehouse = new GuildWarehouse();
+        return guildWarehouse;
+    }
+
 
     @Override
     public boolean equals(Object o) {

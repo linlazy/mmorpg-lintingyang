@@ -46,6 +46,14 @@ public class GlobalConfigService {
     }
 
     /**
+     * 获取公会仓库背包最大格子数
+     * @return
+     */
+    public int getGuildPackageMaxLatticeNum(){
+        return jsonObject.getIntValue("packageMaxLatticeNum");
+    }
+
+    /**
      * 获取玩家初始场景
      * @return
      */

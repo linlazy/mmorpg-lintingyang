@@ -3,19 +3,19 @@ package com.linlazy.mmorpglintingyang.module.guild.entity;
 import lombok.Data;
 
 @Data
-public class Guild {
+public class GuildActor {
+
     /**
      * 公会ID
      */
     private long guildId;
+    /**
+     * 玩家ID
+     */
+    private long actorId;
 
     /**
-     * 金币
+     * 权限级别
      */
-    private int gold;
-
-    /**
-     * 公会等级
-     */
-    private int level;
+    private int authLevel;
 }

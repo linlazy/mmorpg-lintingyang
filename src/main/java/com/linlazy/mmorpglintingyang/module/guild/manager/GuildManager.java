@@ -3,11 +3,15 @@ package com.linlazy.mmorpglintingyang.module.guild.manager;
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.module.guild.constants.GuildAuthLevel;
 import com.linlazy.mmorpglintingyang.module.guild.constants.GuildOpertorType;
+import com.linlazy.mmorpglintingyang.module.guild.dao.GuildActorDao;
 import com.linlazy.mmorpglintingyang.module.guild.dao.GuildDao;
 import com.linlazy.mmorpglintingyang.module.guild.dao.GuildOffLineDao;
+import com.linlazy.mmorpglintingyang.module.guild.dao.GuildWarehouseDao;
 import com.linlazy.mmorpglintingyang.module.guild.domain.GuildDo;
 import com.linlazy.mmorpglintingyang.module.guild.entity.Guild;
+import com.linlazy.mmorpglintingyang.module.guild.entity.GuildActor;
 import com.linlazy.mmorpglintingyang.module.guild.entity.GuildOffLine;
+import com.linlazy.mmorpglintingyang.module.guild.entity.GuildWarehouse;
 import com.linlazy.mmorpglintingyang.module.guild.push.GuildPushHelper;
 import com.linlazy.mmorpglintingyang.server.common.Result;
 import com.linlazy.mmorpglintingyang.utils.SessionManager;
@@ -24,9 +28,13 @@ public class GuildManager {
 
 
     @Autowired
-    private GuildDao guildDao;
+    private GuildActorDao guildActorDao;
     @Autowired
     private GuildOffLineDao guildOffLineDao;
+    @Autowired
+    private GuildDao guildDao;
+    @Autowired
+    private GuildWarehouseDao guildWarehouseDao;
 
     private Map<Long,Long> actorIdGuildIdMap = new ConcurrentHashMap<>();
 
@@ -44,11 +52,11 @@ public class GuildManager {
     public Result<?> createGuild(long actorId) {
 
         long newGuildId = maxGuildId.incrementAndGet();
-        Guild guild = new Guild();
-        guild.setActorId(actorId);
-        guild.setGuildId(newGuildId);
-        guild.setAuthLevel(GuildAuthLevel.President);
-        guildDao.addGuild(guild);
+        GuildActor guildActor = new GuildActor();
+        guildActor.setActorId(actorId);
+        guildActor.setGuildId(newGuildId);
+        guildActor.setAuthLevel(GuildAuthLevel.President);
+        guildActorDao.addGuild(guildActor);
         actorIdGuildIdMap.put(actorId,newGuildId);
         return Result.success();
     }
@@ -88,23 +96,23 @@ public class GuildManager {
         GuildDo guildDo = new GuildDo();
         guildDo.setGuildId(guildId);
 
-        Set<Guild> guildSet = guildDao.getGuildSet(guildId);
-        for(Guild guild: guildSet){
-            switch (guild.getAuthLevel()){
+        Set<GuildActor> guildActorSet = guildActorDao.getGuildSet(guildId);
+        for(GuildActor guildActor : guildActorSet){
+            switch (guildActor.getAuthLevel()){
                 case GuildAuthLevel.President:
-                    guildDo.setPresidentId(guild.getActorId());
+                    guildDo.setPresidentId(guildActor.getActorId());
                 break;
                 case GuildAuthLevel.VicePresident:
-                    guildDo.getVoidPresidentIdSet().add(guild.getActorId());
+                    guildDo.getVoidPresidentIdSet().add(guildActor.getActorId());
                 break;
                 case GuildAuthLevel.ExcellentMember:
-                    guildDo.getExcellentMemberIdSet().add(guild.getActorId());
+                    guildDo.getExcellentMemberIdSet().add(guildActor.getActorId());
                     break;
                 case GuildAuthLevel.OrdinaryMember:
-                    guildDo.getOrdinaryMemberIdSet().add(guild.getActorId());
+                    guildDo.getOrdinaryMemberIdSet().add(guildActor.getActorId());
                     break;
                 default:
-                    guildDo.getNewMemberIdSet().add(guild.getActorId());
+                    guildDo.getNewMemberIdSet().add(guildActor.getActorId());
             }
         }
 
@@ -114,19 +122,19 @@ public class GuildManager {
     public Result<?> acceptJoin(long actorId, long targetId) {
         Long guildId = actorIdGuildIdMap.get(actorId);
         actorIdGuildIdMap.put(actorId,guildId);
-        Guild guild = new Guild();
-        guild.setActorId(targetId);
-        guild.setGuildId(guildId);
-        guild.setAuthLevel(GuildAuthLevel.NewMember);
-        guildDao.addGuild(guild);
+        GuildActor guildActor = new GuildActor();
+        guildActor.setActorId(targetId);
+        guildActor.setGuildId(guildId);
+        guildActor.setAuthLevel(GuildAuthLevel.NewMember);
+        guildActorDao.addGuild(guildActor);
         return Result.success();
     }
 
     public Result<?> appoint(long actorId, long targetId, int authLevel) {
         Long guildId = actorIdGuildIdMap.get(actorId);
-        Guild guild = guildDao.getGuild(guildId, targetId);
-        guild.setAuthLevel(authLevel);
-        guildDao.updateGuild(guild);
+        GuildActor guildActor = guildActorDao.getGuild(guildId, targetId);
+        guildActor.setAuthLevel(authLevel);
+        guildActorDao.updateGuild(guildActor);
         return Result.success();
     }
 
@@ -142,8 +150,30 @@ public class GuildManager {
      */
     public Result<?> shotOffGuild(long actorId, long targetId) {
         Long guildId = actorIdGuildIdMap.remove(targetId);
-        Guild guild = guildDao.getGuild(guildId, targetId);
-        guildDao.deleteGuild(guild);
+        GuildActor guildActor = guildActorDao.getGuild(guildId, targetId);
+        guildActorDao.deleteGuild(guildActor);
         return Result.success();
+    }
+
+
+    /**
+     * 捐献金币
+     * @param actorId
+     * @param gold
+     * @return
+     */
+    public Result<?> donateGold(long actorId, int gold) {
+
+        Long guildId = actorIdGuildIdMap.get(actorId);
+        Guild guild = guildDao.getGuildGold(guildId);
+        guild.setGold(guild.getGold() + gold);
+        guildDao.updateGuildGold(guild);
+        return Result.success();
+    }
+
+    public Result<?> getGuildWareHouse(long actorId) {
+        Long guildId = actorIdGuildIdMap.get(actorId);
+        Set<GuildWarehouse> guildWarehouse = guildWarehouseDao.getGuildWarehouse(guildId);
+        return null;
     }
 }

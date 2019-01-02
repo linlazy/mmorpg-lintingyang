@@ -72,6 +72,20 @@ public class GuildService {
      */
     public Result<?> getGuildWareHouse(long actorId) {
 
-        return Result.success();
+        return guildManager.getGuildWareHouse(actorId);
+    }
+
+
+    /**
+     * 捐献金币
+     * @param actorId
+     * @param gold
+     * @return
+     */
+    public Result<?> donateGold(long actorId, int gold) {
+
+
+
+        return guildManager.donateGold(actorId,gold);
     }
 }

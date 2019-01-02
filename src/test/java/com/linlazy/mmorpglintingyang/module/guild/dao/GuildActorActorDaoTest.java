@@ -1,7 +1,7 @@
 package com.linlazy.mmorpglintingyang.module.guild.dao;
 
 import com.linlazy.mmorpglintingyang.module.guild.constants.GuildAuthLevel;
-import com.linlazy.mmorpglintingyang.module.guild.entity.Guild;
+import com.linlazy.mmorpglintingyang.module.guild.entity.GuildActor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,27 +10,27 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class GuildDaoTest {
+public class GuildActorActorDaoTest {
 
     @Autowired
-    GuildDao guildDao;
+    GuildActorDao guildActorDao;
 
     @Test
     public void addGuild() {
 
-        Guild guild = new Guild();
-        guild.setGuildId(1);
-        guild.setAuthLevel(GuildAuthLevel.President);
-        guild.setActorId(4194306);
-        guildDao.addGuild(guild);
+        GuildActor guildActor = new GuildActor();
+        guildActor.setGuildId(1);
+        guildActor.setAuthLevel(GuildAuthLevel.President);
+        guildActor.setActorId(4194306);
+        guildActorDao.addGuild(guildActor);
     }
 
 
     @Test
     public void getGuild() {
 
-        Guild guild = guildDao.getGuild(1, 4194306);
-        assert guild != null;
+        GuildActor guildActor = guildActorDao.getGuild(1, 4194306);
+        assert guildActor != null;
     }
 
 }
