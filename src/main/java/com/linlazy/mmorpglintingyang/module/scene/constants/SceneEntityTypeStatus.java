@@ -1,5 +1,8 @@
 package com.linlazy.mmorpglintingyang.module.scene.constants;
 
+/**
+ * @author linlazy
+ */
 public interface SceneEntityTypeStatus {
     /**
      * 生存

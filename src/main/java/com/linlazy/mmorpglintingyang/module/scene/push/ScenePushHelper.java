@@ -7,6 +7,9 @@ import com.linlazy.mmorpglintingyang.server.common.PushHelper;
 
 import java.util.List;
 
+/**
+ * @author linlazy
+ */
 public class ScenePushHelper {
 
     public static void pushMonster(long actorId, List<SceneEntityDo> data){

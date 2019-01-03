@@ -5,6 +5,9 @@ import com.linlazy.mmorpglintingyang.module.item.manager.config.ItemConfigServic
 import com.linlazy.mmorpglintingyang.utils.SpringContextUtil;
 import lombok.Data;
 
+/**
+ * @author linlazy
+ */
 @Data
 public class ItemContext {
 

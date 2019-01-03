@@ -2,6 +2,9 @@ package com.linlazy.mmorpglintingyang.module.skill.entity;
 
 import lombok.Data;
 
+/**
+ * @author linlazy
+ */
 @Data
 public class Skill {
 

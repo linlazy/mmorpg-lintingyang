@@ -12,6 +12,7 @@ import java.util.List;
 
 /**
  * 补偿邮件模板
+ * @author linlazy
  */
 @Component
 public class CompensateEmailTemplate extends EmailTemplate {

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 全服频道
+ * @author linlazy
  */
 @Component
 public class FullServerChatChannel extends ChatChannel{

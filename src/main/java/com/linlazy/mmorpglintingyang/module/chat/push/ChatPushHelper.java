@@ -8,6 +8,7 @@ import java.util.Set;
 
 /**
  * 聊天推送类
+ * @author linlazy
  */
 public class ChatPushHelper {
 

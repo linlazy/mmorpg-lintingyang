@@ -3,6 +3,9 @@ package com.linlazy.mmorpglintingyang.module.skill.template;
 import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 
+/**
+ * @author linlazy
+ */
 @Data
 public class SkillDo {
 
@@ -20,7 +23,7 @@ public class SkillDo {
     /**
      * CD时间
      */
-    private int CDTimes;
+    private int cdTimes;
 
     /**
      * 是否群攻

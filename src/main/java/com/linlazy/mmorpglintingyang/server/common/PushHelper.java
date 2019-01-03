@@ -7,6 +7,9 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 
 import java.util.Set;
 
+/**
+ * @author linlazy
+ */
 public class PushHelper {
 
     public static void push(long actorId,JSONObject jsonObjectResponse){

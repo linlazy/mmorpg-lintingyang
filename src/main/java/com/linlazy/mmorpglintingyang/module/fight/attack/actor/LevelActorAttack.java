@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 玩家等级攻击力 = 玩家等级 * 20
+ * @author linlazy
  */
 @Component
 public class LevelActorAttack extends ActorAttack {

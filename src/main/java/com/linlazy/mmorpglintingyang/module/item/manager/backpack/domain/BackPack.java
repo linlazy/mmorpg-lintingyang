@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 /**
  * 玩家背包
+ * @author linlazy
  */
 public class BackPack {
 

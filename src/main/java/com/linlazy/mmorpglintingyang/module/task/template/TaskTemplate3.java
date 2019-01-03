@@ -10,6 +10,7 @@ import java.util.Set;
 
 /**
  *  击杀xxx小怪N只
+ * @author linlazy
  */
 @Component
 public class TaskTemplate3 extends TaskTemplate {

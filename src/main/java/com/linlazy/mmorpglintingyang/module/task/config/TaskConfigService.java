@@ -10,6 +10,9 @@ import javax.annotation.PostConstruct;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @author linlazy
+ */
 @Component
 public class TaskConfigService {
 

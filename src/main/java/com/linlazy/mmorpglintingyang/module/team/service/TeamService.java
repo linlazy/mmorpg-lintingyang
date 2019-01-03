@@ -7,6 +7,9 @@ import com.linlazy.mmorpglintingyang.utils.SessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author linlazy
+ */
 @Component
 public class TeamService {
 

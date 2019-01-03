@@ -6,6 +6,9 @@ import com.linlazy.mmorpglintingyang.module.user.manager.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author linlazy
+ */
 @Component
 public class CommonAttackMode extends AttackMode {
 

@@ -1,5 +1,8 @@
 package com.linlazy.mmorpglintingyang.module.fight.attack.actor;
 
+/**
+ * @author linlazy
+ */
 public interface AttackType {
     /**
      * 装备

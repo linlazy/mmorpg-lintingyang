@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+/**
+ * @author linlazy
+ */
 public abstract class EmailTemplate {
 
     private static Map<Integer, EmailTemplate> map = new HashMap<>();

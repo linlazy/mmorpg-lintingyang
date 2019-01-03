@@ -3,6 +3,7 @@ package com.linlazy.mmorpglintingyang.module.common.reward;
 
 /**
  * 道具类型
+ * @author linlazy
  */
 public interface RewardDBType {
     /**

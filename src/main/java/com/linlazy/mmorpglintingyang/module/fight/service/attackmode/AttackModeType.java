@@ -1,5 +1,8 @@
 package com.linlazy.mmorpglintingyang.module.fight.service.attackmode;
 
+/**
+ * @author linlazy
+ */
 public interface AttackModeType {
     /**
      * 普通攻击

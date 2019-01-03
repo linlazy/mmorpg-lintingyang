@@ -6,6 +6,9 @@ import com.linlazy.mmorpglintingyang.module.skill.entity.Skill;
 import com.linlazy.mmorpglintingyang.utils.SpringContextUtil;
 import lombok.Data;
 
+/**
+ * @author linlazy
+ */
 @Data
 public class SkillDo {
 

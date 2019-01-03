@@ -2,6 +2,9 @@ package com.linlazy.mmorpglintingyang.module.scene.domain;
 
 import lombok.Data;
 
+/**
+ * @author linlazy
+ */
 @Data
 public class SceneBossDo {
 

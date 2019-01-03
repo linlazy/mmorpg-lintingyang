@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 技能校验器
+ * @author linlazy
  */
 @Component
 public class SkillValidator {

@@ -12,6 +12,7 @@ import java.util.Map;
 
 /**
  * 道具配置服务类
+ * @author linlazy
  */
 @Component
 public class ItemConfigService {

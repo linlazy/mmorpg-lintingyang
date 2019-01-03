@@ -2,6 +2,9 @@ package com.linlazy.mmorpglintingyang.module.team.dto;
 
 import lombok.Data;
 
+/**
+ * @author linlazy
+ */
 @Data
 public class TeamDTO {
 
@@ -18,5 +21,5 @@ public class TeamDTO {
     /**
      * 操作类型
      */
-    private int TeamOperatorType;
+    private int teamOperatorType;
 }

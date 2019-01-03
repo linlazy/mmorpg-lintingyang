@@ -5,6 +5,9 @@ import com.linlazy.mmorpglintingyang.module.pk.arena.entity.Arena;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author linlazy
+ */
 @Component
 public class ArenaManager {
 

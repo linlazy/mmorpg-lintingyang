@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 副本登出监听器
+ * @author linlazy
  */
 @Component
 public class CopyLogoutListener implements LogoutListener {

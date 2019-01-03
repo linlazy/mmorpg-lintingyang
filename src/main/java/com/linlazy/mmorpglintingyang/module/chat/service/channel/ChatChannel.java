@@ -7,6 +7,9 @@ import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author linlazy
+ */
 public abstract class ChatChannel {
 
     private static Map<Integer,ChatChannel> map = new HashMap<>();

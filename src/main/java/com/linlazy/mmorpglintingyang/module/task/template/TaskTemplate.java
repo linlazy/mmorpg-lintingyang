@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * @author linlazy
+ */
 public abstract class TaskTemplate {
 
     public abstract Set<EventType> likeEvent();

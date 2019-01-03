@@ -1,5 +1,8 @@
 package com.linlazy.mmorpglintingyang.module.equip.constants;
 
+/**
+ * @author linlazy
+ */
 public interface EquipType {
     /**
      * 武器

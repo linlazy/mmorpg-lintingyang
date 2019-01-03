@@ -1,5 +1,8 @@
 package com.linlazy.mmorpglintingyang.module.task.constants;
 
+/**
+ * @author linlazy
+ */
 public interface TaskStatus {
     /**
      * 未开启

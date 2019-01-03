@@ -12,6 +12,7 @@ import java.util.Map;
 
 /**
  * 游戏路由类
+ * @author linlazy
  */
 public class GameRouter {
 

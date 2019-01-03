@@ -7,6 +7,7 @@ import java.util.Set;
 
 /**
  * 队伍领域类
+ * @author linlazy
  */
 @Data
 public class TeamDo {

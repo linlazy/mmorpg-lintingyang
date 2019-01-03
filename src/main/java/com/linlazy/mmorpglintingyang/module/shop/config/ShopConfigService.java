@@ -10,6 +10,9 @@ import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author linlazy
+ */
 @Component
 public class ShopConfigService {
 

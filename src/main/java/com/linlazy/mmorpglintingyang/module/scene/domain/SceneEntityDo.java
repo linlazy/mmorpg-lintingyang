@@ -14,6 +14,7 @@ import lombok.Data;
 
 /**
  * 场景实体类
+ * @author linlazy
  */
 @Data
 public class SceneEntityDo {

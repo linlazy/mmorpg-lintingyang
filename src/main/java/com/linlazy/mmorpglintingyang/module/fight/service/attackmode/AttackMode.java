@@ -17,6 +17,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * @author linlazy
+ */
 public abstract class AttackMode {
 
     private static Map<Integer,AttackMode> map = new HashMap<>();

@@ -8,6 +8,9 @@ import com.linlazy.mmorpglintingyang.server.route.Module;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author linlazy
+ */
 @Component
 @Module("team")
 public class TeamHandler {

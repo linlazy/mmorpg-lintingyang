@@ -1,5 +1,8 @@
 package com.linlazy.mmorpglintingyang.utils;
 
+/**
+ * @author linlazy
+ */
 public class ItemIdUtil {
 
     /**

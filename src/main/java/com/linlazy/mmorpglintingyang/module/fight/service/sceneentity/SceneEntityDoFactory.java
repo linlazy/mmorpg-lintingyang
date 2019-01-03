@@ -6,6 +6,9 @@ import com.linlazy.mmorpglintingyang.module.user.manager.UserManager;
 import com.linlazy.mmorpglintingyang.module.user.manager.entity.User;
 import com.linlazy.mmorpglintingyang.utils.SpringContextUtil;
 
+/**
+ * @author linlazy
+ */
 public  class SceneEntityDoFactory {
 
     public static SceneEntityDo newPlayerSceneEntityDo(long entityId) {

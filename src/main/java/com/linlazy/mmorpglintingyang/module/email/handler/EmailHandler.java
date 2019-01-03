@@ -9,6 +9,9 @@ import com.linlazy.mmorpglintingyang.server.route.Module;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author linlazy
+ */
 @Module("email")
 @Component
 public class EmailHandler {

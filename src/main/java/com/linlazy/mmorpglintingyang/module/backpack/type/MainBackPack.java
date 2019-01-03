@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 /**
  * 玩家主背包
+ * @author linlazy
  */
 @Data
 public class MainBackPack extends BackPack{

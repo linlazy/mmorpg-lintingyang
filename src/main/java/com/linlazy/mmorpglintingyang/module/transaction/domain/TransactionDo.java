@@ -6,6 +6,9 @@ import lombok.Data;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @author linlazy
+ */
 @Data
 public class TransactionDo {
     /**

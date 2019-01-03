@@ -12,6 +12,7 @@ import java.util.Set;
 
 /**
  * 等级升到N级
+ * @author linlazy
  */
 @Component
 public class TaskTemplate1 extends TaskTemplate {

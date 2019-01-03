@@ -1,5 +1,8 @@
 package com.linlazy.mmorpglintingyang.module.equip.manager.domain;
 
+/**
+ * @author linlazy
+ */
 public class EquipUpgrade {
 
     public static EquipDo upgrade(EquipDo equipDo){

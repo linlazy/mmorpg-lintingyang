@@ -16,6 +16,7 @@ import java.util.Map;
 
 /**
  * BOSS配置服务类
+ * @author linlazy
  */
 @Component
 public class BossConfigService {

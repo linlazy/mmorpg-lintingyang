@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 攻击力增加xxx点（作用实体，存档）
+ * @author linlazy
  */
 public  class SkillTemplate4 extends SkillTemplate{
 

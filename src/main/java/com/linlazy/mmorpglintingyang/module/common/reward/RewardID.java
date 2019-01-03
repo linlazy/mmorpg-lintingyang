@@ -1,5 +1,8 @@
 package com.linlazy.mmorpglintingyang.module.common.reward;
 
+/**
+ * @author linlazy
+ */
 public interface RewardID {
     /**
      * 红药

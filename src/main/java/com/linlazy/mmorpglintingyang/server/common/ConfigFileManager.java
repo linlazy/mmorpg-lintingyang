@@ -2,6 +2,9 @@ package com.linlazy.mmorpglintingyang.server.common;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * @author linlazy
+ */
 public class ConfigFileManager {
 
     private static ConfigFile prop = null;

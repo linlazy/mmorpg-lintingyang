@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 任务xxx已领奖，触发任务
+ * @author linlazy
  */
 public class TaskTrigger2 extends TaskTrigger {
     @Override

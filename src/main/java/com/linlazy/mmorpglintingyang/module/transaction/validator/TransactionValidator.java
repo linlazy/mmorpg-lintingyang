@@ -4,6 +4,9 @@ import com.linlazy.mmorpglintingyang.module.transaction.manager.TransactionsMana
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author linlazy
+ */
 @Component
 public class TransactionValidator {
 

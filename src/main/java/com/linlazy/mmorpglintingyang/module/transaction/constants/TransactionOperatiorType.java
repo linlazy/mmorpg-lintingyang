@@ -1,5 +1,8 @@
 package com.linlazy.mmorpglintingyang.module.transaction.constants;
 
+/**
+ * @author linlazy
+ */
 public interface TransactionOperatiorType {
 
     /**

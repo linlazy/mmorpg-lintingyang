@@ -6,6 +6,9 @@ import com.linlazy.mmorpglintingyang.server.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author linlazy
+ */
 @Component
 public class TeamValidator {
 

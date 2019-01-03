@@ -3,6 +3,9 @@ package com.linlazy.mmorpglintingyang.module.chat.dto;
 import com.linlazy.mmorpglintingyang.module.chat.entity.Chat;
 import lombok.Data;
 
+/**
+ * @author linlazy
+ */
 @Data
 public class ChatDTO {
 

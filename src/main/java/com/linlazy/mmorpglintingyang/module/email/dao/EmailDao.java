@@ -4,6 +4,9 @@ import com.linlazy.mmorpglintingyang.module.email.entity.Email;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 
+/**
+ * @author linlazy
+ */
 @Mapper
 public interface EmailDao {
 

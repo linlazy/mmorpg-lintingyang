@@ -2,6 +2,7 @@ package com.linlazy.mmorpglintingyang.server.common;
 
 /**
  * 业务结果类
+ * @author linlazy
  */
 public class Result<T> {
 

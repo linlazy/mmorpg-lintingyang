@@ -5,6 +5,7 @@ import lombok.Data;
 
 /**
  * 背包格子
+ * @author linlazy
  */
 @Data
 public class BackPackLatticeDTO {

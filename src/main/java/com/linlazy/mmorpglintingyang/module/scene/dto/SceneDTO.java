@@ -7,6 +7,9 @@ import lombok.Data;
 
 import java.util.Set;
 
+/**
+ * @author linlazy
+ */
 @Data
 public class SceneDTO {
 

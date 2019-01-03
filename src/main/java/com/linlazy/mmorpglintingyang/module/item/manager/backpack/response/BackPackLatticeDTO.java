@@ -3,6 +3,9 @@ package com.linlazy.mmorpglintingyang.module.item.manager.backpack.response;
 import com.linlazy.mmorpglintingyang.module.item.manager.backpack.domain.BackPackLattice;
 import lombok.Data;
 
+/**
+ * @author linlazy
+ */
 @Data
 public class BackPackLatticeDTO {
 

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 背包管理类
+ * @author linlazy
  */
 @Component
 public class BackPackManager {

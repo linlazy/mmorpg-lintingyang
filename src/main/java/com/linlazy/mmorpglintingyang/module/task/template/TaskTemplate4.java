@@ -14,6 +14,7 @@ import java.util.Set;
 
 /**
  *  穿戴装备等级总和达到XXX
+ * @author linlazy
  */
 @Component
 public class TaskTemplate4 extends TaskTemplate {

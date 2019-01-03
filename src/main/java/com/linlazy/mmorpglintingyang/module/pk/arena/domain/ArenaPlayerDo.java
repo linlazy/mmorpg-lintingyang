@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 竞技场玩家
+ * @author linlazy
  */
 @Data
 public class ArenaPlayerDo {

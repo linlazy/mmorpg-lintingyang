@@ -8,6 +8,9 @@ import com.linlazy.mmorpglintingyang.utils.SpringContextUtil;
 import lombok.Data;
 import org.springframework.util.StringUtils;
 
+/**
+ * @author linlazy
+ */
 @Data
 public class EquipDo {
 

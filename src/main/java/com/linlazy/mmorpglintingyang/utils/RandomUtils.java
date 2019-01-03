@@ -5,6 +5,9 @@ import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
+/**
+ * @author linlazy
+ */
 public class RandomUtils {
 
 

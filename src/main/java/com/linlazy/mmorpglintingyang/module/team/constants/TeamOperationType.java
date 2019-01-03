@@ -1,5 +1,8 @@
 package com.linlazy.mmorpglintingyang.module.team.constants;
 
+/**
+ * @author linlazy
+ */
 public interface TeamOperationType {
 
     /**

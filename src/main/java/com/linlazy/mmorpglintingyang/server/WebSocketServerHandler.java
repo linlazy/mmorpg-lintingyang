@@ -16,6 +16,9 @@ import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 
+/**
+ * @author linlazy
+ */
 public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> {
 
     private static final String WEBSOCKET_PATH = "/websoket";

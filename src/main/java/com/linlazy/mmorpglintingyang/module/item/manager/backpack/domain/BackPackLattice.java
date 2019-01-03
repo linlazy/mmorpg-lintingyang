@@ -7,6 +7,7 @@ import java.util.Objects;
 
 /**
  * 背包格子
+ * @author linlazy
  */
 @Data
 public class BackPackLattice {

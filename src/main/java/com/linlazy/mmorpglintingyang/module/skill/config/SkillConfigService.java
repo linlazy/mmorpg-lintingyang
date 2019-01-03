@@ -13,6 +13,7 @@ import java.util.Map;
 
 /**
  * 技能配置服务类
+ * @author linlazy
  */
 @Component
 public class SkillConfigService {

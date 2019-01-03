@@ -14,6 +14,9 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+/**
+ * @author linlazy
+ */
 @Component
 public class TeamManager {
 

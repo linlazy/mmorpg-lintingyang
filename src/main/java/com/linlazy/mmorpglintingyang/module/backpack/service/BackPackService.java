@@ -6,6 +6,9 @@ import com.linlazy.mmorpglintingyang.module.backpack.type.BackPack;
 import com.linlazy.mmorpglintingyang.server.common.Result;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author linlazy
+ */
 @Component
 public class BackPackService {
 

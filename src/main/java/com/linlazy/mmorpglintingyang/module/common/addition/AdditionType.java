@@ -1,5 +1,8 @@
 package com.linlazy.mmorpglintingyang.module.common.addition;
 
+/**
+ * @author linlazy
+ */
 public interface AdditionType {
     /**
      * 物理攻击

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 等级防御力 = 等级 * 19
+ * @author linlazy
  */
 @Component
 public class LevelActorDefense extends ActorDefense {

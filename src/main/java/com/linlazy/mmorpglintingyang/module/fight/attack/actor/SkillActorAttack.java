@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 技能攻击力 = 基础攻击力 + 技能等级 * 6
+ * @author linlazy
  */
 @Component
 public class SkillActorAttack extends ActorAttack {

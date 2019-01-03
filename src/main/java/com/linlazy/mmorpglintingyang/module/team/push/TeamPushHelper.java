@@ -4,6 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.module.team.dto.TeamDTO;
 import com.linlazy.mmorpglintingyang.server.common.PushHelper;
 
+/**
+ * @author linlazy
+ */
 public class TeamPushHelper {
 
     public static void pushTeam(long actorId, int teamOperationType) {

@@ -5,6 +5,7 @@ import lombok.Data;
 
 /**
  * 公会仓库
+ * @author linlazy
  */
 @Data
 public class GuildWarehouse {

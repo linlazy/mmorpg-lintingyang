@@ -5,6 +5,9 @@ import com.linlazy.mmorpglintingyang.module.chat.service.channel.ChatChannel;
 import com.linlazy.mmorpglintingyang.server.common.Result;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author linlazy
+ */
 @Component
 public class ChatService {
     public Result<?> sendChat(long actorId, JSONObject jsonObject) {

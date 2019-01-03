@@ -1,5 +1,8 @@
 package com.linlazy.mmorpglintingyang.module.chat.constants;
 
+/**
+ * @author linlazy
+ */
 public interface ChatType {
 
     /**

@@ -5,6 +5,9 @@ import com.linlazy.mmorpglintingyang.module.email.service.template.EmailTemplate
 import com.linlazy.mmorpglintingyang.server.common.Result;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author linlazy
+ */
 @Component
 public class EmailService {
 

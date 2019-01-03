@@ -1,5 +1,8 @@
 package com.linlazy.mmorpglintingyang.module.backpack.constants;
 
+/**
+ * @author linlazy
+ */
 public interface BackPackType {
     /**
      * 主背包

@@ -7,6 +7,9 @@ import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author linlazy
+ */
 public abstract class CanAttacked {
 
     private static Map<Integer, CanAttacked> map = new HashMap<>();

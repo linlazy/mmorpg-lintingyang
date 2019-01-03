@@ -29,6 +29,9 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * @author linlazy
+ */
 @Component
 public class CopyManager {
 

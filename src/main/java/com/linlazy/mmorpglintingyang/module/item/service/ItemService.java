@@ -13,6 +13,9 @@ import com.linlazy.mmorpglintingyang.utils.ItemIdUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author linlazy
+ */
 @Component
 public class ItemService {
 

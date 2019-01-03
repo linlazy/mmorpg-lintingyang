@@ -3,6 +3,9 @@ package com.linlazy.mmorpglintingyang.module.scene.domain;
 import com.linlazy.mmorpglintingyang.module.user.manager.entity.User;
 import lombok.Data;
 
+/**
+ * @author linlazy
+ */
 @Data
 public class ScenePlayerDo {
 

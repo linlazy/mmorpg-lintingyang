@@ -2,6 +2,9 @@ package com.linlazy.mmorpglintingyang.module.common.reward;
 
 import lombok.Data;
 
+/**
+ * @author linlazy
+ */
 @Data
 public class Reward {
 

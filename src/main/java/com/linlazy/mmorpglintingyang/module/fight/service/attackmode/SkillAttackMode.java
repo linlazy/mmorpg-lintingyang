@@ -11,6 +11,9 @@ import com.linlazy.mmorpglintingyang.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author linlazy
+ */
 @Component
 public class SkillAttackMode extends AttackMode {
 

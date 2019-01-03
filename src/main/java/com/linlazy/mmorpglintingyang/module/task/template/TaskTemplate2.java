@@ -12,6 +12,7 @@ import java.util.Set;
 
 /**
  *  当前金币达到xxx
+ * @author linlazy
  */
 @Component
 public class TaskTemplate2 extends TaskTemplate {

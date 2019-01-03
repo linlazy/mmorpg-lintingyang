@@ -5,6 +5,9 @@ import com.linlazy.mmorpglintingyang.server.common.PushHelper;
 
 import java.util.Map;
 
+/**
+ * @author linlazy
+ */
 public class UserPushHelper {
 
     public static void pushActorAttrChange(long actorId, Map<Long,Integer> changeAttr){

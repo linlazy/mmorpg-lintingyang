@@ -12,6 +12,7 @@ import java.util.Objects;
 /**
  *
  * 道具领域类
+ * @author linlazy
  */
 @Data
 public class ItemDo{

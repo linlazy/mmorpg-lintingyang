@@ -2,6 +2,9 @@ package com.linlazy.mmorpglintingyang.module.pk.arena.entity;
 
 import lombok.Data;
 
+/**
+ * @author linlazy
+ */
 @Data
 public class Arena {
 

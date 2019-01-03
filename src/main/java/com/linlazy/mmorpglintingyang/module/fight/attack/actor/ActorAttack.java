@@ -6,6 +6,9 @@ import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author linlazy
+ */
 public abstract class ActorAttack {
 
     private static Map<Integer,ActorAttack> map = new HashMap<>();

@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
+/**
+ * @author linlazy
+ */
 @Component
 public class GlobalConfigService {
     private static ConfigFile globalConfigFile;

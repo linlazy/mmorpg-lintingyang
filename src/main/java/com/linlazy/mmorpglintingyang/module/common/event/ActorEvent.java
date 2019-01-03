@@ -2,6 +2,9 @@ package com.linlazy.mmorpglintingyang.module.common.event;
 
 import lombok.Data;
 
+/**
+ * @author linlazy
+ */
 @Data
 public class ActorEvent<T> {
     private long actorId;

@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 /**
  * 已穿戴装备
+ * @author linlazy
  */
 @Data
 @Component

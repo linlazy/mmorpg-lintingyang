@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 /**
  * 私聊频道
+ * @author linlazy
  */
 @Component
 public class PrivateChatChannel extends ChatChannel{

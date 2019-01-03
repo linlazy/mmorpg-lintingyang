@@ -4,6 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.module.fight.defense.actor.ActorDefense;
 import com.linlazy.mmorpglintingyang.module.scene.constants.SceneEntityType;
 
+/**
+ * @author linlazy
+ */
 public abstract class Defense {
 
     public static int computeDefense(int entityType, long entityId, JSONObject jsonObject) {

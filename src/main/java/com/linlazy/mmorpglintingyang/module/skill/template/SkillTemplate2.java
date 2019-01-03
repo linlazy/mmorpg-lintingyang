@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 间隔xx秒恢复N点HP，持续时间xx秒（作用实体，存档）
+ * @author linlazy
  */
 public  class SkillTemplate2 extends SkillTemplate{
 

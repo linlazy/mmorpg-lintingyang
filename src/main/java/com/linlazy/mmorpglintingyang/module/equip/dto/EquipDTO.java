@@ -3,6 +3,9 @@ package com.linlazy.mmorpglintingyang.module.equip.dto;
 import com.linlazy.mmorpglintingyang.module.equip.manager.domain.EquipDo;
 import lombok.Data;
 
+/**
+ * @author linlazy
+ */
 @Data
 public class EquipDTO {
 

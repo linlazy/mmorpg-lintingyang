@@ -9,6 +9,7 @@ import java.util.Set;
 
 /**
  * 会话管理类，管理用户与通道连接
+ * @author linlazy
  */
 public class SessionManager {
 

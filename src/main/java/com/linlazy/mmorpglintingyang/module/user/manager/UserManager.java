@@ -14,6 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * @author linlazy
+ */
 @Component
 public class UserManager {
 

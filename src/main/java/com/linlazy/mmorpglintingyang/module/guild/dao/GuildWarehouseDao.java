@@ -10,6 +10,7 @@ import java.util.Set;
 
 /**
  * 公会仓库访问类
+ * @author linlazy
  */
 @Mapper
 public interface GuildWarehouseDao {

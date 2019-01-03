@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 聊天
+ * @author linlazy
  */
 @Module("chat")
 @Component

@@ -5,6 +5,7 @@ import com.linlazy.mmorpglintingyang.server.common.PushHelper;
 
 /**
  * 交易推送类
+ * @author linlazy
  */
 public class TransactionPushHelper {
 

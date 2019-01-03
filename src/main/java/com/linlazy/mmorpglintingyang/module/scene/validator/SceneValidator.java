@@ -15,6 +15,7 @@ import java.util.Set;
 
 /**
  * 场景校验器
+ * @author linlazy
  */
 @Component
 public class SceneValidator {

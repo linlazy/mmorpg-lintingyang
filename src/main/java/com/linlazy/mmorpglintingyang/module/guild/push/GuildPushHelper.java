@@ -3,6 +3,9 @@ package com.linlazy.mmorpglintingyang.module.guild.push;
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.server.common.PushHelper;
 
+/**
+ * @author linlazy
+ */
 public class GuildPushHelper {
 
 

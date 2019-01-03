@@ -2,6 +2,9 @@ package com.linlazy.mmorpglintingyang.module.common.event;
 
 import com.google.common.eventbus.EventBus;
 
+/**
+ * @author linlazy
+ */
 public class EventBusHolder {
 
     private static EventBus eventBus = new EventBus();

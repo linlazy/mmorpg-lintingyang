@@ -4,6 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.server.common.Result;
 import com.linlazy.mmorpglintingyang.utils.SpringContextUtil;
 
+/**
+ * @author linlazy
+ */
 public abstract class UseItemStrategy {
     public static UseItemStrategy newUseItemStrategy(int useItem) {
 

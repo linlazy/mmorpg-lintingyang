@@ -2,6 +2,9 @@ package com.linlazy.mmorpglintingyang.module.item.manager.entity;
 
 import lombok.Data;
 
+/**
+ * @author linlazy
+ */
 @Data
 public class Item {
 

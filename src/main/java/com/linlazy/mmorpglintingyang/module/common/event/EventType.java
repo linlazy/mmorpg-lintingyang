@@ -1,5 +1,9 @@
 package com.linlazy.mmorpglintingyang.module.common.event;
 
+/**
+ * @author linlazy
+ */
+
 public enum EventType {
     /**
      * 进入场景

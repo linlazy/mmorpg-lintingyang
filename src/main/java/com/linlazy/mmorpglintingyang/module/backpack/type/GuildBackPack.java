@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 /**
  * 公会仓库背包
+ * @author linlazy
  */
 @Data
 public class GuildBackPack extends BackPack{

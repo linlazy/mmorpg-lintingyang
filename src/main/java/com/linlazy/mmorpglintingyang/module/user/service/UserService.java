@@ -19,6 +19,9 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 
+/**
+ * @author linlazy
+ */
 @Component
 public class UserService {
 

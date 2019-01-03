@@ -21,6 +21,9 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * @author linlazy
+ */
 @Component
 public class TransactionsManager {
     private static Logger logger = LoggerFactory.getLogger(TransactionsManager.class);

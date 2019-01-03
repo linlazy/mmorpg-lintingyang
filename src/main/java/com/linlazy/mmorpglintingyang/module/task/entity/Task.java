@@ -2,6 +2,9 @@ package com.linlazy.mmorpglintingyang.module.task.entity;
 
 import lombok.Data;
 
+/**
+ * @author linlazy
+ */
 @Data
 public class Task {
 

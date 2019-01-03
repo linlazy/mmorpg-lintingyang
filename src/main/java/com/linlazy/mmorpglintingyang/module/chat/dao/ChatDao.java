@@ -8,6 +8,9 @@ import org.apache.ibatis.annotations.Select;
 
 import java.util.Set;
 
+/**
+ * @author linlazy
+ */
 @Mapper
 public interface ChatDao {
 

@@ -22,6 +22,9 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * @author linlazy
+ */
 @Component
 public class GuildManager {
 

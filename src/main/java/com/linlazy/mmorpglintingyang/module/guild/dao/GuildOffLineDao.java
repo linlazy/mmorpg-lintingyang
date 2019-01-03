@@ -5,6 +5,9 @@ import com.linlazy.mmorpglintingyang.module.guild.entity.GuildOffLine;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 
+/**
+ * @author linlazy
+ */
 @Mapper
 public interface GuildOffLineDao {
 

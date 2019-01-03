@@ -16,6 +16,7 @@ import java.util.Map;
 
 /**
  * 游戏场景配置服务类
+ * @author linlazy
  */
 @Component
 public class MonsterConfigService {

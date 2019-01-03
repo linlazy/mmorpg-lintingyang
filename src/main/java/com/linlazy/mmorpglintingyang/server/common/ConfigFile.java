@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+/**
+ * @author linlazy
+ */
 public class ConfigFile {
 
     private JSONArray jsonArray;

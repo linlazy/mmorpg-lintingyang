@@ -12,6 +12,7 @@ import java.util.Set;
 
 /**
  * 队员登出监听器
+ * @author linlazy
  */
 @Component
 public class TeamLogoutListener implements LogoutListener{

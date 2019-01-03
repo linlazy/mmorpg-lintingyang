@@ -7,6 +7,9 @@ import com.linlazy.mmorpglintingyang.module.common.reward.Reward;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author linlazy
+ */
 public class RewardUtils {
 
     public static List<Reward> parseRewards(String rewards){

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 装备攻击力 = 基础攻击力 + 装备等级 * 6
+ * @author linlazy
  */
 @Component
 public class EquipActorAttack extends ActorAttack {

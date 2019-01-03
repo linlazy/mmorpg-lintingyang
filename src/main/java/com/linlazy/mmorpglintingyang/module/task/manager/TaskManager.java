@@ -11,6 +11,9 @@ import org.springframework.stereotype.Component;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * @author linlazy
+ */
 @Component
 public class TaskManager {
 

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 完成任务xxx,触发任务
+ * @author linlazy
  */
 public class TaskTrigger1 extends TaskTrigger {
     @Override

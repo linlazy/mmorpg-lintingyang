@@ -24,6 +24,7 @@ import java.util.Set;
 
 /**
  * 玩家场景服务类
+ * @author linlazy
  */
 @Component
 public class SceneService {
