@@ -48,8 +48,12 @@ public class BackPackLattice {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         BackPackLattice that = (BackPackLattice) o;
         return index == that.index;
     }

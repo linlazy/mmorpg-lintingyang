@@ -154,8 +154,12 @@ public class ItemDo{
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ItemDo itemDo = (ItemDo) o;
         return getBaseItemIdOrderIdKey().equals(itemDo.getBaseItemIdOrderIdKey());
     }
