@@ -15,7 +15,7 @@ import java.util.Set;
  * @author linlazy
  */
 @Component
-public class TaskTemplate1 extends TaskTemplate {
+public class TaskTemplate1 extends BaseTaskTemplate {
 
     @Override
     public Set<EventType> likeEvent() {

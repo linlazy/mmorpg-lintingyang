@@ -9,10 +9,10 @@ import org.springframework.context.ConfigurableApplicationContext;
  * @author linlazy
  */
 @SpringBootApplication
-public class MMORPGLinTingYangApplication {
+public class MmoRpgLinTingYangApplication {
 
 	public static void main(String[] args) {
-		ConfigurableApplicationContext app = SpringApplication.run(MMORPGLinTingYangApplication.class, args);
+		ConfigurableApplicationContext app = SpringApplication.run(MmoRpgLinTingYangApplication.class, args);
 		SpringContextUtil.setApplicationContext(app);
 	}
 }

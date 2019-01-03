@@ -52,7 +52,7 @@ public class SceneEntityDo {
         this.sceneId = monsterDo.getSceneId();
         this.sceneEntityId = monsterDo.getMonsterId();
         this.name = monsterDo.getName();
-        this.sceneEntityType = SceneEntityType.Monster;
+        this.sceneEntityType = SceneEntityType.MONSTER;
         this.hp =monsterDo.getHp();
     }
 
@@ -60,14 +60,14 @@ public class SceneEntityDo {
         this.sceneId = npcDo.getSceneId();
         this.sceneEntityId = npcDo.getNpcId();
         this.name = npcDo.getName();
-        this.sceneEntityType = SceneEntityType.Npc;
+        this.sceneEntityType = SceneEntityType.NPC;
         this.hp =npcDo.getHp();
     }
     public SceneEntityDo(ScenePlayerDo scenePlayerDo) {
         this.sceneId = scenePlayerDo.getSceneId();
         this.sceneEntityId = scenePlayerDo.getActorId();
         this.name = scenePlayerDo.getName();
-        this.sceneEntityType = SceneEntityType.Player;
+        this.sceneEntityType = SceneEntityType.PLAYER;
         this.hp =scenePlayerDo.getHp();
         this.copyId = scenePlayerDo.getCopyId();
     }
@@ -76,7 +76,7 @@ public class SceneEntityDo {
         this.sceneId = sceneBossDo.getSceneId();
         this.sceneEntityId = sceneBossDo.getBossId();
         this.name = sceneBossDo.getName();
-        this.sceneEntityType = SceneEntityType.Boss;
+        this.sceneEntityType = SceneEntityType.BOSS;
         this.hp =sceneBossDo.getHp();
         this.copyId = sceneBossDo.getCopyId();
     }
@@ -109,19 +109,20 @@ public class SceneEntityDo {
             }
 
             //怪物死亡事件
-            if(sceneEntityType == SceneEntityType.Monster){
+            if(sceneEntityType == SceneEntityType.MONSTER){
                 jsonObject.put("damage",damage);
                 triggerMonsterDeadEvent(jsonObject);
             }
         }
 
         //玩家受到伤害事件
-        if(sceneEntityType == SceneEntityType.Player){
+        if(sceneEntityType == SceneEntityType.PLAYER){
             jsonObject.put("damage",damage);
             triggerActorDamageEvent(jsonObject);
         }
 
-        if(jsonObject.getLongValue("actorId") != 0){
+        long actorId = jsonObject.getLongValue("actorId");
+        if( actorId != 0){
             EventBusHolder.post(new ActorEvent<>(jsonObject.getLongValue("actorId"),EventType.ATTACK));
             ScenePushHelper.pushSceneEntityDamage(jsonObject.getLongValue("actorId"), Lists.newArrayList(this));
 
@@ -149,7 +150,7 @@ public class SceneEntityDo {
      */
     private void triggerArenaDeadEvent(JSONObject jsonObject) {
         //玩家死亡
-        if(sceneEntityType == SceneEntityType.Player){
+        if(sceneEntityType == SceneEntityType.PLAYER){
             EventBusHolder.post(new ActorEvent(sceneEntityId, EventType.ARENA_ACTOR_DEAD,jsonObject));
         }
     }
@@ -160,12 +161,12 @@ public class SceneEntityDo {
      */
     private void triggerCopyDeadEvent(JSONObject jsonObject) {
         //玩家死亡
-        if(sceneEntityType == SceneEntityType.Player){
+        if(sceneEntityType == SceneEntityType.PLAYER){
             jsonObject.put("copyId",copyId);
             EventBusHolder.post(new ActorEvent(sceneEntityId, EventType.COPY_ACTOR_DEAD,jsonObject));
         }
         //BOSS死亡
-        if(sceneEntityType == SceneEntityType.Boss){
+        if(sceneEntityType == SceneEntityType.BOSS){
             jsonObject.put("copyId",copyId);
             EventBusHolder.post(new ActorEvent(sceneEntityId, EventType.COPY_BOSS_DEAD,jsonObject));
         }

@@ -1,8 +1,8 @@
 package com.linlazy.mmorpglintingyang.module.fight.service.attackmode;
 
 import com.alibaba.fastjson.JSONObject;
-import com.linlazy.mmorpglintingyang.module.fight.attack.actor.ActorAttack;
-import com.linlazy.mmorpglintingyang.module.fight.service.canattacked.CanAttacked;
+import com.linlazy.mmorpglintingyang.module.fight.attack.actor.BaseActorAttack;
+import com.linlazy.mmorpglintingyang.module.fight.service.canattacked.BaseCanAttacked;
 import com.linlazy.mmorpglintingyang.module.fight.service.sceneentity.SceneEntityDoFactory;
 import com.linlazy.mmorpglintingyang.module.scene.constants.SceneEntityType;
 import com.linlazy.mmorpglintingyang.module.scene.domain.SceneDo;
@@ -20,18 +20,22 @@ import java.util.Set;
 /**
  * @author linlazy
  */
-public abstract class AttackMode {
+public abstract class BaseAttackMode {
 
-    private static Map<Integer,AttackMode> map = new HashMap<>();
+    private static Map<Integer, BaseAttackMode> map = new HashMap<>();
 
     @PostConstruct
     public void init(){
         map.put(attackMode(),this);
     }
 
+    /**
+     * 返回玩家攻击的方式
+     * @return 返回玩家攻击的方式（普通攻击，技能攻击）
+     */
     protected abstract int attackMode();
 
-    public static AttackMode getAttackMode(int attackMode){
+    public static BaseAttackMode getAttackMode(int attackMode){
         return map.get(attackMode);
     }
 
@@ -44,7 +48,7 @@ public abstract class AttackMode {
             return Result.valueOf(result.getCode());
         }
         //计算玩家攻击力
-        int finalAttack = ActorAttack.computeFinalAttack(actorId, jsonObject);
+        int finalAttack = BaseActorAttack.computeFinalAttack(actorId, jsonObject);
         // 受攻击场景实体集合集合
         Set<SceneEntityDo> attackedSceneEntity = getAttackedSceneEntity(actorId, jsonObject);
         attackedSceneEntity.stream()
@@ -63,7 +67,7 @@ public abstract class AttackMode {
         long entityId = jsonObject.getLongValue("entityId");
 
         SceneEntityDo sceneEntityDo = null;
-        if(entityType == SceneEntityType.Player){
+        if(entityType == SceneEntityType.PLAYER){
              sceneEntityDo =SceneEntityDoFactory.newPlayerSceneEntityDo(entityId);
         }else {
             SceneDo sceneDo = sceneManager.getSceneDo(actorId);
@@ -81,7 +85,7 @@ public abstract class AttackMode {
 
     public Result<?> isCanAttack(long actorId, JSONObject jsonObject){
         int entityType = jsonObject.getIntValue("entityType");
-        return CanAttacked.getCanAttacked(entityType).canAttacked(actorId,jsonObject);
+        return BaseCanAttacked.getCanAttacked(entityType).canAttacked(actorId,jsonObject);
     }
     public  void attackAfter(long actorId, JSONObject jsonObject){
 

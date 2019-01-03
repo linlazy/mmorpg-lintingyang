@@ -13,7 +13,7 @@ import java.util.Set;
  * @author linlazy
  */
 @Component
-public class TaskTemplate3 extends TaskTemplate {
+public class TaskTemplate3 extends BaseTaskTemplate {
     /**
      * 关心场景怪物死亡事件
      * @return

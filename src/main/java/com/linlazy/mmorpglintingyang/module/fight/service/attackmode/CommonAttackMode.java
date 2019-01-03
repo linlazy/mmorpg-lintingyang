@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  * @author linlazy
  */
 @Component
-public class CommonAttackMode extends AttackMode {
+public class CommonAttackMode extends BaseAttackMode {
 
     @Autowired
     private FightValidtor fightValidtor;

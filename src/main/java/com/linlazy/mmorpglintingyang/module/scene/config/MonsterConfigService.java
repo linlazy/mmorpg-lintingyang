@@ -28,8 +28,9 @@ public class MonsterConfigService {
         monsterConfigFile =  ConfigFileManager.use("config_file/monster_config.json");
     }
 
-
-    //构建场景怪物映射
+    /**
+     * 构建场景怪物映射
+     */
     private static Map<Integer, List<JSONObject>> sceneMonsterMap = new HashMap<>();
 
     @PostConstruct

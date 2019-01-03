@@ -7,5 +7,5 @@ public interface ItemType {
     /**
      * 装备
      */
-    int Equip = 2;
+    int EQUIP = 2;
 }

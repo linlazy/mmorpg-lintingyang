@@ -43,7 +43,7 @@ public class CopyDo extends SceneDo {
     private Set<Long> copyPlayerIdSet = new HashSet<>();
 
     /**
-     * 副本怪物集合(小怪+Boss)
+     * 副本怪物集合(小怪+BOSS)
      */
     private Set<SceneEntityDo> sceneEntitySet = new HashSet<>();
 
@@ -75,7 +75,7 @@ public class CopyDo extends SceneDo {
      */
     public boolean isAllBOSSDead(){
         return sceneEntitySet.stream()
-                .filter(sceneEntityDo -> sceneEntityDo.getSceneEntityType() == SceneEntityType.Boss)
+                .filter(sceneEntityDo -> sceneEntityDo.getSceneEntityType() == SceneEntityType.BOSS)
                 .allMatch(bossDo -> bossDo.getHp() == 0);
     }
 

@@ -12,7 +12,7 @@ public class BackPackDTO {
     /**
      * 背包类型
      */
-    private int type;
+    private Integer type;
     /**
      * 背包格子
      */

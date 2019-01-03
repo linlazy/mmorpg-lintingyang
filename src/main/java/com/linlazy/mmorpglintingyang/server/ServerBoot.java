@@ -15,8 +15,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ServerBoot implements CommandLineRunner {
-    private static final NioEventLoopGroup bossGroup = new NioEventLoopGroup();
-    private static final NioEventLoopGroup workGroup = new NioEventLoopGroup();
+    private static final NioEventLoopGroup BOSS_GROUP = new NioEventLoopGroup();
+    private static final NioEventLoopGroup WORK_GROUP = new NioEventLoopGroup();
     private static int port = 41235;
 
     public static void start() {
@@ -24,7 +24,7 @@ public class ServerBoot implements CommandLineRunner {
         ServerBootstrap serverBootstrap = new ServerBootstrap();
 //        doBind(serverBootstrap,port);
         //配置线程
-        ChannelFuture channelFuture = serverBootstrap.group(bossGroup, workGroup)
+        ChannelFuture channelFuture = serverBootstrap.group(BOSS_GROUP, WORK_GROUP)
                 //配置通道
                 .channel(NioServerSocketChannel.class)
                 //配置tcp参数

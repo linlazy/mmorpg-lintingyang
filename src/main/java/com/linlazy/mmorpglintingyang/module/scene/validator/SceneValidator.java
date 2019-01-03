@@ -47,7 +47,7 @@ public class SceneValidator {
 
     public boolean isDifferentScene(long actorId, int entityType, long entityId) {
         SceneDo sceneDo = sceneManager.getSceneDo(actorId);
-        if(entityType == SceneEntityType.Player){
+        if(entityType == SceneEntityType.PLAYER){
             return userManager.getUser(entityId).getSceneId() != userManager.getUser(actorId).getSceneId();
         }else {
             Set<SceneEntityDo> sceneEntityDoSet = sceneDo.getSceneEntityDoSet();

@@ -29,10 +29,14 @@ public class BossConfigService {
     }
 
 
-    //构建场景怪物映射
+    /**
+     * 构建场景怪物映射
+     */
     private static Map<Integer, List<JSONObject>> sceneBossMap = new HashMap<>();
 
-    //构建bossId映射
+    /**
+     * 构建bossId映射
+     */
     private static Map<Integer,JSONObject> bossIdMap = new HashMap<>();
 
     @PostConstruct

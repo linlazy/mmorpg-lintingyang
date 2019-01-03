@@ -30,7 +30,7 @@ public class DressedEquip {
             .map(ItemDo::new)
             .map(EquipDo::new)
             .filter(equipDo -> equipDo.isDressed())
-            .filter(equipDo -> equipDo.getType() == EquipType.Arms)
+            .filter(equipDo -> equipDo.getType() == EquipType.ARMS)
             .findFirst()
             .ifPresent(
                 equipDo ->  {
@@ -48,7 +48,7 @@ public class DressedEquip {
                 .map(ItemDo::new)
                 .map(EquipDo::new)
                 .filter(equipDo -> equipDo.isDressed())
-                .filter(equipDo -> equipDo.getType() != EquipType.Arms)
+                .filter(equipDo -> equipDo.getType() != EquipType.ARMS)
                 .collect(Collectors.toList());
         EquipDo equipDo = RandomUtils.randomElement(collect);
         EquipDurability.consumeDurability(equipDo,1);

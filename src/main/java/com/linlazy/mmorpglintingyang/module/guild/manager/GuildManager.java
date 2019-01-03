@@ -57,8 +57,8 @@ public class GuildManager {
         GuildActor guildActor = new GuildActor();
         guildActor.setActorId(actorId);
         guildActor.setGuildId(newGuildId);
-        guildActor.setAuthLevel(GuildAuthLevel.President);
-        guildActorDao.addGuild(guildActor);
+        guildActor.setAuthLevel(GuildAuthLevel.PRESIDENT);
+        guildActorDao.addGuildActor(guildActor);
         actorIdGuildIdMap.put(actorId,newGuildId);
         return Result.success();
     }
@@ -79,14 +79,14 @@ public class GuildManager {
         for(Long targetId:hasAuthInviteSet){
             //在线则直接推送
             if(SessionManager.isOnline(targetId)){
-                GuildPushHelper.pushGuildOperator(targetId, GuildOpertorType.ApplyJoin,jsonObject);
+                GuildPushHelper.pushGuildOperator(targetId, GuildOpertorType.APPLY_JOIN,jsonObject);
             }else {
                 //不在线则，先存档，下次登录时推送
                 GuildOffLine guildOffLine = new GuildOffLine();
                 guildOffLine.setGuild(guildId);
                 guildOffLine.setReceiver(targetId);
                 guildOffLine.setSourceId(actorId);
-                guildOffLine.setType(GuildOpertorType.ApplyJoin);
+                guildOffLine.setType(GuildOpertorType.APPLY_JOIN);
                 guildOffLineDao.addGuildOffLine(guildOffLine);
             }
         }
@@ -98,19 +98,19 @@ public class GuildManager {
         GuildDo guildDo = new GuildDo();
         guildDo.setGuildId(guildId);
 
-        Set<GuildActor> guildActorSet = guildActorDao.getGuildSet(guildId);
+        Set<GuildActor> guildActorSet = guildActorDao.getGuildActorSet(guildId);
         for(GuildActor guildActor : guildActorSet){
             switch (guildActor.getAuthLevel()){
-                case GuildAuthLevel.President:
+                case GuildAuthLevel.PRESIDENT:
                     guildDo.setPresidentId(guildActor.getActorId());
                 break;
-                case GuildAuthLevel.VicePresident:
+                case GuildAuthLevel.VICE_PRESIDENT:
                     guildDo.getVoidPresidentIdSet().add(guildActor.getActorId());
                 break;
-                case GuildAuthLevel.ExcellentMember:
+                case GuildAuthLevel.EXCELLENT_MEMBER:
                     guildDo.getExcellentMemberIdSet().add(guildActor.getActorId());
                     break;
-                case GuildAuthLevel.OrdinaryMember:
+                case GuildAuthLevel.ORDINARY_MEMBER:
                     guildDo.getOrdinaryMemberIdSet().add(guildActor.getActorId());
                     break;
                 default:
@@ -127,16 +127,16 @@ public class GuildManager {
         GuildActor guildActor = new GuildActor();
         guildActor.setActorId(targetId);
         guildActor.setGuildId(guildId);
-        guildActor.setAuthLevel(GuildAuthLevel.NewMember);
-        guildActorDao.addGuild(guildActor);
+        guildActor.setAuthLevel(GuildAuthLevel.NEW_MEMBER);
+        guildActorDao.addGuildActor(guildActor);
         return Result.success();
     }
 
     public Result<?> appoint(long actorId, long targetId, int authLevel) {
         Long guildId = actorIdGuildIdMap.get(actorId);
-        GuildActor guildActor = guildActorDao.getGuild(guildId, targetId);
+        GuildActor guildActor = guildActorDao.getGuildActor(guildId, targetId);
         guildActor.setAuthLevel(authLevel);
-        guildActorDao.updateGuild(guildActor);
+        guildActorDao.updateGuildActor(guildActor);
         return Result.success();
     }
 
@@ -152,8 +152,8 @@ public class GuildManager {
      */
     public Result<?> shotOffGuild(long actorId, long targetId) {
         Long guildId = actorIdGuildIdMap.remove(targetId);
-        GuildActor guildActor = guildActorDao.getGuild(guildId, targetId);
-        guildActorDao.deleteGuild(guildActor);
+        GuildActor guildActor = guildActorDao.getGuildActor(guildId, targetId);
+        guildActorDao.deleteGuildActor(guildActor);
         return Result.success();
     }
 
@@ -167,9 +167,9 @@ public class GuildManager {
     public Result<?> donateGold(long actorId, int gold) {
 
         Long guildId = actorIdGuildIdMap.get(actorId);
-        Guild guild = guildDao.getGuildGold(guildId);
+        Guild guild = guildDao.getGuild(guildId);
         guild.setGold(guild.getGold() + gold);
-        guildDao.updateGuildGold(guild);
+        guildDao.updateGuild(guild);
         return Result.success();
     }
 

@@ -31,8 +31,9 @@ public class EmailConfigService {
         emailConfigFile =  ConfigFileManager.use("config_file/email_config.json");
     }
 
-
-    //构建邮件模板映射
+    /**
+     * 构建邮件模板映射
+     */
     private static Map<Integer, JSONObject> emailTemplateMap = new HashMap<>();
 
     @PostConstruct

@@ -14,7 +14,7 @@ import java.util.Set;
  * @author linlazy
  */
 @Component
-public class NPCManager {
+public class NpcManager {
 
     @Autowired
     private NpcConfigService npcConfigService;

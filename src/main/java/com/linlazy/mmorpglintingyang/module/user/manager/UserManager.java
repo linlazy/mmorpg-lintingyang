@@ -61,7 +61,7 @@ public class UserManager {
     }
 
     public Map<Long,Integer> addOrConsumeReward(long actorId, Reward reward) {
-        Map<Long,Integer> map = new HashMap<>();
+        Map<Long,Integer> map = new HashMap<>(6);
 
         User user = userDao.getUser(actorId);
         if (reward.getRewardId() == RewardID.HP) {
@@ -82,18 +82,18 @@ public class UserManager {
     }
 
     public void addOrRemoveAddition(long actorId, Addition addition) {
-//        User user = userDao.getUser(actorId);
+//        USER user = userDao.getUser(actorId);
 //        switch (addition.getAdditionType()){
-//            case AdditionType.PhysicalAttack:
+//            case AdditionType.PHYSICAL_ATTACK:
 //                user.modifyPhysicalAttack(addition.getCount());
 //                break;
-//            case AdditionType.MagicAttack:
+//            case AdditionType.MAGIC_ATTACK:
 //                user.modifyMagicAttack(addition.getCount());
 //                break;
-//            case AdditionType.PhysicalDefense:
+//            case AdditionType.PHYSICAL_DEFENSE:
 //                user.modifyPhysicalDefense(addition.getCount());
 //                break;
-//            case AdditionType.MagicDefense:
+//            case AdditionType.MAGIC_DEFENSE:
 //                user.modifyMagicDefense(addition.getCount());
 //                break;
 //            default:

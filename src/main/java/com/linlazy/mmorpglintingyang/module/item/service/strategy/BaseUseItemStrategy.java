@@ -7,8 +7,8 @@ import com.linlazy.mmorpglintingyang.utils.SpringContextUtil;
 /**
  * @author linlazy
  */
-public abstract class UseItemStrategy {
-    public static UseItemStrategy newUseItemStrategy(int useItem) {
+public abstract class BaseUseItemStrategy {
+    public static BaseUseItemStrategy newUseItemStrategy(int useItem) {
 
         switch (useItem){
             case 1:
@@ -18,5 +18,12 @@ public abstract class UseItemStrategy {
         }
     }
 
+    /**
+     *  执行使用道具
+     * @param actorId 玩家ID
+     * @param itemId 道具ID
+     * @param jsonObject 可变参数
+     * @return 返回使用道具结果
+     */
     public abstract Result<?> doUseItem(long actorId, long itemId, JSONObject jsonObject);
 }

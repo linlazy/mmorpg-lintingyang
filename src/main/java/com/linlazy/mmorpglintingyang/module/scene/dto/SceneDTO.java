@@ -13,7 +13,7 @@ import java.util.Set;
 @Data
 public class SceneDTO {
 
-    private final int sceneId;
+    private final Integer sceneId;
     private final Set<Long> actorIdSet;
     private final Set<SceneEntityDo> sceneEntityDoSet;
 

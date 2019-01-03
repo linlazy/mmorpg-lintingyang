@@ -1,7 +1,7 @@
 package com.linlazy.mmorpglintingyang.module.email.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.linlazy.mmorpglintingyang.module.email.service.template.EmailTemplate;
+import com.linlazy.mmorpglintingyang.module.email.service.template.BaseEmailTemplate;
 import com.linlazy.mmorpglintingyang.server.common.Result;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +23,7 @@ public class EmailService {
      */
     public Result<?> sendEmail(long actorId,JSONObject jsonObject) {
         int emailTemplateId = jsonObject.getIntValue("emailTemplateId");
-        EmailTemplate emailTemplate = EmailTemplate.getEmailTemplate(emailTemplateId);
+        BaseEmailTemplate emailTemplate = BaseEmailTemplate.getEmailTemplate(emailTemplateId);
         return emailTemplate.sendEmail(actorId,jsonObject);
     }
 

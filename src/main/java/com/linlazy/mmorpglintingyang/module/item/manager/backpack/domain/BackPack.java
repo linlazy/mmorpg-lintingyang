@@ -307,7 +307,7 @@ public class BackPack {
                     .max(Integer::compareTo).orElse(0);
             long newItemId = ItemIdUtil.getNewItemId(maxOrderId + 1, spaceBackPackLattice.getIndex(), itemDo.getBaseItemId());
             itemDo.setItemId(newItemId);
-            if(itemDo.getItemType() == ItemType.Equip){
+            if(itemDo.getItemType() == ItemType.EQUIP){
                 itemDao.addItem(new EquipDo(itemDo).convertItemDo().convertItem());
             }else {
                 itemDao.addItem(itemDo.convertItem());
@@ -416,7 +416,7 @@ public class BackPack {
      * @return  获取背包内道具与总数量映射
      */
     private Map<ItemDo, Integer> getItemDoTotalMap() {
-        Map<ItemDo,Integer>  itemDoTotalMap = new HashMap<>();
+        Map<ItemDo,Integer>  itemDoTotalMap = new HashMap<>(actorBackPack.size());
         for(BackPackLattice backPackLattice: actorBackPack){
             ItemDo itemDo = backPackLattice.getItemDo();
             itemDoTotalMap.putIfAbsent(itemDo, 0);

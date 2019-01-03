@@ -20,16 +20,16 @@ public class GuildActorActorDaoTest {
 
         GuildActor guildActor = new GuildActor();
         guildActor.setGuildId(1);
-        guildActor.setAuthLevel(GuildAuthLevel.President);
+        guildActor.setAuthLevel(GuildAuthLevel.PRESIDENT);
         guildActor.setActorId(4194306);
-        guildActorDao.addGuild(guildActor);
+        guildActorDao.addGuildActor(guildActor);
     }
 
 
     @Test
     public void getGuild() {
 
-        GuildActor guildActor = guildActorDao.getGuild(1, 4194306);
+        GuildActor guildActor = guildActorDao.getGuildActor(1, 4194306);
         assert guildActor != null;
     }
 

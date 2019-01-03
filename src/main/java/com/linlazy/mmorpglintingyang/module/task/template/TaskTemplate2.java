@@ -15,7 +15,7 @@ import java.util.Set;
  * @author linlazy
  */
 @Component
-public class TaskTemplate2 extends TaskTemplate {
+public class TaskTemplate2 extends BaseTaskTemplate {
     /**
      * 玩家金币改变事件
      * @return

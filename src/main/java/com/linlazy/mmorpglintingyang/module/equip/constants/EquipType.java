@@ -7,31 +7,31 @@ public interface EquipType {
     /**
      * 武器
      */
-    int Arms = 1;
+    int ARMS = 1;
 
     /**
      * 衣服
      */
-    int Clothes = 2;
+    int CLOTHES = 2;
 
     /**
      * 盾牌
      */
-    int Shield = 3;
+    int SHIELD = 3;
 
     /**
      * 头盔
      */
-    int Helmet = 4;
+    int HELMET = 4;
 
     /**
      * 鞋子
      */
-    int Shoes = 5;
+    int SHOES = 5;
 
     /**
      *  项链
      */
-    int Necklace = 6;
+    int NECKLACE = 6;
 
 }

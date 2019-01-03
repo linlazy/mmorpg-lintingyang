@@ -12,20 +12,28 @@ import java.util.Set;
 /**
  * @author linlazy
  */
-public abstract class TaskTemplate {
+public abstract class BaseTaskTemplate {
 
+    /**
+     * 任务模板感兴趣的事件集合
+     * @return  返回感兴趣的事件集合
+     */
     public abstract Set<EventType> likeEvent();
 
-    private static Map<Integer,TaskTemplate> map = new HashMap<>();
+    private static Map<Integer, BaseTaskTemplate> map = new HashMap<>();
 
     @PostConstruct
     public void init(){
         map.put(templateId(),this);
     }
 
+    /**
+     * 任务模板ID
+     * @return  返回任务模板ID
+     */
     protected abstract int templateId();
 
-    public static TaskTemplate getTaskTemplate(int templateId){
+    public static BaseTaskTemplate getTaskTemplate(int templateId){
         return map.get(templateId);
     }
 

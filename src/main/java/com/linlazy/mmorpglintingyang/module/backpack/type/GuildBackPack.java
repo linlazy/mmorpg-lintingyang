@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * @author linlazy
  */
 @Data
-public class GuildBackPack extends BackPack{
+public class GuildBackPack extends BaseBackPack {
 
     private static Map<Long, GuildBackPack> guildIdBackPackMap = new HashMap<>();
     private static GuildWarehouseDao guildWarehouseDao = SpringContextUtil.getApplicationContext().getBean(GuildWarehouseDao.class);

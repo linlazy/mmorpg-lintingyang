@@ -3,7 +3,7 @@ package com.linlazy.mmorpglintingyang.module.task.domain;
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.module.task.constants.TaskStatus;
 import com.linlazy.mmorpglintingyang.module.task.entity.Task;
-import com.linlazy.mmorpglintingyang.module.task.trigger.TaskTrigger;
+import com.linlazy.mmorpglintingyang.module.task.trigger.BaseTaskTrigger;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -124,7 +124,7 @@ public class TaskDo {
         if(this.status > TaskStatus.UN_START){
             return true;
         }
-        TaskTrigger taskTrigger = TaskTrigger.getTaskTrigger(triggerType);
+        BaseTaskTrigger taskTrigger = BaseTaskTrigger.getTaskTrigger(triggerType);
         if(taskTrigger.isTrigger(this)){
             this.status = TaskStatus.START_UNCOMPLETE;
             return true;

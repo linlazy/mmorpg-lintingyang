@@ -4,8 +4,8 @@ package com.linlazy.mmorpglintingyang.module.scene.constants;
  * @author linlazy
  */
 public interface SceneEntityType {
-    int Player = 1;
-    int Monster = 2;
-    int Npc = 3;
-    int Boss = 4;
+    int PLAYER = 1;
+    int MONSTER = 2;
+    int NPC = 3;
+    int BOSS = 4;
 }

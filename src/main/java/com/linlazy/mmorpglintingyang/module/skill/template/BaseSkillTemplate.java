@@ -8,9 +8,9 @@ import java.util.Map;
  * 技能模板
  * @author linlazy
  */
-public abstract class SkillTemplate {
+public abstract class BaseSkillTemplate {
 
-    private static Map<Integer,SkillTemplate> map = new HashMap<>();
+    private static Map<Integer, BaseSkillTemplate> map = new HashMap<>();
 
     @PostConstruct
     public void init(){
@@ -24,7 +24,7 @@ public abstract class SkillTemplate {
     protected abstract int skillTemplateId();
 
 
-    public static SkillTemplate getSkillTemplate(int skillTemplateId){
+    public static BaseSkillTemplate getSkillTemplate(int skillTemplateId){
         return map.get(skillTemplateId);
     }
 }

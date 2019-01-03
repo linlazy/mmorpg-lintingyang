@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * @author linlazy
  */
 @Component
-public class SkillActorAttack extends ActorAttack {
+public class SkillActorAttack extends BaseActorAttack {
 
     @Autowired
     private SkillConfigService skillConfigService;

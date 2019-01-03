@@ -11,12 +11,21 @@ import org.apache.ibatis.annotations.Update;
 @Mapper
 public interface GuildDao {
 
+    /**
+     * 获取公会信息
+     * @param guildId 公会ID
+     * @return 返回公会信息
+     */
     @Select("select * from guild where guildId = #{guildId}")
-    Guild getGuildGold(long guildId);
+    Guild getGuild(long guildId);
 
 
+    /**
+     * 更新公会信息
+     * @param guild 公会信息
+     */
     @Update("update guild where guildId = #{guildId}")
-    void updateGuildGold(Guild guild);
+    void updateGuild(Guild guild);
 
 
 }

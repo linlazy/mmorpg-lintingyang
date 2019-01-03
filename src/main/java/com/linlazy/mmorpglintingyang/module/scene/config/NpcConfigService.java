@@ -28,7 +28,9 @@ public class NpcConfigService {
         npcConfigFile =  ConfigFileManager.use("config_file/npc_config.json");
     }
 
-    //构建场景怪物映射
+    /**
+     * 构建场景Npc映射
+     */
     private static Map<Integer, List<JSONObject>> sceneNpcMap = new HashMap<>();
 
     @PostConstruct

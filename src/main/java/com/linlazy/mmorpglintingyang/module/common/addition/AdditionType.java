@@ -7,18 +7,18 @@ public interface AdditionType {
     /**
      * 物理攻击
      */
-    int PhysicalAttack = 1;
+    int PHYSICAL_ATTACK = 1;
     /**
      * 魔法攻击
      */
-    int MagicAttack = 2;
+    int MAGIC_ATTACK = 2;
 
     /**
      * 物理防御
      */
-    int PhysicalDefense = 3;
+    int PHYSICAL_DEFENSE = 3;
     /**
      * 魔法防御
      */
-    int MagicDefense = 4;
+    int MAGIC_DEFENSE = 4;
 }

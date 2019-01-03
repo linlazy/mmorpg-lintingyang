@@ -9,7 +9,7 @@ import com.linlazy.mmorpglintingyang.module.common.event.EventBusHolder;
 import com.linlazy.mmorpglintingyang.module.scene.domain.SceneDo;
 import com.linlazy.mmorpglintingyang.module.scene.domain.SceneEntityDo;
 import com.linlazy.mmorpglintingyang.module.scene.dto.SceneDTO;
-import com.linlazy.mmorpglintingyang.module.scene.manager.NPCManager;
+import com.linlazy.mmorpglintingyang.module.scene.manager.NpcManager;
 import com.linlazy.mmorpglintingyang.module.scene.manager.SceneManager;
 import com.linlazy.mmorpglintingyang.module.scene.push.ScenePushHelper;
 import com.linlazy.mmorpglintingyang.module.scene.validator.SceneValidator;
@@ -36,7 +36,7 @@ public class SceneService {
     private SceneValidator sceneValidator;
 
     @Autowired
-    private NPCManager npcManager;
+    private NpcManager npcManager;
     @Autowired
     private UserManager userManager;
 
@@ -68,7 +68,8 @@ public class SceneService {
         onlineActorIds.stream()
                 .filter(onlineActorId -> onlineActorId !=actorId)
                 .forEach(onlineActorId ->{
-                    if(userManager.getUser(onlineActorId).getSceneId() ==jsonObject.getIntValue("sceneId")){
+                    int sceneId = jsonObject.getIntValue("sceneId");
+                    if(userManager.getUser(onlineActorId).getSceneId() == sceneId){
                         SceneEntityDo monsterDo = jsonObject.getObject("monsterDo", SceneEntityDo.class);
                         ScenePushHelper.pushMonster(onlineActorId, Lists.newArrayList(monsterDo));
                     }
@@ -109,7 +110,8 @@ public class SceneService {
 
         SceneDo sceneDo = sceneManager.getSceneDo(actorId);
         SceneDTO sceneDTO = new SceneDTO(sceneDo);
-        if(jsonObject.getBooleanValue("closeOwn")) {
+        boolean closeOwn = jsonObject.getBooleanValue("closeOwn");
+        if( closeOwn){
             sceneDTO.getActorIdSet().remove(actorId);
         }
         return Result.success(sceneDTO);

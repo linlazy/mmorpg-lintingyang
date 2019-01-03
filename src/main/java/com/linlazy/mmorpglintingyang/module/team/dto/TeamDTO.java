@@ -11,15 +11,15 @@ public class TeamDTO {
     /**
      * 来源
      */
-    private long sourceId;
+    private Long sourceId;
 
     /**
      * 目标对象
      */
-    private long targetId;
+    private Long targetId;
 
     /**
      * 操作类型
      */
-    private int teamOperatorType;
+    private Integer teamOperatorType;
 }

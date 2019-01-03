@@ -22,7 +22,7 @@ public class TeamManager {
 
     private Logger logger = LoggerFactory.getLogger(TeamManager.class);
 
-    private static final Map<Long, TeamDo> actorIdTeamDoMap = new ConcurrentHashMap<>();
+    private static final Map<Long, TeamDo> ACTOR_ID_TEAMDO_MAP = new ConcurrentHashMap<>();
 
     /**
      * actorId邀请targetId入队
@@ -84,11 +84,11 @@ public class TeamManager {
     }
 
     public TeamDo getActorTeamDo(long actorId) {
-        TeamDo teamDo = actorIdTeamDoMap.get(actorId);
+        TeamDo teamDo = ACTOR_ID_TEAMDO_MAP.get(actorId);
         if(teamDo == null){
             teamDo = new TeamDo();
             teamDo.setActorId(actorId);
-            actorIdTeamDoMap.put(actorId,teamDo);
+            ACTOR_ID_TEAMDO_MAP.put(actorId,teamDo);
         }
         return teamDo;
     }

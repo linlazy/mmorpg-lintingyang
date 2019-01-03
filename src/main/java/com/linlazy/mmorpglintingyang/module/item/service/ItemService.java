@@ -6,7 +6,7 @@ import com.linlazy.mmorpglintingyang.module.common.reward.RewardService;
 import com.linlazy.mmorpglintingyang.module.item.manager.ItemManager;
 import com.linlazy.mmorpglintingyang.module.item.manager.config.ItemConfigService;
 import com.linlazy.mmorpglintingyang.module.item.manager.dao.ItemDao;
-import com.linlazy.mmorpglintingyang.module.item.service.strategy.UseItemStrategy;
+import com.linlazy.mmorpglintingyang.module.item.service.strategy.BaseUseItemStrategy;
 import com.linlazy.mmorpglintingyang.module.item.validator.ItemValidator;
 import com.linlazy.mmorpglintingyang.server.common.Result;
 import com.linlazy.mmorpglintingyang.utils.ItemIdUtil;
@@ -46,7 +46,7 @@ public class ItemService {
 
         int baseItemId = ItemIdUtil.getBaseItemId(itemId);
         JSONObject itemConfig = itemConfigService.getItemConfig(baseItemId);
-        UseItemStrategy useItemStrategy = UseItemStrategy.newUseItemStrategy(itemConfig.getIntValue("useItem"));
+        BaseUseItemStrategy useItemStrategy = BaseUseItemStrategy.newUseItemStrategy(itemConfig.getIntValue("useItem"));
         return useItemStrategy.doUseItem(actorId,itemId,jsonObject);
     }
 

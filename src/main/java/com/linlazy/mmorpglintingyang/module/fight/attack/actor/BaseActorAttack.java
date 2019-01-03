@@ -9,9 +9,9 @@ import java.util.Map;
 /**
  * @author linlazy
  */
-public abstract class ActorAttack {
+public abstract class BaseActorAttack {
 
-    private static Map<Integer,ActorAttack> map = new HashMap<>();
+    private static Map<Integer, BaseActorAttack> map = new HashMap<>();
 
     @PostConstruct
     public void init(){
@@ -39,6 +39,12 @@ public abstract class ActorAttack {
                 .reduce(0,(a,b) -> a + b);
     }
 
+    /**
+     *  计算玩家攻击力
+     * @param actorId  玩家ID
+     * @param jsonObject 可变参数
+     * @return 返回玩家攻击力
+     */
     public abstract int computeAttack(long actorId,JSONObject jsonObject);
 
     /**

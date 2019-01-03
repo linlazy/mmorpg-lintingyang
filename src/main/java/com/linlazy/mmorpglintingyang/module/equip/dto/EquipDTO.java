@@ -12,21 +12,21 @@ public class EquipDTO {
     /**
      * 所属玩家
      */
-    private long actorId;
+    private Long actorId;
     /**
      * 装备ID
      */
-    private long equipId;
+    private Long equipId;
     /**
      * 装备状态
      */
-    private int status;
+    private Integer status;
 
 
     /**
      * 耐久度
      */
-    private int durability;
+    private Integer durability;
 
     public EquipDTO(EquipDo equipDo) {
         this.actorId = equipDo.getActorId();

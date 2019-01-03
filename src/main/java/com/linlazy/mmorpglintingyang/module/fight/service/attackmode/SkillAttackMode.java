@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * @author linlazy
  */
 @Component
-public class SkillAttackMode extends AttackMode {
+public class SkillAttackMode extends BaseAttackMode {
 
     @Autowired
     private SkillDao skillDao;

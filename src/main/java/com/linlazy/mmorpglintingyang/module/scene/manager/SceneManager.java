@@ -33,7 +33,7 @@ public class SceneManager {
     @Autowired
     private MonsterManager monsterManager;
     @Autowired
-    private NPCManager npcManager;
+    private NpcManager npcManager;
 
     @Autowired
     private CopyManager copyManager;

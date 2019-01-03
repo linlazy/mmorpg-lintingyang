@@ -10,9 +10,9 @@ import lombok.Data;
 @Data
 public class BackPackLatticeDTO {
 
-    private long itemId;
-    private int backpackIndex;
-    private int count;
+    private Long itemId;
+    private Integer backpackIndex;
+    private Integer count;
 
     public BackPackLatticeDTO(BackpackLattice backpackLattice) {
         this.backpackIndex = backpackLattice.getBackpackIndex();

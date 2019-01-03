@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @author linlazy
  */
 @Component
-public class LevelActorDefense extends ActorDefense {
+public class LevelActorDefense extends BaseActorDefense {
 
     @Autowired
     private UserDao userDao;

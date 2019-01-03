@@ -27,7 +27,7 @@ public class SkillConfigService {
     /**
      * 构建技能ID与配置映射
      */
-    private static final Map<Integer,JSONObject> skillIdmap = new HashMap<>();
+    private static final Map<Integer,JSONObject> SKILL_ID_MAP = new HashMap<>();
 
     @PostConstruct
     public void init(){
@@ -35,7 +35,7 @@ public class SkillConfigService {
         for(int i =0; i < jsonArray.size(); i++){
             JSONObject jsonObject = jsonArray.getJSONObject(i);
             int skillId = jsonObject.getIntValue("skillId");
-            skillIdmap.putIfAbsent(skillId, jsonObject);
+            SKILL_ID_MAP.putIfAbsent(skillId, jsonObject);
         }
     }
 
@@ -48,6 +48,6 @@ public class SkillConfigService {
     }
 
     public JSONObject getSkillConfig(int skillId) {
-        return skillIdmap.get(skillId);
+        return SKILL_ID_MAP.get(skillId);
     }
 }

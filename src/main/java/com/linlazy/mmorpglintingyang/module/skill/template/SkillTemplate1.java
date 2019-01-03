@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * 瞬间恢复N点HP（作用实体，存档）
  * @author linlazy
  */
-public  class SkillTemplate1 extends SkillTemplate{
+public  class SkillTemplate1 extends BaseSkillTemplate {
 
 
     @Override

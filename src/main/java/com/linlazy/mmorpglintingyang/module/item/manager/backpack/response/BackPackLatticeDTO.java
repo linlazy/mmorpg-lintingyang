@@ -12,21 +12,21 @@ public class BackPackLatticeDTO {
     /**
      * 格子位置
      */
-    private int index;
+    private Integer index;
 
     /**
      * 道具唯一ID
      */
-    private long itemId;
+    private Long itemId;
     /**
      * 道具数量
      */
-    private int count;
+    private Integer count;
 
 
     public BackPackLatticeDTO(BackPackLattice backPackLattice) {
         this.index = backPackLattice.getIndex();
-        this.itemId = backPackLattice.getItemDo().getCount();
+        this.itemId = backPackLattice.getItemDo().getItemId();
         this.count = backPackLattice.getItemDo().getCount();
     }
 }

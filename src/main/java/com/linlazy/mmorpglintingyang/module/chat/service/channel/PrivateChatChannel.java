@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  * @author linlazy
  */
 @Component
-public class PrivateChatChannel extends ChatChannel{
+public class PrivateChatChannel extends BaseChatChannel {
 
     @Autowired
     private ChatDao chatDao;

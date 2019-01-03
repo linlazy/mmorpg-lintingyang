@@ -7,7 +7,7 @@ import com.linlazy.mmorpglintingyang.module.common.event.EventBusHolder;
 import com.linlazy.mmorpglintingyang.module.task.constants.TaskStatus;
 import com.linlazy.mmorpglintingyang.module.task.domain.TaskDo;
 import com.linlazy.mmorpglintingyang.module.task.manager.TaskManager;
-import com.linlazy.mmorpglintingyang.module.task.template.TaskTemplate;
+import com.linlazy.mmorpglintingyang.module.task.template.BaseTaskTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +34,7 @@ public class TaskService {
     public void listenEvent(ActorEvent<JSONObject> actorEvent){
         Set<TaskDo> allTaskDo = taskManager.getActorAllTaskDo(actorEvent.getActorId());
         allTaskDo.stream()
-            .filter(taskDo -> TaskTemplate.getTaskTemplate(taskDo.getTaskTemplateId()).likeEvent().contains(actorEvent.getEventType()))
+            .filter(taskDo -> BaseTaskTemplate.getTaskTemplate(taskDo.getTaskTemplateId()).likeEvent().contains(actorEvent.getEventType()))
             .forEach(taskDo -> doComplete(actorEvent.getActorId(),actorEvent.getData(),taskDo));
     }
 
@@ -44,7 +44,7 @@ public class TaskService {
             taskManager.update(taskDo.convertTask());
             return;
         }
-        TaskTemplate taskTemplate = TaskTemplate.getTaskTemplate(taskDo.getTaskTemplateId());
+        BaseTaskTemplate taskTemplate = BaseTaskTemplate.getTaskTemplate(taskDo.getTaskTemplateId());
         if(taskTemplate.isReachCondition(actorId,taskDo)){
             taskDo.setStatus(TaskStatus.COMPLETE_UNREWARD);
             //存档
@@ -66,7 +66,7 @@ public class TaskService {
         if (taskDo.getStatus() != TaskStatus.START_UNCOMPLETE){
             return false;
         }
-        TaskTemplate taskTemplate = TaskTemplate.getTaskTemplate(taskDo.getTaskTemplateId());
+        BaseTaskTemplate taskTemplate = BaseTaskTemplate.getTaskTemplate(taskDo.getTaskTemplateId());
         return taskTemplate.isPreCondition(actorId, jsonObject, taskDo);
     }
 

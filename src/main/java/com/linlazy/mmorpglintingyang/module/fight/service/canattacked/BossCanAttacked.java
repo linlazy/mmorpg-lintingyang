@@ -11,14 +11,14 @@ import org.springframework.stereotype.Component;
  * @author linlazy
  */
 @Component
-public class BossCanAttacked extends CanAttacked {
+public class BossCanAttacked extends BaseCanAttacked {
 
     @Autowired
     private SceneValidator sceneValidator;
 
     @Override
     protected int entityType() {
-        return SceneEntityType.Boss;
+        return SceneEntityType.BOSS;
     }
 
     @Override

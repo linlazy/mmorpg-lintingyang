@@ -19,7 +19,7 @@ public class AdditionService {
 
         for(Addition addition : additionList){
             switch (addition.getAdditionType()){
-                case AdditionType.PhysicalAttack:
+                case AdditionType.PHYSICAL_ATTACK:
                     userService.addOrRemoveAddition(actorId,addition);
                     break;
                     default:

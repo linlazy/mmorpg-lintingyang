@@ -9,17 +9,17 @@ public class ConfigFileManager {
 
     private static ConfigFile prop = null;
 
-    private static final ConcurrentHashMap<String, ConfigFile> map = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, ConfigFile> MAP = new ConcurrentHashMap<>();
     private static final String DEFAULT_ENCODE = "UTF-8";
 
     public static ConfigFile use(String fileName) {
-        ConfigFile result = map.get(fileName);
+        ConfigFile result = MAP.get(fileName);
         if (result == null) {
             synchronized (ConfigFileManager.class) {
-                result = map.get(fileName);
+                result = MAP.get(fileName);
                 if (result == null) {
                     result = new ConfigFile(fileName,DEFAULT_ENCODE);
-                    map.put(fileName, result);
+                    MAP.put(fileName, result);
                     if (ConfigFileManager.prop == null) {
                         ConfigFileManager.prop = result;
                     }
@@ -37,6 +37,6 @@ public class ConfigFileManager {
     }
 
     public static ConfigFile getConfigFile(String fileName) {
-        return map.get(fileName);
+        return MAP.get(fileName);
     }
 }

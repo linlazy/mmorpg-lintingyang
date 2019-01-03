@@ -15,7 +15,7 @@ import java.util.List;
  * @author linlazy
  */
 @Component
-public class CompensateEmailTemplate extends EmailTemplate {
+public class CompensateEmailTemplate extends BaseEmailTemplate {
 
     @Autowired
     private EmailConfigService emailConfigService;

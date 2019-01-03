@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * @author linlazy
  */
 @Data
-public class MainBackPack extends BackPack{
+public class MainBackPack extends BaseBackPack {
 
     private static ItemDao itemDao = SpringContextUtil.getApplicationContext().getBean(ItemDao.class);
     private static GlobalConfigService globalConfigService =  SpringContextUtil.getApplicationContext().getBean(GlobalConfigService.class);
@@ -161,7 +161,7 @@ public class MainBackPack extends BackPack{
 //            long newItemId = ItemIdUtil.getNewItemId(maxOrderId + 1, spaceBackPackLattice.getBackpackIndex(), itemContext.getBaseItemId());
 //            itemDo.setItemId(newItemId);
 //            itemDo.setCount(1);
-//            if(itemDo.getItemType() == ItemType.Equip){
+//            if(itemDo.getItemType() == ItemType.EQUIP){
 //                itemDao.addItem(new EquipDo(itemDo).convertItemDo().convertItem());
 //            }else {
 //                itemDao.addItem(itemDo.convertItem());

@@ -11,6 +11,10 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface GuildOffLineDao {
 
+    /**
+     * 增加公会离线消息
+     * @param guildOffLine  公会离线消息
+     */
     @Insert({"insert into guild_offline (guildId,receiver,sourceId,type)",
     "values (#{guildId},#{receiver},#{sourceId},#{type})"})
     void addGuildOffLine(GuildOffLine guildOffLine);

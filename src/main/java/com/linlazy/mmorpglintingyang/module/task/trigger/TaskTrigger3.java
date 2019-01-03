@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * 开启任务xxx,触发任务
  * @author linlazy
  */
-public class TaskTrigger3 extends TaskTrigger {
+public class TaskTrigger3 extends BaseTaskTrigger {
     @Override
     protected int triggerType() {
         return 3;

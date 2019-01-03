@@ -23,7 +23,7 @@ public class ItemConfigService {
         itemConfigFile =  ConfigFileManager.use("config_file/item_config.json");
     }
 
-    private static  final Map<Integer,JSONObject> map = new HashMap<>();
+    private static  final Map<Integer,JSONObject> MAP = new HashMap<>();
 
     @PostConstruct
     public void init(){
@@ -32,11 +32,11 @@ public class ItemConfigService {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
 
 
-            map.put(jsonObject.getInteger("itemId"),jsonObject);
+            MAP.put(jsonObject.getInteger("itemId"),jsonObject);
         }
     }
 
     public JSONObject getItemConfig(int itemId) {
-        return map.get(itemId);
+        return MAP.get(itemId);
     }
 }

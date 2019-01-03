@@ -2,7 +2,7 @@ package com.linlazy.mmorpglintingyang.module.backpack.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.module.backpack.dto.BackPackDTO;
-import com.linlazy.mmorpglintingyang.module.backpack.type.BackPack;
+import com.linlazy.mmorpglintingyang.module.backpack.type.BaseBackPack;
 import com.linlazy.mmorpglintingyang.server.common.Result;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +20,8 @@ public class BackPackService {
      */
     public Result<BackPackDTO> arrange(long actorId, int backpackType, JSONObject jsonObject) {
 
-        BackPack backPack = BackPack.getBackPack(backpackType, jsonObject);
-        BackPackDTO backPackDTO = backPack.arrangeBackPack();
+        BaseBackPack baseBackPack = BaseBackPack.getBackPack(backpackType, jsonObject);
+        BackPackDTO backPackDTO = baseBackPack.arrangeBackPack();
         return Result.success(backPackDTO);
     }
 }

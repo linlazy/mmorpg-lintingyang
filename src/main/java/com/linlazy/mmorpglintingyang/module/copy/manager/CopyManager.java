@@ -129,7 +129,7 @@ public class CopyManager {
             sceneEntityDo.setCopyId(copyDo.getCopyId());
             // boss attack entityId entityType
             copyDo.getSceneEntitySet().stream()
-                    .filter(sceneEntityDo1 -> sceneEntityDo1.getSceneEntityType() == SceneEntityType.Boss)
+                    .filter(sceneEntityDo1 -> sceneEntityDo1.getSceneEntityType() == SceneEntityType.BOSS)
                     .forEach(
                             sceneEntityDo1 -> {
                                 JSONObject bossConfig = bossConfigService.getBossConfig((int) sceneEntityDo1.getSceneEntityId());

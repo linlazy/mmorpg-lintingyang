@@ -12,7 +12,7 @@ public class ChatDTO {
     /**
      *  内容来源
      */
-    long sourceId;
+    Long sourceId;
 
     /**
      * 聊天内容
@@ -22,7 +22,7 @@ public class ChatDTO {
     /**
      * 聊天类型
      */
-    private int chatType;
+    private Integer chatType;
 
     public ChatDTO(Chat chat) {
         this.sourceId = chat.getSourceId();

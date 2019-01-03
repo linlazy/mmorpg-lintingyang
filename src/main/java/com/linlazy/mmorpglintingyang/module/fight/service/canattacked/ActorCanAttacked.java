@@ -12,10 +12,10 @@ import org.springframework.stereotype.Component;
  * @author linlazy
  */
 @Component
-public class ActorCanAttacked extends CanAttacked {
+public class ActorCanAttacked extends BaseCanAttacked {
     @Override
     protected int entityType() {
-        return SceneEntityType.Player;
+        return SceneEntityType.PLAYER;
     }
 
     @Autowired

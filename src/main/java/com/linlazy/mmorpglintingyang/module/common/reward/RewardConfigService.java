@@ -26,7 +26,7 @@ public class RewardConfigService {
         rewardConfigFile =  ConfigFileManager.use("config_file/reward_config.json");
     }
 
-    private static  final Map<Integer, JSONObject> map = new HashMap<>();
+    private static  final Map<Integer, JSONObject> MAP = new HashMap<>();
 
     @PostConstruct
     public void init(){
@@ -34,12 +34,12 @@ public class RewardConfigService {
         for(int i = 0; i < jsonArray.size(); i++){
             JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-            map.put(jsonObject.getInteger("rewardId"),jsonObject);
+            MAP.put(jsonObject.getInteger("rewardId"),jsonObject);
         }
     }
 
     public int getRewardDBType(int rewardId) {
-        return map.get(rewardId).getIntValue("rewardDBType");
+        return MAP.get(rewardId).getIntValue("rewardDBType");
     }
 
     public List<Reward> parseRewards(String rewards){

@@ -20,9 +20,9 @@ import java.util.stream.Collectors;
  * @author linlazy
  */
 @Data
-public abstract class BackPack {
+public abstract class BaseBackPack {
 
-    private static Logger logger = LoggerFactory.getLogger(BackPack.class);
+    private static Logger logger = LoggerFactory.getLogger(BaseBackPack.class);
 
     protected Set<BackpackLattice> backPack;
 
@@ -32,7 +32,7 @@ public abstract class BackPack {
      */
     protected abstract int backpackType();
 
-    public static BackPack getBackPack(int backpackType, JSONObject jsonObject){
+    public static BaseBackPack getBackPack(int backpackType, JSONObject jsonObject){
         switch (backpackType){
             case BackPackType.MAIN:
                 return MainBackPack.getMainBackPack(jsonObject.getLongValue("actorId"));
@@ -145,6 +145,10 @@ public abstract class BackPack {
         return backPackLatticeDTOList;
     }
 
+    /**
+     * 删除格子
+     * @param backPackLattice 格子信息
+     */
     protected abstract void deleteLattice(BackpackLattice backPackLattice);
 
     protected  List<BackPackLatticeDTO> popSuperPositionFromBackPack(ItemContext itemContext){
@@ -177,12 +181,28 @@ public abstract class BackPack {
     }
 
 
+    /**
+     * 增加格子信息
+     * @param spaceBackPackLattice 格子信息
+     */
     protected abstract void addLattice(BackpackLattice spaceBackPackLattice);
 
+    /**
+     * 更新格子信息
+     * @param backPackLattice 格子信息
+     */
     protected abstract void updateLattice(BackpackLattice backPackLattice);
 
+    /**
+     * 新建整理好的背包容器
+     * @return 返回新建整理好的背包容器
+     */
     protected abstract Set<BackpackLattice> newArrangeBackPack();
 
+    /**
+     * 执行背包整理
+     * @param arrangeBackPack 整理好的背包容器
+     */
     protected abstract void doArrangeBackpack(Set<BackpackLattice> arrangeBackPack);
 
 
@@ -201,7 +221,7 @@ public abstract class BackPack {
             long newItemId = ItemIdUtil.getNewItemId(maxOrderId + 1, spaceBackPackLattice.getBackpackIndex(), itemContext.getBaseItemId());
             itemDo.setItemId(newItemId);
             itemDo.setCount(1);
-            if(itemDo.getItemType() == ItemType.Equip){
+            if(itemDo.getItemType() == ItemType.EQUIP){
                 itemDo = new EquipDo(itemDo).convertItemDo();
             }
             spaceBackPackLattice.setItemDo(itemDo);
@@ -227,7 +247,6 @@ public abstract class BackPack {
             //未超过叠加数量
             if(count + addItemNum <= itemContext.getSuperPositionUp()){
                 backPackLattice.getItemDo().setCount(count + addItemNum);
-//                itemDao.updateItem(backPackLattice.getItemDo().convertItem());
                 updateLattice(backPackLattice);
                 //增加返回结果
                 backPackLatticeDTOList.add(new BackPackLatticeDTO(backPackLattice));
@@ -238,7 +257,6 @@ public abstract class BackPack {
             addItemNum -= (itemContext.getSuperPositionUp() - count);
             backPack.remove(backPackLattice);
             backPack.add(backPackLattice);
-//            itemDao.updateItem(backPackLattice.getItemDo().convertItem());
 
             //增加返回结果
             backPackLatticeDTOList.add(new BackPackLatticeDTO(backPackLattice));
@@ -304,7 +322,7 @@ public abstract class BackPack {
     }
 
     private Map<ItemDo, Integer> getItemDoTotalMap() {
-        Map<ItemDo,Integer>  itemDoTotalMap = new HashMap<>();
+        Map<ItemDo,Integer>  itemDoTotalMap = new HashMap<>(backPack.size());
         for(BackpackLattice backpackLattice: backPack){
             ItemDo itemDo = backpackLattice.getItemDo();
             itemDoTotalMap.putIfAbsent(itemDo, 0);

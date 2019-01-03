@@ -15,7 +15,7 @@ public interface RewardID {
     /**
      * 装备耐久度
      */
-    long Durability = 3;
+    long DURABILITY = 3;
 
     /**
      * 金币

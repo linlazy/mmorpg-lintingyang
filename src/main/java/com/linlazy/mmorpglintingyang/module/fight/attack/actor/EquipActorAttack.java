@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  * @author linlazy
  */
 @Component
-public class EquipActorAttack extends ActorAttack {
+public class EquipActorAttack extends BaseActorAttack {
 
     @Autowired
     private ItemDao itemDao;

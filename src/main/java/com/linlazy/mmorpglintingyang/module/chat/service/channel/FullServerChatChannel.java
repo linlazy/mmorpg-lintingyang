@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * @author linlazy
  */
 @Component
-public class FullServerChatChannel extends ChatChannel{
+public class FullServerChatChannel extends BaseChatChannel {
 
     @Override
     protected int chatType() {

@@ -17,7 +17,7 @@ import java.util.Set;
  * @author linlazy
  */
 @Component
-public class TaskTemplate4 extends TaskTemplate {
+public class TaskTemplate4 extends BaseTaskTemplate {
     /**
      * 关心任务触发，穿戴装备事件
      * @return

@@ -25,9 +25,9 @@ public class GuildValidator {
 
     public boolean hasAuth(long actorId,long targetId,int authLevel){
         long guildId =  guildManager.getGuildId(actorId);
-        GuildActor actorGuildActor = guildActorDao.getGuild(guildId, actorId);
-        GuildActor targetGuildActor = guildActorDao.getGuild(guildId, targetId);
-        if(actorGuildActor.getAuthLevel() >= GuildAuthLevel.VicePresident
+        GuildActor actorGuildActor = guildActorDao.getGuildActor(guildId, actorId);
+        GuildActor targetGuildActor = guildActorDao.getGuildActor(guildId, targetId);
+        if(actorGuildActor.getAuthLevel() >= GuildAuthLevel.VICE_PRESIDENT
         && actorGuildActor.getAuthLevel() > targetGuildActor.getAuthLevel()
         && actorGuildActor.getAuthLevel() > authLevel){
             return true;
@@ -37,9 +37,9 @@ public class GuildValidator {
 
     public boolean hasAuth(long actorId, long targetId) {
         long guildId =  guildManager.getGuildId(actorId);
-        GuildActor actorGuildActor = guildActorDao.getGuild(guildId, actorId);
-        GuildActor targetGuildActor = guildActorDao.getGuild(guildId, targetId);
-        if(actorGuildActor.getAuthLevel() >= GuildAuthLevel.VicePresident
+        GuildActor actorGuildActor = guildActorDao.getGuildActor(guildId, actorId);
+        GuildActor targetGuildActor = guildActorDao.getGuildActor(guildId, targetId);
+        if(actorGuildActor.getAuthLevel() >= GuildAuthLevel.VICE_PRESIDENT
                 && actorGuildActor.getAuthLevel() > targetGuildActor.getAuthLevel()){
             return true;
         }

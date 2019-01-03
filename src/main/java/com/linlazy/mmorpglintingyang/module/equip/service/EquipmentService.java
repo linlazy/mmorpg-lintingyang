@@ -73,7 +73,8 @@ public class EquipmentService {
      */
     public Result<?> equip(long actorId, long equipId){
         JSONObject itemConfig = itemConfigService.getItemConfig(ItemIdUtil.getBaseItemId(equipId));
-        if(itemConfig.getIntValue("itemType") != ItemType.Equip){
+        int itemType = itemConfig.getIntValue("itemType");
+        if( itemType!= ItemType.EQUIP){
             return Result.valueOf("参数有误");
         }
 
@@ -96,7 +97,8 @@ public class EquipmentService {
      */
     public Result<?> unEquip(long actorId, long equipId) {
         JSONObject itemConfig = itemConfigService.getItemConfig(ItemIdUtil.getBaseItemId(equipId));
-        if(itemConfig.getIntValue("itemType") != ItemType.Equip){
+        int itemType = itemConfig.getIntValue("itemType");
+        if(itemType != ItemType.EQUIP){
             return Result.valueOf("参数有误");
         }
 
@@ -118,7 +120,8 @@ public class EquipmentService {
     public Result<FixEquipmentDTO> fixEquipment(long actorId, long equipId) {
         //校验
         JSONObject itemConfig = itemConfigService.getItemConfig(ItemIdUtil.getBaseItemId(equipId));
-        if(itemConfig.getIntValue("itemType") != ItemType.Equip){
+        int itemType = itemConfig.getIntValue("itemType");
+        if(itemType != ItemType.EQUIP){
             return Result.valueOf("参数有误");
         }
 

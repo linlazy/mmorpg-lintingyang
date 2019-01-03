@@ -15,7 +15,7 @@ import java.util.List;
  * @author linlazy
  */
 @Component
-public class UseItemStrategy0 extends UseItemStrategy{
+public class UseItemStrategy0 extends BaseUseItemStrategy {
 
     @Autowired
     private ItemManager itemManager;
