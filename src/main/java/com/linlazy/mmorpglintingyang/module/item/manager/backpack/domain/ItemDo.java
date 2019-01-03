@@ -82,7 +82,7 @@ public class ItemDo{
         this.setSuperPositionUp(superPositionUp);
     }
 
-    private ItemDo() {
+    public ItemDo() {
     }
 
     public ItemDo(long itemId) {
@@ -116,7 +116,7 @@ public class ItemDo{
         initConfig(baseItemId);
     }
 
-    ItemDo clonez(){
+    public ItemDo clonez(){
         ItemDo itemDo = new ItemDo();
         itemDo.setItemId(itemId);
         itemDo.setActorId(actorId);
@@ -163,4 +163,5 @@ public class ItemDo{
     public int hashCode() {
         return Objects.hash(getBaseItemIdOrderIdKey());
     }
+
 }

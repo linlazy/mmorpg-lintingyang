@@ -41,7 +41,7 @@ public class GlobalConfigService {
      * 获取背包最大格子数
      * @return
      */
-    public int getPackageMaxLatticeNum(){
+    public int getMainPackageMaxLatticeNum(){
         return jsonObject.getIntValue("packageMaxLatticeNum");
     }
 

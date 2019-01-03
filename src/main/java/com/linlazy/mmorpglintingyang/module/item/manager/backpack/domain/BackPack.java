@@ -84,7 +84,7 @@ public class BackPack {
 
     public boolean isFull(JSONArray jsonArray){
         int needSpace = computeNeedSpace(jsonArray);
-        int totalSpace = globalConfigService.getPackageMaxLatticeNum() -actorBackPack.size();
+        int totalSpace = globalConfigService.getMainPackageMaxLatticeNum() -actorBackPack.size();
         return totalSpace < needSpace;
     }
 
@@ -135,7 +135,7 @@ public class BackPack {
      * @return
      */
     private boolean isFullBackPackForNonSuperPosition(ItemDo itemDo) {
-        int spaceNum =globalConfigService.getPackageMaxLatticeNum() - actorBackPack.size();
+        int spaceNum =globalConfigService.getMainPackageMaxLatticeNum() - actorBackPack.size();
         return spaceNum <itemDo.getCount();
     }
 
@@ -150,7 +150,7 @@ public class BackPack {
 
 
         //物品数量
-        int spaceNum = globalConfigService.getPackageMaxLatticeNum() -actorBackPack.size();
+        int spaceNum = globalConfigService.getMainPackageMaxLatticeNum() -actorBackPack.size();
         long totalNum = spaceNum * itemDo.getSuperPositionUp() + actorBackPack.stream()
                 .filter(backPackLattice -> backPackLattice.getItemDo().getBaseItemId() == itemDo.getBaseItemId())
                 .map(backPackLattice -> itemDo.getSuperPositionUp() - backPackLattice.getItemDo().getCount())
@@ -253,7 +253,7 @@ public class BackPack {
     public BackPackInfo arrange(){
         BackPackInfo backPackInfo = new BackPackInfo();
 
-        Set<BackPackLattice> arrangeBackPack = new HashSet<>(globalConfigService.getPackageMaxLatticeNum());
+        Set<BackPackLattice> arrangeBackPack = new HashSet<>(globalConfigService.getMainPackageMaxLatticeNum());
 
         //构建 道具，数量映射
         Map<ItemDo,Integer>  itemDoTotalMap = getItemDoTotalMap();
