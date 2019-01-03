@@ -7,8 +7,8 @@ import com.linlazy.mmorpglintingyang.module.guild.entity.GuildWarehouse;
 import com.linlazy.mmorpglintingyang.module.item.manager.backpack.domain.ItemDo;
 import com.linlazy.mmorpglintingyang.server.common.GlobalConfigService;
 import com.linlazy.mmorpglintingyang.utils.ItemIdUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import com.linlazy.mmorpglintingyang.utils.SpringContextUtil;
+import lombok.Data;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,14 +19,12 @@ import java.util.stream.Collectors;
 /**
  * 公会仓库背包
  */
-@Component
+@Data
 public class GuildBackPack extends BackPack{
 
     private static Map<Long, GuildBackPack> guildIdBackPackMap = new HashMap<>();
-    @Autowired
-    private GuildWarehouseDao guildWarehouseDao;
-    @Autowired
-    private GlobalConfigService globalConfigService;
+    private static GuildWarehouseDao guildWarehouseDao = SpringContextUtil.getApplicationContext().getBean(GuildWarehouseDao.class);
+    private static GlobalConfigService globalConfigService =SpringContextUtil.getApplicationContext().getBean(GlobalConfigService.class);
 
     /**
      * 公会ID
@@ -35,20 +33,25 @@ public class GuildBackPack extends BackPack{
 
     /**
      * 获取公会背包
-     * @param guildId
-     * @return
+     * @param guildId 公会ID
+     * @return 公会背包
      */
-    public GuildBackPack getGuildBackPack(long guildId){
+     static GuildBackPack getGuildBackPack(long guildId){
         if(guildIdBackPackMap.get(guildId) == null){
+
+            GuildBackPack guildBackPack = new GuildBackPack();
+
             Set<GuildWarehouse> guildWarehouse = guildWarehouseDao.getGuildWarehouse(guildId);
-            this.backPack = guildWarehouse.stream()
+            Set<BackpackLattice> backpackLatticeSet = guildWarehouse.stream()
                     .map(GuildWarehouse::convertItemDo)
                     .map(itemDo -> {
                         int backPackIndex = ItemIdUtil.getBackPackIndex(itemDo.getItemId());
-                        return new BackpackLattice(backPackIndex,itemDo);
+                        return new BackpackLattice(backPackIndex, itemDo);
                     }).collect(Collectors.toSet());
-            this.guildId = guildId;
-            guildIdBackPackMap.put(guildId,this);
+
+            guildBackPack.setBackPack(backpackLatticeSet);
+            guildBackPack.setGuildId(guildId);
+            guildIdBackPackMap.put(guildId,guildBackPack);
         }
 
         return guildIdBackPackMap.get(guildId);

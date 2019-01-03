@@ -6,16 +6,21 @@ import java.util.Map;
 
 /**
  * 技能模板
+ * @author linlazy
  */
 public abstract class SkillTemplate {
 
-    public static Map<Integer,SkillTemplate> map = new HashMap<>();
+    private static Map<Integer,SkillTemplate> map = new HashMap<>();
 
     @PostConstruct
     public void init(){
         map.put(skillTemplateId(),this);
     }
 
+    /**
+     * 技能模板ID 由子类决定
+     * @return
+     */
     protected abstract int skillTemplateId();
 
 

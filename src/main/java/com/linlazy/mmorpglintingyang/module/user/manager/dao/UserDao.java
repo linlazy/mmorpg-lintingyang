@@ -24,7 +24,7 @@ public interface UserDao {
     @Select({"select max(actorId) from ",TABLE})
     Long getMaxActorId();
 
-    @Update({"update ",TABLE,"set sceneId = #{sceneId}, mp = #{mp},MPNextResumeTime = #{MPNextResumeTime},hp = #{hp}",
+    @Update({"update ",TABLE,"set sceneId = #{sceneId}, mp = #{mp},mpNextResumeTime = #{mpNextResumeTime},hp = #{hp}",
                 "where actorId = #{actorId}"})
     void updateUser(User user);
 

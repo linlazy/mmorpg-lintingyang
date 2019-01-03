@@ -40,6 +40,9 @@ public class UserService {
         switch (actorEvent.getEventType()){
             case ACTOR_DAMAGE:
                 handleActorDamage(actorEvent);
+                break;
+            default:
+                break;
         }
     }
 

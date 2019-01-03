@@ -24,6 +24,7 @@ public class BackPackHandler {
     @Cmd("arrange")
     public Result<?> arrangeBackPack(JSONObject jsonObject){
         long actorId = jsonObject.getLongValue("actorId");
-        return backPackService.arrange(actorId);
+        int backpackType = jsonObject.getIntValue("backpackType");
+        return backPackService.arrange(actorId,backpackType,jsonObject);
     }
 }

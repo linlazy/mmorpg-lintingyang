@@ -20,14 +20,14 @@ public class ShopConfigService {
         shopConfigFile =  ConfigFileManager.use("config_file/shop_config.json");
     }
 
-    private static Map<Integer,JSONObject> map = new HashMap<>();
+    private static Map<Long,JSONObject> map = new HashMap<>();
 
     @PostConstruct
     public void init(){
         JSONArray jsonArray = shopConfigFile.getJsonArray();
         for(int i = 0; i < jsonArray.size(); i++){
             JSONObject jsonObject = jsonArray.getJSONObject(i);
-            map.put(jsonObject.getInteger("goodsId"),jsonObject);
+            map.put(jsonObject.getLongValue("goodsId"),jsonObject);
         }
     }
 

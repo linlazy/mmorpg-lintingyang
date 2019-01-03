@@ -8,7 +8,7 @@ public class ScheduleTest {
 
     public static void main(String[] args) {
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(20);
-        ScheduledFuture<?> scheduledFuture = scheduledExecutorService.scheduleAtFixedRate(()->{
+        scheduledExecutorService.scheduleAtFixedRate(()->{
             System.out.println("aaa");
         },2L,2L,TimeUnit.SECONDS);
     }

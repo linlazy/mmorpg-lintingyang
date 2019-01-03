@@ -14,7 +14,8 @@ public abstract class Defense {
             case SceneEntityType
                     .Monster:
                 return 0;
+            default:
+                return  0;
         }
-        return 0;
     }
 }

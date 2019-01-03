@@ -1,24 +1,24 @@
 package com.linlazy.mmorpglintingyang.module.backpack.service;
 
-import com.linlazy.mmorpglintingyang.module.item.manager.ItemManager;
-import com.linlazy.mmorpglintingyang.module.item.manager.backpack.response.BackPackInfo;
+import com.alibaba.fastjson.JSONObject;
+import com.linlazy.mmorpglintingyang.module.backpack.dto.BackPackDTO;
+import com.linlazy.mmorpglintingyang.module.backpack.type.BackPack;
 import com.linlazy.mmorpglintingyang.server.common.Result;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class BackPackService {
 
-    @Autowired
-    private ItemManager itemManager;
-
     /**
      * 整理背包
      * @param actorId
+     * @param backpackType
      * @return
      */
-    public Result<BackPackInfo> arrange(long actorId) {
-        BackPackInfo backPackInfo = itemManager.arrangeBackPack(actorId);
-        return Result.success(backPackInfo);
+    public Result<BackPackDTO> arrange(long actorId, int backpackType, JSONObject jsonObject) {
+
+        BackPack backPack = BackPack.getBackPack(backpackType, jsonObject);
+        BackPackDTO backPackDTO = backPack.arrangeBackPack();
+        return Result.success(backPackDTO);
     }
 }

@@ -12,7 +12,7 @@ public interface GuildDao {
     Guild getGuildGold(long guildId);
 
 
-    @Update("doArrangeBackpack guild where guildId = #{guildId}")
+    @Update("update guild where guildId = #{guildId}")
     void updateGuildGold(Guild guild);
 
 

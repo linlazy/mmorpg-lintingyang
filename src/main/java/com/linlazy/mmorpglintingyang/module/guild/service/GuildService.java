@@ -84,8 +84,6 @@ public class GuildService {
      */
     public Result<?> donateGold(long actorId, int gold) {
 
-
-
         return guildManager.donateGold(actorId,gold);
     }
 }

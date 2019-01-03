@@ -19,7 +19,7 @@ public interface GuildActorDao {
     @Select("select * from guild_actor where guildId = #{guildId}")
     Set<GuildActor> getGuildSet(long guildId);
 
-    @Update({"doArrangeBackpack guild_actor set authLevel = #{authLevel}",
+    @Update({"update guild_actor set authLevel = #{authLevel}",
             "where guildId = #{guildId} and actorId = #{actorId}"})
     Set<GuildActor> updateGuild(GuildActor guildActor);
 

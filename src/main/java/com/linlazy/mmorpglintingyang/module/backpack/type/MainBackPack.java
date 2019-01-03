@@ -7,8 +7,8 @@ import com.linlazy.mmorpglintingyang.module.item.manager.dao.ItemDao;
 import com.linlazy.mmorpglintingyang.module.item.manager.entity.Item;
 import com.linlazy.mmorpglintingyang.server.common.GlobalConfigService;
 import com.linlazy.mmorpglintingyang.utils.ItemIdUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import com.linlazy.mmorpglintingyang.utils.SpringContextUtil;
+import lombok.Data;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,13 +19,11 @@ import java.util.stream.Collectors;
 /**
  * 玩家主背包
  */
-@Component
+@Data
 public class MainBackPack extends BackPack{
 
-    @Autowired
-    private ItemDao itemDao;
-    @Autowired
-    private GlobalConfigService globalConfigService;
+    private static ItemDao itemDao = SpringContextUtil.getApplicationContext().getBean(ItemDao.class);
+    private static GlobalConfigService globalConfigService =  SpringContextUtil.getApplicationContext().getBean(GlobalConfigService.class);
 
     private static Map<Long, MainBackPack> actorIdBackPackMap = new HashMap<>();
 
@@ -36,22 +34,23 @@ public class MainBackPack extends BackPack{
 
     /**
      * 获取玩家主背包背包
-     * @param actorId
-     * @return
+     * @param actorId 玩家ID
+     * @return  玩家主背包背包
      */
-    public MainBackPack getMainBackPack(long actorId){
+    static MainBackPack getMainBackPack(long actorId){
         if(actorIdBackPackMap.get(actorId) == null){
+            MainBackPack mainBackPack = new MainBackPack();
             Set<Item> itemSet = itemDao.getItemSet(actorId);
-            this.backPack = itemSet.stream()
+            Set<BackpackLattice> backpackLatticeSet = itemSet.stream()
                     .map(ItemDo::new)
                     .map(itemDo -> {
                         int backPackIndex = ItemIdUtil.getBackPackIndex(itemDo.getItemId());
-                        BackpackLattice backpackLattice = new BackpackLattice(backPackIndex,itemDo);
-                        return backpackLattice;
+                        return new BackpackLattice(backPackIndex, itemDo);
                     })
                     .collect(Collectors.toSet());
-            this. actorId= actorId;
-            actorIdBackPackMap.put(actorId,this);
+            mainBackPack.setBackPack(backpackLatticeSet);
+            mainBackPack.setActorId(actorId);
+            actorIdBackPackMap.put(actorId,mainBackPack);
         }
 
         return actorIdBackPackMap.get(actorId);

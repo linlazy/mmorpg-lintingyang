@@ -11,7 +11,6 @@ import com.linlazy.mmorpglintingyang.module.guild.domain.GuildDo;
 import com.linlazy.mmorpglintingyang.module.guild.entity.Guild;
 import com.linlazy.mmorpglintingyang.module.guild.entity.GuildActor;
 import com.linlazy.mmorpglintingyang.module.guild.entity.GuildOffLine;
-import com.linlazy.mmorpglintingyang.module.guild.entity.GuildWarehouse;
 import com.linlazy.mmorpglintingyang.module.guild.push.GuildPushHelper;
 import com.linlazy.mmorpglintingyang.server.common.Result;
 import com.linlazy.mmorpglintingyang.utils.SessionManager;
@@ -173,7 +172,7 @@ public class GuildManager {
 
     public Result<?> getGuildWareHouse(long actorId) {
         Long guildId = actorIdGuildIdMap.get(actorId);
-        Set<GuildWarehouse> guildWarehouse = guildWarehouseDao.getGuildWarehouse(guildId);
+        guildWarehouseDao.getGuildWarehouse(guildId);
         return null;
     }
 }

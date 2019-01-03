@@ -11,7 +11,7 @@ public class EquipDurability {
     public static EquipDo fixEquip(EquipDo equipDo, int addDurability){
 
         if(equipDo.getDurability() + addDurability< equipDo.getDurabilityUp()){
-            equipDo.setDurability(equipDo.getDurabilityUp());
+            equipDo.setDurability(equipDo.getDurability() + addDurability);
         }else {
             equipDo.setDurability(equipDo.getDurabilityUp());
         }

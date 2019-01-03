@@ -31,20 +31,27 @@ public class CopyService {
     public void listenEvent(ActorEvent actorEvent){
 
         switch (actorEvent.getEventType()){
-            case COPY_ACTOR_DEAD://副本玩家死亡
+            case COPY_ACTOR_DEAD:
+                //副本玩家死亡
                 handleCopyActorDead(actorEvent);
                 break;
-            case COPY_BOSS_DEAD://副本BOSS死亡
+            case COPY_BOSS_DEAD:
+                //副本BOSS死亡
                 handleCopyBOSSDead(actorEvent);
                 break;
-            case QUIT_COPY://退出副本
+            case QUIT_COPY:
+                //退出副本
                 handleQuitCopy(actorEvent);
                 break;
-            case COPY_SUCCESS://挑战成功
+            case COPY_SUCCESS:
+                //挑战成功
                 handleCopySuccess(actorEvent);
                 break;
-            case COPY_FAIL://挑战失败
+            case COPY_FAIL:
+                //挑战失败
                 handleCopyFail(actorEvent);
+                break;
+            default:
                 break;
         }
 

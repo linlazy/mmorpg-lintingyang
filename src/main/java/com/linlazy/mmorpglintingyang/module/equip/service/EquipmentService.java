@@ -42,6 +42,8 @@ public class EquipmentService {
             case ACTOR_DAMAGE:
                 handleAttacked(actorEvent);
                 break;
+                default:
+                    break;
         }
     }
 

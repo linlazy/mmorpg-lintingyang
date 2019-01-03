@@ -23,7 +23,7 @@ public class SkillActorAttack extends ActorAttack {
         return AttackType.SKILL;
     }
 
-
+    @Override
     public boolean isValid(long actorId,JSONObject jsonObject){
         int skillId = jsonObject.getIntValue("skillId");
         if( skillId == 0){

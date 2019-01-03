@@ -30,6 +30,8 @@ public class ArenaService {
             case ARENA_ACTOR_DEAD:
                 handleArenaActorKilled(actorEvent);
                 break;
+                default:
+                    break;
         }
     }
 

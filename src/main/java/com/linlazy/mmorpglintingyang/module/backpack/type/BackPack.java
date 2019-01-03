@@ -1,5 +1,7 @@
 package com.linlazy.mmorpglintingyang.module.backpack.type;
 
+import com.alibaba.fastjson.JSONObject;
+import com.linlazy.mmorpglintingyang.module.backpack.constants.BackPackType;
 import com.linlazy.mmorpglintingyang.module.backpack.domain.BackpackLattice;
 import com.linlazy.mmorpglintingyang.module.backpack.domain.ItemContext;
 import com.linlazy.mmorpglintingyang.module.backpack.dto.BackPackDTO;
@@ -8,31 +10,38 @@ import com.linlazy.mmorpglintingyang.module.equip.manager.domain.EquipDo;
 import com.linlazy.mmorpglintingyang.module.item.constants.ItemType;
 import com.linlazy.mmorpglintingyang.module.item.manager.backpack.domain.ItemDo;
 import com.linlazy.mmorpglintingyang.utils.ItemIdUtil;
+import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.PostConstruct;
 import java.util.*;
 import java.util.stream.Collectors;
-
+@Data
 public abstract class BackPack {
 
-    private  Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    private static Map<Integer, BackPack> map = new HashMap<>();
+    private static Logger logger = LoggerFactory.getLogger(BackPack.class);
 
     protected Set<BackpackLattice> backPack;
-
-    @PostConstruct
-    public void init(){
-        map.put(backpackType(),this);
-    }
 
     /**
      * 背包类型
      * @return
      */
     protected abstract int backpackType();
+
+    public static BackPack getBackPack(int backpackType, JSONObject jsonObject){
+        switch (backpackType){
+            case BackPackType.MAIN:
+                return MainBackPack.getMainBackPack(jsonObject.getLongValue("actorId"));
+            case BackPackType.GUILD:
+                return GuildBackPack.getGuildBackPack(jsonObject.getLongValue("guildId"));
+            default:
+                logger.error("[backpackType] not implement");
+                return null;
+        }
+
+    }
+
 
     /**
      * 整理背包

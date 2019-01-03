@@ -19,6 +19,8 @@ public class AdditionService {
                 case AdditionType.PhysicalAttack:
                     userService.addOrRemoveAddition(actorId,addition);
                     break;
+                    default:
+                        break;
             }
         }
     }

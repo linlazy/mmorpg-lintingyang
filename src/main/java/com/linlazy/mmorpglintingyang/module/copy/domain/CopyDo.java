@@ -13,11 +13,16 @@ import com.linlazy.mmorpglintingyang.module.user.manager.UserManager;
 import com.linlazy.mmorpglintingyang.utils.RewardUtils;
 import com.linlazy.mmorpglintingyang.utils.SpringContextUtil;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+/**
+ * @author linlazy
+ */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Component
 public class CopyDo extends SceneDo {

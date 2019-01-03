@@ -33,6 +33,7 @@ public class PrivateChatChannel extends ChatChannel{
      * 订阅事件
      */
     @PostConstruct
+    @Override
     public void init(){
         super.init();
         EventBusHolder.register(this);

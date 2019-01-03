@@ -13,14 +13,14 @@ public class ConfigFile {
 
     public  ConfigFile(String fileName, String encoding) {
 
-        InputStream inputStream = null;
+        InputStreamReader inputStreamReader = null;
         try {
-            inputStream = getClassLoader().getResourceAsStream(fileName);
+            InputStream inputStream = getClassLoader().getResourceAsStream(fileName);
             if (inputStream == null) {
                 throw new IllegalArgumentException("Properties file not found in classpath: " + fileName);
             }
             StringBuilder stringBuilder = new StringBuilder();
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, encoding);
+             inputStreamReader = new InputStreamReader(inputStream, encoding);
             char[] buffer = new char[1024];
             int count;
             while ((count = inputStreamReader.read(buffer)) >= 0) {
@@ -31,9 +31,9 @@ public class ConfigFile {
             throw new RuntimeException("Error loading properties file.", e);
         }
         finally {
-            if (inputStream != null) {
+            if (inputStreamReader != null) {
                 try {
-                    inputStream.close();
+                    inputStreamReader.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

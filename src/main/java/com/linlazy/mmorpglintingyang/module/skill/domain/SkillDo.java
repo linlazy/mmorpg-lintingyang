@@ -3,6 +3,7 @@ package com.linlazy.mmorpglintingyang.module.skill.domain;
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.module.skill.config.SkillConfigService;
 import com.linlazy.mmorpglintingyang.module.skill.entity.Skill;
+import com.linlazy.mmorpglintingyang.utils.SpringContextUtil;
 import lombok.Data;
 
 @Data
@@ -23,7 +24,7 @@ public class SkillDo {
      */
     private final int attack;
 
-    private SkillConfigService skillConfigService;
+    private SkillConfigService skillConfigService = SpringContextUtil.getApplicationContext().getBean(SkillConfigService.class);
 
     public SkillDo(Skill skill) {
         this.actorId = skill.getActorId();

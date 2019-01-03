@@ -3,6 +3,9 @@ package com.linlazy.mmorpglintingyang.module.user.manager.entity;
 import com.linlazy.mmorpglintingyang.utils.DateUtils;
 import lombok.Data;
 
+/**
+ * @author linlazy
+ */
 @Data
 public class User {
 
@@ -66,10 +69,19 @@ public class User {
      * 红
      */
     private int hp;
+
+    public synchronized int getHp() {
+        return hp;
+    }
+
+    public synchronized void setHp(int hp) {
+        this.hp = hp;
+    }
+
     /**
      * 红下一次自动回复时间
      */
-    private long HPNextResumeTime;
+    private long hpNextResumeTime;
 
     /**
      * 蓝
@@ -78,19 +90,19 @@ public class User {
     /**
      * 蓝下一次自动回复时间
      */
-    private long MPNextResumeTime = DateUtils.getNowMillis();
+    private long mpNextResumeTime = DateUtils.getNowMillis();
 
     public boolean resumeMP(long mpResumeIntervalMills) {
         // 未到回复时间
-        if(DateUtils.getNowMillis() < MPNextResumeTime){
+        if(DateUtils.getNowMillis() < mpNextResumeTime){
             return false;
         }
 
         //计算满足次数，每次回复一点
-        int times = (int) ((DateUtils.getNowMillis() -MPNextResumeTime)/mpResumeIntervalMills +1);
+        int times = (int) ((DateUtils.getNowMillis() - mpNextResumeTime)/mpResumeIntervalMills +1);
 
         this.modifyMP(times);
-        this.MPNextResumeTime += mpResumeIntervalMills * times;
+        this.mpNextResumeTime += mpResumeIntervalMills * times;
         return true;
     }
 

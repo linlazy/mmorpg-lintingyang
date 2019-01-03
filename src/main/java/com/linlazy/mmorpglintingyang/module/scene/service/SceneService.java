@@ -50,6 +50,9 @@ public class SceneService {
         switch (actorEvent.getEventType()){
             case SCENE_MONSTER_DEAD:
                 handlerSceneMonsterDead(actorEvent);
+                break;
+            default:
+                break;
         }
     }
 

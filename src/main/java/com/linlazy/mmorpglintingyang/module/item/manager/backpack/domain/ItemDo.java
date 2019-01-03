@@ -156,7 +156,7 @@ public class ItemDo{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ItemDo itemDo = (ItemDo) o;
-        return getBaseItemIdOrderIdKey() == itemDo.getBaseItemIdOrderIdKey();
+        return getBaseItemIdOrderIdKey().equals(itemDo.getBaseItemIdOrderIdKey());
     }
 
     @Override

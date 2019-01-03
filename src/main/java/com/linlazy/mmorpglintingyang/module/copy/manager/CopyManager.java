@@ -26,10 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 public class CopyManager {
@@ -53,10 +51,10 @@ public class CopyManager {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private static int maxCopyId = 0;
+    private static AtomicInteger maxCopyId = new AtomicInteger(0);
 
-    private Map<Integer, CopyDo> copyIdCopyDoMap = new HashMap<>();
-    private Map<Long,Integer> actorIdCopyIdMap = new HashMap<>();
+    private Map<Integer, CopyDo> copyIdCopyDoMap = new ConcurrentHashMap<>();
+    private Map<Long,Integer> actorIdCopyIdMap = new ConcurrentHashMap<>();
 
     private Map<Integer,ScheduledFuture> copyIdScheduleMap = new HashMap<>();
 
@@ -77,10 +75,10 @@ public class CopyManager {
      * @param actorId
      */
     public CopyDo createCopy(long actorId,int sceneId) {
-        maxCopyId = maxCopyId + 1;
+        int  newCopyId = maxCopyId.incrementAndGet();
         CopyDo copyDo = new CopyDo();
         //初始化副本ID
-        copyDo.setCopyId(maxCopyId);
+        copyDo.setCopyId(newCopyId);
         //初始化副本玩家
         TeamDo actorTeamDo = teamManager.getActorTeamDo(actorId);
         Set<Long> teamIdSet = actorTeamDo.getTeamIdSet();
@@ -99,17 +97,17 @@ public class CopyManager {
             bossDo.setBossId(bossConfig.getIntValue("bossId"));
             bossDo.setName(bossConfig.getString("name"));
             bossDo.setHp(bossConfig.getIntValue("hp"));
-            bossDo.setCopyId(maxCopyId);
+            bossDo.setCopyId(newCopyId);
 
             sceneEntityDoSet.add(new SceneEntityDo(bossDo));
         }
         copyDo.setSceneEntitySet(sceneEntityDoSet);
 
-        copyIdCopyDoMap.put(maxCopyId,copyDo);
+        copyIdCopyDoMap.put(newCopyId,copyDo);
         Set<Long> copyPlayerIdSet = copyDo.getCopyPlayerIdSet();
         copyPlayerIdSet.stream()
                 .forEach(teamId ->{
-                    actorIdCopyIdMap.put(teamId,maxCopyId);
+                    actorIdCopyIdMap.put(teamId,newCopyId);
                 });
 
         //启动Boss自动攻击调度

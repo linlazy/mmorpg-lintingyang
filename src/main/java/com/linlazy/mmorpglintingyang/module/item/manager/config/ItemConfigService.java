@@ -4,13 +4,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.server.common.ConfigFile;
 import com.linlazy.mmorpglintingyang.server.common.ConfigFileManager;
-import com.linlazy.mmorpglintingyang.module.common.reward.Reward;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,7 +30,6 @@ public class ItemConfigService {
         for(int i = 0; i < jsonArray.size(); i++){
             JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-            List<Reward> rewards = new ArrayList<>();
 
             map.put(jsonObject.getInteger("itemId"),jsonObject);
         }
