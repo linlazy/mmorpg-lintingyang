@@ -113,4 +113,15 @@ public class GuildHandler {
         int gold = jsonObject.getIntValue("gold");
         return guildService.donateGold(actorId,gold);
     }
+
+    /**
+     * 放进公会仓库
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("pushGuildWareHose")
+    public Result<?> pushGuildWareHose(JSONObject jsonObject){
+        long actorId = jsonObject.getLongValue("actorId");
+        return guildService.pushGuildWareHose(actorId,jsonObject);
+    }
 }

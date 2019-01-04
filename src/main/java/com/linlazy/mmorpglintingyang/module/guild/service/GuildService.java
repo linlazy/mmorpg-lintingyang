@@ -1,5 +1,6 @@
 package com.linlazy.mmorpglintingyang.module.guild.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.module.guild.manager.GuildManager;
 import com.linlazy.mmorpglintingyang.module.guild.validator.GuildValidator;
 import com.linlazy.mmorpglintingyang.server.common.Result;
@@ -88,5 +89,24 @@ public class GuildService {
     public Result<?> donateGold(long actorId, int gold) {
 
         return guildManager.donateGold(actorId,gold);
+    }
+
+    /**
+     * 放置主背包道具放进公会
+     * @param actorId
+     * @param jsonObject
+     * @return
+     */
+    public Result<?> pushGuildWareHose(long actorId, JSONObject jsonObject) {
+        //已加入公会
+        //拥有公会权限
+        //拥有道具
+        //公会仓库放得下
+
+        //主背包中移除道具
+        //公会仓库增加道具
+
+        // 线程池操作公会，公会id决定线程
+        return null;
     }
 }
