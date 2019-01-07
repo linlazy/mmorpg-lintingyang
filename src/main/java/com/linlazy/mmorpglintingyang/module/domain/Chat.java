@@ -5,4 +5,5 @@ package com.linlazy.mmorpglintingyang.module.domain;
  * @author linlazy
  */
 public class Chat {
+
 }
