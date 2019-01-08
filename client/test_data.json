@@ -1,5 +1,6 @@
 [
   {"module":"user","command":"register","username":"linlazy","password":123456,"confirm_password": 123456},
+  {"module":"user","command":"register","username":"username","password":"password","confirm_password":"password"},
   {"module":"user","command":"login","username":"linlazy","password":123456},
   {"module":"user","command":"logout","actorId":8},
   {"module":"user","command":"getInfo","actorId":3},

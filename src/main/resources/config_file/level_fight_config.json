@@ -1,0 +1,22 @@
+[
+  {
+    "professionId": 1,
+    "attack": 50,
+    "defense": 50
+  },
+  {
+    "professionId": 2,
+    "attack": 20,
+    "defense": 20
+  },
+  {
+    "professionId": 3,
+    "attack": 30,
+    "defense": 30
+  },
+  {
+    "professionId": 4,
+    "attack": 30,
+    "defense": 30
+  }
+]

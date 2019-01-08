@@ -20,6 +20,11 @@ public class User {
     private int sceneId;
 
     /**
+     * 玩家职业
+     */
+    private int profession;
+
+    /**
      * 令牌
      */
     private String token;

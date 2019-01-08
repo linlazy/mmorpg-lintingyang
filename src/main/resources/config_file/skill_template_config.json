@@ -1,0 +1,34 @@
+[
+  {
+    "skillTemplateId": 1,
+    "description": "攻击力为A，具有B秒冷却时间"
+  },
+  {
+    "skillTemplateId": 2,
+    "description": " 瞬时回复A点HP，具有B秒冷却时间,消耗C点MP"
+  },
+  {
+    "skillTemplateId": 3,
+    "description": " 攻击力为A,造成可以攻击B人，具有C秒冷却时间,消耗D点MP"
+  },
+  {
+    "skillTemplateId": 4,
+    "description": " 召唤召唤师协助作战,持续时间A秒，具有B秒冷却时间,消耗C点MP"
+  },
+  {
+    "skillTemplateId": 5,
+    "description": " 嘲讽技能,优先攻击使用技能的玩家,持续时间A秒，具有B秒冷却时间,消耗C点MP"
+  },
+  {
+    "skillTemplateId": 6,
+    "description": " 召唤兽技能,攻击力为A，具有B秒冷却时间"
+  },
+  {
+    "skillTemplateId": 7,
+    "description": " 全体攻击,攻击力为A"
+  },
+  {
+    "skillTemplateId": 8,
+    "description": " 中毒效果,持续时间A秒,每隔B秒，掉C点HP"
+  }
+]

@@ -2,22 +2,93 @@
   {
     "skillId":1,
     "name": "回风拂柳",
-    "attack":50,
-    "cd": 3,
-    "mp": 50
+    "type": 1,
+    "professionId": 1,
+    "skillTemplateId": 1,
+    "skillTemplateArgs": {
+      "attack":150,
+      "cd": 3
+    }
   },
   {
     "skillId": 2,
-    "name": "剑荡八荒",
-    "attack": 100,
-    "cd": 5,
-    "mp": 100
+    "name": "回春术",
+    "type": 1,
+    "skillTemplateId": 2,
+    "professionId": 2,
+    "skillTemplateArgs": {
+      "resumeHP":50,
+      "cd": 3,
+      "mp": 50
+    }
   },
   {
     "skillId": 3,
-    "name": "回春术",
-    "attack": 150,
-    "cd": 5,
-    "mp": 200
+    "name": "剑荡八荒",
+    "type": 1,
+    "skillTemplateId": 3,
+    "professionId": 3,
+    "skillTemplateArgs": {
+      "attack":50,
+      "attackNum": 2,
+      "cd": 3,
+      "mp": 50
+    }
+  },
+  {
+    "skillId": 4,
+    "name": "深渊召唤",
+    "type": 1,
+    "skillTemplateId": 4,
+    "professionId": 4,
+    "skillTemplateArgs": {
+      "continueTime":5,
+      "cd": 3,
+      "mp": 50
+    }
+  },
+  {
+    "skillId": 5,
+    "name": "嘲讽",
+    "type": 1,
+    "skillTemplateId": 5,
+    "professionId": 1,
+    "skillTemplateArgs": {
+      "continueTime":5,
+      "cd": 3,
+      "mp": 50
+    }
+  },
+  {
+    "skillId": 6,
+    "name": "连心刺",
+    "type": 2,
+    "skillTemplateId": 6,
+    "skillTemplateArgs": {
+      "attack":56,
+      "cd": 3
+    }
+  },
+  {
+    "skillId": 7,
+    "name": "全垒打",
+    "type": 3,
+    "bossId": 2,
+    "skillTemplateId": 7,
+    "skillTemplateArgs": {
+      "attack":56
+    }
+  },
+  {
+    "skillId": 8,
+    "name": "夺命冰",
+    "type": 3,
+    "bossId": 1,
+    "skillTemplateId": 8,
+    "skillTemplateArgs": {
+      "decreaseHP":50,
+      "duration": 3,
+      "continue": 60
+    }
   }
 ]

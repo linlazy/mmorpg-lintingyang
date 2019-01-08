@@ -1,0 +1,22 @@
+[
+  {
+    "professionId": 1,
+    "name": "战士",
+    "description": "拥有高攻击，高防御的职业"
+  },
+  {
+    "professionId": 2,
+    "name": "牧师",
+    "description": "具备治疗技能的职业"
+  },
+  {
+    "professionId": 3,
+    "name": "法师",
+    "description": "具备群体攻击技能的职业"
+  },
+  {
+    "professionId": 4,
+    "name": "召唤师",
+    "description": "具备召唤技能的职业"
+  }
+]

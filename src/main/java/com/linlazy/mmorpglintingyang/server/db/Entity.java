@@ -40,7 +40,7 @@ public abstract class Entity {
 
     }
 
-    private void doWrite(){
+    protected void doWrite(){
         beforeWriteDB();
         //获取@Column注解的字段值
 
@@ -49,7 +49,7 @@ public abstract class Entity {
     /**
      * 读取DB后执行
      */
-    private void afterReadDB(){
+    protected void afterReadDB(){
 
     }
 

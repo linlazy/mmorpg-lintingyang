@@ -7,7 +7,7 @@
     "neighborSet":[2],
     "times": 100,
     "rewards": [[1,50],[2,50]],
-    "bossIds":[1]
+    "bossIds":[1,2]
   },
   {
     "sceneId":5,

@@ -1,8 +1,6 @@
 <html>
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset = utf-8"/>
-		<title>WebSocket客户端</title>
-	<script type="text/javascript">
+		<script type="text/javascript">
 		var socket;
 		if(!window.WebSocket){
 			window.WebSocket = window.MozWebSocket;
@@ -12,7 +10,12 @@
 			socket = new WebSocket("ws://localhost:41235/websocket");
 			socket.onmessage = function(event){
 				var ta = document.getElementById('responseContent');
-				ta.value += event.data + "\r\n";
+				var json = JSON.parse(event.data);
+				console.log(json.code);
+				ta.value += json.code + "\r\n";
+				if(json.data){
+					ta.value += json.data + "\r\n";
+				}
 			};
 
 			socket.onopen = function(event){
@@ -35,12 +38,55 @@
 				return;
 			}
 			if(socket.readyState == WebSocket.OPEN){
-				socket.send(message);
+				var ta = document.getElementById('responseContent');
+				console.log("message:"+message);
+				arr = message.split(" ");
+
+				if(arr[0] == "register"){
+
+					var json ={};
+					json.module = "user";
+					json.command = "register";
+					json.username = arr[1];
+					json.password = arr[2];
+					json.confirm_password = arr[2];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "正在注册..."+ "\r\n";
+				}
+
+				if(arr[0] == "login"){
+
+					var json ={};
+					json.module = "user";
+					json.command = "login";
+					json.username = arr[1];
+					json.password = arr[2];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "正在登录..."+ "\r\n";
+				}
+
+				if(arr[0] == "entermap"){
+
+					var json ={};
+					json.module = "scene";
+					json.command = "enter";
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "正在进入场景..."+ "\r\n";
+				}
+
 			}else{
 				alert("WebSocket连接没有建立成功！！");
 			}
 		}
 	</script>
+		<meta http-equiv="Content-Type" content="text/html; charset = utf-8"/>
+		<title>WebSocket客户端</title>
 	</head>
 	<body>
 		<form onSubmit="return false;">

@@ -1,7 +1,10 @@
 package com.linlazy.mmorpglintingyang.module.domain;
 
+import com.linlazy.mmorpglintingyang.module.backpack.service.PlayerBackpackService;
 import com.linlazy.mmorpglintingyang.module.equip.manager.domain.DressedEquip;
 import lombok.Data;
+
+import java.util.Objects;
 
 /**
  * 玩家领域类
@@ -14,6 +17,12 @@ public class Player {
      * 玩家
      */
     private long actorId;
+
+    /**
+     * 职业
+     */
+    private int profession;
+
     /**
      * 血量
      */
@@ -29,10 +38,6 @@ public class Player {
      */
     private int gold;
 
-    /**
-     * 主背包
-     */
-    private PlayerBackpack playerBackpack;
 
     /**
      * 穿戴装备
@@ -73,4 +78,36 @@ public class Player {
      * 玩家聊天信息
      */
     private PlayerChatInfo playerChatInfo;
+
+    public Player(Long actorId) {
+        this.actorId =actorId;
+    }
+
+    /**
+     * 获取玩家背包
+     * @return
+     */
+    public PlayerBackpack getPlayerBackpack(){
+        return PlayerBackpackService.getPlayerBackpack(actorId);
+    }
+    /**
+     * 获取玩家队伍
+     * @return
+     */
+    public PlayerTeamInfo getPlayerTeamInfo() {
+        return Team.getPlayerTeamInfo(actorId);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Player player = (Player) o;
+        return actorId == player.actorId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(actorId);
+    }
 }

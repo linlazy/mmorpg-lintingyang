@@ -16,7 +16,10 @@ public class Scene {
      */
     private ScenePlayerInfo scenePlayerInfo;
 
-
+    /**
+     * 怪物信息
+     */
     private SceneMonsterInfo sceneMonsterInfo;
+
 
 }

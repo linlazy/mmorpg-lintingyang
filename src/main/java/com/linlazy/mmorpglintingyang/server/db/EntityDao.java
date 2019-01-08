@@ -23,10 +23,10 @@ public class EntityDao<T extends Entity> {
      */
     public void updateQueue(T entity){
 
-        //更新缓存
-        dbCache.putEntity(entity.getIdentity(),entity);
-        //放进队列
-        queue.add(entity);
+//        //更新缓存
+//        dbCache.putEntity(entity.getIdentity(),entity);
+//        //放进队列
+//        queue.add(entity);
     }
 
     /**

@@ -13,7 +13,7 @@ public class ItemContext {
 
     private int baseItemId;
 
-    private int itemId;
+    private long itemId;
 
     private int count;
 

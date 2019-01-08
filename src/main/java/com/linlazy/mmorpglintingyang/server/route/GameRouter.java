@@ -36,16 +36,11 @@ public class GameRouter {
 
                             //权限
                             if(cmd.auth()){
-                                long actorId = jsonObject.getLong("actorId");
-
-                                if(!SessionManager.isOnline(actorId)){
-                                    return Result.valueOf("未登录，无权限执行此操作");
-                                }
-
                                 Channel channel = jsonObject.getObject("channel", Channel.class);
-                                if(SessionManager.getActorId(channel) != actorId){
-                                    return Result.valueOf("参数错误");
+                                if(SessionManager.getActorId(channel) == null){
+                                    return Result.valueOf("无权限执行此操作,请登录");
                                 }
+                                jsonObject.put("actorId",SessionManager.getActorId(channel));
                             }
 
                             try {

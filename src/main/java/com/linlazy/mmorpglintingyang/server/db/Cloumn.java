@@ -16,4 +16,10 @@ public @interface Cloumn {
      * @return
      */
     boolean pk() default false;
+
+    /**
+     * 是否为缓存键
+     * @return
+     */
+    boolean fk() default false;
 }

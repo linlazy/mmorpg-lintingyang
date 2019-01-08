@@ -1,0 +1,6 @@
+1 注册
+注册指令 用户名     密码
+register username password
+2 登录
+登录指令 用户名     密码
+login username password

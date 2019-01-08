@@ -46,6 +46,17 @@ public class UserHandler {
         return userService.login(username,password,channel);
     }
 
+    /**
+     * 选择职业
+     * @param jsonObject
+     * @return
+     */
+    @Cmd(value ="selectProfession")
+    public Result<?> selectProfession(JSONObject jsonObject){
+        long actorId = jsonObject.getLongValue("actorId");
+        int professionId = jsonObject.getIntValue("actorId");
+        return userService.selectProfession(actorId,professionId);
+    }
 
     /**
      * 登出

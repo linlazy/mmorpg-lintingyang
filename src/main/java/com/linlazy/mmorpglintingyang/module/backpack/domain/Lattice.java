@@ -8,17 +8,17 @@ import lombok.Data;
  * @author linlazy
  */
 @Data
-public class BackpackLattice {
+public class Lattice {
     private int backpackIndex;
     private ItemDo itemDo;
 
-    public BackpackLattice(int backpackIndex, ItemDo itemDo) {
+    public Lattice(int backpackIndex, ItemDo itemDo) {
         this.backpackIndex = backpackIndex;
         this.itemDo = itemDo;
     }
 
 
-    public BackpackLattice(int backPackLatticeIndex) {
+    public Lattice(int backPackLatticeIndex) {
         this.backpackIndex = backPackLatticeIndex;
     }
 }

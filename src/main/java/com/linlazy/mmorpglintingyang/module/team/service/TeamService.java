@@ -18,6 +18,7 @@ public class TeamService {
     @Autowired
     private TeamManager teamManager;
 
+
     /**
      * 邀请入队
      * @param actorId

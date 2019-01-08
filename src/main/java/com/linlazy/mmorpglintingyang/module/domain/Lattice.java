@@ -1,11 +1,14 @@
 package com.linlazy.mmorpglintingyang.module.domain;
 
+import com.linlazy.mmorpglintingyang.utils.ItemIdUtil;
+import lombok.Data;
+
 /**
  * 格子
  * @author linlazy
  */
+@Data
 public class Lattice {
-
 
     /**
      * 位置
@@ -16,4 +19,13 @@ public class Lattice {
      * 道具
      */
     private Item item;
+
+    public Lattice(Item item){
+        this.index = ItemIdUtil.getBackPackIndex(item.getItemId());
+        this.item = item;
+    }
+
+    public Lattice(int index) {
+        this.index = index;
+    }
 }

@@ -6,9 +6,7 @@ import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 import com.linlazy.mmorpglintingyang.module.common.event.ActorEvent;
 import com.linlazy.mmorpglintingyang.module.common.event.EventBusHolder;
-import com.linlazy.mmorpglintingyang.module.scene.domain.SceneDo;
 import com.linlazy.mmorpglintingyang.module.scene.domain.SceneEntityDo;
-import com.linlazy.mmorpglintingyang.module.scene.dto.SceneDTO;
 import com.linlazy.mmorpglintingyang.module.scene.manager.NpcManager;
 import com.linlazy.mmorpglintingyang.module.scene.manager.SceneManager;
 import com.linlazy.mmorpglintingyang.module.scene.push.ScenePushHelper;
@@ -103,19 +101,23 @@ public class SceneService {
      * @return
      */
     public Result<?> enter(long actorId) {
-       return sceneManager.enter(actorId);
-    }
+        userManager.getUser()
+        if(){
 
-    public Result<?> aoi(long actorId, JSONObject jsonObject) {
-
-        SceneDo sceneDo = sceneManager.getSceneDo(actorId);
-        SceneDTO sceneDTO = new SceneDTO(sceneDo);
-        boolean closeOwn = jsonObject.getBooleanValue("closeOwn");
-        if( closeOwn){
-            sceneDTO.getActorIdSet().remove(actorId);
         }
-        return Result.success(sceneDTO);
+        return sceneManager.enter(actorId);
     }
+//
+//    public Result<?> aoi(long actorId, JSONObject jsonObject) {
+//
+//        SceneDo sceneDo = sceneManager.getSceneDo(actorId);
+//        SceneDTO sceneDTO = new SceneDTO(sceneDo);
+//        boolean closeOwn = jsonObject.getBooleanValue("closeOwn");
+//        if( closeOwn){
+//            sceneDTO.getActorIdSet().remove(actorId);
+//        }
+//        return Result.success(sceneDTO);
+//    }
 
     /**
      * 对话NPC

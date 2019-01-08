@@ -45,6 +45,17 @@ public class SessionManager {
     }
 
     /**
+     * 解绑用户与通道连接
+     * @param channel
+     */
+    public static void unBind(long actorId){
+        Channel channel = actorIdChannelMap.get(actorId);
+
+        actorIdChannelMap.remove(actorId);
+        channelActorIdMap.remove(channel);
+    }
+
+    /**
      * 通道是否已绑定用户
      * @param
      * @return
@@ -68,7 +79,7 @@ public class SessionManager {
         return actorIdChannelMap.get(actorId);
     }
 
-    public static long getActorId(Channel channel){
+    public static Long getActorId(Channel channel){
         return channelActorIdMap.get(channel);
     }
 
