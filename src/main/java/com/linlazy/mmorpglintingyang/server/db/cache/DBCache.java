@@ -44,8 +44,13 @@ public class DBCache<T extends Entity> {
                 });
     }
 
-    public T getEntity(Identity identity) throws ExecutionException {
-        return cache.get(identity);
+    public T getEntity(Identity identity){
+        try {
+            return cache.get(identity);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private T createEntity(Identity key) {

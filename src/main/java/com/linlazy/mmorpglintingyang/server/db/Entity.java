@@ -36,13 +36,7 @@ public abstract class Entity {
     /**
      * 写入DB前执行
      */
-    private void beforeWriteDB(){
-
-    }
-
-    protected void doWrite(){
-        beforeWriteDB();
-        //获取@Column注解的字段值
+    protected void beforeWriteDB(){
 
     }
 
@@ -52,6 +46,7 @@ public abstract class Entity {
     protected void afterReadDB(){
 
     }
+
 
     public String getType(String columnName){
         return columnNameTypeMap.get(columnName);
@@ -73,4 +68,6 @@ public abstract class Entity {
     public List<FieldInfo> getAllField(){
          return entityFieldInfo.getAll();
     }
+
+
 }

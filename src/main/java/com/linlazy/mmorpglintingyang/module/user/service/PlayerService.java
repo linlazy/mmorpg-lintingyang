@@ -8,6 +8,7 @@ import com.linlazy.mmorpglintingyang.module.domain.Player;
 import com.linlazy.mmorpglintingyang.module.entity.PlayerEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ExecutionException;
@@ -22,28 +23,31 @@ public class PlayerService {
 
     private static Logger logger = LoggerFactory.getLogger(PlayerService.class);
 
+    @Autowired
+    private PlayerDAO playerDAO;
+
     /**
      * 玩家缓存
      */
-    public static LoadingCache<Long, Player> playerCache = CacheBuilder.newBuilder()
+    public  LoadingCache<Long, Player> playerCache = CacheBuilder.newBuilder()
             .maximumSize(10)
             .expireAfterAccess(600, TimeUnit.SECONDS)
             .recordStats()
             .build(new CacheLoader<Long, Player>() {
                 @Override
                 public Player load(Long actorId) {
-                    Player player = new Player(actorId);
+                Player player = new Player(actorId);
 
-                    PlayerEntity playerEntity = PlayerDAO.getPlayerEntity(actorId);
-                    player.setProfession(player.getProfession());
-                    player.setHp(playerEntity.getHp());
-                    player.setMp(playerEntity.getMp());
-                    player.setGold(playerEntity.getGold());
-                    return player;
+                PlayerEntity playerEntity = playerDAO.getPlayerEntity(actorId);
+                player.setProfession(player.getProfession());
+                player.setHp(playerEntity.getHp());
+                player.setMp(playerEntity.getMp());
+                player.setGold(playerEntity.getGold());
+                return player;
                 }
     });
 
-    public static Player getPlayer(long actorId) {
+    public  Player getPlayer(long actorId) {
         try {
             return playerCache.get(actorId);
         } catch (ExecutionException e) {

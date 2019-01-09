@@ -101,10 +101,10 @@ public class SceneService {
      * @return
      */
     public Result<?> enter(long actorId) {
-        userManager.getUser()
-        if(){
-
-        }
+//        userManager.getUser()
+//        if(){
+//
+//        }
         return sceneManager.enter(actorId);
     }
 //

@@ -16,7 +16,7 @@ public class UserDaoTest {
 
 
     @Autowired
-    private UserDao userDao;
+    private UserDAO userDao;
 
     @Test
     public void getUserByUsername() {

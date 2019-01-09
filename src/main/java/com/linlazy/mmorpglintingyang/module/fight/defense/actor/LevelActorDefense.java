@@ -1,7 +1,7 @@
 package com.linlazy.mmorpglintingyang.module.fight.defense.actor;
 
 import com.alibaba.fastjson.JSONObject;
-import com.linlazy.mmorpglintingyang.module.user.manager.dao.UserDao;
+import com.linlazy.mmorpglintingyang.module.user.manager.dao.UserDAO;
 import com.linlazy.mmorpglintingyang.module.user.manager.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class LevelActorDefense extends BaseActorDefense {
 
     @Autowired
-    private UserDao userDao;
+    private UserDAO userDao;
 
     @Override
     public int actorDefenseType() {

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * 更新语句
  * @author linlazy
  */
 public class UpdateStatement {

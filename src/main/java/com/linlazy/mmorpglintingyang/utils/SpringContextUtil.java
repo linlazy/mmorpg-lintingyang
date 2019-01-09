@@ -1,6 +1,8 @@
 package com.linlazy.mmorpglintingyang.utils;
 
+import com.linlazy.mmorpglintingyang.MmoRpgLinTingYangApplication;
 import org.springframework.beans.BeansException;
+import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 /**
@@ -15,6 +17,11 @@ public class SpringContextUtil {
     }
 
     public static ConfigurableApplicationContext getApplicationContext() {
-        return applicationContext;
+         if(applicationContext == null){
+             String[] args =new String[0];
+             ConfigurableApplicationContext app = SpringApplication.run(MmoRpgLinTingYangApplication.class, args);
+             applicationContext = app;
+         }
+         return applicationContext;
     }
 }

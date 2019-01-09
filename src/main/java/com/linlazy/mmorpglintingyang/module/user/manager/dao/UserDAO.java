@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Update;
  * @author linlazy
  */
 @Mapper
-public interface UserDao {
+public interface UserDAO {
 
     String TABLE = "user";
 

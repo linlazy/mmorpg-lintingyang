@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpglintingyang.module.common.addition.Addition;
 import com.linlazy.mmorpglintingyang.module.common.reward.Reward;
 import com.linlazy.mmorpglintingyang.module.common.reward.RewardID;
-import com.linlazy.mmorpglintingyang.module.user.manager.dao.UserDao;
+import com.linlazy.mmorpglintingyang.module.user.manager.dao.UserDAO;
 import com.linlazy.mmorpglintingyang.module.user.manager.entity.User;
 import com.linlazy.mmorpglintingyang.server.common.GlobalConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import java.util.UUID;
 public class UserManager {
 
     @Autowired
-    private UserDao userDao;
+    private UserDAO userDao;
     @Autowired
     private GlobalConfigService globalConfigService;
 

@@ -1,41 +1,42 @@
 package com.linlazy.mmorpglintingyang.server.db;
 
-import com.linlazy.mmorpglintingyang.server.db.cache.DBCache;
-
 import java.util.Queue;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * @author linlazy
  */
-public class EntityDao<T extends Entity> {
+public abstract class EntityDao<T extends Entity> extends BaseJdbc<T>{
 
-    private DBCache dbCache;
+    protected abstract Class<T> forClass();
+
 
     /**
      * 实体队列
      */
-    protected Queue<T> queue;
+    protected Queue<T> queue = new ConcurrentLinkedQueue<>();
 
     /**
      * 更新队列
      * @param entity
      */
     public void updateQueue(T entity){
-
+        entity.beforeWriteDB();
 //        //更新缓存
 //        dbCache.putEntity(entity.getIdentity(),entity);
 //        //放进队列
-//        queue.add(entity);
+        queue.add(entity);
     }
 
     /**
      * 获取实体
      * @param identity
      * @return
-     * @throws ExecutionException
      */
-    public Entity getEntity(Identity identity) throws ExecutionException {
-        return dbCache.getEntity(identity);
+    public T getEntity(Identity identity){
+        EntityInfo entityInfo = EntityInfo.ENTITY_INFO_MAP.get(forClass());
+        return this.query(entityInfo,identity);
     }
+
+
 }

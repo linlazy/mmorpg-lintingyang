@@ -1,14 +1,22 @@
 package com.linlazy.mmorpglintingyang.server.db;
 
+import lombok.Data;
+
 /**
  * @author linlazy
  */
+@Data
 public class Identity {
 
+    private Object[] args =null;
 
-    public Identity build(Object ... objects){
+    public static Identity build(Object ... args){
         Identity identity = new Identity();
+        identity.args =args;
+        return identity;
+    }
 
-        return this;
+    public Object[] getArgs() {
+        return args;
     }
 }

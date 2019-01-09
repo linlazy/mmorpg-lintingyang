@@ -31,10 +31,6 @@ public class ItemEntity extends Entity {
      */
     private int superPositionUp;
 
-    @Override
-    protected void doWrite() {
-        //todo
-    }
 
     @Override
     protected void afterReadDB() {

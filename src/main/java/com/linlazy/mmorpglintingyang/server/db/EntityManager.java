@@ -54,7 +54,7 @@ public class EntityManager {
                     break;
                 default:
             }
-            baseJdbc.batchUpdate(prepareSQL,entry.getValue());
+            baseJdbc.doBatchUpdate(prepareSQL,entry.getValue());
         }
 
     }

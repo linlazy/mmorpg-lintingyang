@@ -1,7 +1,7 @@
 package com.linlazy.mmorpglintingyang.server.db.test;
 
-import com.linlazy.mmorpglintingyang.server.db.Entity;
 import com.linlazy.mmorpglintingyang.server.db.EntityDao;
+import com.linlazy.mmorpglintingyang.server.db.Identity;
 import org.springframework.stereotype.Component;
 
 /**
@@ -9,10 +9,14 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public class UserEntityDao extends EntityDao {
+public class UserEntityDao extends EntityDao<UserEntity> {
 
     @Override
-    public void updateQueue(Entity entity) {
-        super.updateQueue(entity);
+    protected Class<UserEntity> forClass() {
+        return UserEntity.class;
+    }
+
+    public UserEntity getUserEntity(long actorId) {
+        return super.getEntity( Identity.build(actorId));
     }
 }

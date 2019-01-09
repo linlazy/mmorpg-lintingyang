@@ -42,16 +42,16 @@ public class SceneHandler {
         return sceneService.enter(actorId);
     }
 
-    /**
-     *  获取当前场景实体信息
-     * @param jsonObject
-     * @return
-     */
-    @Cmd("aoi")
-    public Result<?> aoi(JSONObject jsonObject){
-        long actorId = jsonObject.getLong("actorId");
-        return sceneService.aoi(actorId,jsonObject);
-    }
+//    /**
+//     *  获取当前场景实体信息
+//     * @param jsonObject
+//     * @return
+//     */
+//    @Cmd("aoi")
+//    public Result<?> aoi(JSONObject jsonObject){
+//        long actorId = jsonObject.getLong("actorId");
+//        return sceneService.aoi(actorId,jsonObject);
+//    }
 
     /**
      *  对话npc
