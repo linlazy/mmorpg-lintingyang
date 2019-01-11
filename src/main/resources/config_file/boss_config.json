@@ -4,14 +4,12 @@
     "name": "何曼",
     "attack": 50,
     "hp": 100,
-    "copyIds": [4],
     "sceneIds": [4]
   },{
   "bossId": 2,
   "name": "张",
   "attack": 100,
   "hp": 100,
-  "copyIds": [4],
   "sceneIds": [4]
 }
 ]

@@ -10,21 +10,11 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="a" target="1.8" />
-      <module name="mmorpg-client" target="1.8" />
-      <module name="mmorpg-client-lintingyang" target="1.5" />
-      <module name="mmorpg-comon" target="1.8" />
-      <module name="mmorpg-game" target="1.8" />
-      <module name="mmorpg-game-server" target="1.8" />
+      <module name="mmorpg-lintingyang" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="a" options="-parameters" />
-      <module name="mmorpg-client" options="-parameters" />
-      <module name="mmorpg-comon" options="-parameters" />
-      <module name="mmorpg-game" options="-parameters" />
-      <module name="mmorpg-game-server" options="-parameters" />
       <module name="mmorpg-lintingyang" options="-parameters" />
     </option>
   </component>
