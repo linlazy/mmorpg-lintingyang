@@ -17,7 +17,7 @@ public class ItemDAO extends EntityDAO<ItemEntity> {
      * @param actorId 玩家ID
      * @return 返回玩家道具集合
      */
-    List<ItemEntity> getItemList(long actorId){
+    public List<ItemEntity> getItemList(long actorId){
         return jdbcTemplate.queryForList("select * from item where actorId = ?",new Object[]{actorId},ItemEntity.class);
     }
 

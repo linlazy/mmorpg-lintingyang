@@ -1,7 +1,7 @@
 package com.linlazy.mmorpg.module.chat.handler;
 
 import com.alibaba.fastjson.JSONObject;
-import com.linlazy.mmorpg.module.chat.service.ChatService;
+import com.linlazy.mmorpg.service.ChatService;
 import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.server.route.Cmd;
 import com.linlazy.mmorpg.server.route.Module;

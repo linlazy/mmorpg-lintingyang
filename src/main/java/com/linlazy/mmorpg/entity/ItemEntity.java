@@ -31,6 +31,17 @@ public class ItemEntity extends Entity {
     @Cloumn
     private String ext;
 
+
+    /**
+     * 可折叠
+     */
+    private boolean superPosition;
+
+    /**
+     * 折叠上限
+     */
+    private int superPositionUp;
+
     @Override
     public void afterReadDB() {
         ItemConfigService bean = SpringContextUtil.getApplicationContext().getBean(ItemConfigService.class);

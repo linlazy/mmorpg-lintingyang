@@ -3,10 +3,10 @@ package com.linlazy.mmorpg.module.chat.service.channel;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.Subscribe;
+import com.linlazy.mmorpg.dao.ChatDAO;
+import com.linlazy.mmorpg.entity.ChatEntity;
 import com.linlazy.mmorpg.module.chat.constants.ChatType;
-import com.linlazy.mmorpg.module.chat.dao.ChatDao;
 import com.linlazy.mmorpg.module.chat.dto.ChatDTO;
-import com.linlazy.mmorpg.module.chat.entity.Chat;
 import com.linlazy.mmorpg.module.chat.push.ChatPushHelper;
 import com.linlazy.mmorpg.module.common.event.ActorEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -28,7 +29,7 @@ import java.util.stream.Collectors;
 public class PrivateChatChannel extends BaseChatChannel {
 
     @Autowired
-    private ChatDao chatDao;
+    private ChatDAO chatDao;
 
     /**
      * 订阅事件
@@ -48,7 +49,7 @@ public class PrivateChatChannel extends BaseChatChannel {
     public void listenEvent(ActorEvent actorEvent){
         //登录时，将私聊信息推送给接受者
         if(actorEvent.getEventType().equals(EventType.LOGIN)){
-            Set<Chat> chatSet = chatDao.getReceiveChatSet(actorEvent.getActorId(), ChatType.PRIVATE);
+            List<ChatEntity> chatSet = chatDao.getReceiveChatSet(actorEvent.getActorId());
             if(chatSet.size() > 0){
                 Set<ChatDTO> chatDTOS = chatSet.stream()
                         .map(ChatDTO::new)
@@ -57,7 +58,7 @@ public class PrivateChatChannel extends BaseChatChannel {
             }
 
             //推送后删除
-            chatDao.deleteChatSet(actorEvent.getActorId(),ChatType.PRIVATE);
+            chatDao.deleteChatSet(actorEvent.getActorId());
         }
     }
 
@@ -87,7 +88,7 @@ public class PrivateChatChannel extends BaseChatChannel {
             return Result.success();
         }else {
             //存档私聊内容
-            Chat chat = new Chat();
+            ChatEntity chat = new ChatEntity();
                 Long maxChatId = chatDao.getMaxChatId();
                 if(maxChatId == null){
                     maxChatId = 0L;
@@ -98,7 +99,7 @@ public class PrivateChatChannel extends BaseChatChannel {
             chat.setSourceId(actorId);
             chat.setContent(content);
             chat.setReceiver(targetId);
-            chatDao.addChat(chat);
+            chatDao.insertQueue(chat);
             return Result.success();
         }
     }

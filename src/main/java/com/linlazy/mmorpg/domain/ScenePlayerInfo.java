@@ -1,8 +1,5 @@
 package com.linlazy.mmorpg.domain;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * 场景玩家信息
  * @author linlazy
@@ -14,9 +11,6 @@ public class ScenePlayerInfo {
      */
     private long sceneId;
 
-    /**
-     * 场景玩家信息
-     */
-    Set<Player> playerSet = new HashSet<>();
+
 
 }

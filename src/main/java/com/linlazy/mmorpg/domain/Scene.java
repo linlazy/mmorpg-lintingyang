@@ -1,25 +1,35 @@
 package com.linlazy.mmorpg.domain;
 
+import lombok.Data;
+
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * 场景领域类
  * @author linlazy
  */
+@Data
 public class Scene {
 
     /**
      *  场景ID
      */
-    private long sceneId;
+    private int sceneId;
 
     /**
      * 场景玩家信息
      */
-    private ScenePlayerInfo scenePlayerInfo;
+    Set<Player> playerSet = new HashSet<>();
 
     /**
-     * 怪物信息
+     * 场景怪物信息
      */
-    private SceneMonsterInfo sceneMonsterInfo;
+    private Set<Monster> monsterSet = new HashSet<>();
 
+    /**
+     * 场景BOSS信息
+     */
+    private Set<Boss> bossSet = new HashSet<>();
 
 }

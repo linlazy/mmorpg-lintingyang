@@ -1,5 +1,6 @@
 package com.linlazy.mmorpg.domain;
 
+import com.linlazy.mmorpg.module.scene.domain.SceneEntity;
 import lombok.Data;
 
 /**
@@ -7,12 +8,13 @@ import lombok.Data;
  * @author linlazy
  */
 @Data
-public class Boss {
+public class Boss extends SceneEntity {
 
     /**
      * boss标识
      */
     private long id;
+
 
     /**
      * 场景ID
@@ -39,4 +41,15 @@ public class Boss {
      */
     private String name;
 
+    private BossSkillInfo bossSkillInfo;
+
+    @Override
+    protected int computeDefense() {
+        return 0;
+    }
+
+    @Override
+    public int computeAttack() {
+        return 0;
+    }
 }

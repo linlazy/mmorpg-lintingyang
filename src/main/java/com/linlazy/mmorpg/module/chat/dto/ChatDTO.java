@@ -1,6 +1,6 @@
 package com.linlazy.mmorpg.module.chat.dto;
 
-import com.linlazy.mmorpg.module.chat.entity.Chat;
+import com.linlazy.mmorpg.entity.ChatEntity;
 import lombok.Data;
 
 /**
@@ -24,7 +24,7 @@ public class ChatDTO {
      */
     private Integer chatType;
 
-    public ChatDTO(Chat chat) {
+    public ChatDTO(ChatEntity chat) {
         this.sourceId = chat.getSourceId();
         this.content = chat.getContent();
     }

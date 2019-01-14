@@ -18,12 +18,16 @@ import lombok.Data;
  * @author linlazy
  */
 @Data
-public class SceneEntity {
+public abstract class SceneEntity {
 
     /**
      * 场景ID
      */
     protected int sceneId;
+
+    private long copyId;
+
+    private int sceneEntityType;
 
     /**
      * 实体名称
@@ -35,11 +39,44 @@ public class SceneEntity {
      */
     protected int hp;
 
+    private  int maxHP;
+
+    /**
+     * 蓝
+     */
+    protected int mp;
+
+
     /**
      * 嘲讽状态
      */
     protected boolean tauntStatus;
 
+
+
+    protected abstract int computeDefense();
+
+    public void attacked(int attack){
+        int defense = computeDefense();
+        int damage = attack > defense?attack - defense: 1;
+        this.hp -= damage;
+        if(this.hp <= 0){
+            this.hp = 0;
+            triggerDeadEvent();
+        }
+    }
+
+    protected  void triggerDeadEvent(){
+
+    }
+
+    /**
+     * 是否处于副本中
+     * @return
+     */
+    public boolean isCopy(){
+        return true;
+    }
 
     public void attacked(int attack, JSONObject jsonObject){
 
@@ -101,7 +138,7 @@ public class SceneEntity {
     private void triggerArenaDeadEvent(JSONObject jsonObject) {
         //玩家死亡
         if(sceneEntityType == SceneEntityType.PLAYER){
-            EventBusHolder.post(new ActorEvent(sceneEntityId, EventType.ARENA_ACTOR_DEAD,jsonObject));
+//            EventBusHolder.post(new ActorEvent(sceneEntityId, EventType.ARENA_ACTOR_DEAD,jsonObject));
         }
     }
 
@@ -113,12 +150,43 @@ public class SceneEntity {
         //玩家死亡
         if(sceneEntityType == SceneEntityType.PLAYER){
             jsonObject.put("copyId",copyId);
-            EventBusHolder.post(new ActorEvent(sceneEntityId, EventType.COPY_ACTOR_DEAD,jsonObject));
+//            EventBusHolder.post(new ActorEvent(sceneEntityId, EventType.COPY_ACTOR_DEAD,jsonObject));
         }
         //BOSS死亡
         if(sceneEntityType == SceneEntityType.BOSS){
             jsonObject.put("copyId",copyId);
-            EventBusHolder.post(new ActorEvent(sceneEntityId, EventType.COPY_BOSS_DEAD,jsonObject));
+//            EventBusHolder.post(new ActorEvent(sceneEntityId, EventType.COPY_BOSS_DEAD,jsonObject));
         }
+    }
+
+
+    public  int consumeMP(int mp){
+        synchronized (this){
+            this.mp -= mp;
+            if(this.mp <0){
+                this.mp = 0;
+            }
+            return this.mp;
+        }
+    }
+
+    public  int resumeHP(int resumeHP){
+        synchronized (this){
+            this.hp -= resumeHP;
+            if(this.hp >= maxHP){
+                this.hp = maxHP;
+            }
+            return this.hp;
+        }
+    }
+
+    /**
+     * 计算攻击力
+     * @return
+     */
+    public abstract int computeAttack();
+
+    public  void active(){
+
     }
 }

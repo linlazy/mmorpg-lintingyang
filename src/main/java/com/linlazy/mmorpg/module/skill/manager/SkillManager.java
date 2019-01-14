@@ -1,8 +1,8 @@
 package com.linlazy.mmorpg.module.skill.manager;
 
 import com.alibaba.fastjson.JSONObject;
-import com.linlazy.mmorpg.module.skill.dao.SkillDAO;
-import com.linlazy.mmorpg.module.skill.entity.SkillEntity;
+import com.linlazy.mmorpg.dao.SkillDAO;
+import com.linlazy.mmorpg.entity.SkillEntity;
 import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +24,9 @@ public class SkillManager {
      * @return
      */
     public Result<?> dressSkill(long actorId, int skillId) {
-        SkillEntity skillEntity = skillDao.getSkill(actorId, skillId);
+        SkillEntity skillEntity = skillDao.getEntityByPK(actorId, skillId);
         skillEntity.setDressed(true);
-        skillDao.updateSkill(skillEntity);
+//        skillDao.updateSkill(skillEntity);
         return Result.success();
     }
 
@@ -38,7 +38,7 @@ public class SkillManager {
      * @return
      */
     public Result<?> levelUp(long actorId, int skillId, JSONObject jsonObject) {
-        SkillEntity skillEntity = skillDao.getSkill(actorId, skillId);
+        SkillEntity skillEntity = skillDao.getEntityByPK(actorId, skillId);
         if(skillEntity != null){
             return Result.valueOf("已拥有技能");
         }
@@ -50,7 +50,7 @@ public class SkillManager {
         skillEntity.setLevel(1);
         skillEntity.setNextCDResumeTimes(DateUtils.getNowMillis());
 
-        skillDao.addSkill(skillEntity);
+//        skillDao.addSkill(skillEntity);
         return Result.success(skillEntity);
     }
 }

@@ -1,15 +1,11 @@
 package com.linlazy.mmorpg.module.user.service;
 
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.eventbus.Subscribe;
 import com.linlazy.mmorpg.dao.PlayerDAO;
-import com.linlazy.mmorpg.domain.Player;
 import com.linlazy.mmorpg.entity.PlayerEntity;
-import com.linlazy.mmorpg.module.common.addition.Addition;
 import com.linlazy.mmorpg.module.common.event.ActorEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.common.event.EventType;
-import com.linlazy.mmorpg.module.user.manager.entity.User;
 import com.linlazy.mmorpg.module.user.push.UserPushHelper;
 import com.linlazy.mmorpg.server.common.GlobalConfigService;
 import com.linlazy.mmorpg.server.common.Result;
@@ -150,9 +146,9 @@ public class UserService {
      * @param actorEvent
      */
     private void handleActorDamage(ActorEvent actorEvent) {
-        JSONObject jsonObject = (JSONObject) actorEvent.getData();
-        long actorId = actorEvent.getActorId();
-        userManager.handleActorDamage(actorId,jsonObject);
+//        JSONObject jsonObject = (JSONObject) actorEvent.getData();
+//        long actorId = actorEvent.getActorId();
+//        userManager.handleActorDamage(actorId,jsonObject);
     }
 
     public Result<?> selectProfession(long actorId, int professionId) {

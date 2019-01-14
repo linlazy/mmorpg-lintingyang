@@ -2,8 +2,8 @@ package com.linlazy.mmorpg.module.chat.service.channel;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Sets;
+import com.linlazy.mmorpg.dao.ChatDAO;
 import com.linlazy.mmorpg.module.chat.constants.ChatType;
-import com.linlazy.mmorpg.module.chat.dao.ChatDao;
 import com.linlazy.mmorpg.module.chat.dto.ChatDTO;
 import com.linlazy.mmorpg.module.chat.push.ChatPushHelper;
 import com.linlazy.mmorpg.server.common.Result;
@@ -24,7 +24,7 @@ public class FullServerChatChannel extends BaseChatChannel {
 
 
     @Autowired
-    private ChatDao chatDao;
+    private ChatDAO chatDao;
 
     @Override
     public Result<?> sendChat(long actorId, JSONObject jsonObject) {

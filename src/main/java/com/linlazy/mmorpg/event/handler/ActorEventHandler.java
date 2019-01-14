@@ -5,6 +5,7 @@ import com.google.common.eventbus.Subscribe;
 import com.linlazy.mmorpg.domain.Player;
 import com.linlazy.mmorpg.event.GameEvenHandler;
 import com.linlazy.mmorpg.event.type.CopyPlayerDeadEvent;
+import com.linlazy.mmorpg.event.type.PlayerAttackEvent;
 import com.linlazy.mmorpg.event.type.PlayerDeadEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.scene.config.SceneConfigService;
@@ -54,5 +55,16 @@ public class ActorEventHandler extends GameEvenHandler {
         if(sceneConfigService.isCopyScene(deadPlayer.getSceneId())){
             EventBusHolder.register(new CopyPlayerDeadEvent(deadPlayer));
         }
+    }
+
+    /**
+     * 玩家攻击事件
+     * @param playerAttackEvent
+     */
+    @Subscribe
+    public void playerAttack(PlayerAttackEvent playerAttackEvent){
+        Player player = playerAttackEvent.getPlayer();
+        player.getPlayerCall().active();
+
     }
 }

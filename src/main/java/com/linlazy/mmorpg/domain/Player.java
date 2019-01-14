@@ -1,7 +1,7 @@
 package com.linlazy.mmorpg.domain;
 
-import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpg.event.type.PlayerDeadEvent;
+import com.linlazy.mmorpg.module.backpack.service.PlayerBackpackService;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.equip.manager.domain.DressedEquip;
 import com.linlazy.mmorpg.module.scene.domain.SceneEntity;
@@ -34,9 +34,24 @@ public class Player extends SceneEntity {
      */
     private int hp;
 
-    @Override
-    public void attacked(int attack, JSONObject jsonObject){
+    /**
+     * 等级
+     */
+    private int level;
 
+    @Override
+    protected int computeDefense() {
+        return 0;
+    }
+
+    @Override
+    protected void triggerDeadEvent() {
+        EventBusHolder.post(new PlayerDeadEvent(this));
+    }
+
+    @Override
+    public int computeAttack() {
+        return 0;
     }
 
     public int damageHp(int damageHp){
@@ -101,6 +116,11 @@ public class Player extends SceneEntity {
      */
     private PlayerChatInfo playerChatInfo;
 
+    /**
+     * 玩家召唤兽
+     */
+    private PlayerCall playerCall;
+
     public Player(Long actorId) {
         this.actorId =actorId;
     }
@@ -109,15 +129,16 @@ public class Player extends SceneEntity {
      * 获取玩家队伍
      * @return
      */
-    public PlayerTeamInfo getPlayerTeamInfo() {
+    public Team getTeam() {
         TeamService teamService = SpringContextUtil.getApplicationContext().getBean(TeamService.class);
-        return teamService.getPlayerTeamInfo(actorId);
+        return teamService.getTeam(actorId);
     }
 
-
-    public PlayerSceneInfo getPlayerSceneInfo(){
-        return null;
+    public PlayerBackpack getBackPack(){
+        PlayerBackpackService playerBackpackService = SpringContextUtil.getApplicationContext().getBean(PlayerBackpackService.class);
+        return playerBackpackService.getPlayerBackpack(actorId);
     }
+
 
 
     public PlayerCopyInfo getPlayerCopyInfo(){
@@ -126,8 +147,12 @@ public class Player extends SceneEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Player player = (Player) o;
         return actorId == player.actorId;
     }

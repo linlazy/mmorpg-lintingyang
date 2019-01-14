@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 public class PlayerSceneInfo {
 
-    private int sceneId;
+
 
 
 }

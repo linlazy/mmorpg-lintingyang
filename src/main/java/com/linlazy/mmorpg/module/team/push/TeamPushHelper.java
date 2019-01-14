@@ -1,7 +1,7 @@
 package com.linlazy.mmorpg.module.team.push;
 
 import com.alibaba.fastjson.JSONObject;
-import com.linlazy.mmorpg.module.team.dto.TeamDTO;
+import com.linlazy.mmorpg.dto.TeamDTO;
 import com.linlazy.mmorpg.server.common.PushHelper;
 
 /**

@@ -1,10 +1,6 @@
 package com.linlazy.mmorpg.module.transaction.domain;
 
-import com.linlazy.mmorpg.module.item.manager.backpack.domain.ItemDo;
 import lombok.Data;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author linlazy
@@ -44,14 +40,14 @@ public class TransactionDo {
      */
     private boolean acceptorEnter;
 
-    /**
-     * 邀请者交易道具
-     */
-    private Set<ItemDo> inviterItemDoSet = new HashSet<>();
-
-    /**
-     * 接受者交易道具
-     */
-    private Set<ItemDo> acceptorItemDoSet = new HashSet<>();
+//    /**
+//     * 邀请者交易道具
+//     */
+//    private Set<ItemDo> inviterItemDoSet = new HashSet<>();
+//
+//    /**
+//     * 接受者交易道具
+//     */
+//    private Set<ItemDo> acceptorItemDoSet = new HashSet<>();
 
 }

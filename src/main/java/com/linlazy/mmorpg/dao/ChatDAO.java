@@ -20,7 +20,7 @@ public class ChatDAO extends EntityDAO<ChatEntity> {
      * @param receiver  聊天信息接受者
      * @return 返回相应频道上接受者的聊天信息
      */
-    List<ChatEntity> getReceiveChatSet(long receiver){
+    public List<ChatEntity> getReceiveChatSet(long receiver){
         return jdbcTemplate.queryForList("select * from chat where receiver = #{receiver}",new  Object[]{receiver},ChatEntity.class);
     }
 
@@ -28,7 +28,7 @@ public class ChatDAO extends EntityDAO<ChatEntity> {
      * 获取最大聊天ID
      * @return  返回最大聊天ID
      */
-    Long getMaxChatId(){
+    public Long getMaxChatId(){
          return jdbcTemplate.queryForObject("select max(chatId) from chat",Long.class);
     }
 
@@ -36,7 +36,7 @@ public class ChatDAO extends EntityDAO<ChatEntity> {
      * 删除接受者的相应频道上的聊天信息
      * @param receiver  接受者ID
      */
-    void deleteChatSet(long receiver){
+    public void deleteChatSet(long receiver){
         jdbcTemplate.update("delete from chat where receiver = ?",receiver);
     }
 

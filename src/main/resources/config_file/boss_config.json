@@ -3,6 +3,7 @@
     "bossId": 1,
     "name": "何曼",
     "attack": 50,
+    "skillId":7,
     "hp": 100,
     "sceneIds": [4]
   },{
@@ -10,6 +11,7 @@
   "name": "张",
   "attack": 100,
   "hp": 100,
+  "skillId":8,
   "sceneIds": [4]
 }
 ]

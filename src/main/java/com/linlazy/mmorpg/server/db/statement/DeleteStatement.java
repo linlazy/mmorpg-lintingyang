@@ -1,7 +1,7 @@
 package com.linlazy.mmorpg.server.db.statement;
 
 
-import com.linlazy.db.entity.EntityInfo;
+import com.linlazy.mmorpg.server.db.entity.EntityInfo;
 
 /**
  * 删除语句

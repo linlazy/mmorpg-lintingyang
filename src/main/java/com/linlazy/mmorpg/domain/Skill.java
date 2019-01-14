@@ -1,5 +1,8 @@
 package com.linlazy.mmorpg.domain;
 
+import com.alibaba.fastjson.JSONObject;
+import lombok.Data;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,6 +10,7 @@ import java.util.Map;
  * 技能领域类
  * @author linlazy
  */
+@Data
 public class Skill {
 
     /**
@@ -15,9 +19,25 @@ public class Skill {
     private int skillId;
 
     /**
+     * 技能类型
+     */
+    private int type;
+
+    /**
      * 等级
      */
     private int level;
+
+    /**
+     * 技能模板ID
+     */
+    private int skillTemplateId;
+
+    /**
+     * 技能模板参数
+     */
+    private JSONObject skillTemplateArgs = new JSONObject();
+
 
     /**
      * 是否已穿戴
@@ -43,4 +63,8 @@ public class Skill {
     public PlayerSkillInfo getPlayerSkillInfo(long actorId) {
         return playerSkillInfoMap.get(actorId);
     }
+
+
+
+
 }

@@ -1,5 +1,6 @@
 package com.linlazy.mmorpg.module.skill.dao;
 
+import com.linlazy.mmorpg.dao.SkillDAO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ public class SkillEntityDaoTest {
 
     @Test
     public void getSkill() {
-         skillDao.getSkill(4194306, 1);
+         skillDao.getEntityByPK(4194306, 1);
     }
 
     @Test

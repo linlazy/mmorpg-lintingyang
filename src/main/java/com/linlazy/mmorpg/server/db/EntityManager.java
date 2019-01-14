@@ -1,12 +1,12 @@
 package com.linlazy.mmorpg.server.db;
 
 
-import com.linlazy.db.annotation.Cloumn;
-import com.linlazy.db.annotation.Table;
-import com.linlazy.db.dao.BaseJdbc;
-import com.linlazy.db.entity.Entity;
-import com.linlazy.db.entity.EntityInfo;
-import com.linlazy.db.utils.PackageScanUtils;
+import com.linlazy.mmorpg.server.db.annotation.Cloumn;
+import com.linlazy.mmorpg.server.db.annotation.Table;
+import com.linlazy.mmorpg.server.db.dao.BaseJdbc;
+import com.linlazy.mmorpg.server.db.entity.Entity;
+import com.linlazy.mmorpg.server.db.entity.EntityInfo;
+import com.linlazy.mmorpg.server.db.utils.PackageScanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

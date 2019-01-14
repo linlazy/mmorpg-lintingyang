@@ -1,6 +1,7 @@
 package com.linlazy.mmorpg.domain;
 
-import com.linlazy.mmorpg.module.email.entity.Email;
+
+import com.linlazy.mmorpg.entity.EmailEntity;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,5 +20,5 @@ public class PlayerEmailInfo {
     /**
      * 玩家邮件集合
      */
-    Set<Email> emailSet = new HashSet<>();
+    Set<EmailEntity> emailSet = new HashSet<>();
 }

@@ -2,7 +2,7 @@ package com.linlazy.mmorpg.module.skill.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpg.module.skill.manager.SkillManager;
-import com.linlazy.mmorpg.module.skill.validator.SkillValidator;
+import com.linlazy.mmorpg.validator.SkillValidator;
 import com.linlazy.mmorpg.server.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -69,14 +69,14 @@ public class UserHandler {
         return userService.logout(channel);
     }
 
-    /**
-     * 获取玩家信息
-     * @param jsonObject
-     * @return
-     */
-    @Cmd(value = "getInfo")
-    public Result<?> getInfo(JSONObject jsonObject){
-        long actorId = jsonObject.getLongValue("actorId");
-        return Result.success(userService.getUser(actorId));
-    }
+//    /**
+//     * 获取玩家信息
+//     * @param jsonObject
+//     * @return
+//     */
+//    @Cmd(value = "getInfo")
+//    public Result<?> getInfo(JSONObject jsonObject){
+//        long actorId = jsonObject.getLongValue("actorId");
+//        return Result.success(userService.getUser(actorId));
+//    }
 }
