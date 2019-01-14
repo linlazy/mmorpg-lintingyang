@@ -1,4 +1,4 @@
-package com.linlazy.mmorpg.module.backpack.constants;
+package com.linlazy.mmorpg.constants;
 
 /**
  * @author linlazy

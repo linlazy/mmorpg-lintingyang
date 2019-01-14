@@ -1,4 +1,4 @@
-package com.linlazy.mmorpg.module.backpack.dto;
+package com.linlazy.mmorpg.dto;
 
 import com.linlazy.mmorpg.domain.Lattice;
 import lombok.Data;

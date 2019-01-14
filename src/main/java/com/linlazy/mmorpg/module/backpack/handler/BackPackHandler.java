@@ -1,7 +1,7 @@
 //package com.linlazy.mmorpg.module.backpack.handler;
 //
 //import com.alibaba.fastjson.JSONObject;
-//import com.linlazy.mmorpg.module.backpack.dto.PlayerBackPackDTO;
+//import com.linlazy.mmorpg.dto.PlayerBackPackDTO;
 //import com.linlazy.mmorpg.module.backpack.service.BackPackService;
 //import com.linlazy.mmorpg.module.backpack.service.PlayerBackpackService;
 //import com.linlazy.mmorpg.server.common.Result;

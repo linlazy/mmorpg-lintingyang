@@ -1,7 +1,6 @@
 package com.linlazy.mmorpg.domain;
 
 import com.linlazy.mmorpg.module.backpack.BackpackInterface;
-import com.linlazy.mmorpg.module.backpack.domain.ItemContext;
 
 import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -36,7 +35,6 @@ public class GuildWarehouse extends Backpack implements BackpackInterface {
         }
     }
 
-    @Override
     public boolean addItem(List<ItemContext> itemContextList) {
         readWriteLock.writeLock().lock();
         try {
@@ -46,7 +44,6 @@ public class GuildWarehouse extends Backpack implements BackpackInterface {
         }
     }
 
-    @Override
     public boolean consumeItem(List<ItemContext> itemContextList) {
         readWriteLock.writeLock().lock();
         try {

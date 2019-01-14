@@ -6,6 +6,7 @@ import com.google.common.eventbus.Subscribe;
 import com.linlazy.mmorpg.domain.*;
 import com.linlazy.mmorpg.dto.SceneDTO;
 import com.linlazy.mmorpg.event.type.PlayerMoveSceneEvent;
+import com.linlazy.mmorpg.event.type.SceneMonsterDeadEvent;
 import com.linlazy.mmorpg.file.service.SceneConfigService;
 import com.linlazy.mmorpg.module.common.event.ActorEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
@@ -13,7 +14,6 @@ import com.linlazy.mmorpg.module.common.event.EventType;
 import com.linlazy.mmorpg.push.ScenePushHelper;
 import com.linlazy.mmorpg.server.common.GlobalConfigService;
 import com.linlazy.mmorpg.server.common.Result;
-import com.linlazy.mmorpg.utils.SessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -46,6 +46,8 @@ public class SceneService {
     @Autowired
     private MonsterService monsterService;
     @Autowired
+    private BossService bossService;
+    @Autowired
     private GlobalConfigService globalConfigService;
 
     public Scene getScene(long actorId){
@@ -60,7 +62,6 @@ public class SceneService {
                 Scene scene = sceneMap.get(actorId);
                 if(scene == null){
                     scene = new Scene();
-
                     scene.setSceneId(sceneId);
 
                     //初始化怪物
@@ -72,8 +73,14 @@ public class SceneService {
                     scene.setNpcSet( npcDoSet);
 
                     //初始化玩家
-                    sceneEntitySet.addAll();
-                    map.put(sceneId,scene);
+                    Set<Player> sameScenePlayerSet = playerService.getSameScenePlayerSet(actorId);
+                    scene.setPlayerSet(sameScenePlayerSet);
+
+                    //初始化boss
+                    Set<Boss> bossSet = bossService.getBOSSBySceneId(sceneId);
+                    scene.setBossSet(bossSet);
+
+                    sceneMap.put(sceneId,scene);
                 }
                 return scene;
             }
@@ -130,46 +137,20 @@ public class SceneService {
         return sceneEntitySet;
     }
 
-
-
-
-
-
-
     @PostConstruct
     public void init(){
         EventBusHolder.register(this);
     }
 
-    @Subscribe
-    public void listenEvent(ActorEvent actorEvent){
-        switch (actorEvent.getEventType()){
-            case SCENE_MONSTER_DEAD:
-                handlerSceneMonsterDead(actorEvent);
-                break;
-            default:
-                break;
-        }
-    }
-
     /**
      * 处理场景怪物死亡事件
-     * @param actorEvent
+     * @param sceneMonsterDeadEvent
      */
-    private void handlerSceneMonsterDead(ActorEvent actorEvent) {
-        JSONObject jsonObject = (JSONObject) actorEvent.getData();
-        long actorId = jsonObject.getLongValue("actorId");
-        Set<Long> onlineActorIds = SessionManager.getOnlineActorIds();
-        onlineActorIds.stream()
-                .filter(onlineActorId -> onlineActorId !=actorId)
-                .forEach(onlineActorId ->{
-                    int sceneId = jsonObject.getIntValue("sceneId");
-                    if(userManager.getUser(onlineActorId).getSceneId() == sceneId){
-                        SceneEntity monsterDo = jsonObject.getObject("monsterDo", SceneEntity.class);
-                        ScenePushHelper.pushMonster(onlineActorId, Lists.newArrayList(monsterDo));
-                    }
-                });
-
+    @Subscribe
+    private void handlerSceneMonsterDead(SceneMonsterDeadEvent sceneMonsterDeadEvent) {
+        Set<Player> playerSet = sceneMonsterDeadEvent.getScene().getPlayerSet();
+        playerSet.stream()
+            .forEach(player ->   ScenePushHelper.pushMonster(player.getActorId(), Lists.newArrayList(sceneMonsterDeadEvent.getMonster())));
     }
 
 

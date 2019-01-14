@@ -1,11 +1,11 @@
 //package com.linlazy.mmorpg.module.backpack.type;
 //
 //import com.alibaba.fastjson.JSONObject;
-//import com.linlazy.mmorpg.module.backpack.constants.BackPackType;
+//import com.linlazy.mmorpg.constants.BackPackType;
 //import com.linlazy.mmorpg.module.backpack.domain.Lattice;
 //import com.linlazy.mmorpg.module.backpack.domain.ItemContext;
-//import com.linlazy.mmorpg.module.backpack.dto.PlayerBackPackDTO;
-//import com.linlazy.mmorpg.module.backpack.dto.LatticeDTO;
+//import com.linlazy.mmorpg.dto.PlayerBackPackDTO;
+//import com.linlazy.mmorpg.dto.LatticeDTO;
 //import com.linlazy.mmorpg.module.equip.manager.domain.EquipDo;
 //import com.linlazy.mmorpg.module.item.constants.ItemType;
 //import com.linlazy.mmorpg.module.item.manager.backpack.domain.ItemDo;

@@ -1,6 +1,6 @@
 //package com.linlazy.mmorpg.module.backpack.type;
 //
-//import com.linlazy.mmorpg.module.backpack.constants.BackPackType;
+//import com.linlazy.mmorpg.constants.BackPackType;
 //import com.linlazy.mmorpg.module.backpack.domain.Lattice;
 //import com.linlazy.mmorpg.module.item.manager.backpack.domain.ItemDo;
 //import com.linlazy.mmorpg.module.item.manager.dao.ItemDAO;

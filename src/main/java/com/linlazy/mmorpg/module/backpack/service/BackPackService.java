@@ -1,7 +1,7 @@
 //package com.linlazy.mmorpg.module.backpack.service;
 //
 //import com.alibaba.fastjson.JSONObject;
-//import com.linlazy.mmorpg.module.backpack.dto.PlayerBackPackDTO;
+//import com.linlazy.mmorpg.dto.PlayerBackPackDTO;
 //import com.linlazy.mmorpg.module.backpack.type.BaseBackPack;
 //import com.linlazy.mmorpg.server.common.Result;
 //import org.springframework.stereotype.Component;
