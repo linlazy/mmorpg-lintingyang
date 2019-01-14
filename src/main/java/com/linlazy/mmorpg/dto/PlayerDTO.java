@@ -1,9 +1,13 @@
 package com.linlazy.mmorpg.dto;
 
+import com.linlazy.mmorpg.domain.Player;
+import lombok.Data;
+
 /**
  * 玩家信息
  * @author linlazy
  */
+@Data
 public class PlayerDTO {
 
     /**
@@ -15,10 +19,15 @@ public class PlayerDTO {
      */
     private Integer hp;
 
+    public PlayerDTO(Player player) {
+    }
+
     public PlayerDTO(String username, Integer hp) {
         this.username = username;
         this.hp = hp;
     }
+
+
 
 
     @Override

@@ -9,7 +9,7 @@ import com.linlazy.mmorpg.event.type.CopySuccessEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.common.reward.Reward;
 import com.linlazy.mmorpg.module.common.reward.RewardService;
-import com.linlazy.mmorpg.module.scene.config.SceneConfigService;
+import com.linlazy.mmorpg.file.service.SceneConfigService;
 import com.linlazy.mmorpg.module.team.service.TeamService;
 import com.linlazy.mmorpg.server.common.Result;
 import org.slf4j.Logger;
@@ -43,6 +43,11 @@ public class CopyService {
      * 当前最大副本编号
      */
     private AtomicLong maxCopyId = new AtomicLong();
+
+    public Copy getCopyByActorId(long actorId){
+        Long copyId = playerCopyIdMap.get(actorId);
+        return copyIdCopyMap.get(copyId);
+    }
 
     public Copy getCopy(long copyId){
         return copyIdCopyMap.get(copyId);

@@ -18,6 +18,11 @@ public class Scene {
     private int sceneId;
 
     /**
+     * 场景名称
+     */
+    private String sceneName;
+
+    /**
      * 场景玩家信息
      */
     Set<Player> playerSet = new HashSet<>();
@@ -31,5 +36,9 @@ public class Scene {
      * 场景BOSS信息
      */
     private Set<Boss> bossSet = new HashSet<>();
+    /**
+     * 场景NPC信息
+     */
+    private Set<Npc> NpcSet = new HashSet<>();
 
 }

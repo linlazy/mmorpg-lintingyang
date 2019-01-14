@@ -5,7 +5,6 @@ import com.linlazy.mmorpg.event.type.PlayerAttackEvent;
 import com.linlazy.mmorpg.event.type.PlayerAttackedEvent;
 import com.linlazy.mmorpg.event.type.PlayerCallDisappearEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
-import com.linlazy.mmorpg.module.scene.domain.SceneEntity;
 import com.linlazy.mmorpg.service.SkillService;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import lombok.Data;

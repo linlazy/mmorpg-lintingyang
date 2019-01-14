@@ -1,18 +1,53 @@
 package com.linlazy.mmorpg.domain;
 
-import java.util.HashMap;
-import java.util.Map;
+import lombok.Data;
 
 /**
- * 交易领域类
  * @author linlazy
  */
+@Data
 public class Transaction {
-
     /**
-     * 交易ID
+     * 交易号
      */
     private long transactionId;
 
-    Map<Long, TransactionPlayerInfo> transactionPlayerInfoMap = new HashMap<>();
+    /**
+     * 邀请者
+     */
+    private long inviter;
+    /**
+     * 接受者
+     */
+    private long acceptor;
+    /**
+     * 邀请者锁定
+     */
+    private boolean inviterLock;
+
+    /**
+     * 接受者锁定
+     */
+    private boolean acceptorLock;
+
+    /**
+     * 邀请者确认
+     */
+    private boolean inviterEnter;
+
+    /**
+     * 接受者确认
+     */
+    private boolean acceptorEnter;
+
+//    /**
+//     * 邀请者交易道具
+//     */
+//    private Set<ItemDo> inviterItemDoSet = new HashSet<>();
+//
+//    /**
+//     * 接受者交易道具
+//     */
+//    private Set<ItemDo> acceptorItemDoSet = new HashSet<>();
+
 }

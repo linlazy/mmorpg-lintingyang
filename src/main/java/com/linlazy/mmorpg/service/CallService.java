@@ -5,7 +5,7 @@ import com.linlazy.mmorpg.domain.Player;
 import com.linlazy.mmorpg.domain.PlayerCall;
 import com.linlazy.mmorpg.event.type.PlayerCallDisappearEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
-import com.linlazy.mmorpg.module.scene.domain.SceneEntity;
+import com.linlazy.mmorpg.domain.SceneEntity;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;

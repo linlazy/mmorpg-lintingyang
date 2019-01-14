@@ -2,7 +2,7 @@ package com.linlazy.mmorpg.module.fight.defense;
 
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpg.module.fight.defense.actor.BaseActorDefense;
-import com.linlazy.mmorpg.module.scene.constants.SceneEntityType;
+import com.linlazy.mmorpg.constants.SceneEntityType;
 
 /**
  * @author linlazy

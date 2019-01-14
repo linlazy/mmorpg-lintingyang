@@ -1,6 +1,6 @@
 //package com.linlazy.mmorpg.module.fight.service.sceneentity;
 //
-//import com.linlazy.mmorpg.module.scene.domain.SceneEntity;
+//import com.linlazy.mmorpg.domain.SceneEntity;
 //import com.linlazy.mmorpg.module.scene.domain.ScenePlayerDo;
 //import com.linlazy.mmorpg.module.user.manager.UserManager;
 //import com.linlazy.mmorpg.module.user.manager.entity.User;

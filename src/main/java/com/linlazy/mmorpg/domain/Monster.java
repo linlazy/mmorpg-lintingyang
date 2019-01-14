@@ -1,6 +1,5 @@
 package com.linlazy.mmorpg.domain;
 
-import com.linlazy.mmorpg.module.scene.domain.SceneEntity;
 import lombok.Data;
 
 /**
@@ -12,6 +11,7 @@ public class Monster extends SceneEntity {
 
     private int sceneId;
 
+    private int monsterId;
 
     /**
      * 小怪技能信息

@@ -2,45 +2,40 @@ package com.linlazy.mmorpg.domain;
 
 import lombok.Data;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
- * BOSS
  * @author linlazy
  */
 @Data
-public class Boss extends SceneEntity {
+public class Npc extends SceneEntity{
 
     /**
-     * boss标识
-     */
-    private long id;
-
-
-    /**
-     * 场景ID
+     * 场景Id
      */
     private int sceneId;
 
     /**
-     *  bossId
+     * npcID
      */
-    private long bossId;
-
-    /**
-     * boss血量
-     */
-    private int hp;
-
-    /**
-     * 攻击力
-     */
-    private int attack;
+    private int npcId;
 
     /**
      * 名称
      */
     private String name;
 
-    private BossSkillInfo bossSkillInfo;
+    /**
+     * 当前血量
+     */
+    private int hp;
+
+    /**
+     * 谈话进度
+     */
+    private Map<Integer, List<String>> talkProcess = new HashMap<>();
 
     @Override
     protected int computeDefense() {

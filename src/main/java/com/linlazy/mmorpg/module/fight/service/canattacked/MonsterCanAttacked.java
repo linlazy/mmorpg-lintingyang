@@ -1,7 +1,7 @@
 //package com.linlazy.mmorpg.module.fight.service.canattacked;
 //
 //import com.alibaba.fastjson.JSONObject;
-//import com.linlazy.mmorpg.module.scene.constants.SceneEntityType;
+//import com.linlazy.mmorpg.constants.SceneEntityType;
 //import com.linlazy.mmorpg.module.scene.validator.SceneValidator;
 //import com.linlazy.mmorpg.server.common.Result;
 //import org.springframework.beans.factory.annotation.Autowired;

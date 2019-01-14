@@ -3,7 +3,7 @@ package com.linlazy.mmorpg.template.skill;
 
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpg.domain.Skill;
-import com.linlazy.mmorpg.module.scene.domain.SceneEntity;
+import com.linlazy.mmorpg.domain.SceneEntity;
 import com.linlazy.mmorpg.service.SceneService;
 import com.linlazy.mmorpg.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;

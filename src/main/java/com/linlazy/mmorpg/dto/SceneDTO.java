@@ -1,8 +1,10 @@
 package com.linlazy.mmorpg.dto;
 
+import com.linlazy.mmorpg.domain.Scene;
 import lombok.Data;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 场景DTO
@@ -16,10 +18,11 @@ public class SceneDTO {
     private final Set<MonsterDTO> monsterDTOSet;
     private final Set<BossDTO> bossDTOSet;
 
-    public SceneDTO(String sceneName, Set<PlayerDTO> playerDTOSet, Set<MonsterDTO> monsterDTOSet, Set<BossDTO> bossDTOSet) {
-        this.sceneName = sceneName;
-        this.playerDTOSet = playerDTOSet;
-        this.monsterDTOSet = monsterDTOSet;
-        this.bossDTOSet = bossDTOSet;
+
+    public SceneDTO(Scene scene) {
+        this.sceneName = scene.getSceneName();
+        this.playerDTOSet = scene.getPlayerSet().stream().map(PlayerDTO::new).collect(Collectors.toSet());
+        this.monsterDTOSet =  scene.getMonsterSet().stream().map(MonsterDTO::new).collect(Collectors.toSet());
+        this.bossDTOSet = scene.getBossSet().stream().map(BossDTO::new).collect(Collectors.toSet());
     }
 }

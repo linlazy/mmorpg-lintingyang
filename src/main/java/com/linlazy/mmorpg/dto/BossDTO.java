@@ -1,5 +1,7 @@
 package com.linlazy.mmorpg.dto;
 
+import com.linlazy.mmorpg.domain.Boss;
+
 /**
  * @author linlazy
  */
@@ -8,16 +10,20 @@ public class BossDTO {
     /**
      * boss名称
      */
-    private final String bossName;
+    private  String bossName;
 
     /**
      * boss血量
      */
-    private final Integer hp;
+    private  Integer hp;
+
+    public BossDTO(Boss boss) {
+       this.bossName = boss.getName();
+       this.hp = boss.getHp();
+
+    }
 
     public BossDTO(String bossName, Integer hp) {
-        this.bossName = bossName;
-        this.hp = hp;
     }
 
     @Override

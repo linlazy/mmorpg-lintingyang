@@ -2,7 +2,7 @@
 //
 //import com.alibaba.fastjson.JSONObject;
 //import com.linlazy.mmorpg.module.fight.validator.FightValidtor;
-//import com.linlazy.mmorpg.module.scene.constants.SceneEntityType;
+//import com.linlazy.mmorpg.constants.SceneEntityType;
 //import com.linlazy.mmorpg.server.common.Result;
 //import com.linlazy.mmorpg.utils.SessionManager;
 //import org.springframework.beans.factory.annotation.Autowired;

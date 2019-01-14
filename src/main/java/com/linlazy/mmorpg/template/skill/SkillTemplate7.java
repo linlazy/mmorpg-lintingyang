@@ -2,8 +2,8 @@ package com.linlazy.mmorpg.template.skill;
 
 import com.linlazy.mmorpg.domain.Player;
 import com.linlazy.mmorpg.domain.Skill;
-import com.linlazy.mmorpg.module.scene.constants.SceneEntityType;
-import com.linlazy.mmorpg.module.scene.domain.SceneEntity;
+import com.linlazy.mmorpg.constants.SceneEntityType;
+import com.linlazy.mmorpg.domain.SceneEntity;
 import com.linlazy.mmorpg.service.SceneService;
 import org.springframework.beans.factory.annotation.Autowired;
 

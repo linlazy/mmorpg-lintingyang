@@ -5,7 +5,7 @@ import com.linlazy.mmorpg.event.type.CopyFailEvent;
 import com.linlazy.mmorpg.event.type.CopyRefreshMonsterEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.common.reward.Reward;
-import com.linlazy.mmorpg.module.scene.config.SceneConfigService;
+import com.linlazy.mmorpg.file.service.SceneConfigService;
 import com.linlazy.mmorpg.service.SceneService;
 import com.linlazy.mmorpg.service.SkillService;
 import com.linlazy.mmorpg.utils.SpringContextUtil;

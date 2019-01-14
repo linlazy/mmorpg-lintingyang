@@ -4,7 +4,6 @@ import com.linlazy.mmorpg.event.type.PlayerDeadEvent;
 import com.linlazy.mmorpg.module.backpack.service.PlayerBackpackService;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.equip.manager.domain.DressedEquip;
-import com.linlazy.mmorpg.module.scene.domain.SceneEntity;
 import com.linlazy.mmorpg.module.team.service.TeamService;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import lombok.Data;

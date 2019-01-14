@@ -8,7 +8,7 @@ import com.linlazy.mmorpg.event.type.CopyPlayerDeadEvent;
 import com.linlazy.mmorpg.event.type.PlayerAttackEvent;
 import com.linlazy.mmorpg.event.type.PlayerDeadEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
-import com.linlazy.mmorpg.module.scene.config.SceneConfigService;
+import com.linlazy.mmorpg.file.service.SceneConfigService;
 import com.linlazy.mmorpg.push.PlayerPushHelper;
 import com.linlazy.mmorpg.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;

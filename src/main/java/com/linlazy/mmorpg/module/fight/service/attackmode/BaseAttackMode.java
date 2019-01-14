@@ -4,9 +4,9 @@
 //import com.linlazy.mmorpg.module.fight.attack.actor.BaseActorAttack;
 //import com.linlazy.mmorpg.module.fight.service.canattacked.BaseCanAttacked;
 //import com.linlazy.mmorpg.module.fight.service.sceneentity.SceneEntityDoFactory;
-//import com.linlazy.mmorpg.module.scene.constants.SceneEntityType;
+//import com.linlazy.mmorpg.constants.SceneEntityType;
 //import com.linlazy.mmorpg.module.scene.domain.SceneDo;
-//import com.linlazy.mmorpg.module.scene.domain.SceneEntity;
+//import com.linlazy.mmorpg.domain.SceneEntity;
 //import com.linlazy.mmorpg.module.scene.manager.SceneManager;
 //import com.linlazy.mmorpg.server.common.Result;
 //import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +70,7 @@
 //        if(entityType == SceneEntityType.PLAYER){
 //             sceneEntity =SceneEntityDoFactory.newPlayerSceneEntityDo(entityId);
 //        }else {
-//            SceneDo sceneDo = sceneManager.getSceneDo(actorId);
+//            SceneDo sceneDo = sceneManager.getScene(actorId);
 //            sceneEntity = sceneDo.getSceneEntitySet().stream()
 //                    .filter(sceneEntityDo1 -> sceneEntityDo1.getSceneEntityId() == entityId && sceneEntityDo1.getSceneEntityType() == entityType)
 //                    .findFirst().get();

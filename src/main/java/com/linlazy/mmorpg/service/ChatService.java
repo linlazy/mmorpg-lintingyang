@@ -1,7 +1,7 @@
 package com.linlazy.mmorpg.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.linlazy.mmorpg.module.chat.service.channel.BaseChatChannel;
+import com.linlazy.mmorpg.channel.BaseChatChannel;
 import com.linlazy.mmorpg.server.common.Result;
 import org.springframework.stereotype.Component;
 
