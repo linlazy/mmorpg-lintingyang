@@ -38,17 +38,22 @@ public class GuildWarehouse extends Backpack implements BackpackInterface {
 
 
     @Override
-    protected void addItem(Lattice lattice) {
+    protected void addItem(Item item) {
         GuildWarehouseDAO guildWarehouseDAO = SpringContextUtil.getApplicationContext().getBean(GuildWarehouseDAO.class);
         GuildWarehouseEntity guildWarehouseEntity = new GuildWarehouseEntity();
         guildWarehouseEntity.setGuildId(guildId);
-        guildWarehouseEntity.setCount(lattice.getItem().getCount());
-        guildWarehouseEntity.setItemId(lattice.getItem().getItemId());
+        guildWarehouseEntity.setCount(item.getCount());
+        guildWarehouseEntity.setItemId(item.getItemId());
         guildWarehouseDAO.insertQueue(guildWarehouseEntity);
     }
 
     @Override
-    protected void updateItem(Lattice backPackLattice) {
+    protected void updateItem(Item backPackLattice) {
+
+    }
+
+    @Override
+    protected void deleteItem(Item item) {
 
     }
 
@@ -60,6 +65,16 @@ public class GuildWarehouse extends Backpack implements BackpackInterface {
     @Override
     public Lattice[] arrangeBackPack() {
         return latticeArr;
+    }
+
+    @Override
+    protected void refreshBackpack(Lattice[] latticeArr, Lattice[] arrangeBackPack) {
+
+    }
+
+    @Override
+    protected Lattice[] initArrangeBackPack() {
+        return new Lattice[0];
     }
 
 }

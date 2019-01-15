@@ -47,4 +47,8 @@ public class ItemEntity extends Entity {
         ItemConfigService bean = SpringContextUtil.getApplicationContext().getBean(ItemConfigService.class);
         JSONObject itemConfig = bean.getItemConfig(ItemIdUtil.getBaseItemId(this.itemId));
     }
+
+    @Override
+    public void beforeWriteDB() {
+    }
 }

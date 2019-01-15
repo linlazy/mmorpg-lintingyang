@@ -53,4 +53,9 @@ public class GuildWarehouseEntity extends Entity {
     public void afterReadDB() {
         //todo
     }
+
+    @Override
+    public void beforeWriteDB() {
+        super.beforeWriteDB();
+    }
 }
