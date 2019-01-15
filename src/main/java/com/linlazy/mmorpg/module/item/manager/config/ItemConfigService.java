@@ -7,6 +7,7 @@ import com.linlazy.mmorpg.server.common.ConfigFileManager;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,5 +39,9 @@ public class ItemConfigService {
 
     public JSONObject getItemConfig(int itemId) {
         return MAP.get(itemId);
+    }
+
+    public Collection<JSONObject> getAllItemConfig(){
+        return MAP.values();
     }
 }

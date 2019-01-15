@@ -1,5 +1,6 @@
 package com.linlazy.mmorpg.service;
 
+import com.google.common.collect.Sets;
 import com.linlazy.mmorpg.domain.Boss;
 import com.linlazy.mmorpg.file.config.BossConfig;
 import com.linlazy.mmorpg.file.service.BossConfigService;
@@ -46,6 +47,6 @@ public class BossService {
     }
 
     public Set<Boss> getBOSSBySceneId(Integer sceneId) {
-        return null;
+        return Sets.newHashSet();
     }
 }

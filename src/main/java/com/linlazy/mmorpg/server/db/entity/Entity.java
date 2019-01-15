@@ -18,8 +18,8 @@ public abstract class Entity {
     private int operatorType;
 
 
-    private List<KeyValueEntry<String,String>> pkKeyValue = new ArrayList<>();
-    private List<KeyValueEntry<String,String>> notNullOrdinaryKeyValue = new ArrayList<>();
+    private List<KeyValueEntry<String,Object>> pkKeyValue = new ArrayList<>();
+    private List<KeyValueEntry<String,Object>> ordinaryKeyValue = new ArrayList<>();
 
     public Entity() {
         entityInfo = EntityInfo.ENTITY_INFO_MAP.get(this.getClass());
@@ -45,23 +45,21 @@ public abstract class Entity {
     }
 
     public void init(){
-        init(notNullOrdinaryKeyValue,entityInfo.getOrdinaryColumnNameList());
+        init(ordinaryKeyValue,entityInfo.getOrdinaryColumnNameList());
         init(pkKeyValue,entityInfo.getPkColumnNameList());
     }
 
-    private void init(List<KeyValueEntry<String, String>> notNullOrdinaryKeyValue, List<String> ordinaryColumnNameList) {
+    private void init(List<KeyValueEntry<String, Object>> ordinaryKeyValue, List<String> ordinaryColumnNameList) {
         for(String ordinaryColumnName: ordinaryColumnNameList){
             Class<? extends Entity> aClass = this.getClass();
             Field field = null;
             try {
                 field = aClass.getDeclaredField(ordinaryColumnName);
                 field.setAccessible(true);
-                if(field.get(this) != null){
-                    KeyValueEntry<String,String> keyValue = new KeyValueEntry<>() ;
-                    keyValue.setKey(ordinaryColumnName);
-                    keyValue.setValue((String) field.get(this));
-                    notNullOrdinaryKeyValue.add(keyValue);
-                }
+                KeyValueEntry<String,Object> keyValue = new KeyValueEntry<>() ;
+                keyValue.setKey(ordinaryColumnName);
+                keyValue.setValue(field.get(this));
+                ordinaryKeyValue.add(keyValue);
             } catch (NoSuchFieldException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {

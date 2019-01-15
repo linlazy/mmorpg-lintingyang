@@ -16,6 +16,7 @@ public class InsertStatement {
 
     private static Logger logger = LoggerFactory.getLogger(InsertStatement.class);
 
+
     public static String buildPrepareSQL(Entity entity){
         EntityInfo entityInfo = EntityInfo.ENTITY_INFO_MAP.get(entity.getClass());
         StringBuilder sql = new StringBuilder();
@@ -42,5 +43,4 @@ public class InsertStatement {
 
         return sql.toString();
     }
-
 }

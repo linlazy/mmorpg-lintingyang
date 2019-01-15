@@ -7,7 +7,6 @@ import com.linlazy.mmorpg.domain.PlayerBackpack;
 import com.linlazy.mmorpg.module.common.event.ActorEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.equip.manager.EquipManager;
-import com.linlazy.mmorpg.module.equip.manager.domain.DressedEquip;
 import com.linlazy.mmorpg.module.item.manager.config.ItemConfigService;
 import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.service.PlayerService;
@@ -22,8 +21,6 @@ import javax.annotation.PostConstruct;
 @Component
 public class EquipmentService {
 
-    @Autowired
-    private DressedEquip dressedEquip;
 
     @Autowired
     private PlayerService playerService;
@@ -49,11 +46,11 @@ public class EquipmentService {
     }
 
     private void handleAttacked(ActorEvent actorEvent) {
-        dressedEquip.consumeDurabilityWithAttacked(actorEvent.getActorId());
+//        dressedEquip.consumeDurabilityWithAttacked(actorEvent.getActorId());
     }
 
     private void handleAttack(ActorEvent actorEvent) {
-        dressedEquip.consumeDurabilityWithAttack(actorEvent.getActorId());
+//        dressedEquip.consumeDurabilityWithAttack(actorEvent.getActorId());
     }
 
     @Autowired

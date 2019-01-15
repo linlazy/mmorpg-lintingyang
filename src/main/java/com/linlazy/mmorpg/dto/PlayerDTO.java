@@ -20,21 +20,12 @@ public class PlayerDTO {
     private Integer hp;
 
     public PlayerDTO(Player player) {
-    }
-
-    public PlayerDTO(String username, Integer hp) {
-        this.username = username;
-        this.hp = hp;
+        username = player.getName();
+        hp = player.getHp();
     }
 
 
 
 
-    @Override
-    public String toString() {
-        return "PlayerDTO{" +
-                "username='" + username + '\'' +
-                ", hp=" + hp +
-                '}';
-    }
+
 }

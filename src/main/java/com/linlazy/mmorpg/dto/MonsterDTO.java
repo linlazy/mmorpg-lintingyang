@@ -1,11 +1,13 @@
 package com.linlazy.mmorpg.dto;
 
 import com.linlazy.mmorpg.domain.Monster;
+import lombok.Data;
 
 /**
  * 怪物信息DTO
  * @author linlazy
  */
+@Data
 public class MonsterDTO {
 
     /**
@@ -19,13 +21,9 @@ public class MonsterDTO {
     private Integer hp;
 
     public MonsterDTO(Monster monster) {
+        monsterName = monster.getName();
+        hp = monster.getHp();
     }
 
-    @Override
-    public String toString() {
-        return "MonsterDTO{" +
-                "monsterName='" + monsterName + '\'' +
-                ", hp=" + hp +
-                '}';
-    }
+
 }

@@ -50,20 +50,20 @@ public  class BaseJdbc<T extends Entity>  {
      */
     public void doInsert(Entity entity) {
 
-            List<Object> args = new ArrayList<>();
+        List<Object> args = new ArrayList<>();
+        //获取主键参数值
+        List<KeyValueEntry<String, Object>> pkKeyValue = entity.getPkKeyValue();
+        List<Object> pkValueList = pkKeyValue.stream().map(KeyValueEntry::getValue).collect(Collectors.toList());
+        args.addAll(pkValueList);
 
-            //获取主键参数值
-            List<KeyValueEntry<String, String>> pkKeyValue = entity.getPkKeyValue();
-            List<String> pkValueList = pkKeyValue.stream().map(KeyValueEntry::getValue).collect(Collectors.toList());
+        //获取普通列值
+        List<KeyValueEntry<String, Object>> ordinaryKeyValue = entity.getOrdinaryKeyValue();
+        List<Object> ordinaryValueList = ordinaryKeyValue.stream().map(KeyValueEntry::getValue).collect(Collectors.toList());
+        args.addAll(ordinaryValueList);
 
-            //获取普通列值
-            List<KeyValueEntry<String, String>> notNullOrdinaryKeyValue = entity.getNotNullOrdinaryKeyValue();
-            List<String> notNullOrdinaryValueList = notNullOrdinaryKeyValue.stream().map(KeyValueEntry::getValue).collect(Collectors.toList());
-            args.addAll(notNullOrdinaryValueList);
 
-            args.addAll(pkValueList);
-            String prepareSQL = InsertStatement.buildPrepareSQL(entity);
-            jdbcTemplate.update(prepareSQL,args);
+        String prepareSQL = InsertStatement.buildPrepareSQL(entity);
+        jdbcTemplate.update(prepareSQL, args.toArray());
     }
 
 
@@ -84,15 +84,15 @@ public  class BaseJdbc<T extends Entity>  {
         List<Object> args = new ArrayList<>();
 
         //获取普通列值
-        List<KeyValueEntry<String, String>> notNullOrdinaryKeyValue = entity.getNotNullOrdinaryKeyValue();
-        List<String> notNullOrdinaryValueList = notNullOrdinaryKeyValue.stream().map(KeyValueEntry::getValue).collect(Collectors.toList());
-        args.addAll(notNullOrdinaryValueList);
+        List<KeyValueEntry<String, Object>> ordinaryKeyValue = entity.getOrdinaryKeyValue();
+        List<Object> ordinaryValueList = ordinaryKeyValue.stream().map(KeyValueEntry::getValue).collect(Collectors.toList());
+        args.addAll(ordinaryValueList);
         //获取主键参数值
-        List<KeyValueEntry<String, String>> pkKeyValue = entity.getPkKeyValue();
-        List<String> pkValueList = pkKeyValue.stream().map(KeyValueEntry::getValue).collect(Collectors.toList());
+        List<KeyValueEntry<String, Object>> pkKeyValue = entity.getPkKeyValue();
+        List<Object> pkValueList = pkKeyValue.stream().map(KeyValueEntry::getValue).collect(Collectors.toList());
         args.addAll(pkValueList);
         String prepareSQL = UpdateStatement.buildPrepareSQL(entity);
-        jdbcTemplate.update(prepareSQL,args);
+        jdbcTemplate.update(prepareSQL,args.toArray());
     }
 
     /**
@@ -113,11 +113,11 @@ public  class BaseJdbc<T extends Entity>  {
         List<Object> args = new ArrayList<>();
 
         //获取主键参数值
-        List<KeyValueEntry<String, String>> pkKeyValue = entity.getPkKeyValue();
-        List<String> pkValueList = pkKeyValue.stream().map(KeyValueEntry::getValue).collect(Collectors.toList());
+        List<KeyValueEntry<String, Object>> pkKeyValue = entity.getPkKeyValue();
+        List<Object> pkValueList = pkKeyValue.stream().map(KeyValueEntry::getValue).collect(Collectors.toList());
         args.addAll(pkValueList);
         String prepareSQL = UpdateStatement.buildPrepareSQL(entity);
-        jdbcTemplate.update(prepareSQL,args);
+        jdbcTemplate.update(prepareSQL,args.toArray());
     }
 
 

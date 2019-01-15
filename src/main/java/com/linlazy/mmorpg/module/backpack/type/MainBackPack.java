@@ -68,7 +68,7 @@
 //        this.backPack.stream()
 //                .map(Lattice::getItemDo)
 //                .map(ItemDo::convertItem)
-//                .forEachOrdered(item -> itemDao.addItem(item));
+//                .forEachOrdered(item -> itemDao.push(item));
 //    }
 //
 //    @Override
@@ -77,7 +77,7 @@
 //    }
 //    @Override
 //    protected void addLattice(Lattice spaceBackPackLattice) {
-//        itemDao.addItem(spaceBackPackLattice.getItemDo().convertItem());
+//        itemDao.push(spaceBackPackLattice.getItemDo().convertItem());
 //    }
 //
 //    @Override

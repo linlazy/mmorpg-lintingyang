@@ -1,21 +1,32 @@
-//package com.linlazy.mmorpg;
-//
-//import com.linlazy.mmorpg.module.dao.PlayerDAO;
-//import com.linlazy.mmorpg.utils.SpringContextUtil;
-//import org.junit.Test;
-//import org.springframework.context.ApplicationContext;
-//
-///**
-// * @author linlazy
-// */
-//public class DBTest {
-//
-//
-//    @Test
-//    public void contextLoads() {
-//        ApplicationContext applicationContext = SpringContextUtil.getApplicationContext();
-//        PlayerDAO playerDAO = applicationContext.getBean(PlayerDAO.class);
-//        PlayerEntity playerEntity = playerDAO.getPlayerEntityByUsername("linlazy");
-//        assert playerEntity != null;
-//    }
-//}
+package com.linlazy.mmorpg;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.junit4.SpringRunner;
+
+/**
+ * @author linlazy
+ */
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class DBTest {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Test
+    public void insert() {
+        jdbcTemplate.update("insert into player ( actorId , sceneId , profession , token , username , password , gold , level , hp , mp ) values(  ?  ,  ?  ,  ?  ,  ?  ,  ?  ,  ?  ,  ?  ,  ?  ,  ?  ,  ?  ) ",
+                4194306,0,0,0,0,0,0,0,0,0);
+    }
+
+    @Test
+    public void update() {
+        jdbcTemplate.update("update player  set sceneId= ? ,profession= ? ,token= ? ,username= ? ,password= ? ,gold= ? ,level= ? ,hp= ? ,mp= ?  where actorId =  ? ",
+                0,1,null,"username","password",0,0,0,0,4194308);
+    }
+}

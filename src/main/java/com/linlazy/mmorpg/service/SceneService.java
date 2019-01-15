@@ -4,9 +4,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 import com.linlazy.mmorpg.domain.*;
+import com.linlazy.mmorpg.dto.PlayerDTO;
 import com.linlazy.mmorpg.dto.SceneDTO;
 import com.linlazy.mmorpg.event.type.PlayerMoveSceneEvent;
 import com.linlazy.mmorpg.event.type.SceneMonsterDeadEvent;
+import com.linlazy.mmorpg.file.config.SceneConfig;
 import com.linlazy.mmorpg.file.service.SceneConfigService;
 import com.linlazy.mmorpg.module.common.event.ActorEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
@@ -33,7 +35,6 @@ public class SceneService {
      * 普通场景
      */
     private Map<Integer, Scene> sceneMap = new ConcurrentHashMap<>();
-    private Map<Long,Integer> playerSceneMap = new ConcurrentHashMap<>();
 
     @Autowired
     private PlayerService playerService;
@@ -53,23 +54,26 @@ public class SceneService {
     public Scene getScene(long actorId){
         Player player = playerService.getPlayer(actorId);
 
-        Integer sceneId = playerSceneMap.get(actorId);
 
-            if(globalConfigService.isCopy(sceneId)){
+            if(globalConfigService.isCopy(player.getSceneId())){
                 Copy copy = copyService.getCopy(player.getCopyId());
                 return copy;
             }else {
                 Scene scene = sceneMap.get(actorId);
                 if(scene == null){
                     scene = new Scene();
-                    scene.setSceneId(sceneId);
+                    scene.setSceneId(player.getSceneId());
+
+                    SceneConfig sceneConfig = sceneConfigService.getSceneConfig(player.getSceneId());
+                    scene.setSceneName(sceneConfig.getName());
+                    scene.setNeighborSet(sceneConfig.getNeighborSet());
 
                     //初始化怪物
-                    Set<Monster> monsterDoSet = monsterService.getMonsterBySceneId(sceneId);
+                    Set<Monster> monsterDoSet = monsterService.getMonsterBySceneId(player.getSceneId());
                     scene.setMonsterSet( monsterDoSet);
 
                     //初始化NPC
-                    Set<Npc> npcDoSet = npcService.getNPCDoBySceneId(sceneId);
+                    Set<Npc> npcDoSet = npcService.getNPCDoBySceneId(player.getSceneId());
                     scene.setNpcSet( npcDoSet);
 
                     //初始化玩家
@@ -77,10 +81,10 @@ public class SceneService {
                     scene.setPlayerSet(sameScenePlayerSet);
 
                     //初始化boss
-                    Set<Boss> bossSet = bossService.getBOSSBySceneId(sceneId);
+                    Set<Boss> bossSet = bossService.getBOSSBySceneId(player.getSceneId());
                     scene.setBossSet(bossSet);
 
-                    sceneMap.put(sceneId,scene);
+                    sceneMap.put(player.getSceneId(),scene);
                 }
                 return scene;
             }
@@ -173,9 +177,6 @@ public class SceneService {
         Player player = playerService.getPlayer(actorId);
 
         player.setSceneId(targetSceneId);
-        //原场景中移除玩家
-        playerSceneMap.remove(player.getActorId());
-        playerSceneMap.put(player.getActorId(),targetSceneId);
         return Result.success();
     }
 
@@ -185,6 +186,7 @@ public class SceneService {
      * @return
      */
     public Result<?> enter(long actorId) {
+
         Player player = playerService.getPlayer(actorId);
         Scene scene = getScene(actorId);
         scene.getPlayerSet().add(player);
@@ -194,16 +196,26 @@ public class SceneService {
             jsonObject.put("sceneId",scene.getSceneId());
             EventBusHolder.post(new ActorEvent<>(actorId, EventType.ENTER_COPY_SCENE));
         }
-        return Result.success(scene);
+        return Result.success(new SceneDTO(scene));
     }
 
+    /**
+     * aoi指令
+     * @param actorId
+     * @param jsonObject
+     * @return
+     */
     public Result<?> aoi(long actorId, JSONObject jsonObject) {
-        Integer sceneId = playerSceneMap.get(actorId);
-        Scene scene = sceneMap.get(sceneId);
+        Player player = playerService.getPlayer(actorId);
+        Scene scene = getScene(actorId);
         SceneDTO sceneDTO = new SceneDTO(scene);
         boolean closeOwn = jsonObject.getBooleanValue("closeOwn");
         if( closeOwn){
-            sceneDTO.getPlayerDTOSet().remove(actorId);
+            Set<PlayerDTO> playerSet = scene.getPlayerSet().stream()
+                    .filter(player1 -> player1.getActorId() != player.getActorId())
+                    .map(PlayerDTO::new)
+                    .collect(Collectors.toSet());
+            sceneDTO.setPlayerDTOSet(playerSet);
         }
         return Result.success(sceneDTO);
     }

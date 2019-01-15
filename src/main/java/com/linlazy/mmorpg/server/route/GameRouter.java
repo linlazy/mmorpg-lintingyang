@@ -1,6 +1,7 @@
 package com.linlazy.mmorpg.server.route;
 
 import com.alibaba.fastjson.JSONObject;
+import com.linlazy.mmorpg.handler.CmdHandler;
 import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.utils.SessionManager;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
@@ -8,7 +9,6 @@ import io.netty.channel.Channel;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Map;
 
 /**
  * 游戏路由类
@@ -19,14 +19,10 @@ public class GameRouter {
     public static Result<?> handleRoute(JSONObject jsonObject){
 
         //获取模块处理器
-        String moduleKey = jsonObject.getString("module");
-        Map<String, Object> moduleHandlers = SpringContextUtil.getApplicationContext().getBeansWithAnnotation(Module.class);
-        for(Object moduleHandler : moduleHandlers.values()){
-            Module module = moduleHandler.getClass().getAnnotation(Module.class);
+        CmdHandler cmdHandler = SpringContextUtil.getApplicationContext().getBean(CmdHandler.class);
 
-            if(module.value().equals(moduleKey)){
                 //获取处理方法
-                Method[] methods = moduleHandler.getClass().getMethods();
+                Method[] methods = cmdHandler.getClass().getMethods();
                 for(Method method :methods){
                     Cmd cmd = method.getAnnotation(Cmd.class);
                     if(cmd != null){
@@ -44,7 +40,7 @@ public class GameRouter {
                             }
 
                             try {
-                                return  (Result<?>) method.invoke(moduleHandler,jsonObject);
+                                return  (Result<?>) method.invoke(cmdHandler,jsonObject);
                             } catch (IllegalAccessException e) {
                                 e.printStackTrace();
                             } catch (InvocationTargetException e) {
@@ -53,8 +49,6 @@ public class GameRouter {
                         }
                     }
                 }
-            }
-        }
         return null;
     }
 }

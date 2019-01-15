@@ -34,6 +34,8 @@ public class ItemContext {
         if(superPositionUp == null){
             superPositionUp =1;
             this.setSuperPosition(false);
+        }else {
+            this.setSuperPosition(true);
         }
         this.setSuperPositionUp(superPositionUp);
     }

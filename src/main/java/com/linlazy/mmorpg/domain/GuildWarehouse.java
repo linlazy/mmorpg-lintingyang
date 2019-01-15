@@ -1,6 +1,10 @@
 package com.linlazy.mmorpg.domain;
 
+import com.linlazy.mmorpg.dao.GuildWarehouseDAO;
+import com.linlazy.mmorpg.entity.GuildWarehouseEntity;
 import com.linlazy.mmorpg.module.backpack.BackpackInterface;
+import com.linlazy.mmorpg.utils.SpringContextUtil;
+import lombok.Data;
 
 import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -9,6 +13,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * 公会仓库
  * @author linlazy
  */
+@Data
 public class GuildWarehouse extends Backpack implements BackpackInterface {
 
     /**
@@ -27,50 +32,34 @@ public class GuildWarehouse extends Backpack implements BackpackInterface {
 
     @Override
     public Lattice[] getBackPack() {
-        readWriteLock.readLock().lock();
-        try {
             return latticeArr;
-        }finally {
-            readWriteLock.readLock().unlock();
-        }
+
     }
 
-    public boolean addItem(List<ItemContext> itemContextList) {
-        readWriteLock.writeLock().lock();
-        try {
-            return true;
-        }finally {
-            readWriteLock.writeLock().unlock();
-        }
+
+    @Override
+    protected void addItem(Lattice lattice) {
+        GuildWarehouseDAO guildWarehouseDAO = SpringContextUtil.getApplicationContext().getBean(GuildWarehouseDAO.class);
+        GuildWarehouseEntity guildWarehouseEntity = new GuildWarehouseEntity();
+        guildWarehouseEntity.setGuildId(guildId);
+        guildWarehouseEntity.setCount(lattice.getItem().getCount());
+        guildWarehouseEntity.setItemId(lattice.getItem().getItemId());
+        guildWarehouseDAO.insertQueue(guildWarehouseEntity);
     }
 
-    public boolean consumeItem(List<ItemContext> itemContextList) {
-        readWriteLock.writeLock().lock();
-        try {
-            return true;
-        }finally {
-            readWriteLock.writeLock().unlock();
-        }
+    @Override
+    protected void updateItem(Lattice backPackLattice) {
+
+    }
+
+    @Override
+    public boolean pop(List<ItemContext> itemContextList) {
+        return true;
     }
 
     @Override
     public Lattice[] arrangeBackPack() {
-        readWriteLock.writeLock().lock();
-        try {
-
-            return latticeArr;
-        }finally {
-            readWriteLock.writeLock().unlock();
-        }
+        return latticeArr;
     }
 
-    @Override
-    public boolean moveItem() {
-        readWriteLock.writeLock().lock();
-        try {
-            return true;
-        }finally {
-            readWriteLock.writeLock().unlock();
-        }
-    }
 }

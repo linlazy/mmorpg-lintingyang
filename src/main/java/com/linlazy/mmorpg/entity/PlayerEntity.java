@@ -6,6 +6,7 @@ import com.linlazy.mmorpg.server.db.entity.Entity;
 import com.linlazy.mmorpg.utils.DateUtils;
 import lombok.Data;
 
+
 /**
  * @author linlazy
  */
@@ -58,12 +59,6 @@ public class PlayerEntity extends Entity {
      */
     @Cloumn
     private int level;
-
-    /**
-     * 状态
-     */
-    @Cloumn
-    private int status;
 
 
     /**

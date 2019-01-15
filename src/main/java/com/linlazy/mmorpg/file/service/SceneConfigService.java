@@ -3,12 +3,14 @@ package com.linlazy.mmorpg.file.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.linlazy.mmorpg.file.config.SceneConfig;
 import com.linlazy.mmorpg.server.common.ConfigFile;
 import com.linlazy.mmorpg.server.common.ConfigFileManager;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,7 +27,7 @@ public class SceneConfigService {
         sceneConfigFile =  ConfigFileManager.use("config_file/scene_config.json");
     }
 
-    private static Map<Integer,JSONObject> map = new HashMap<>();
+    private static Map<Integer,SceneConfig> map = new HashMap<>();
 
     private int initSceneId;
 
@@ -34,10 +36,16 @@ public class SceneConfigService {
         JSONArray jsonArray = sceneConfigFile.getJsonArray();
         for(int i = 0; i < jsonArray.size(); i++){
             JSONObject jsonObject = jsonArray.getJSONObject(i);
-            map.put(jsonObject.getInteger("sceneId"),jsonObject);
-            if(jsonObject.getBoolean("init")!= null){
-                initSceneId = jsonObject.getIntValue("sceneId");
-            }
+
+            Integer sceneId = jsonObject.getInteger("sceneId");
+            String name = jsonObject.getString("name");
+            List<Integer> neighborSet = jsonObject.getJSONArray("neighborSet").toJavaList(Integer.class);
+
+            SceneConfig sceneConfig = new SceneConfig();
+            sceneConfig.setSceneId(sceneId);
+            sceneConfig.setName(name);
+            sceneConfig.setNeighborSet(neighborSet);
+            map.put(sceneId,sceneConfig);
         }
     }
 
@@ -65,28 +73,23 @@ public class SceneConfigService {
      * @return
      */
     public boolean canMoveToTarget(int currentSceneId, int targetSceneId) {
-        JSONObject jsonObject = map.get(currentSceneId);
-        JSONArray neighborSet = jsonObject.getJSONArray("neighborSet");
-        for(int i = 0; i < neighborSet.size(); i ++){
-            if(neighborSet.getIntValue(i) == targetSceneId){
-                return true;
-            }
-        }
-        return false;
+        SceneConfig sceneConfig = map.get(currentSceneId);
+        return sceneConfig.getNeighborSet().stream()
+                .anyMatch(sceneId ->sceneId == targetSceneId);
     }
 
-
-    /**
-     * 获取副本配置
-     * @param sceneId
-     * @return
-     */
-    public JSONObject getCopyConfig(int sceneId) {
-        return map.get(sceneId);
-    }
 
 
     public boolean isCopyScene(int sceneId){
         return true;
+    }
+
+    /**
+     * 获取场景配置
+     * @param sceneId
+     * @return
+     */
+    public SceneConfig getSceneConfig(int sceneId) {
+        return map.get(sceneId);
     }
 }

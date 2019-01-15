@@ -36,6 +36,9 @@ public class Item {
      */
     private int count;
 
+    private String ext;
+
+
     private Item() {
     }
 
@@ -70,6 +73,17 @@ public class Item {
 
         return item;
     }
+
+    public ItemEntity convertItemEntity(){
+        ItemEntity item = new ItemEntity();
+
+        item.setItemId(itemId);
+        item.setCount(count);
+        item.setExt(ext);
+
+        return item;
+    }
+
 
 
     /**

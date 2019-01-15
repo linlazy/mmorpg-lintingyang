@@ -11,10 +11,23 @@
 			socket.onmessage = function(event){
 				var ta = document.getElementById('responseContent');
 				var json = JSON.parse(event.data);
-				console.log(json.code);
+				console.log(json.data);
 				ta.value += json.code + "\r\n";
-				if(json.data){
-					ta.value += json.data + "\r\n";
+				if(json.command == "aoi"){
+					ta.value +="场景名称："+  JSON.stringify(json.data.sceneName) + "\r\n";
+					ta.value +="相邻场景："+  JSON.stringify(json.data.neighborSet) + "\r\n";
+					ta.value +="玩家："+  JSON.stringify(json.data.playerDTOSet) + "\r\n";
+					ta.value +="小怪："+  JSON.stringify(json.data.monsterDTOSet) + "\r\n";
+					ta.value +="npc："+  JSON.stringify(json.data.npcDTOSet) + "\r\n";
+					ta.value +="boss："+  JSON.stringify(json.data.bossDTOSet) + "\r\n";
+				}
+
+				if(json.command == "getBackpackInfo"){
+					ta.value +="玩家背包信息："+  JSON.stringify(json.data) + "\r\n";
+				}
+
+				if(json.command == "itemInfo"){
+					ta.value +="游戏道具信息："+  JSON.stringify(json.data) + "\r\n";
 				}
 			};
 
@@ -45,7 +58,6 @@
 				if(arr[0] == "register"){
 
 					var json ={};
-					json.module = "user";
 					json.command = "register";
 					json.username = arr[1];
 					json.password = arr[2];
@@ -59,7 +71,6 @@
 				if(arr[0] == "login"){
 
 					var json ={};
-					json.module = "user";
 					json.command = "login";
 					json.username = arr[1];
 					json.password = arr[2];
@@ -69,15 +80,92 @@
 					ta.value += "正在登录..."+ "\r\n";
 				}
 
-				if(arr[0] == "entermap"){
+				if(arr[0] == "logout"){
 
 					var json ={};
-					json.module = "scene";
-					json.command = "enter";
+					json.command = "logout";
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "正在退出..."+ "\r\n";
+				}
+
+				if(arr[0] == "profession"){
+					var json ={};
+					json.command = "profession";
+					json.profession = arr[1];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "正在选择职业..."+ "\r\n";
+				}
+
+				if(arr[0] == "enterMap"){
+
+					var json ={};
+					json.command = "enterMap";
 					var jsonStr = JSON.stringify(json);
 					console.log(jsonStr);
 					socket.send(jsonStr);
 					ta.value += "正在进入场景..."+ "\r\n";
+				}
+
+				if(arr[0] == "aoi"){
+
+					var json ={};
+					json.command = "aoi";
+					if( arr[1]){
+						json.closeOwn =true;
+					}
+
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "aoi..."+ "\r\n";
+				}
+
+				if(arr[0] == "moveScene"){
+
+					var json ={};
+					json.command = "moveScene";
+					json.targetSceneId = arr[1];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "正在移动场景..."+ "\r\n";
+				}
+
+
+				if(arr[0] == "getBackpackInfo"){
+
+					var json ={};
+					json.command = "getBackpackInfo";
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "正在获取玩家背包信息..."+ "\r\n";
+				}
+
+				if(arr[0] == "itemInfo"){
+
+					var json ={};
+					json.command = "itemInfo";
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "正在获取游戏道具信息..."+ "\r\n";
+				}
+
+				if(arr[0] == "pushBackpack"){
+
+					var json ={};
+					json.command = "pushBackpack";
+					json.itemId = arr[1];
+					json.num = arr[2];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "正在放进玩家背包信息..."+ "\r\n";
 				}
 
 			}else{

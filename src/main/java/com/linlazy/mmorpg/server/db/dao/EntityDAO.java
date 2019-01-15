@@ -22,6 +22,7 @@ public abstract class EntityDAO<T extends Entity> extends BaseJdbc<T>{
     public void updateQueue(T entity){
         entity.setOperatorType(EntityOperatorType.UPDATE);
         entity.beforeWriteDB();
+        entity.init();
         //放进队列
         dbQueueManager.pushEntity(entity);
     }
@@ -33,6 +34,7 @@ public abstract class EntityDAO<T extends Entity> extends BaseJdbc<T>{
     public void insertQueue(T entity){
         entity.setOperatorType(EntityOperatorType.INSERT);
         entity.beforeWriteDB();
+        entity.init();
         //放进队列
         dbQueueManager.pushEntity(entity);
     }
@@ -44,6 +46,7 @@ public abstract class EntityDAO<T extends Entity> extends BaseJdbc<T>{
     public void deleteQueue(T entity){
         entity.setOperatorType(EntityOperatorType.INSERT);
         entity.beforeWriteDB();
+        entity.init();
         //放进队列
         dbQueueManager.pushEntity(entity);
     }

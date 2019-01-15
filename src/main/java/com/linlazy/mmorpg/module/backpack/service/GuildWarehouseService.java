@@ -6,17 +6,20 @@ import com.google.common.cache.LoadingCache;
 import com.linlazy.mmorpg.dao.GuildWarehouseDAO;
 import com.linlazy.mmorpg.domain.GuildWarehouse;
 import com.linlazy.mmorpg.domain.Item;
+import com.linlazy.mmorpg.domain.ItemContext;
 import com.linlazy.mmorpg.domain.Lattice;
 import com.linlazy.mmorpg.entity.GuildWarehouseEntity;
+import com.linlazy.mmorpg.server.common.GlobalConfigService;
+import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * 公会仓库服务类
@@ -26,6 +29,9 @@ import java.util.stream.Collectors;
 public class GuildWarehouseService {
 
     private static Logger logger = LoggerFactory.getLogger(PlayerBackpackService.class);
+
+    @Autowired
+    private PlayerBackpackService playerBackpackService;
 
     /**
      * 公会仓库缓存
@@ -41,15 +47,20 @@ public class GuildWarehouseService {
                     GuildWarehouse guildWarehouse = new GuildWarehouse(guildId);
 
                     GuildWarehouseDAO guildWarehouseDAO = SpringContextUtil.getApplicationContext().getBean(GuildWarehouseDAO.class);
+                    GlobalConfigService globalConfigService = SpringContextUtil.getApplicationContext().getBean(GlobalConfigService.class);
                     List<GuildWarehouseEntity> guildWarehouseEntitySet = guildWarehouseDAO.getGuildWarehouseEntity(guildId);
 
-                    Lattice[] latticeArr = new Lattice[globalConfigService.getMainPackageMaxLatticeNum()];
+                    Lattice[] latticeArr = new Lattice[globalConfigService.getGuildPackageMaxLatticeNum()];
 
-                    List<Lattice> latticeList = guildWarehouseEntitySet.stream()
+                    guildWarehouseEntitySet.stream()
                             .map(Item::new)
                             .map(Lattice::new)
-                            .collect(Collectors.toList());
-                    guildWarehouse.setLatticeList(latticeList);
+                            .forEach(
+                                    lattice -> {
+                                        latticeArr[lattice.getIndex()] = lattice;
+                                    }
+                            );
+                    guildWarehouse.setLatticeArr(latticeArr);
 
                     return guildWarehouse;
                 }
@@ -69,7 +80,56 @@ public class GuildWarehouseService {
             logger.error("{}",e);
         }
 
-
         return guildWarehouse;
+    }
+
+    /**
+     *  公会道具是否足够
+     * @param guildId 公会ID
+     * @param itemContext 取出的道具列表
+     * @return
+     */
+    public Result<?> isEnough(long guildId, List<ItemContext> itemContext){
+        GuildWarehouse guildWarehouse = getGuildWarehouse(guildId);
+        try{
+            guildWarehouse.getReadWriteLock().readLock().lock();
+            boolean notEnough = guildWarehouse.isNotEnough(itemContext);
+            if(notEnough){
+                return Result.valueOf("公会道具不足");
+            }
+        }finally {
+            guildWarehouse.getReadWriteLock().readLock().unlock();
+        }
+        return Result.success();
+    }
+
+    /**
+     *  玩家从公会仓库中取出道具
+     * @param guildId 公会ID
+     * @param actorId 玩家ID
+     * @param itemContextList 道具列表
+     * @return 取出结果
+     */
+    public Result<?> pop(long guildId,long actorId,List<ItemContext> itemContextList){
+
+        Result<?> enough = isEnough(guildId, itemContextList);
+        if(enough.isFail()){
+            return Result.valueOf(enough.getCode());
+        }
+
+        Result<?> full = playerBackpackService.isNotFull(actorId, itemContextList);
+        if(full.isFail()){
+            return Result.valueOf(full.getCode());
+        }
+
+        GuildWarehouse guildWarehouse = getGuildWarehouse(guildId);
+        try{
+            guildWarehouse.getReadWriteLock().writeLock().lock();
+            guildWarehouse.pop(itemContextList);
+        }finally {
+            guildWarehouse.getReadWriteLock().writeLock().unlock();
+        }
+
+        return playerBackpackService.push(actorId,itemContextList);
     }
 }

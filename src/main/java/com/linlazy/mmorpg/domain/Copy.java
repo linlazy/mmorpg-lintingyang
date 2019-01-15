@@ -1,11 +1,11 @@
 package com.linlazy.mmorpg.domain;
 
-import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpg.event.type.CopyFailEvent;
 import com.linlazy.mmorpg.event.type.CopyRefreshMonsterEvent;
+import com.linlazy.mmorpg.file.config.SceneConfig;
+import com.linlazy.mmorpg.file.service.SceneConfigService;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.common.reward.Reward;
-import com.linlazy.mmorpg.file.service.SceneConfigService;
 import com.linlazy.mmorpg.service.SceneService;
 import com.linlazy.mmorpg.service.SkillService;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
@@ -150,8 +150,8 @@ public class Copy extends Scene{
     public void startQuitCopyScheduled() {
         SceneConfigService sceneConfigService = SpringContextUtil.getApplicationContext().getBean(SceneConfigService.class);
 
-        JSONObject copyConfig = sceneConfigService.getCopyConfig(this.getSceneId());
-        int times = copyConfig.getIntValue("times");
+        SceneConfig sceneConfig = sceneConfigService.getSceneConfig(this.getSceneId());
+        int times = sceneConfig.getOverTimeSeconds();
         //到达时间后挑战结束,退出副本触发事件
         ScheduledFuture<?> schedule = scheduledExecutorService.schedule(() -> {
             EventBusHolder.post(new CopyFailEvent(this));
@@ -182,8 +182,9 @@ public class Copy extends Scene{
     public void quitQuit() {
         SceneConfigService sceneConfigService = SpringContextUtil.getApplicationContext().getBean(SceneConfigService.class);
         SceneService sceneService = SpringContextUtil.getApplicationContext().getBean(SceneService.class);
-        JSONObject copyConfig = sceneConfigService.getCopyConfig(this.getSceneId());
-        int targetSceneId = copyConfig.getJSONArray("neighborSet").getIntValue(0);
+        SceneConfig sceneConfig = sceneConfigService.getSceneConfig(this.getSceneId());
+
+        int targetSceneId = sceneConfig.getNeighborSet().get(0);
 
         //副本玩家移动到目标场景
         this.getPlayerCopyInfoMap().values().stream()

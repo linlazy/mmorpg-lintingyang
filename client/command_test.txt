@@ -4,3 +4,14 @@ register username password
 2 登录
 登录指令 用户名     密码
 login username password
+3 退出
+退出指令
+logout
+
+4 进入场景
+进入场景指令
+enterMap
+
+5 aoi
+aoi指令 不展示自己
+aoi closeOwn

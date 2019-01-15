@@ -28,9 +28,9 @@
 //     * @param actorId
 //     * @return
 //     */
-//    public Result<?> isFull(long actorId) {
+//    public Result<?> isNotFull(long actorId) {
 //        TeamDo actorTeamDo = teamManager.getActorTeamDo(actorId);
-//        if(actorTeamDo.isFull()){
+//        if(actorTeamDo.isNotFull()){
 //            return Result.valueOf("队伍人员已满");
 //        }
 //        return Result.success();

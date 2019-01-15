@@ -1,5 +1,6 @@
 package com.linlazy.mmorpg.entity;
 
+import com.linlazy.mmorpg.server.db.annotation.Table;
 import com.linlazy.mmorpg.server.db.entity.Entity;
 import lombok.Data;
 
@@ -7,6 +8,7 @@ import lombok.Data;
  * @author linlazy
  */
 @Data
+@Table("email")
 public class EmailEntity extends Entity {
 
     /**

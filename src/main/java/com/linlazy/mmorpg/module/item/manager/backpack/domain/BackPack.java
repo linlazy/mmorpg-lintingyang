@@ -83,22 +83,12 @@
 //        }
 //    }
 //
-//    public boolean isFull(JSONArray jsonArray){
-//        int needSpace = computeNeedSpace(jsonArray);
-//        int totalSpace = globalConfigService.getMainPackageMaxLatticeNum() -actorBackPack.size();
-//        return totalSpace < needSpace;
+//    public boolean isNotFull(JSONArray jsonArray){
+
 //    }
 //
 //    private int computeNeedSpace(JSONArray jsonArray) {
-//        int needSpace = 0;
-//        for(int i = 0; i < jsonArray.size(); i ++){
-//            JSONObject jsonObject = jsonArray.getJSONObject(i);
-//            long itemId = jsonObject.getLongValue("itemId");
-//            int num = jsonObject.getIntValue("num");
-//            needSpace +=computeItemNeedSpace(itemId,num);
-//        }
-//
-//        return needSpace;
+
 //    }
 //
 //    private int computeItemNeedSpace(long itemId, int num) {
@@ -280,7 +270,7 @@
 //        this.actorBackPack.stream()
 //                .map(BackPackLattice::getItemDo)
 //                .map(ItemDo::convertItem)
-//                .forEachOrdered(item -> itemDao.addItem(item));
+//                .forEachOrdered(item -> itemDao.push(item));
 //
 //        //返回数据
 //        List<BackPackLatticeDTO> backPackLatticeDTOList = actorBackPack.stream()
@@ -308,9 +298,9 @@
 //            long newItemId = ItemIdUtil.getNewItemId(maxOrderId + 1, spaceBackPackLattice.getIndex(), itemDo.getBaseItemId());
 //            itemDo.setItemId(newItemId);
 //            if(itemDo.getItemType() == ItemType.EQUIP){
-//                itemDao.addItem(new EquipDo(itemDo).convertItemDo().convertItem());
+//                itemDao.push(new EquipDo(itemDo).convertItemDo().convertItem());
 //            }else {
-//                itemDao.addItem(itemDo.convertItem());
+//                itemDao.push(itemDo.convertItem());
 //            }
 //
 //            itemDo.setCount(1);
@@ -389,7 +379,7 @@
 //            clonez.setCount(itemDo.getSuperPositionUp());
 //            spaceBackPackLattice.setItemDo(clonez);
 //            actorBackPack.add(spaceBackPackLattice);
-//            itemDao.addItem(spaceBackPackLattice.getItemDo().convertItem());
+//            itemDao.push(spaceBackPackLattice.getItemDo().convertItem());
 //            result.add(spaceBackPackLattice);
 //        }
 //
@@ -402,7 +392,7 @@
 //            clonez.setCount(remainCount);
 //            spaceBackPackLattice.setItemDo(clonez);
 //            actorBackPack.add(spaceBackPackLattice);
-//            itemDao.addItem(spaceBackPackLattice.getItemDo().convertItem());
+//            itemDao.push(spaceBackPackLattice.getItemDo().convertItem());
 //            result.add(spaceBackPackLattice);
 //        }
 //

@@ -10,11 +10,13 @@ import com.linlazy.mmorpg.template.skill.BaseSkillTemplate;
 import com.linlazy.mmorpg.utils.DateUtils;
 import com.linlazy.mmorpg.validator.SkillValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * 技能服务类
  * @author linlazy
  */
+@Component
 public class SkillService {
 
     @Autowired

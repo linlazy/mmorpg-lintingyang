@@ -22,6 +22,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 /**
@@ -53,6 +54,8 @@ public class PlayerService {
                     //todo
                     player.setActorId(actorId);
                     player.setMp(playerEntity.getMp());
+                    player.setName(playerEntity.getUsername());
+                    player.setHp(playerEntity.getHp());
 
                     return player;
                 }
@@ -128,6 +131,14 @@ public class PlayerService {
         SessionManager.bind(playerEntity.getActorId(),channel);
 
         EventBusHolder.post(new ActorEvent<>(playerEntity.getActorId(), EventType.LOGIN));
+
+        if(playerEntity.getProfession() == 0 ){
+            UserPushHelper.pushRegister(playerEntity.getActorId(),"请选择职业\n"+
+                    "输入profession 1，选择战士，高攻击，高防御\n"+
+                    "输入profession 2，选择牧师，携带治疗技能\n"+
+                    "输入profession 3，选择法师,携带群攻技能\n"+
+                    "输入profession 4，选择召唤师，携带召唤技能\n");
+        }
         return Result.success("登录成功");
     }
 
@@ -136,7 +147,7 @@ public class PlayerService {
         return Result.success("退出成功");
     }
 
-    public Result<?> register(String username, String password, String confirmPassword) {
+    public Result<?> register(String username, String password, String confirmPassword, Channel channel) {
         //参数校验
         if (StringUtils.isEmpty(username)){
             return Result.valueOf("用户名不能为空");
@@ -157,15 +168,19 @@ public class PlayerService {
 
         //注册
         playerEntity = new PlayerEntity();
+        AtomicLong maxActorId = playerDAO.getMaxActorId();
+        playerEntity.setActorId(maxActorId.incrementAndGet());
         playerEntity.setUsername(username);
         playerEntity.setPassword(password);
         playerDAO.insertQueue(playerEntity);
 
-        UserPushHelper.pushRegister(playerEntity.getActorId(),"请选择职业"+
-                "输入profession 1，选择战士，高攻击，高防御+" +
-                "输入profession 2，选择牧师，携带治疗技能"+
-                "输入profession 3，选择法师,携带群攻技能"+
-                "输入profession 4，选择召唤师，携带召唤技能");
+
+        SessionManager.bind(playerEntity.getActorId(),channel);
+        UserPushHelper.pushRegister(playerEntity.getActorId(),"请选择职业\n"+
+                "输入profession 1，选择战士，高攻击，高防御\n"+
+                "输入profession 2，选择牧师，携带治疗技能\n"+
+                "输入profession 3，选择法师,携带群攻技能\n"+
+                "输入profession 4，选择召唤师，携带召唤技能\n");
         return Result.success("注册成功");
     }
 

@@ -89,7 +89,7 @@ public class TeamService {
 //            return Result.valueOf("玩家不在线");
 //        }
 //        //人员已满
-//        Result<?> result = teamValidator.isFull(actorId);
+//        Result<?> result = teamValidator.isNotFull(actorId);
 //        if(result.isFail()){
 //            return Result.valueOf(result.getCode());
 //        }

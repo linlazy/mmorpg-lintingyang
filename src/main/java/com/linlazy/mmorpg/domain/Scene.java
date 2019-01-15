@@ -2,7 +2,9 @@ package com.linlazy.mmorpg.domain;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -21,6 +23,11 @@ public class Scene {
      * 场景名称
      */
     private String sceneName;
+
+    /**
+     * 相邻场景ID
+     */
+    private List<Integer> neighborSet = new ArrayList<>();
 
     /**
      * 场景玩家信息

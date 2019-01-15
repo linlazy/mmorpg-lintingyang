@@ -22,7 +22,7 @@ public class UpdateStatement {
         sql.append(entityInfo.getTableName() + " ");
 
         sql.append(" set ");
-        List<String> notNullOrdinaryColumnNameList = entity.getNotNullOrdinaryKeyValue().stream()
+        List<String> notNullOrdinaryColumnNameList = entity.getOrdinaryKeyValue().stream()
                 .map(KeyValueEntry::getKey).collect(Collectors.toList());
 
         for(int i = 0; i < notNullOrdinaryColumnNameList.size(); i ++){

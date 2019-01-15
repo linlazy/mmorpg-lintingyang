@@ -1,18 +1,23 @@
 package com.linlazy.mmorpg.handler;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
+import com.linlazy.mmorpg.domain.ItemContext;
+import com.linlazy.mmorpg.module.backpack.service.PlayerBackpackService;
 import com.linlazy.mmorpg.module.equip.service.EquipmentService;
-import com.linlazy.mmorpg.service.ShopService;
+import com.linlazy.mmorpg.module.item.manager.config.ItemConfigService;
 import com.linlazy.mmorpg.module.team.service.TeamService;
 import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.server.route.Cmd;
 import com.linlazy.mmorpg.service.*;
 import io.netty.channel.Channel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * @author linlazy
  */
+@Component
 public class CmdHandler {
 
 
@@ -172,7 +177,8 @@ public class CmdHandler {
         String username = jsonObject.getString("username");
         String password = jsonObject.getString("password");
         String confirmPassword = jsonObject.getString("confirm_password");
-        return playerService.register(username,password,confirmPassword);
+        Channel channel = jsonObject.getObject("channel",Channel.class);
+        return playerService.register(username,password,confirmPassword,channel);
     }
 
     /**
@@ -193,10 +199,10 @@ public class CmdHandler {
      * @param jsonObject
      * @return
      */
-    @Cmd(value ="selectProfession")
+    @Cmd(value ="profession")
     public Result<?> selectProfession(JSONObject jsonObject){
         long actorId = jsonObject.getLongValue("actorId");
-        int professionId = jsonObject.getIntValue("actorId");
+        int professionId = jsonObject.getIntValue("profession");
         return playerService.selectProfession(actorId,professionId);
     }
 
@@ -347,32 +353,81 @@ public class CmdHandler {
      * @param jsonObject
      * @return
      */
-    @Cmd("enter")
-    public Result<?> enter(JSONObject jsonObject){
+    @Cmd("enterMap")
+    public Result<?> enterMap(JSONObject jsonObject){
         long actorId = jsonObject.getLong("actorId");
         return sceneService.enter(actorId);
     }
 
-//    /**
-//     *  获取当前场景实体信息
-//     * @param jsonObject
-//     * @return
-//     */
-//    @Cmd("aoi")
-//    public Result<?> aoi(JSONObject jsonObject){
-//        long actorId = jsonObject.getLong("actorId");
-//        return sceneService.aoi(actorId,jsonObject);
-//    }
-
     /**
-     *  对话npc
+     *  获取当前场景实体信息
      * @param jsonObject
      * @return
      */
-    @Cmd("talk")
-    public Result<?> talk(JSONObject jsonObject){
+    @Cmd("aoi")
+    public Result<?> aoi(JSONObject jsonObject){
         long actorId = jsonObject.getLong("actorId");
-        int npcId = jsonObject.getIntValue("npcId");
-        return sceneService.talk(actorId,npcId,jsonObject);
+        return sceneService.aoi(actorId,jsonObject);
     }
+
+    /**
+     *  获取当前场景实体信息
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("moveScene")
+    public Result<?> moveScene(JSONObject jsonObject){
+        long actorId = jsonObject.getLong("actorId");
+        int targetSceneId = jsonObject.getIntValue("targetSceneId");
+        return sceneService.moveTo(actorId,targetSceneId);
+    }
+
+
+
+
+    @Autowired
+    private ItemConfigService itemConfigService;
+    /**
+     *  获取游戏道具信息
+     * @param jsonObject
+     * @return
+     */
+    @Cmd(value="itemInfo",auth = false)
+    public Result<?> itemInfo(JSONObject jsonObject){
+
+        return Result.success(itemConfigService.getAllItemConfig());
+    }
+
+
+    @Autowired
+    private PlayerBackpackService playerBackpackService;
+    /**
+     *  获取背包信息
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("getBackpackInfo")
+    public Result<?> getBackPackInfo(JSONObject jsonObject){
+        long actorId = jsonObject.getLong("actorId");
+        return playerBackpackService.getPlayerBackpackDTO(actorId);
+    }
+
+    /**
+     *  放进背包
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("pushBackpack")
+    public Result<?> pushBackpack(JSONObject jsonObject){
+        long actorId = jsonObject.getLong("actorId");
+
+        ItemContext itemContext = new ItemContext();
+
+        int baseItemId = jsonObject.getIntValue("itemId");
+        itemContext.setBaseItemId(baseItemId);
+        int num = jsonObject.getIntValue("num");
+        itemContext.setCount(num);
+        return playerBackpackService.push(actorId, Lists.newArrayList(itemContext));
+    }
+
 }
