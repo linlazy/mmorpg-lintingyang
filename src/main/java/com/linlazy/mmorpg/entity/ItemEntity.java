@@ -31,6 +31,10 @@ public class ItemEntity extends Entity {
     @Cloumn
     private String ext;
 
+    /**
+     * 道具类型
+     */
+    private int itemType;
 
     /**
      * 可折叠

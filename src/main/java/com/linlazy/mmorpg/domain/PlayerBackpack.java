@@ -16,7 +16,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class PlayerBackpack extends Backpack {
 
     private Logger logger = LoggerFactory.getLogger(PlayerBackpack.class);
-
     /**
      * 玩家ID
      */
@@ -36,11 +35,6 @@ public class PlayerBackpack extends Backpack {
     @Override
     protected Lattice[] initArrangeBackPack() {
         return new Lattice[globalConfigService.getMainPackageMaxLatticeNum()];
-    }
-
-    @Override
-    protected void refreshBackpack(Lattice[] latticeArr, Lattice[] arrangeBackPack) {
-
     }
 
     @Override

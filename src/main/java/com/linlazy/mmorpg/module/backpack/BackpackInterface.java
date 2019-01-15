@@ -1,5 +1,6 @@
 package com.linlazy.mmorpg.module.backpack;
 
+import com.linlazy.mmorpg.domain.Item;
 import com.linlazy.mmorpg.domain.ItemContext;
 import com.linlazy.mmorpg.domain.Lattice;
 
@@ -24,14 +25,14 @@ public interface BackpackInterface {
      * @param itemList 要放进背包的道具
      * @return 返回结果
      */
-    boolean push(List<ItemContext> itemList);
+    boolean push(List<Item> itemList);
 
     /**
      * 是否已满
      * @param itemList 要放进背包的道具
      * @return 放回结果
      */
-    boolean isFull(List<ItemContext> itemList);
+    boolean isFull(List<Item> itemList);
 
     /**
      * 是否足够
@@ -45,7 +46,7 @@ public interface BackpackInterface {
      * @param itemContextList
      * @return 放回取出结果
      */
-    boolean pop(List<ItemContext> itemContextList);
+    boolean pop(List<Item> itemContextList);
 
     /**
      * 整理背包

@@ -1,5 +1,8 @@
 package com.linlazy.mmorpg.domain;
 
+import com.linlazy.mmorpg.entity.ItemEntity;
+import com.linlazy.mmorpg.event.type.EquipDamageEvent;
+import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import lombok.Data;
 
 /**
@@ -12,6 +15,8 @@ public class Equip extends Item{
      * 道具标识
      */
     private long id;
+
+    private int equipType;
 
     /**
      * 等级
@@ -33,8 +38,26 @@ public class Equip extends Item{
      */
     private int defense;
 
+    /**
+     * 装备
+     */
+    private boolean isDress;
+
+
+    public Equip(ItemEntity entity) {
+        super(entity);
+    }
 
     public Equip(long itemId, int count) {
         super(itemId, count);
+    }
+
+
+    public void modifyDurability() {
+        durability--;
+        if(durability <= 0){
+            durability = 0;
+            EventBusHolder.post(new EquipDamageEvent(this));
+        }
     }
 }

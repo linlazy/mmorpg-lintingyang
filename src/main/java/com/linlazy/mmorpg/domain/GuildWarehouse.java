@@ -6,7 +6,6 @@ import com.linlazy.mmorpg.module.backpack.BackpackInterface;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import lombok.Data;
 
-import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
@@ -30,12 +29,6 @@ public class GuildWarehouse extends Backpack implements BackpackInterface {
      */
     private ReentrantReadWriteLock  readWriteLock= new ReentrantReadWriteLock();
 
-    @Override
-    public Lattice[] getBackPack() {
-            return latticeArr;
-
-    }
-
 
     @Override
     protected void addItem(Item item) {
@@ -57,20 +50,6 @@ public class GuildWarehouse extends Backpack implements BackpackInterface {
 
     }
 
-    @Override
-    public boolean pop(List<ItemContext> itemContextList) {
-        return true;
-    }
-
-    @Override
-    public Lattice[] arrangeBackPack() {
-        return latticeArr;
-    }
-
-    @Override
-    protected void refreshBackpack(Lattice[] latticeArr, Lattice[] arrangeBackPack) {
-
-    }
 
     @Override
     protected Lattice[] initArrangeBackPack() {

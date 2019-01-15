@@ -20,7 +20,7 @@ public abstract class Backpack implements BackpackInterface {
     protected Lattice[] latticeArr;
 
     @Override
-    public boolean isFull(List<ItemContext> itemList) {
+    public boolean isFull(List<Item> itemList) {
         int needSpace = computeNeedSpace(itemList);
         long count = Arrays.stream(latticeArr)
                 .filter(Objects::nonNull)
@@ -49,7 +49,7 @@ public abstract class Backpack implements BackpackInterface {
                 .reduce(0,(a,b) -> a + b);
     }
 
-    private int computeNeedSpace(List<ItemContext> itemList) {
+    private int computeNeedSpace(List<Item> itemList) {
         int needSpace = 0;
         for(int i = 0; i < itemList.size(); i ++){
             needSpace +=computeItemNeedSpace(itemList.get(i));
@@ -57,92 +57,92 @@ public abstract class Backpack implements BackpackInterface {
         return needSpace;
     }
 
-    private int computeItemNeedSpace(ItemContext itemContext) {
+    private int computeItemNeedSpace(Item item) {
         int needSpace = 0;
 
         int ableNum = Arrays.stream(latticeArr)
                 .filter(Objects::nonNull)
-                .filter(lattice -> ItemIdUtil.getBaseItemId(lattice.getItem().getItemId()) == itemContext.getBaseItemId())
+                .filter(lattice -> ItemIdUtil.getBaseItemId(lattice.getItem().getItemId()) == ItemIdUtil.getBaseItemId(item.getItemId()))
                 .map(lattice -> lattice.getItem().getSuperPositionUp() - lattice.getItem().getCount())
                 .reduce(0, (a, b) -> a + b);
         //新放入的道具直接放在已放置的位置已足够
-        if(ableNum >= itemContext.getCount()){
+        if(ableNum >= item.getCount()){
             return needSpace;
         }
 
-        needSpace =(itemContext.getCount() -ableNum)/itemContext.getSuperPositionUp();
-        if(needSpace * itemContext.getSuperPositionUp() <itemContext.getCount() -ableNum){
+        needSpace =(item.getCount() -ableNum)/item.getSuperPositionUp();
+        if(needSpace * item.getSuperPositionUp() <item.getCount() -ableNum){
             needSpace++;
         }
         return needSpace;
     }
     @Override
-    public boolean push(List<ItemContext> itemContextList) {
-        for(ItemContext itemContext: itemContextList){
+    public boolean push(List<Item> itemList) {
+        for(Item item: itemList){
             //放置折叠物品进背包
-            if(itemContext.isSuperPosition()){
-                pushSuperPositionBackPack(itemContext);
+            if(item.isSuperPosition()){
+                pushSuperPositionBackPack(item);
                 //放置非折叠物品进背包
             }else {
-                pushNonSuperPositionBackPack(itemContext);
+                pushNonSuperPositionBackPack(item);
             }
         }
         return true;
     }
 
-    private boolean pushNonSuperPositionBackPack(ItemContext itemContext) {
-        for(int i = 0; i < itemContext.getCount(); i ++){
+    private boolean pushNonSuperPositionBackPack(Item item) {
+        for(int i = 0; i < item.getCount(); i ++){
             Lattice spaceBackPackLattice = findSpaceBackPackLattice();
 
             int maxOrderId = Arrays.stream(latticeArr)
                     .filter(Objects::nonNull)
                     .map(Lattice::getItem)
-                    .filter(item -> ItemIdUtil.getBaseItemId(item.getItemId()) == itemContext.getBaseItemId())
-                    .map(item -> ItemIdUtil.getOrderId(item.getItemId()) )
+                    .filter(item1 -> ItemIdUtil.getBaseItemId(item1.getItemId()) == ItemIdUtil.getBaseItemId(item.getItemId()))
+                    .map(item1 -> ItemIdUtil.getOrderId(item1.getItemId()) )
                     .max(Integer::compareTo).orElse(0);
-            long newItemId = ItemIdUtil.getNewItemId(maxOrderId + 1, spaceBackPackLattice.getIndex(), itemContext.getBaseItemId());
-            Item item = new Item(newItemId,1);
-            spaceBackPackLattice.setItem(item);
+            long newItemId = ItemIdUtil.getNewItemId(maxOrderId + 1, spaceBackPackLattice.getIndex(), ItemIdUtil.getBaseItemId(item.getItemId()));
+            Item newItem = new Item(newItemId,1);
+            spaceBackPackLattice.setItem(newItem);
             latticeArr[spaceBackPackLattice.getIndex()] = spaceBackPackLattice;
-            addItem(item);
+            addItem(newItem);
         }
         return true;
     }
 
     protected abstract void addItem(Item item);
 
-    private boolean pushSuperPositionBackPack(ItemContext itemContext) {
+    private boolean pushSuperPositionBackPack(Item item) {
 
         List<Lattice> hasBaseItemIdLattice = Arrays.asList(latticeArr).stream()
                 .filter(Objects::nonNull)
-                .filter(lattice -> (ItemIdUtil.getBaseItemId(lattice.getItem().getItemId()) == itemContext.getBaseItemId()))
+                .filter(lattice -> (ItemIdUtil.getBaseItemId(lattice.getItem().getItemId()) == ItemIdUtil.getBaseItemId(item.getItemId())))
                 .collect(Collectors.toList());
 
-        int addItemNum = itemContext.getCount();
+        int addItemNum = item.getCount();
         //放进已有物品格子
         for(Lattice backPackLattice: hasBaseItemIdLattice){
             int count = backPackLattice.getItem().getCount();
 
             //未超过叠加数量
-            if(count + addItemNum <= itemContext.getSuperPositionUp()){
+            if(count + addItemNum <= item.getSuperPositionUp()){
                 backPackLattice.getItem().setCount(count + addItemNum);
                 updateItem(backPackLattice.getItem());
                 break;
             }
 
-            backPackLattice.getItem().setCount(itemContext.getSuperPositionUp());
+            backPackLattice.getItem().setCount(item.getSuperPositionUp());
             updateItem(backPackLattice.getItem());
-            addItemNum -= (itemContext.getSuperPositionUp() - count);
+            addItemNum -= (item.getSuperPositionUp() - count);
 
         }
 
         //放进空格子
-        int times = addItemNum /itemContext.getSuperPositionUp();
+        int times = addItemNum /item.getSuperPositionUp();
         for(int i =1 ; i<= times; i ++){
             Lattice spaceBackPackLattice = findSpaceBackPackLattice();
 
-            long newItemId = ItemIdUtil.getNewItemId(0,spaceBackPackLattice.getIndex(),itemContext.getBaseItemId());
-            int count = itemContext.getSuperPositionUp();
+            long newItemId = ItemIdUtil.getNewItemId(0,spaceBackPackLattice.getIndex(),ItemIdUtil.getBaseItemId(item.getItemId()));
+            int count = item.getSuperPositionUp();
             Item newItem = new Item(newItemId,count);
             spaceBackPackLattice.setItem(newItem);
             latticeArr[spaceBackPackLattice.getIndex()] = spaceBackPackLattice;
@@ -150,10 +150,10 @@ public abstract class Backpack implements BackpackInterface {
         }
 
         //还有剩余,再放置一格
-        int remainCount = addItemNum- itemContext.getSuperPositionUp() * times;
+        int remainCount = addItemNum- item.getSuperPositionUp() * times;
         if(remainCount > 0 ){
             Lattice spaceBackPackLattice = findSpaceBackPackLattice();
-            long newItemId = ItemIdUtil.getNewItemId(0,spaceBackPackLattice.getIndex(),itemContext.getBaseItemId());
+            long newItemId = ItemIdUtil.getNewItemId(0,spaceBackPackLattice.getIndex(),ItemIdUtil.getBaseItemId(item.getItemId()));
             int count = remainCount;
             Item newItem = new Item(newItemId,count);
             spaceBackPackLattice.setItem(newItem);
@@ -206,8 +206,6 @@ public abstract class Backpack implements BackpackInterface {
         return latticeArr;
     }
 
-    protected abstract void refreshBackpack(Lattice[] latticeArr, Lattice[] arrangeBackPack);
-
     protected abstract Lattice[] initArrangeBackPack();
 
 
@@ -250,32 +248,32 @@ public abstract class Backpack implements BackpackInterface {
     }
 
     @Override
-    public boolean pop(List<ItemContext> itemContextList) {
-        for(ItemContext itemContext: itemContextList){
-            if(itemContext.isSuperPosition()){
-                popSuperPositionFromBackPack(itemContext);
+    public boolean pop(List<Item> items) {
+        for(Item item: items){
+            if(item.isSuperPosition()){
+                popSuperPositionFromBackPack(item);
             }else {
-                popNonSuperPositionFromBackPack(itemContext);
+                popNonSuperPositionFromBackPack(item);
             }
         }
         return true;
     }
 
-    private void popNonSuperPositionFromBackPack(ItemContext itemContext) {
+    private void popNonSuperPositionFromBackPack(Item item) {
         for(Lattice backPackLattice: Arrays.asList(latticeArr)){
-            if(backPackLattice.getItem().getItemId() == itemContext.getItemId()){
+            if(backPackLattice.getItem().getItemId() == item.getItemId()){
                 latticeArr[backPackLattice.getIndex()] = null;
                 updateItem( backPackLattice.getItem());
             }
         }
     }
 
-    private void popSuperPositionFromBackPack(ItemContext itemContext) {
+    private void popSuperPositionFromBackPack(Item item) {
         List<Lattice> hasBaseItemIdBackPackLatticeList = Arrays.stream(latticeArr)
-                .filter(backPackLattice -> ItemIdUtil.getBaseItemId(backPackLattice.getItem().getItemId()) == itemContext.getBaseItemId())
+                .filter(backPackLattice -> ItemIdUtil.getBaseItemId(backPackLattice.getItem().getItemId()) == ItemIdUtil.getBaseItemId(backPackLattice.getItem().getItemId()))
                 .collect(Collectors.toList());
 
-        int consumeNum = itemContext.getCount();
+        int consumeNum = item.getCount();
         for(Lattice backPackLattice: hasBaseItemIdBackPackLatticeList){
             //当前格子满足消耗
             if(backPackLattice.getItem().getCount() > consumeNum){
@@ -294,5 +292,22 @@ public abstract class Backpack implements BackpackInterface {
     @Override
     public Lattice[] getBackPack() {
         return latticeArr;
+    }
+
+
+    private void refreshBackpack(Lattice[] latticeArr, Lattice[] arrangeBackPack) {
+        Arrays.stream(latticeArr)
+                .filter(Objects::nonNull)
+                .map(Lattice::getItem)
+                .forEach(item -> {
+                    deleteItem(item);
+                });
+
+        Arrays.stream(arrangeBackPack)
+                .filter(Objects::nonNull)
+                .map(Lattice::getItem)
+                .forEach(item -> {
+                    addItem(item);
+                });
     }
 }

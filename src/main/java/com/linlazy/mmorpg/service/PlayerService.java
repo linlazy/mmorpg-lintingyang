@@ -9,7 +9,7 @@ import com.linlazy.mmorpg.entity.PlayerEntity;
 import com.linlazy.mmorpg.module.common.event.ActorEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.common.event.EventType;
-import com.linlazy.mmorpg.push.UserPushHelper;
+import com.linlazy.mmorpg.push.PlayerPushHelper;
 import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.utils.SessionManager;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
@@ -112,19 +112,19 @@ public class PlayerService {
             SessionManager.unBind(channel);
             //新账号上线
             SessionManager.bind(playerEntity.getActorId(),channel);
-            UserPushHelper.pushLogin(playerEntity.getActorId(),"登录成功，原账号已下线");
+            PlayerPushHelper.pushLogin(playerEntity.getActorId(),"登录成功，原账号已下线");
         }
 
         //同一账号不同连接
         if(SessionManager.getChannel(playerEntity.getActorId()) != null &&
                 !SessionManager.getChannel(playerEntity.getActorId()).equals(channel)){
             //通知原账号被迫下线
-            UserPushHelper.pushLogin(playerEntity.getActorId(),"被迫下线");
+            PlayerPushHelper.pushLogin(playerEntity.getActorId(),"被迫下线");
             SessionManager.unBind(playerEntity.getActorId());
 
             //新账号上线
             SessionManager.bind(playerEntity.getActorId(),channel);
-            UserPushHelper.pushLogin(playerEntity.getActorId(),"登录成功，原账号已下线");
+            PlayerPushHelper.pushLogin(playerEntity.getActorId(),"登录成功，原账号已下线");
         }
 
         //正常登录
@@ -133,7 +133,7 @@ public class PlayerService {
         EventBusHolder.post(new ActorEvent<>(playerEntity.getActorId(), EventType.LOGIN));
 
         if(playerEntity.getProfession() == 0 ){
-            UserPushHelper.pushRegister(playerEntity.getActorId(),"请选择职业\n"+
+            PlayerPushHelper.pushRegister(playerEntity.getActorId(),"请选择职业\n"+
                     "输入profession 1，选择战士，高攻击，高防御\n"+
                     "输入profession 2，选择牧师，携带治疗技能\n"+
                     "输入profession 3，选择法师,携带群攻技能\n"+
@@ -176,7 +176,7 @@ public class PlayerService {
 
 
         SessionManager.bind(playerEntity.getActorId(),channel);
-        UserPushHelper.pushRegister(playerEntity.getActorId(),"请选择职业\n"+
+        PlayerPushHelper.pushRegister(playerEntity.getActorId(),"请选择职业\n"+
                 "输入profession 1，选择战士，高攻击，高防御\n"+
                 "输入profession 2，选择牧师，携带治疗技能\n"+
                 "输入profession 3，选择法师,携带群攻技能\n"+
