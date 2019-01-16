@@ -1,13 +1,15 @@
 package com.linlazy.mmorpg.module.team.service;
 
-import com.linlazy.mmorpg.constants.TeamOperationType;
 import com.linlazy.mmorpg.domain.Player;
 import com.linlazy.mmorpg.domain.PlayerTeamInfo;
 import com.linlazy.mmorpg.domain.Team;
+import com.linlazy.mmorpg.dto.TeamDTO;
 import com.linlazy.mmorpg.push.TeamPushHelper;
 import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.service.PlayerService;
 import com.linlazy.mmorpg.utils.SessionManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +23,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Component
 public class TeamService {
 
-
+    private Logger logger = LoggerFactory.getLogger(TeamService.class);
 
 
     @Autowired
@@ -42,7 +44,10 @@ public class TeamService {
     private AtomicLong maxTeamId = new AtomicLong();
 
 
-
+    public Team getTeamByactorId(long actorId){
+        Long teamId = playerTeamIdMap.get(actorId);
+        return teamMap.get(teamId);
+    }
 
     public Team getTeam(long teamId){
         return teamMap.get(teamId);
@@ -88,40 +93,48 @@ public class TeamService {
      * @return
      */
     public Result<?> inviteJoin(long actorId, long targetId) {
-
+        Player player = playerService.getPlayer(actorId);
         if(!SessionManager.isOnline(targetId)){
             return Result.valueOf("玩家不在线");
         }
         //人员已满
-        Result<?> result = isNotFull(actorId);
-        if(result.isFail()){
-            return Result.valueOf(result.getCode());
-        }
+//        Result<?> result = isNotFull(actorId);
+//        if(result.isFail()){
+//            return Result.valueOf(result.getCode());
+//        }
 
         //玩家已组队
-        result = notHasJoinedTeam(targetId);
+        Result<?> result = notHasJoinedTeam(targetId);
         if(result.isFail()){
             return Result.valueOf(result.getCode());
         }
 
-        TeamPushHelper.pushTeam(targetId,TeamOperationType.INVITE_JOIN);
+        TeamPushHelper.pushTeam(targetId,String.format("玩家【%s】邀请你加入队伍",player.getName()));
         return Result.success();
     }
-//
-//    /**
-//     * 同意加入
-//     * @param actorId
-//     * @param targetId
-//     * @return
-//     */
-//    public Result<?> acceptJoin(long actorId, long targetId) {
-//        //队伍已解散
-//        Result<?> disband = teamValidator.isDisband(targetId);
-//        if(disband.isFail()){
-//            return Result.valueOf(disband.getCode());
-//        }
-//        return teamManager.acceptJoinTeam(actorId,targetId);
-//    }
+
+    /**
+     * 同意加入
+     * @param actorId
+     * @param targetId
+     * @return
+     */
+    public Result<?> acceptJoin(long actorId, long targetId) {
+        Player player = playerService.getPlayer(actorId);
+
+
+        Long teamId = playerTeamIdMap.get(targetId);
+        if(teamId == null){
+            Team team = createTeam(targetId);
+            team.addPlayer(playerService.getPlayer(actorId));
+            playerTeamIdMap.put(actorId,team.getTeamId());
+        }
+
+        //推送通知对方
+        TeamPushHelper.pushTeam(targetId, String.format("玩家【%s】接受了你的队伍邀请",player.getName()));
+
+        return Result.success();
+    }
 //
 //    /**
 //     * 拒绝加入
@@ -183,10 +196,15 @@ public class TeamService {
      */
     public Result<?> notHasJoinedTeam(long actorId) {
         Long teamId = playerTeamIdMap.get(actorId) ;
-        if(teamId == null){
+        if(teamId != null){
             return Result.valueOf("玩家已组队");
         }
         return Result.success();
     }
 
+    public Result<?> teamInfo(long actorId) {
+        Team team = playerService.getPlayer(actorId).getTeam();
+
+        return Result.success(new TeamDTO(team).toString());
+    }
 }

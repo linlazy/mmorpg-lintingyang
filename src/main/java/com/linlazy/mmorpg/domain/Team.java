@@ -41,4 +41,8 @@ public class Team {
     public boolean hasJoinedTeam(long actorId) {
         return false;
     }
+
+    public void addPlayer(Player player) {
+        playerTeamInfoMap.put(player.getActorId(),new PlayerTeamInfo(player,teamId,false));
+    }
 }

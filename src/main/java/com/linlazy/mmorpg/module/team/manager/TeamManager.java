@@ -41,32 +41,7 @@
 //        return Result.success();
 //    }
 //
-//    /**
-//     * actorId同意加入targetId的队伍
-//     * @param actorId
-//     * @param targetId
-//     * @return
-//     */
-//    public Result<?> acceptJoinTeam(long actorId , long targetId){
-//
-//        TeamDo actorTeamDo = getActorTeamDo(actorId);
-//        actorTeamDo.getTeamIdSet().add(targetId);
-//
-//        TeamDo targetTeamDo = getActorTeamDo(targetId);
-//        Set<Long> teamIdSet = targetTeamDo.getTeamIdSet();
-//        if(teamIdSet.size() == 0){
-//            targetTeamDo.setCaptain(true);
-//        }
-//        teamIdSet.add(actorId);
-//        targetTeamDo.getInviteIdSet().remove(actorId);
-//
-//        //推送通知对方
-//        TeamPushHelper.pushTeam(targetId,TeamOperationType.ACCEPT_JOIN);
-//
-//        logger.debug("actorId:{},teamInfo:{}",actorId,actorTeamDo);
-//        logger.debug("actorId:{},teamInfo:{}",targetId,targetTeamDo);
-//        return Result.success();
-//    }
+
 //
 //    /**
 //     * actorId拒绝加入targetId的队伍

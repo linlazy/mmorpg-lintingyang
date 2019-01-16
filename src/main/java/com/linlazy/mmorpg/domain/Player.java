@@ -29,11 +29,6 @@ public class Player extends SceneEntity {
     private int profession;
 
     /**
-     * 血量
-     */
-    private int hp;
-
-    /**
      * 等级
      */
     private int level;
@@ -130,7 +125,7 @@ public class Player extends SceneEntity {
      */
     public Team getTeam() {
         TeamService teamService = SpringContextUtil.getApplicationContext().getBean(TeamService.class);
-        return teamService.getTeam(actorId);
+        return teamService.getTeamByactorId(actorId);
     }
 
     public PlayerBackpack getBackPack(){

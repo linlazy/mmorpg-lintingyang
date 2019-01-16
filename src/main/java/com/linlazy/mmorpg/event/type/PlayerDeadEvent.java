@@ -7,8 +7,11 @@ import lombok.Data;
  * @author linlazy
  */
 @Data
-public class PlayerDeadEvent extends PlayerEvent {
+public class PlayerDeadEvent  {
+
+    private Player player;
+
     public PlayerDeadEvent(Player player) {
-        super(player);
+        this.player = player;
     }
 }

@@ -1,13 +1,17 @@
 package com.linlazy.mmorpg.event.type;
 
 import com.linlazy.mmorpg.domain.Player;
+import lombok.Data;
 
 /**
  * @author linlazy
  */
-public class CopyPlayerDeadEvent extends PlayerDeadEvent{
+@Data
+public class CopyPlayerDeadEvent {
+
+    private Player player;
 
     public CopyPlayerDeadEvent(Player player) {
-        super(player);
+        this.player = player;
     }
 }

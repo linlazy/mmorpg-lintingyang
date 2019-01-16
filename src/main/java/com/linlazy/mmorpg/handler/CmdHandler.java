@@ -91,17 +91,29 @@ public class CmdHandler {
 //        return teamService.rejectJoin(actorId,targetId);
 //    }
 //
-//    /**
-//     * 同意加入
-//     * @param jsonObject
-//     * @return
-//     */
-//    @Cmd("acceptJoinTeam")
-//    public Result<?> acceptJoin(JSONObject jsonObject){
-//        long actorId = jsonObject.getLongValue("actorId");
-//        long targetId = jsonObject.getLongValue("targetId");
-//        return teamService.acceptJoin(actorId,targetId);
-//    }
+    /**
+     * 同意加入
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("acceptJoinTeam")
+    public Result<?> acceptJoin(JSONObject jsonObject){
+        long actorId = jsonObject.getLongValue("actorId");
+        long targetId = jsonObject.getLongValue("targetId");
+        return teamService.acceptJoin(actorId,targetId);
+    }
+
+
+    /**
+     * 同意加入
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("teamInfo")
+    public Result<?> teamInfo(JSONObject jsonObject){
+        long actorId = jsonObject.getLongValue("actorId");
+        return teamService.teamInfo(actorId);
+    }
 //
 //    /**
 //     *  任命队长

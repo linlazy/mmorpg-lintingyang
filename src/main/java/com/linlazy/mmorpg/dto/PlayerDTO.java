@@ -27,9 +27,6 @@ public class PlayerDTO {
 
     @Override
     public String toString() {
-        return "PlayerDTO{" +
-                "username='" + username + '\'' +
-                ", hp=" + hp +
-                '}';
+        return "玩家 【" + username + "】血量："+hp;
     }
 }

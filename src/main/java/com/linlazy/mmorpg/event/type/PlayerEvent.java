@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 public class PlayerEvent {
 
-    protected Player player;
+    private Player player;
 
     public PlayerEvent(Player player) {
         this.player = player;
