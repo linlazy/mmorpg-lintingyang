@@ -1,6 +1,8 @@
 package com.linlazy.mmorpg.domain;
 
+import com.linlazy.mmorpg.event.type.CopyPlayerDeadEvent;
 import com.linlazy.mmorpg.event.type.PlayerDeadEvent;
+import com.linlazy.mmorpg.file.service.SceneConfigService;
 import com.linlazy.mmorpg.module.backpack.service.PlayerBackpackService;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.equip.manager.domain.DressedEquip;
@@ -41,6 +43,12 @@ public class Player extends SceneEntity {
     @Override
     protected void triggerDeadEvent() {
         EventBusHolder.post(new PlayerDeadEvent(this));
+        SceneConfigService sceneConfigService = SpringContextUtil.getApplicationContext().getBean(SceneConfigService.class);
+        if(sceneConfigService.isCopyScene(this.sceneId)){
+            EventBusHolder.post(new CopyPlayerDeadEvent(this));
+        }
+
+
     }
 
     @Override

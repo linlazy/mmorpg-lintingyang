@@ -4,11 +4,10 @@ package com.linlazy.mmorpg.event.handler;
 import com.google.common.eventbus.Subscribe;
 import com.linlazy.mmorpg.domain.Player;
 import com.linlazy.mmorpg.event.GameEvenHandler;
-import com.linlazy.mmorpg.event.type.CopyPlayerDeadEvent;
 import com.linlazy.mmorpg.event.type.PlayerAttackEvent;
 import com.linlazy.mmorpg.event.type.PlayerDeadEvent;
-import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.file.service.SceneConfigService;
+import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.push.PlayerPushHelper;
 import com.linlazy.mmorpg.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,10 +50,10 @@ public class ActorEventHandler extends GameEvenHandler {
                     PlayerPushHelper.pushPlayerDead(deadPlayer.getActorId(),String.format("玩家【%s】已死亡",deadPlayer.getName()));
                 });
 
-        //如果是副本，触发副本玩家死亡事件
-        if(sceneConfigService.isCopyScene(deadPlayer.getSceneId())){
-            EventBusHolder.register(new CopyPlayerDeadEvent(deadPlayer));
-        }
+//        //如果是副本，触发副本玩家死亡事件
+//        if(sceneConfigService.isCopyScene(deadPlayer.getSceneId())){
+//            EventBusHolder.register(new CopyPlayerDeadEvent(deadPlayer));
+//        }
     }
 
     /**

@@ -124,7 +124,7 @@ public class CopyService {
 
         Copy copy = getCopy(playerCopyInfo.getCopyId());
         if(copy.isAllActorDead()){
-            EventBusHolder.post(new CopyFailEvent(copy));
+            copyFail(new CopyFailEvent(copy));
         }
     }
 
