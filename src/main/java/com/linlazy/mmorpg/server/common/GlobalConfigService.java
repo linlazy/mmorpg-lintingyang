@@ -94,4 +94,13 @@ public class GlobalConfigService {
         }
         return false;
     }
+
+    /**
+     * 获取队伍最大人数
+     * @return
+     */
+    public int getTeamMaxNum(){
+        return jsonObject.getIntValue("maxTeamNum");
+    }
+
 }

@@ -21,7 +21,7 @@ public class ChatDAO extends EntityDAO<ChatEntity> {
      * @return 返回相应频道上接受者的聊天信息
      */
     public List<ChatEntity> getReceiveChatSet(long receiver){
-        return jdbcTemplate.queryForList("select * from chat where receiver = #{receiver}",new  Object[]{receiver},ChatEntity.class);
+        return jdbcTemplate.queryForList("select * from chat where receiver = ?",new  Object[]{receiver},ChatEntity.class);
     }
 
     /**

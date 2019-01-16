@@ -6,6 +6,7 @@ import com.linlazy.mmorpg.file.config.SceneConfig;
 import com.linlazy.mmorpg.file.service.SceneConfigService;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.common.reward.Reward;
+import com.linlazy.mmorpg.push.CopyPushHelper;
 import com.linlazy.mmorpg.service.SceneService;
 import com.linlazy.mmorpg.service.SkillService;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
@@ -35,18 +36,8 @@ public class Copy extends Scene{
     /**
      * 当前bossID
      */
-    private int currentBossId;
+    private int currentBossIndex;
 
-    /**
-     * 副本Boss信息
-     */
-    private List<Boss> copyBoss= new CopyOnWriteArrayList<>();
-
-
-    /**
-     * 副本小怪信息
-     */
-    private Map<Long,Monster> copyMonsterInfoMap = new ConcurrentHashMap<>();
 
     /**
      * 副本玩家信息
@@ -104,7 +95,7 @@ public class Copy extends Scene{
      * @return
      */
     public boolean isFinalBossDead(){
-        return copyBoss.get(copyBoss.size()-1).getId() == currentBossId;
+        return bossList.size()-1 == currentBossIndex;
     }
 
     public List<Reward> getRewardList() {
@@ -117,7 +108,7 @@ public class Copy extends Scene{
     public void startMonsterAutoAttackScheduled() {
 
         //获取怪物
-        Collection<Monster> monsters =copyMonsterInfoMap.values();
+        Collection<Monster> monsters =monsterMap.values();
 
         //随机选择怪物攻击技能
         SkillService skillService = SpringContextUtil.getApplicationContext().getBean(SkillService.class);
@@ -155,6 +146,11 @@ public class Copy extends Scene{
         //到达时间后挑战结束,退出副本触发事件
         ScheduledFuture<?> schedule = scheduledExecutorService.schedule(() -> {
             EventBusHolder.post(new CopyFailEvent(this));
+            this.getPlayerCopyInfoMap().values().stream()
+                    .forEach(playerCopyInfo -> {
+                        CopyPushHelper.pushCopyFail( playerCopyInfo.getPlayer().getActorId(),"超时，挑战失败");
+                    });
+
             logger.debug("到达时间后，触发挑战失败事件");
         }, times, TimeUnit.SECONDS);
     }
@@ -164,16 +160,18 @@ public class Copy extends Scene{
      */
     public void startBossAutoAttackScheduled() {
         //获取BOSS
-        Boss boss = this.getCopyBoss().get(this.getCurrentBossId());
+        Boss boss = this.bossList.get(this.currentBossIndex);
 
         SkillService skillService = SpringContextUtil.getApplicationContext().getBean(SkillService.class);
         ScheduledFuture<?> scheduledFuture = scheduledExecutorService.scheduleAtFixedRate(() -> {
             //随机选择boss技能攻击
-            Skill skill = boss.getBossSkillInfo().randomSkill();
+            logger.error("startBossAutoAttackScheduled");
+
+            Skill skill = boss.randomSkill();
             skillService.attack(boss,skill);
         }, 0L, 5L, TimeUnit.SECONDS);
 
-        bossIdAutoAttackScheduleMap.put(boss.getId(),scheduledFuture);
+        bossIdAutoAttackScheduleMap.put(boss.getBossId(),scheduledFuture);
     }
 
     /**
@@ -201,5 +199,9 @@ public class Copy extends Scene{
         copyIdMonsterRefreshScheduleMap.values()
                 .forEach(scheduledFuture -> scheduledFuture.cancel(true));
 
+    }
+
+    public void initCopyPlayerInfo(Player player) {
+        playerCopyInfoMap.put(player.getActorId(),new PlayerCopyInfo(copyId,player));
     }
 }

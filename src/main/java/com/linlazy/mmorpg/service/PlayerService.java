@@ -3,6 +3,7 @@ package com.linlazy.mmorpg.service;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.linlazy.mmorpg.constants.SceneEntityType;
 import com.linlazy.mmorpg.dao.PlayerDAO;
 import com.linlazy.mmorpg.domain.Player;
 import com.linlazy.mmorpg.entity.PlayerEntity;
@@ -56,6 +57,7 @@ public class PlayerService {
                     player.setMp(playerEntity.getMp());
                     player.setName(playerEntity.getUsername());
                     player.setHp(playerEntity.getHp());
+                    player.setSceneEntityType(SceneEntityType.PLAYER);
 
                     return player;
                 }

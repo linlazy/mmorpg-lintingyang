@@ -25,7 +25,11 @@ public class PlayerDTO {
     }
 
 
-
-
-
+    @Override
+    public String toString() {
+        return "PlayerDTO{" +
+                "username='" + username + '\'' +
+                ", hp=" + hp +
+                '}';
+    }
 }

@@ -6,6 +6,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpg.file.config.SceneConfig;
 import com.linlazy.mmorpg.server.common.ConfigFile;
 import com.linlazy.mmorpg.server.common.ConfigFileManager;
+import com.linlazy.mmorpg.server.common.GlobalConfigService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -20,6 +22,8 @@ import java.util.Map;
 @Component
 public class SceneConfigService {
 
+    @Autowired
+    private GlobalConfigService globalConfigService;
 
     private static ConfigFile sceneConfigFile;
 
@@ -45,6 +49,7 @@ public class SceneConfigService {
             sceneConfig.setSceneId(sceneId);
             sceneConfig.setName(name);
             sceneConfig.setNeighborSet(neighborSet);
+            sceneConfig.setOverTimeSeconds(jsonObject.getIntValue("times"));
             map.put(sceneId,sceneConfig);
         }
     }
@@ -81,7 +86,7 @@ public class SceneConfigService {
 
 
     public boolean isCopyScene(int sceneId){
-        return true;
+        return globalConfigService.isCopy(sceneId);
     }
 
     /**

@@ -46,7 +46,7 @@ public class ActorEventHandler extends GameEvenHandler {
         //广播通知与死亡玩家 同场景玩家
         Set<Player> sameScenePlayerSet = playerService.getSameScenePlayerSet(deadPlayer.getActorId());
         sameScenePlayerSet.stream()
-                .filter(sameScenePlayer -> sameScenePlayer.getActorId() != deadPlayer.getActorId())
+//                .filter(sameScenePlayer -> sameScenePlayer.getActorId() != deadPlayer.getActorId())
                 .forEach(sameScenePlayer -> {
                     PlayerPushHelper.pushPlayerDead(deadPlayer.getActorId(),String.format("玩家【%s】已死亡",deadPlayer.getName()));
                 });

@@ -2,14 +2,16 @@ package com.linlazy.mmorpg.template.skill;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.linlazy.mmorpg.domain.Skill;
 import com.linlazy.mmorpg.domain.SceneEntity;
+import com.linlazy.mmorpg.domain.Skill;
 import com.linlazy.mmorpg.utils.DateUtils;
+import org.springframework.stereotype.Component;
 
 /**
  * 攻击力为A，具有B秒冷却时间
  * @author linlazy
  */
+@Component
 public  class SkillTemplate1 extends BaseSkillTemplate {
 
 

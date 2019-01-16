@@ -1,6 +1,7 @@
 package com.linlazy.mmorpg.push;
 
 import com.alibaba.fastjson.JSONObject;
+import com.linlazy.mmorpg.dto.PlayerDTO;
 import com.linlazy.mmorpg.server.common.PushHelper;
 
 import java.util.Map;
@@ -14,6 +15,13 @@ public class PlayerPushHelper {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("push","user");
         jsonObject.put("attrChange",changeAttr);
+        PushHelper.push(actorId,jsonObject);
+    }
+
+
+    public static void pushChange(long actorId, PlayerDTO playerDTO){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("code",playerDTO.toString());
         PushHelper.push(actorId,jsonObject);
     }
 

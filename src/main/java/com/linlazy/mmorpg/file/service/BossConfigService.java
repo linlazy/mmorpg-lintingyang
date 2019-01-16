@@ -3,6 +3,7 @@ package com.linlazy.mmorpg.file.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
 import com.linlazy.mmorpg.file.config.BossConfig;
 import com.linlazy.mmorpg.server.common.ConfigFile;
 import com.linlazy.mmorpg.server.common.ConfigFileManager;
@@ -50,8 +51,20 @@ public class BossConfigService {
 
                 Integer sceneId = sceneIds.getInteger(j);
                 sceneBossMap.computeIfAbsent(sceneId, k -> new ArrayList<>());
-//                List<JSONObject> jsonObjects = sceneBossMap.get(sceneId);
-//                jsonObjects.add(jsonObject);
+                List<BossConfig> bossConfigs = sceneBossMap.get(sceneId);
+
+                BossConfig bossConfig = new BossConfig();
+                int bossId = jsonObject.getIntValue("bossId");
+                String name = jsonObject.getString("name");
+                int attack = jsonObject.getIntValue("attack");
+                int hp = jsonObject.getIntValue("hp");
+                bossConfig.setBossId(bossId);
+                bossConfig.setHp(hp);
+                bossConfig.setName(name);
+                bossConfig.setAttack(attack);
+
+                bossConfigs.add(bossConfig);
+
             }
 
             //构建bossId映射
@@ -65,7 +78,11 @@ public class BossConfigService {
      * @return
      */
     public List<BossConfig> getBossConfigBySceneId(int sceneId){
-        return sceneBossMap.get(sceneId);
+        List<BossConfig> bossConfigs = sceneBossMap.get(sceneId);
+        if(bossConfigs == null){
+            bossConfigs = Lists.newArrayList();
+        }
+        return bossConfigs;
     }
 
     /**

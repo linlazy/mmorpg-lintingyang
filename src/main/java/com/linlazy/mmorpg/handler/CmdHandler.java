@@ -26,16 +26,6 @@ public class CmdHandler {
     @Autowired
     private EquipmentService equipmentService;
 
-    /**
-     * 进入副本
-     * @param jsonObject
-     * @return
-     */
-    @Cmd("enterCopy")
-    public Result<?> enterCopy(JSONObject jsonObject){
-        long actorId = jsonObject.getLongValue("actorId");
-        return copyService.enterCopy(actorId);
-    }
 
     /**
      * 卸载装备
@@ -77,17 +67,17 @@ public class CmdHandler {
     @Autowired
     private TeamService teamService;
 
-//    /**
-//     * 邀请加入
-//     * @param jsonObject
-//     * @return
-//     */
-//    @Cmd("inviteJoinTeam")
-//    public Result<?> inviteJoin(JSONObject jsonObject){
-//        long actorId = jsonObject.getLongValue("actorId");
-//        long targetId = jsonObject.getLongValue("targetId");
-//        return teamService.inviteJoin(actorId,targetId);
-//    }
+    /**
+     * 邀请加入
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("inviteJoinTeam")
+    public Result<?> inviteJoin(JSONObject jsonObject){
+        long actorId = jsonObject.getLongValue("actorId");
+        long targetId = jsonObject.getLongValue("targetId");
+        return teamService.inviteJoin(actorId,targetId);
+    }
 //
 //    /**
 //     * 拒绝邀请
@@ -421,13 +411,12 @@ public class CmdHandler {
     public Result<?> pushBackpack(JSONObject jsonObject){
         long actorId = jsonObject.getLong("actorId");
 
-        ItemContext itemContext = new ItemContext();
-
+        ItemContext item = new ItemContext();
         int baseItemId = jsonObject.getIntValue("itemId");
-        itemContext.setBaseItemId(baseItemId);
+        item.setBaseItemId(baseItemId);
         int num = jsonObject.getIntValue("num");
-        itemContext.setCount(num);
-        return playerBackpackService.push(actorId, Lists.newArrayList(itemContext));
+        item.setCount(num);
+        return playerBackpackService.push(actorId, Lists.newArrayList(item));
     }
 
 }

@@ -2,16 +2,14 @@ package com.linlazy.mmorpg.service;
 
 import com.google.common.eventbus.Subscribe;
 import com.linlazy.mmorpg.domain.*;
-import com.linlazy.mmorpg.event.type.CopyBossDeadEvent;
-import com.linlazy.mmorpg.event.type.CopyFailEvent;
-import com.linlazy.mmorpg.event.type.CopyPlayerDeadEvent;
-import com.linlazy.mmorpg.event.type.CopySuccessEvent;
+import com.linlazy.mmorpg.event.type.*;
+import com.linlazy.mmorpg.file.config.SceneConfig;
+import com.linlazy.mmorpg.file.service.SceneConfigService;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.common.reward.Reward;
 import com.linlazy.mmorpg.module.common.reward.RewardService;
-import com.linlazy.mmorpg.file.service.SceneConfigService;
 import com.linlazy.mmorpg.module.team.service.TeamService;
-import com.linlazy.mmorpg.server.common.Result;
+import com.linlazy.mmorpg.push.CopyPushHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +64,8 @@ public class CopyService {
     @Autowired
     private BossService bossService;
     @Autowired
+    private MonsterService monsterService;
+    @Autowired
     private SkillService skillService;
     @Autowired
     private RewardService rewardService;
@@ -76,6 +76,30 @@ public class CopyService {
     @PostConstruct
     public void init(){
         EventBusHolder.register(this);
+    }
+
+
+    @Subscribe
+    public void enterCopy(CopyEnterEvent copyEnterEvent) {
+        Player player =copyEnterEvent.getPlayer();
+        //如果玩家不在副本中
+        if(playerCopyIdMap.get(player.getActorId()) == null){
+            //创建副本
+            Copy copy = createCopy(player.getActorId());
+            copy.setSceneId(player.getSceneId());
+            //开启副本超时调度
+            copy.startQuitCopyScheduled();
+            //开启定时刷新小怪调度
+            copy.startRefreshMonsterScheduled();
+            //开启小怪定时攻击调度
+            copy.startMonsterAutoAttackScheduled();
+            //开启BOSS定时攻击调度
+            copy.startBossAutoAttackScheduled();
+
+        }
+
+        player.setCopyId(playerCopyIdMap.get(player.getActorId()));
+        CopyPushHelper.pushEnterSuccess(player.getActorId(),"进入副本成功");
     }
 
     /**
@@ -151,24 +175,6 @@ public class CopyService {
 
     //=======================================================================
 
-    public Result<?> enterCopy(long actorId) {
-        Player player = playerService.getPlayer(actorId);
-        //如果玩家不在副本中
-        if(playerCopyIdMap.get(actorId) == null){
-            //创建副本
-            Copy copy = createCopy(actorId);
-            //开启副本超时调度
-            copy.startQuitCopyScheduled();
-            //开启定时刷新小怪调度
-            copy.startRefreshMonsterScheduled();
-            //开启小怪定时攻击调度
-            copy.startMonsterAutoAttackScheduled();
-            //开启BOSS定时攻击调度
-            copy.startBossAutoAttackScheduled();
-
-        }
-        return Result.success(String.format("进入副本成功"));
-    }
 
     /**
      * 创建副本
@@ -180,20 +186,34 @@ public class CopyService {
         Copy copy = new Copy();
         //初始化副本ID
         copy.setCopyId(maxCopyId.incrementAndGet());
+        SceneConfig sceneConfig = sceneConfigService.getSceneConfig(player.getSceneId());
+        copy.setSceneId(sceneConfig.getSceneId());
+        copy.setSceneName(sceneConfig.getName());
         //初始化副本boss信息
-        List<Boss> copyBoss = bossService.createCopyBoss(player.getSceneId());
-        copy.setCopyBoss(copyBoss);
+        List<Boss> copyBoss = bossService.getBOSSBySceneId(player.getSceneId());
+        copyBoss.forEach(
+                boss -> boss.setCopyId(copy.getCopyId())
+        );
+        copy.setBossList(copyBoss);
+        //初始化副本小怪信息信息
+        Map<Integer, Monster> monsterMap= monsterService.getMonsterBySceneId(player.getSceneId());
+        copy.setMonsterMap(monsterMap);
         //初始化副本玩家信息
+
         Team team = teamService.getTeam(actorId);
-        copy.initCopyPlayerInfo(team);
+        if(team != null){
+            copy.initCopyPlayerInfo(team);
+            team.getPlayerTeamInfoMap().values().forEach(playerTeamInfo -> {
+                long actorId1 = playerTeamInfo.getPlayer().getActorId();
+                playerCopyIdMap.put(actorId1,maxCopyId.get());
+            });
+        }else {
+            copy.initCopyPlayerInfo(player);
+            playerCopyIdMap.put(player.getActorId(),maxCopyId.get());
+        }
 
-        team.getPlayerTeamInfoMap().values().forEach(playerTeamInfo -> {
-            long actorId1 = playerTeamInfo.getPlayer().getActorId();
-            playerCopyIdMap.put(actorId1,maxCopyId.get());
-        });
 
-
-
+        copyIdCopyMap.put(copy.getCopyId(),copy);
         return copy;
     }
 

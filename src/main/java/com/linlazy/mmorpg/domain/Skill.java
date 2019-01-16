@@ -18,6 +18,12 @@ public class Skill {
      */
     private int skillId;
 
+
+    /**
+     * 技能名称
+     */
+    private String name;
+
     /**
      * 技能类型
      */

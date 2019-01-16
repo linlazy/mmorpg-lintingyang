@@ -1,6 +1,10 @@
 package com.linlazy.mmorpg.domain;
 
+import com.linlazy.mmorpg.utils.RandomUtils;
 import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * BOSS
@@ -8,12 +12,6 @@ import lombok.Data;
  */
 @Data
 public class Boss extends SceneEntity {
-
-    /**
-     * boss标识
-     */
-    private long id;
-
 
     /**
      * 场景ID
@@ -40,7 +38,14 @@ public class Boss extends SceneEntity {
      */
     private String name;
 
-    private BossSkillInfo bossSkillInfo;
+    /**
+     * boss技能列表
+     */
+    private List<Skill> skillList = new ArrayList<>();
+
+    public Skill randomSkill(){
+        return RandomUtils.randomElement(skillList);
+    }
 
     @Override
     protected int computeDefense() {

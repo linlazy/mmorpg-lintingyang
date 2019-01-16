@@ -53,7 +53,9 @@ public abstract class BaseSkillTemplate {
             // 获取 预选受攻击,恢复对象
             Set<SceneEntity> allSceneEntity = sceneService.getAllSceneEntity(sceneEntity);
             Set<SceneEntity> sceneEntitySet = selectAttackedSceneEntity(sceneEntity,skill, allSceneEntity);
-//            useSkill(sceneEntity,skill,sceneEntitySet);
+            for(SceneEntity targetSceneEntity: sceneEntitySet){
+                targetSceneEntity.attacked(sceneEntity.computeAttack());
+            }
         }
 
     }

@@ -3,6 +3,7 @@
     "skillId":1,
     "name": "回风拂柳",
     "type": 1,
+    "bossIds": [],
     "professionId": 1,
     "skillTemplateId": 1,
     "skillTemplateArgs": {
@@ -14,6 +15,7 @@
     "skillId": 2,
     "name": "回春术",
     "type": 1,
+    "bossIds": [],
     "skillTemplateId": 2,
     "professionId": 2,
     "skillTemplateArgs": {
@@ -26,6 +28,7 @@
     "skillId": 3,
     "name": "剑荡八荒",
     "type": 1,
+    "bossIds": [],
     "skillTemplateId": 3,
     "professionId": 3,
     "skillTemplateArgs": {
@@ -39,6 +42,7 @@
     "skillId": 4,
     "name": "深渊召唤",
     "type": 1,
+    "bossIds": [],
     "skillTemplateId": 4,
     "professionId": 4,
     "skillTemplateArgs": {
@@ -51,6 +55,7 @@
     "skillId": 5,
     "name": "嘲讽",
     "type": 1,
+    "bossIds": [],
     "skillTemplateId": 5,
     "professionId": 1,
     "skillTemplateArgs": {
@@ -63,6 +68,7 @@
     "skillId": 6,
     "name": "连心刺",
     "type": 2,
+    "bossIds": [],
     "skillTemplateId": 6,
     "skillTemplateArgs": {
       "attack":56,
@@ -73,7 +79,7 @@
     "skillId": 7,
     "name": "全垒打",
     "type": 3,
-    "bossId": 2,
+    "bossIds": [1],
     "skillTemplateId": 7,
     "skillTemplateArgs": {
       "attack":56
@@ -83,7 +89,7 @@
     "skillId": 8,
     "name": "夺命冰",
     "type": 3,
-    "bossId": 1,
+    "bossIds": [2],
     "skillTemplateId": 8,
     "skillTemplateArgs": {
       "decreaseHP":50,

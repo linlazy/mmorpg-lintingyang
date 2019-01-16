@@ -3,12 +3,15 @@ package com.linlazy.mmorpg.file.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.linlazy.mmorpg.file.config.SkillConfig;
 import com.linlazy.mmorpg.server.common.ConfigFile;
 import com.linlazy.mmorpg.server.common.ConfigFileManager;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,15 +30,41 @@ public class SkillConfigService {
     /**
      * 构建技能ID与配置映射
      */
-    private static final Map<Integer,JSONObject> SKILL_ID_MAP = new HashMap<>();
+    private static final Map<Integer,SkillConfig> SKILL_ID_MAP = new HashMap<>();
+
+    /**
+     * bossID 与技能映射
+     */
+    private static final Map<Long, List<SkillConfig>> bossIdSkillMap = new HashMap<>();
 
     @PostConstruct
     public void init(){
         JSONArray jsonArray = skillConfigFile.getJsonArray();
         for(int i =0; i < jsonArray.size(); i++){
+
             JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+            SkillConfig skillConfig = new SkillConfig();
             int skillId = jsonObject.getIntValue("skillId");
-            SKILL_ID_MAP.putIfAbsent(skillId, jsonObject);
+            String name = jsonObject.getString("name");
+            int skillTemplateId = jsonObject.getIntValue("skillTemplateId");
+            JSONObject skillTemplateArgs = jsonObject.getJSONObject("skillTemplateArgs");
+            List<Long> bossIds = jsonObject.getJSONArray("bossIds").toJavaList(Long.class);
+
+            skillConfig.setSkillId(skillId);
+            skillConfig.setName(name);
+            skillConfig.setSkillTemplateId(skillTemplateId);
+            skillConfig.setSkillTemplateArgs(skillTemplateArgs);
+            skillConfig.setBossIds(bossIds);
+
+            SKILL_ID_MAP.putIfAbsent(skillId, skillConfig);
+
+            // 构建bossID 与技能映射
+            for(Long bossId: bossIds){
+                bossIdSkillMap.computeIfAbsent(bossId, k -> new ArrayList<>());
+                List<SkillConfig> skillConfigList = bossIdSkillMap.get(bossId);
+                skillConfigList.add(skillConfig);
+            }
         }
     }
 
@@ -47,7 +76,16 @@ public class SkillConfigService {
         return skillConfigFile.getJsonArray();
     }
 
-    public JSONObject getSkillConfig(int skillId) {
+    public SkillConfig getSkillConfig(int skillId) {
         return SKILL_ID_MAP.get(skillId);
+    }
+
+    /**
+     * boss技能
+     * @param bossId boss标识
+     * @return
+     */
+    public List<SkillConfig> getBossSkillConfigList(long bossId){
+        return bossIdSkillMap.get(bossId);
     }
 }

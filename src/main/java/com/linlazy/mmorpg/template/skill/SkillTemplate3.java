@@ -2,11 +2,11 @@ package com.linlazy.mmorpg.template.skill;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.linlazy.mmorpg.domain.*;
 import com.linlazy.mmorpg.constants.SceneEntityType;
-import com.linlazy.mmorpg.domain.SceneEntity;
+import com.linlazy.mmorpg.domain.*;
 import com.linlazy.mmorpg.service.SceneService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
  * 攻击力为A,造成可以攻击B人，具有C秒冷却时间,消耗D点MP
  * @author linlazy
  */
+@Component
 public  class SkillTemplate3 extends BaseSkillTemplate {
 
 
@@ -71,8 +72,8 @@ public  class SkillTemplate3 extends BaseSkillTemplate {
                 attackedSceneEntitySet.addAll(result);
             }else {
 
-                Collection<Monster> monsters = copy.getCopyMonsterInfoMap().values();
-                Boss boss = copy.getCopyBoss().get(copy.getCurrentBossId());
+                Collection<Monster> monsters = copy.getMonsterMap().values();
+                Boss boss = copy.getBossList().get(copy.getCurrentBossIndex());
                 attackedSceneEntitySet.add(boss);
 
                 if(attackNum > 1){

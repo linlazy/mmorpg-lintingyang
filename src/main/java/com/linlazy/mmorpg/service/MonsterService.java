@@ -6,9 +6,9 @@ import com.linlazy.mmorpg.file.service.MonsterConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 /**
  * @author linlazy
@@ -19,13 +19,14 @@ public class MonsterService {
     @Autowired
     private MonsterConfigService monsterConfigService;
 
+
     /**
      * 获取场景怪物
      * @return
      * @param sceneId
      */
-    public Set<Monster> getMonsterBySceneId(int sceneId){
-        Set<Monster> monsterSet = new HashSet<>();
+    public  Map<Integer,Monster> getMonsterBySceneId(int sceneId){
+        Map<Integer,Monster> monsterMap = new HashMap<>();
 
         List<JSONObject>  sceneMonsterConfigs= monsterConfigService.getMonsterBySceneId(sceneId);
         for(int i = 0; i < sceneMonsterConfigs.size(); i++){
@@ -39,10 +40,10 @@ public class MonsterService {
             monster.setSceneId(sceneId);
             monster.setHp(hp);
 
-            monsterSet.add(monster);
+            monsterMap.put(monster.getMonsterId(),monster);
         }
 
-        return monsterSet;
+        return monsterMap;
     }
 
 

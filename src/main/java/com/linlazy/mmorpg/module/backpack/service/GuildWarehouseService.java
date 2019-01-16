@@ -86,14 +86,14 @@ public class GuildWarehouseService {
     /**
      *  公会道具是否足够
      * @param guildId 公会ID
-     * @param itemContext 取出的道具列表
+     * @param itemList 取出的道具列表
      * @return
      */
-    public Result<?> isEnough(long guildId, List<ItemContext> itemContext){
+    public Result<?> isEnough(long guildId, List<ItemContext> itemList){
         GuildWarehouse guildWarehouse = getGuildWarehouse(guildId);
         try{
             guildWarehouse.getReadWriteLock().readLock().lock();
-            boolean notEnough = guildWarehouse.isNotEnough(itemContext);
+            boolean notEnough = guildWarehouse.isNotEnough(itemList);
             if(notEnough){
                 return Result.valueOf("公会道具不足");
             }
@@ -107,17 +107,17 @@ public class GuildWarehouseService {
      *  玩家从公会仓库中取出道具
      * @param guildId 公会ID
      * @param actorId 玩家ID
-     * @param itemContextList 道具列表
+     * @param itemList 道具列表
      * @return 取出结果
      */
-    public Result<?> pop(long guildId,long actorId,List<ItemContext> itemContextList){
+    public Result<?> pop(long guildId,long actorId,List<ItemContext> itemList){
 
-        Result<?> enough = isEnough(guildId, itemContextList);
+        Result<?> enough = isEnough(guildId, itemList);
         if(enough.isFail()){
             return Result.valueOf(enough.getCode());
         }
 
-        Result<?> full = playerBackpackService.isNotFull(actorId, itemContextList);
+        Result<?> full = playerBackpackService.isNotFull(actorId, itemList);
         if(full.isFail()){
             return Result.valueOf(full.getCode());
         }
@@ -125,11 +125,11 @@ public class GuildWarehouseService {
         GuildWarehouse guildWarehouse = getGuildWarehouse(guildId);
         try{
             guildWarehouse.getReadWriteLock().writeLock().lock();
-            guildWarehouse.pop(itemContextList);
+            guildWarehouse.pop(itemList);
         }finally {
             guildWarehouse.getReadWriteLock().writeLock().unlock();
         }
 
-        return playerBackpackService.push(actorId,itemContextList);
+        return playerBackpackService.push(actorId,itemList);
     }
 }

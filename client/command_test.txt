@@ -15,3 +15,8 @@ enterMap
 5 aoi
 aoi指令 不展示自己
 aoi closeOwn
+
+
+6 邀请入队
+邀请指令           玩家ID
+inviteJoinTeam 4194308

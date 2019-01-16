@@ -39,7 +39,7 @@ public class Item {
     private String ext;
 
 
-    private Item() {
+    public Item() {
     }
 
 
@@ -62,6 +62,12 @@ public class Item {
         this.superPositionUp = guildWarehouseEntity.getSuperPositionUp();
         this.count = guildWarehouseEntity.getCount();
     }
+
+    public Item(int baseItemId) {
+        this.itemId =baseItemId;
+        initConfig(baseItemId);
+    }
+
 
     public Item clonez(){
         Item item = new Item();

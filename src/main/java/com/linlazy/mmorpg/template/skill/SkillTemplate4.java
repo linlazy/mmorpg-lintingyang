@@ -2,16 +2,18 @@ package com.linlazy.mmorpg.template.skill;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.linlazy.mmorpg.domain.Skill;
 import com.linlazy.mmorpg.domain.SceneEntity;
+import com.linlazy.mmorpg.domain.Skill;
 import com.linlazy.mmorpg.service.CallService;
 import com.linlazy.mmorpg.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * 召唤召唤师协助作战,持续时间A秒，具有B秒冷却时间,消耗C点MP
  * @author linlazy
  */
+@Component
 public  class SkillTemplate4 extends BaseSkillTemplate {
 
     @Autowired

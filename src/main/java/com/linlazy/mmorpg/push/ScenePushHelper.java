@@ -22,4 +22,10 @@ public class ScenePushHelper {
         jsonObject.put("sceneEntity-damage",data);
         PushHelper.push(actorId,jsonObject);
     }
+
+    public static void pushEnterScene(long actorId, String message) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("code",message);
+        PushHelper.push(actorId,jsonObject);
+    }
 }

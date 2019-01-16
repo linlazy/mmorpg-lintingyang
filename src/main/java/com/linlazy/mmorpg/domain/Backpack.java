@@ -20,7 +20,7 @@ public abstract class Backpack implements BackpackInterface {
     protected Lattice[] latticeArr;
 
     @Override
-    public boolean isFull(List<Item> itemList) {
+    public boolean isFull(List<ItemContext> itemList) {
         int needSpace = computeNeedSpace(itemList);
         long count = Arrays.stream(latticeArr)
                 .filter(Objects::nonNull)
@@ -49,7 +49,7 @@ public abstract class Backpack implements BackpackInterface {
                 .reduce(0,(a,b) -> a + b);
     }
 
-    private int computeNeedSpace(List<Item> itemList) {
+    private int computeNeedSpace(List<ItemContext> itemList) {
         int needSpace = 0;
         for(int i = 0; i < itemList.size(); i ++){
             needSpace +=computeItemNeedSpace(itemList.get(i));
@@ -57,7 +57,7 @@ public abstract class Backpack implements BackpackInterface {
         return needSpace;
     }
 
-    private int computeItemNeedSpace(Item item) {
+    private int computeItemNeedSpace(ItemContext item) {
         int needSpace = 0;
 
         int ableNum = Arrays.stream(latticeArr)
@@ -77,8 +77,8 @@ public abstract class Backpack implements BackpackInterface {
         return needSpace;
     }
     @Override
-    public boolean push(List<Item> itemList) {
-        for(Item item: itemList){
+    public boolean push(List<ItemContext> itemList) {
+        for(ItemContext item: itemList){
             //放置折叠物品进背包
             if(item.isSuperPosition()){
                 pushSuperPositionBackPack(item);
@@ -90,7 +90,7 @@ public abstract class Backpack implements BackpackInterface {
         return true;
     }
 
-    private boolean pushNonSuperPositionBackPack(Item item) {
+    private boolean pushNonSuperPositionBackPack(ItemContext item) {
         for(int i = 0; i < item.getCount(); i ++){
             Lattice spaceBackPackLattice = findSpaceBackPackLattice();
 
@@ -111,7 +111,7 @@ public abstract class Backpack implements BackpackInterface {
 
     protected abstract void addItem(Item item);
 
-    private boolean pushSuperPositionBackPack(Item item) {
+    private boolean pushSuperPositionBackPack(ItemContext item) {
 
         List<Lattice> hasBaseItemIdLattice = Arrays.asList(latticeArr).stream()
                 .filter(Objects::nonNull)
@@ -248,8 +248,8 @@ public abstract class Backpack implements BackpackInterface {
     }
 
     @Override
-    public boolean pop(List<Item> items) {
-        for(Item item: items){
+    public boolean pop(List<ItemContext> items) {
+        for(ItemContext item: items){
             if(item.isSuperPosition()){
                 popSuperPositionFromBackPack(item);
             }else {
@@ -259,7 +259,7 @@ public abstract class Backpack implements BackpackInterface {
         return true;
     }
 
-    private void popNonSuperPositionFromBackPack(Item item) {
+    private void popNonSuperPositionFromBackPack(ItemContext item) {
         for(Lattice backPackLattice: Arrays.asList(latticeArr)){
             if(backPackLattice.getItem().getItemId() == item.getItemId()){
                 latticeArr[backPackLattice.getIndex()] = null;
@@ -268,7 +268,7 @@ public abstract class Backpack implements BackpackInterface {
         }
     }
 
-    private void popSuperPositionFromBackPack(Item item) {
+    private void popSuperPositionFromBackPack(ItemContext item) {
         List<Lattice> hasBaseItemIdBackPackLatticeList = Arrays.stream(latticeArr)
                 .filter(backPackLattice -> ItemIdUtil.getBaseItemId(backPackLattice.getItem().getItemId()) == ItemIdUtil.getBaseItemId(backPackLattice.getItem().getItemId()))
                 .collect(Collectors.toList());

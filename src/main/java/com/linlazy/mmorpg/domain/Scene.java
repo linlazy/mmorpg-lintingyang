@@ -2,10 +2,7 @@ package com.linlazy.mmorpg.domain;
 
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 场景领域类
@@ -37,12 +34,12 @@ public class Scene {
     /**
      * 场景怪物信息
      */
-    private Set<Monster> monsterSet = new HashSet<>();
+    protected Map<Integer,Monster> monsterMap;
 
     /**
      * 场景BOSS信息
      */
-    private Set<Boss> bossSet = new HashSet<>();
+    protected List<Boss> bossList;
     /**
      * 场景NPC信息
      */

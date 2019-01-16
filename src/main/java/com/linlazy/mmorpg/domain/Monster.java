@@ -9,6 +9,7 @@ import lombok.Data;
 @Data
 public class Monster extends SceneEntity {
 
+
     private int sceneId;
 
     private int monsterId;

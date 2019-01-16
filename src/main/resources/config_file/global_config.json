@@ -5,6 +5,7 @@
     "packageMaxLatticeNum": 56,
     "initScene": 1,
     "copySceneIds": [4],
-    "arenaSceneIds": [5]
+    "arenaSceneIds": [5],
+    "maxTeamNum": 5
   }
 ]

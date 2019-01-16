@@ -5,11 +5,17 @@ import com.linlazy.mmorpg.dao.SkillDAO;
 import com.linlazy.mmorpg.domain.SceneEntity;
 import com.linlazy.mmorpg.domain.Skill;
 import com.linlazy.mmorpg.entity.SkillEntity;
+import com.linlazy.mmorpg.file.config.SkillConfig;
+import com.linlazy.mmorpg.file.service.SkillConfigService;
 import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.template.skill.BaseSkillTemplate;
 import com.linlazy.mmorpg.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * 技能服务类
@@ -20,6 +26,10 @@ public class SkillService {
 
     @Autowired
     private SkillDAO skillDao;
+    @Autowired
+    private SkillConfigService skillConfigService;
+
+
 
     public void  attack(SceneEntity sceneEntity, Skill skill){
         BaseSkillTemplate skillTemplate = BaseSkillTemplate.getSkillTemplate(skill.getSkillTemplateId());
@@ -66,5 +76,21 @@ public class SkillService {
             return true;
         }
         return false;
+    }
+
+    public List<Skill> getBossSkillList(long bossId){
+        List<SkillConfig> bossSkillConfigList = skillConfigService.getBossSkillConfigList(bossId);
+        return bossSkillConfigList.stream()
+                .map(skillConfig -> {
+                    Skill skill = new Skill();
+
+                    skill.setSkillId(skillConfig.getSkillId());
+                    skill.setSkillTemplateId(skillConfig.getSkillTemplateId());
+                    skill.setSkillTemplateArgs(skillConfig.getSkillTemplateArgs());
+                    skill.setName(skillConfig.getName());
+
+                    return skill;
+                })
+                .collect(toList());
     }
 }

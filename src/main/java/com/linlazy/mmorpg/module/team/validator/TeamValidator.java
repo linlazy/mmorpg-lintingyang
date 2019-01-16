@@ -10,31 +10,9 @@
 //public class TeamValidator {
 //
 //
-//    /**
-//     * 玩家已组队
-//     * @param actorId
-//     * @return
-//     */
-//    public Result<?> hasJoinedTeam(long actorId) {
-//        TeamDo actorTeamDo = teamManager.getActorTeamDo(actorId);
-//        if(actorTeamDo.hasJoinedTeam(actorId)){
-//            return Result.valueOf("玩家已组队");
-//        }
-//        return Result.success();
-//    }
+
 //
-//    /**
-//     * 人员已满
-//     * @param actorId
-//     * @return
-//     */
-//    public Result<?> isNotFull(long actorId) {
-//        TeamDo actorTeamDo = teamManager.getActorTeamDo(actorId);
-//        if(actorTeamDo.isNotFull()){
-//            return Result.valueOf("队伍人员已满");
-//        }
-//        return Result.success();
-//    }
+//
 //
 //    /**
 //     *  队伍已解散

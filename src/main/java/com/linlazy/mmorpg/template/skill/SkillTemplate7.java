@@ -6,6 +6,7 @@ import com.linlazy.mmorpg.constants.SceneEntityType;
 import com.linlazy.mmorpg.domain.SceneEntity;
 import com.linlazy.mmorpg.service.SceneService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
  * 全体攻击
  * @author linlazy
  */
+@Component
 public class SkillTemplate7 extends BaseSkillTemplate {
 
     @Autowired
@@ -62,6 +64,7 @@ public class SkillTemplate7 extends BaseSkillTemplate {
         }else if(sceneEntity.getSceneEntityType() !=SceneEntityType.PLAYER){
             Set<SceneEntity> players = allSceneEntity.stream()
                     .filter(sceneEntity1 -> sceneEntity1.getSceneEntityType() == SceneEntityType.PLAYER)
+                    .filter(sceneEntity1 -> sceneEntity1.getHp() > 0 )
                     .collect(Collectors.toSet());
             sceneEntitySet.addAll(players);
         }

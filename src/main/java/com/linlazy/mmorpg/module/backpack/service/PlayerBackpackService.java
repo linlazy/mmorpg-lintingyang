@@ -62,6 +62,7 @@ public class PlayerBackpackService {
 
                     playerBackpack.setLatticeArr(latticeArr);
 
+
                     return playerBackpack;
                 }
             });
@@ -105,9 +106,9 @@ public class PlayerBackpackService {
      * @param actorId 玩家ID
      * @return
      */
-    public Result<?> isNotFull(long actorId, List<ItemContext> itemContexts)  {
+    public Result<?> isNotFull(long actorId, List<ItemContext> items)  {
         PlayerBackpack playerBackpack = getPlayerBackpack(actorId);
-        boolean full = playerBackpack.isFull(itemContexts);
+        boolean full = playerBackpack.isFull(items);
         if(full){
             return Result.valueOf("背包已满");
         }
@@ -117,16 +118,16 @@ public class PlayerBackpackService {
     /**
      * 放进背包
      * @param actorId
-     * @param itemContextList
+     * @param itemList
      * @return
      */
-    public Result<?> push(long actorId, List<ItemContext> itemContextList) {
-        Result<?> notFull = isNotFull(actorId, itemContextList);
+    public Result<?> push(long actorId, List<ItemContext> itemList) {
+        Result<?> notFull = isNotFull(actorId, itemList);
         if(notFull.isFail()){
             return Result.valueOf(notFull.getCode());
         }
         PlayerBackpack playerBackpack = getPlayerBackpack(actorId);
-        playerBackpack.push(itemContextList);
+        playerBackpack.push(itemList);
         return Result.success();
     }
 }

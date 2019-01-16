@@ -1,9 +1,13 @@
 package com.linlazy.mmorpg.module.team.service;
 
+import com.linlazy.mmorpg.constants.TeamOperationType;
 import com.linlazy.mmorpg.domain.Player;
 import com.linlazy.mmorpg.domain.PlayerTeamInfo;
 import com.linlazy.mmorpg.domain.Team;
+import com.linlazy.mmorpg.push.TeamPushHelper;
+import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.service.PlayerService;
+import com.linlazy.mmorpg.utils.SessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -76,31 +80,33 @@ public class TeamService {
         return team;
     }
 
-//
-//    /**
-//     * 邀请入队
-//     * @param actorId
-//     * @param targetId
-//     * @return
-//     */
-//    public Result<?> inviteJoin(long actorId, long targetId) {
-//
-//        if(!SessionManager.isOnline(targetId)){
-//            return Result.valueOf("玩家不在线");
-//        }
-//        //人员已满
-//        Result<?> result = teamValidator.isNotFull(actorId);
-//        if(result.isFail()){
-//            return Result.valueOf(result.getCode());
-//        }
-//
-//        //玩家已组队
-//        result = teamValidator.hasJoinedTeam(targetId);
-//        if(result.isFail()){
-//            return Result.valueOf(result.getCode());
-//        }
-//        return teamManager.inviteTeam(actorId,targetId);
-//    }
+
+    /**
+     * 邀请入队
+     * @param actorId
+     * @param targetId
+     * @return
+     */
+    public Result<?> inviteJoin(long actorId, long targetId) {
+
+        if(!SessionManager.isOnline(targetId)){
+            return Result.valueOf("玩家不在线");
+        }
+        //人员已满
+        Result<?> result = isNotFull(actorId);
+        if(result.isFail()){
+            return Result.valueOf(result.getCode());
+        }
+
+        //玩家已组队
+        result = notHasJoinedTeam(targetId);
+        if(result.isFail()){
+            return Result.valueOf(result.getCode());
+        }
+
+        TeamPushHelper.pushTeam(targetId,TeamOperationType.INVITE_JOIN);
+        return Result.success();
+    }
 //
 //    /**
 //     * 同意加入
@@ -155,5 +161,32 @@ public class TeamService {
 //        return teamManager.shotOff(actorId,targetId);
 //    }
 
+
+    /**
+     * 人员已满
+     * @param actorId
+     * @return
+     */
+    public Result<?> isNotFull(long actorId) {
+        Long teamId = playerTeamIdMap.get(actorId);
+        Team team = teamMap.get(teamId);
+        if(team.isFull()){
+            return Result.valueOf("队伍人员已满");
+        }
+        return Result.success();
+    }
+
+    /**a
+     * 玩家已组队
+     * @param actorId
+     * @return
+     */
+    public Result<?> notHasJoinedTeam(long actorId) {
+        Long teamId = playerTeamIdMap.get(actorId) ;
+        if(teamId == null){
+            return Result.valueOf("玩家已组队");
+        }
+        return Result.success();
+    }
 
 }

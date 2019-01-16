@@ -1,5 +1,8 @@
 package com.linlazy.mmorpg.dto;
 
+import com.google.common.collect.Sets;
+import com.linlazy.mmorpg.domain.Boss;
+import com.linlazy.mmorpg.domain.Copy;
 import com.linlazy.mmorpg.domain.Scene;
 import lombok.Data;
 
@@ -25,8 +28,14 @@ public class SceneDTO {
     public SceneDTO(Scene scene) {
         this.sceneName = scene.getSceneName();
         this.playerDTOSet = scene.getPlayerSet().stream().map(PlayerDTO::new).collect(Collectors.toSet());
-        this.monsterDTOSet =  scene.getMonsterSet().stream().map(MonsterDTO::new).collect(Collectors.toSet());
-        this.bossDTOSet = scene.getBossSet().stream().map(BossDTO::new).collect(Collectors.toSet());
+        this.monsterDTOSet =  scene.getMonsterMap().values().stream().map(MonsterDTO::new).collect(Collectors.toSet());
+        if(scene instanceof Copy){
+            Copy copy = (Copy) scene;
+            Boss boss = copy.getBossList().get(copy.getCurrentBossIndex());
+            this.bossDTOSet = Sets.newHashSet(new BossDTO(boss));
+        }else {
+            this.bossDTOSet =scene .getBossList().stream().map(BossDTO::new).collect(Collectors.toSet());
+        }
         this.npcDTOSet = scene.getNpcSet().stream().map(NpcDTO::new).collect(Collectors.toSet());
          this.neighborSet =scene.getNeighborSet();
     }

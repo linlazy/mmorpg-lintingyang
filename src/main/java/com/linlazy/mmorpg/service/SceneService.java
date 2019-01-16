@@ -6,13 +6,13 @@ import com.google.common.eventbus.Subscribe;
 import com.linlazy.mmorpg.domain.*;
 import com.linlazy.mmorpg.dto.PlayerDTO;
 import com.linlazy.mmorpg.dto.SceneDTO;
+import com.linlazy.mmorpg.event.type.CopyEnterEvent;
 import com.linlazy.mmorpg.event.type.PlayerMoveSceneEvent;
+import com.linlazy.mmorpg.event.type.SceneEnterEvent;
 import com.linlazy.mmorpg.event.type.SceneMonsterDeadEvent;
 import com.linlazy.mmorpg.file.config.SceneConfig;
 import com.linlazy.mmorpg.file.service.SceneConfigService;
-import com.linlazy.mmorpg.module.common.event.ActorEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
-import com.linlazy.mmorpg.module.common.event.EventType;
 import com.linlazy.mmorpg.push.ScenePushHelper;
 import com.linlazy.mmorpg.server.common.GlobalConfigService;
 import com.linlazy.mmorpg.server.common.Result;
@@ -69,8 +69,8 @@ public class SceneService {
                     scene.setNeighborSet(sceneConfig.getNeighborSet());
 
                     //初始化怪物
-                    Set<Monster> monsterDoSet = monsterService.getMonsterBySceneId(player.getSceneId());
-                    scene.setMonsterSet( monsterDoSet);
+                    Map<Integer, Monster> monsterMap= monsterService.getMonsterBySceneId(player.getSceneId());
+                    scene.setMonsterMap( monsterMap);
 
                     //初始化NPC
                     Set<Npc> npcDoSet = npcService.getNPCDoBySceneId(player.getSceneId());
@@ -81,8 +81,7 @@ public class SceneService {
                     scene.setPlayerSet(sameScenePlayerSet);
 
                     //初始化boss
-                    Set<Boss> bossSet = bossService.getBOSSBySceneId(player.getSceneId());
-                    scene.setBossSet(bossSet);
+                    scene.setBossList(bossService.getBOSSBySceneId(player.getSceneId()));
 
                     sceneMap.put(player.getSceneId(),scene);
                 }
@@ -120,8 +119,8 @@ public class SceneService {
             Copy copy =getCopy(sceneEntity.getCopyId());
             Set<Player> playerSet = copy.getPlayerCopyInfoMap().values().stream()
                     .map(PlayerCopyInfo::getPlayer).collect(Collectors.toSet());
-            List<Boss> copyBoss = copy.getCopyBoss();
-            Collection<Monster> monsterSet = copy.getCopyMonsterInfoMap().values();
+            List<Boss> copyBoss = copy.getBossList();
+            Collection<Monster> monsterSet = copy.getMonsterMap().values();
             sceneEntitySet.addAll(playerSet);
             sceneEntitySet.addAll(copyBoss);
             sceneEntitySet.addAll(monsterSet);
@@ -130,8 +129,8 @@ public class SceneService {
 
             Scene scene = getScene(sceneEntity.getSceneId());
             Set<Player> playerSet = scene.getPlayerSet();
-            Set<Monster> monsterSet = scene.getMonsterSet();
-            Set<Boss> bossSet = scene.getBossSet();
+            Collection<Monster> monsterSet = scene.getMonsterMap().values();
+            List<Boss> bossSet = scene.getBossList();
             sceneEntitySet.addAll(playerSet);
             sceneEntitySet.addAll(monsterSet);
             sceneEntitySet.addAll(bossSet);
@@ -157,6 +156,19 @@ public class SceneService {
             .forEach(player ->   ScenePushHelper.pushMonster(player.getActorId(), Lists.newArrayList(sceneMonsterDeadEvent.getMonster())));
     }
 
+    /**
+     * 处理玩家进入场景事件
+     * @param sceneEnterEvent
+     */
+    @Subscribe
+    private void handleSceneEnter(SceneEnterEvent sceneEnterEvent) {
+        Player player = sceneEnterEvent.getPlayer();
+        Set<Player> sameScenePlayerSet = playerService.getSameScenePlayerSet(player.getActorId());
+        sameScenePlayerSet.stream()
+                .filter(player1 -> player1.getActorId() != player.getActorId())
+                .forEach(player1 -> ScenePushHelper.pushEnterScene(player1.getActorId(),String.format("玩家【%s】进入了场景",player.getName())));
+    }
+
 
     /**
      * 移动到某个场景
@@ -177,6 +189,12 @@ public class SceneService {
         Player player = playerService.getPlayer(actorId);
 
         player.setSceneId(targetSceneId);
+
+        EventBusHolder.post(new SceneEnterEvent(player));
+
+        if(isCopyScene(targetSceneId)){
+            EventBusHolder.post(new CopyEnterEvent(player));
+        }
         return Result.success();
     }
 
@@ -194,7 +212,6 @@ public class SceneService {
         if(globalConfigService.isCopy(scene.getSceneId())){
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("sceneId",scene.getSceneId());
-            EventBusHolder.post(new ActorEvent<>(actorId, EventType.ENTER_COPY_SCENE));
         }
         return Result.success(new SceneDTO(scene));
     }
