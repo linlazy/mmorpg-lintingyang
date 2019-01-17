@@ -3,7 +3,6 @@ package com.linlazy.mmorpg.service;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.linlazy.mmorpg.constants.SceneEntityType;
 import com.linlazy.mmorpg.dao.PlayerDAO;
 import com.linlazy.mmorpg.domain.Player;
 import com.linlazy.mmorpg.domain.Skill;
@@ -52,19 +51,12 @@ public class PlayerService {
                 @Override
                 public Player load(Long actorId) {
 
-                    Player player = new Player(actorId);
 
                     PlayerDAO playerDAO = SpringContextUtil.getApplicationContext().getBean(PlayerDAO.class);
                     PlayerEntity playerEntity = playerDAO.getEntityByPK(actorId);
+                    Player player = new Player(playerEntity);
 
-                    //todo
-                    player.setActorId(actorId);
-                    player.setMp(playerEntity.getMp());
-                    player.setName(playerEntity.getUsername());
-                    player.setHp(playerEntity.getHp());
-                    player.setSceneEntityType(SceneEntityType.PLAYER);
-                    player.setProfession(playerEntity.getProfession());
-                    player.setLevel(playerEntity.getLevel());
+
 
                     return player;
                 }
@@ -230,6 +222,7 @@ public class PlayerService {
         Player player = getPlayer(actorId);
         player.setLevel(player.getLevel() + 1);
         PlayerPushHelper.pushChange(actorId,new PlayerDTO(player));
+        playerDAO.insertQueue(player.convertPlayerEntity());
         return Result.success();
     }
 }

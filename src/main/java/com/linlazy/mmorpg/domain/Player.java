@@ -2,6 +2,8 @@ package com.linlazy.mmorpg.domain;
 
 import com.linlazy.mmorpg.attack.player.PlayerAttack;
 import com.linlazy.mmorpg.backpack.service.PlayerBackpackService;
+import com.linlazy.mmorpg.constants.SceneEntityType;
+import com.linlazy.mmorpg.entity.PlayerEntity;
 import com.linlazy.mmorpg.event.type.CopyPlayerDeadEvent;
 import com.linlazy.mmorpg.event.type.PlayerDeadEvent;
 import com.linlazy.mmorpg.file.service.SceneConfigService;
@@ -23,6 +25,19 @@ import java.util.Objects;
 @Data
 public class Player extends SceneEntity {
 
+
+    private PlayerEntity playerEntity;
+
+    public Player(PlayerEntity playerEntity) {
+        this.playerEntity =playerEntity;
+        this.setActorId(playerEntity.getActorId());
+        this.setMp(playerEntity.getMp());
+        this.setName(playerEntity.getUsername());
+        this.setHp(playerEntity.getHp());
+        this.setSceneEntityType(SceneEntityType.PLAYER);
+        this.setProfession(playerEntity.getProfession());
+        this.setLevel(playerEntity.getLevel());
+    }
 
     /**
      * 玩家
@@ -120,10 +135,6 @@ public class Player extends SceneEntity {
      */
     private PlayerCall playerCall;
 
-    public Player(Long actorId) {
-        this.actorId =actorId;
-    }
-
 
     public boolean isTeam(){
         TeamService teamService = SpringContextUtil.getApplicationContext().getBean(TeamService.class);
@@ -186,6 +197,16 @@ public class Player extends SceneEntity {
     public boolean hasSkill(int skillId){
         PlayerSkill playerSkillInfo = getPlayerSkillInfo();
         return playerSkillInfo.getSkillMap().containsKey(skillId);
+    }
+
+    public PlayerEntity convertPlayerEntity(){
+        playerEntity.setActorId(actorId);
+        playerEntity.setHp(hp);
+        playerEntity.setLevel(level);
+        playerEntity.setProfession(profession);
+        playerEntity.setMp(mp);
+        playerEntity.setGold(gold);
+        return playerEntity;
     }
 
 }
