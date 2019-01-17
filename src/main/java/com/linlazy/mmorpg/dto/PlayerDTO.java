@@ -19,14 +19,20 @@ public class PlayerDTO {
      */
     private Integer hp;
 
+    /**
+     * 等级
+     */
+    private Integer level;
+
     public PlayerDTO(Player player) {
         username = player.getName();
         hp = player.getHp();
+        level = player.getLevel();
     }
 
 
     @Override
     public String toString() {
-        return "玩家 【" + username + "】血量："+hp;
+        return String.format("玩家 【%s】血量：%d 等级：【%d】",username,hp,level);
     }
 }

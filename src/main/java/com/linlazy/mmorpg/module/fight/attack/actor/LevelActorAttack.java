@@ -17,12 +17,12 @@
 //    private UserDAO userDao;
 //
 //    @Override
-//    public int attackType() {
+//    public int defenseType() {
 //        return AttackType.LEVEL;
 //    }
 //
 //    @Override
-//    public int computeAttack(long actorId, JSONObject jsonObject) {
+//    public int computeDefense(long actorId, JSONObject jsonObject) {
 //        User user = userDao.getUser(actorId);
 //        return user.getLevel() * 20;
 //    }

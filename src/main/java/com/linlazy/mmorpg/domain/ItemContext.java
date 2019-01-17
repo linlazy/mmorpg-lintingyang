@@ -2,6 +2,7 @@ package com.linlazy.mmorpg.domain;
 
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpg.module.item.manager.config.ItemConfigService;
+import com.linlazy.mmorpg.utils.ItemIdUtil;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import lombok.Data;
 
@@ -11,7 +12,6 @@ import lombok.Data;
 @Data
 public class ItemContext {
 
-    private int baseItemId;
 
     private long itemId;
 
@@ -21,11 +21,11 @@ public class ItemContext {
 
     private int superPositionUp;
 
-
-    public void setBaseItemId(int baseItemId) {
-        this.baseItemId = baseItemId;
-        this.initConfig(baseItemId);
+    public ItemContext(long itemId) {
+        this.itemId = itemId;
+        initConfig(ItemIdUtil.getBaseItemId(this.itemId));
     }
+
 
     public void initConfig(int baseItemId){
         ItemConfigService itemConfigService = SpringContextUtil.getApplicationContext().getBean(ItemConfigService.class);

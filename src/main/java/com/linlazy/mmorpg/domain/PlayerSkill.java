@@ -10,7 +10,7 @@ import java.util.Map;
  * @author linlazy
  */
 @Data
-public class PlayerSkillInfo {
+public class PlayerSkill {
 
     /**
      * 玩家ID
@@ -20,5 +20,9 @@ public class PlayerSkillInfo {
     /**
      * 玩家技能
      */
-    private Map<Long,Skill> skillMap = new HashMap<>();
+    private Map<Integer,Skill> skillMap = new HashMap<>();
+
+    public PlayerSkill(Long actorId) {
+        this.actorId = actorId;
+    }
 }

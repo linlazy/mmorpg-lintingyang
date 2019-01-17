@@ -1,6 +1,6 @@
 package com.linlazy.mmorpg.domain;
 
-import com.linlazy.mmorpg.module.backpack.BackpackInterface;
+import com.linlazy.mmorpg.backpack.BackpackInterface;
 import com.linlazy.mmorpg.utils.ItemIdUtil;
 import lombok.Data;
 
@@ -44,7 +44,7 @@ public abstract class Backpack implements BackpackInterface {
     private int computeHasNum(ItemContext itemContext) {
         return Arrays.stream(latticeArr)
                 .filter(Objects::isNull)
-                .filter(lattice -> ItemIdUtil.getBaseItemId(lattice.getItem().getItemId()) == itemContext.getBaseItemId())
+                .filter(lattice -> ItemIdUtil.getBaseItemId(lattice.getItem().getItemId()) == ItemIdUtil.getBaseItemId(itemContext.getItemId()))
                 .map(lattice -> lattice.getItem().getCount())
                 .reduce(0,(a,b) -> a + b);
     }

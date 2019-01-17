@@ -5,7 +5,7 @@
   {"sceneId":4,
     "name":"黄巾前锋营",
     "neighborSet":[2],
-    "times": 60,
+    "times": 600,
     "rewards": [[1,50],[2,50]],
     "bossIds":[1,2]
   },

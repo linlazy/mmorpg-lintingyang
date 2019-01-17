@@ -203,6 +203,38 @@
 					ta.value += "正在查看队伍信息..."+ "\r\n";
 				}
 
+				if(arr[0] == "attack"){
+
+					var json ={};
+					json.command = "attack";
+					json.skillId = arr[1];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "正在使用技能攻击..."+ "\r\n";
+				}
+
+				if(arr[0] == "gainSkill"){
+
+					var json ={};
+					json.command = "gainSkill";
+					json.skillId = arr[1];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "正在获得技能..."+ "\r\n";
+				}
+
+				if(arr[0] == "upgradeLevel"){
+
+					var json ={};
+					json.command = "upgradeLevel";
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "正在提升玩家等级..."+ "\r\n";
+				}
+
 			}else{
 				alert("WebSocket连接没有建立成功！！");
 			}

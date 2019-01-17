@@ -57,9 +57,8 @@ public  class SkillTemplate3 extends BaseSkillTemplate {
             Copy copy = sceneService.getCopy(sceneEntity.getCopyId());
             if(sceneEntity.getSceneEntityType() != SceneEntityType.PLAYER){
 
-                Set<Player> players = copy.getPlayerCopyInfoMap().values().stream()
-                        .filter(playerCopyInfo -> playerCopyInfo.getPlayer().getSceneId() == sceneEntity.getSceneId())
-                        .map(PlayerCopyInfo::getPlayer)
+                Set<Player> players = copy.getPlayerMap().values().stream()
+                        .filter(player -> player.getSceneId() == sceneEntity.getSceneId())
                         .collect(Collectors.toSet());
 
 

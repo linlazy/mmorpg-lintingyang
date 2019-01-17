@@ -22,7 +22,7 @@
 //
 //
 //    @Override
-//    public int attackType() {
+//    public int defenseType() {
 //        return AttackType.EQUIP;
 //    }
 //
@@ -32,7 +32,7 @@
 //    }
 //
 //    @Override
-//    public int computeAttack(long actorId, JSONObject jsonObject) {
+//    public int computeDefense(long actorId, JSONObject jsonObject) {
 //
 //        return itemDao.getItemSet(actorId).stream()
 //                .map(ItemDo::new)

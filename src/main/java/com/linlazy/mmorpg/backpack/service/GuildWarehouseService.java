@@ -1,4 +1,4 @@
-package com.linlazy.mmorpg.module.backpack.service;
+package com.linlazy.mmorpg.backpack.service;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;

@@ -17,7 +17,7 @@ public class SkillDAO extends EntityDAO<SkillEntity> {
      * @param actorId  玩家ID
      * @return 返回玩家所有技能信息
      */
-    List<SkillEntity> getSkillSet(long actorId){
+    public List<SkillEntity> getPlayerSkillList(long actorId){
         return jdbcTemplate.queryForList("select * from skill where actorId = ?",new Object[]{actorId},SkillEntity.class);
     }
 

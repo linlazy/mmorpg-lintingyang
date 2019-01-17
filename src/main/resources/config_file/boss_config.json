@@ -8,9 +8,9 @@
     "sceneIds": [4]
   },{
   "bossId": 2,
-  "name": "张",
+  "name": "张曼城",
   "attack": 100,
-  "hp": 100,
+  "hp": 1000,
   "skillId":8,
   "sceneIds": [4]
 }

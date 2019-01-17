@@ -3,10 +3,10 @@ package com.linlazy.mmorpg.handler;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.linlazy.mmorpg.domain.ItemContext;
-import com.linlazy.mmorpg.module.backpack.service.PlayerBackpackService;
+import com.linlazy.mmorpg.backpack.service.PlayerBackpackService;
 import com.linlazy.mmorpg.module.equip.service.EquipmentService;
 import com.linlazy.mmorpg.module.item.manager.config.ItemConfigService;
-import com.linlazy.mmorpg.module.team.service.TeamService;
+import com.linlazy.mmorpg.service.TeamService;
 import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.server.route.Cmd;
 import com.linlazy.mmorpg.service.*;
@@ -423,9 +423,8 @@ public class CmdHandler {
     public Result<?> pushBackpack(JSONObject jsonObject){
         long actorId = jsonObject.getLong("actorId");
 
-        ItemContext item = new ItemContext();
         int baseItemId = jsonObject.getIntValue("itemId");
-        item.setBaseItemId(baseItemId);
+        ItemContext item = new ItemContext(baseItemId);
         int num = jsonObject.getIntValue("num");
         item.setCount(num);
         return playerBackpackService.push(actorId, Lists.newArrayList(item));
@@ -439,7 +438,31 @@ public class CmdHandler {
     @Cmd("attack")
     public Result<?> attack(JSONObject jsonObject){
         long actorId = jsonObject.getLong("actorId");
-        long skillId = jsonObject.getLong("skillId");
+        int skillId = jsonObject.getIntValue("skillId");
         return playerService.attack(actorId,skillId);
     }
+
+    /**
+     *  获得技能
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("gainSkill")
+    public Result<?> gainSkill(JSONObject jsonObject){
+        long actorId = jsonObject.getLong("actorId");
+        int skillId = jsonObject.getIntValue("skillId");
+        return skillService.gainSkill(actorId,skillId);
+    }
+
+    /**
+     *  升级
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("upgradeLevel")
+    public Result<?> upgradeLevel(JSONObject jsonObject){
+        long actorId = jsonObject.getLong("actorId");
+        return playerService.upgradeLevel(actorId);
+    }
+
 }

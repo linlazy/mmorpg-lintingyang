@@ -8,7 +8,6 @@ import com.linlazy.mmorpg.file.service.SceneConfigService;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.common.reward.Reward;
 import com.linlazy.mmorpg.module.common.reward.RewardService;
-import com.linlazy.mmorpg.module.team.service.TeamService;
 import com.linlazy.mmorpg.push.CopyPushHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,8 +88,8 @@ public class CopyService {
         Map<Integer, Monster> monsterMap= monsterService.getMonsterBySceneId(copy.getSceneId());
         monsterMap.values().forEach(monster ->monster.setCopyId(copy.getCopyId()));
         copy.setMonsterMap(monsterMap);
-        copy.getPlayerCopyInfoMap().values().forEach(playerCopyInfo ->
-                CopyPushHelper.pushCopyMonsterRefresh(playerCopyInfo.getPlayer().getActorId(),"副本小怪刷新"));
+        copy.getPlayerMap().values().forEach(player ->
+                CopyPushHelper.pushCopyMonsterRefresh(player.getActorId(),"副本小怪刷新"));
         //开启小怪定时攻击调度
         copy.startMonsterAutoAttackScheduled();
     }
@@ -103,14 +102,14 @@ public class CopyService {
             //创建副本
             Copy copy = createCopy(player.getActorId());
             copy.setSceneId(player.getSceneId());
-            //开启副本超时调度
+//            //开启副本超时调度
             copy.startQuitCopyScheduled();
-            //开启定时刷新小怪调度
-            copy.startRefreshMonsterScheduled();
-            //开启小怪定时攻击调度
-            copy.startMonsterAutoAttackScheduled();
+//            //开启定时刷新小怪调度
+//            copy.startRefreshMonsterScheduled();
+//            //开启小怪定时攻击调度
+//            copy.startMonsterAutoAttackScheduled();
             //开启BOSS定时攻击调度
-            copy.startBossAutoAttackScheduled();
+//            copy.startBossAutoAttackScheduled();
 
         }
 
@@ -125,9 +124,9 @@ public class CopyService {
     @Subscribe
     public void copyFail(CopyFailEvent copyFailEvent){
         Copy copy = copyFailEvent.getCopy();
-        copy.getPlayerCopyInfoMap().values()
+        copy.getPlayerMap().values()
                 .stream()
-                .forEach(playerCopyInfo -> playerCopyInfo.getPlayer().setHp(playerCopyInfo.getPlayer().getMaxHP()/2));
+                .forEach(player -> player.setHp(player.getMaxHP()/2));
         clearCopy(copy);
     }
 
@@ -143,9 +142,9 @@ public class CopyService {
 
         Copy copy = getCopy(player.getCopyId());
         if(copy.isAllActorDead()){
-            copy.getPlayerCopyInfoMap().values().stream()
-                    .forEach(playerCopyInfo -> {
-                        CopyPushHelper.pushCopyFail(playerCopyInfo.getPlayer().getActorId(),"挑战副本失败，全部玩家阵亡");
+            copy.getPlayerMap().values().stream()
+                    .forEach(player1 -> {
+                        CopyPushHelper.pushCopyFail(player1.getActorId(),"挑战副本失败，全部玩家阵亡");
                     });
             copyFail(new CopyFailEvent(copy));
         }
@@ -160,6 +159,12 @@ public class CopyService {
         Copy copy = copyBossDeadEvent.getCopy();
         if(copy.isFinalBossDead()){
             EventBusHolder.post(new CopySuccessEvent(copy));
+        }else {
+//            copy.cancelBossAutoAttackSchedule();
+            Boss boss = copy.nextBoss();
+            copy.getPlayerMap().values().forEach(player ->
+                    CopyPushHelper.pushCopyBossRefresh(player.getActorId(),String.format("副本BOSS【%s】",boss.getName())));
+//            copy.startBossAutoAttackScheduled();
         }
     }
 
@@ -170,11 +175,13 @@ public class CopyService {
     @Subscribe
     public void copySuccess(CopySuccessEvent copySuccessEvent) {
         Copy copy = copySuccessEvent.getCopy();
+
         //发放奖励
         List<Reward> rewardList = copy.getRewardList();
-        copy.getPlayerCopyInfoMap().values().stream()
-                .forEach(playerCopyInfo -> {
-                    rewardService.addRewardList(playerCopyInfo.getPlayer().getActorId(),rewardList);
+        copy.getPlayerMap().values().stream()
+                .forEach(player -> {
+                    CopyPushHelper.pushCopySuccess(player.getActorId(),"副本挑战成功");
+                    rewardService.addRewardList(player.getActorId(),rewardList);
                 });
 
         clearCopy(copy);
@@ -189,9 +196,9 @@ public class CopyService {
         copy.quitQuit();
         //退出副本
         copyIdCopyMap.remove(copy.getCopyId());
-        copy.getPlayerCopyInfoMap().values().stream()
-                .forEach(playerCopyInfo -> {
-                    playerCopyIdMap.remove(playerCopyInfo.getPlayer().getActorId());
+        copy.getPlayerMap().values().stream()
+                .forEach(player -> {
+                    playerCopyIdMap.remove(player.getActorId());
                 });
 
     }
@@ -237,6 +244,10 @@ public class CopyService {
             playerCopyIdMap.put(player.getActorId(),maxCopyId.get());
         }
 
+
+        //初始化奖励
+        List<Reward> rewardList = sceneConfig.getRewardList();
+        copy.setRewardList(rewardList);
 
         copyIdCopyMap.put(copy.getCopyId(),copy);
         return copy;

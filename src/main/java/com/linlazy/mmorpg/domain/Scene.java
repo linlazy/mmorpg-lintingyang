@@ -29,7 +29,7 @@ public class Scene {
     /**
      * 场景玩家信息
      */
-    Set<Player> playerSet = new HashSet<>();
+    protected Map<Long,Player> playerMap = new HashMap<>();
 
     /**
      * 场景怪物信息

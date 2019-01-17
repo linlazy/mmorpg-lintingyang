@@ -20,7 +20,7 @@
 //    private SkillDAO skillDao;
 //
 //    @Override
-//    public int attackType() {
+//    public int defenseType() {
 //        return AttackType.SKILL;
 //    }
 //
@@ -39,7 +39,7 @@
 //    }
 //
 //    @Override
-//    public int computeAttack(long actorId, JSONObject jsonObject) {
+//    public int computeDefense(long actorId, JSONObject jsonObject) {
 //        int skillId = jsonObject.getIntValue("skillId");
 //        SkillEntity skillEntity = skillDao.getSkill(actorId, skillId);
 //        JSONObject skillConfig = skillConfigService.getSkillConfig(skillId);

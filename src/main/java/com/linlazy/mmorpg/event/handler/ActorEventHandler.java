@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.Set;
+import java.util.Map;
 
 /**
  * @author linlazy
@@ -43,8 +43,8 @@ public class ActorEventHandler extends GameEvenHandler {
     public void playerDead(PlayerDeadEvent playerDeadEvent){
         Player deadPlayer = playerDeadEvent.getPlayer();
         //广播通知与死亡玩家 同场景玩家
-        Set<Player> sameScenePlayerSet = playerService.getSameScenePlayerSet(deadPlayer.getActorId());
-        sameScenePlayerSet.stream()
+        Map<Long, Player> sameScenePlayerMap = playerService.getSameScenePlayerMap(deadPlayer.getActorId());
+        sameScenePlayerMap.values().stream()
 //                .filter(sameScenePlayer -> sameScenePlayer.getActorId() != deadPlayer.getActorId())
                 .forEach(sameScenePlayer -> {
                     PlayerPushHelper.pushPlayerDead(sameScenePlayer.getActorId(),String.format("玩家【%s】已死亡",deadPlayer.getName()));

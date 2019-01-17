@@ -7,6 +7,7 @@ import com.linlazy.mmorpg.constants.SceneEntityType;
 import com.linlazy.mmorpg.dao.PlayerDAO;
 import com.linlazy.mmorpg.domain.Player;
 import com.linlazy.mmorpg.domain.Skill;
+import com.linlazy.mmorpg.dto.PlayerDTO;
 import com.linlazy.mmorpg.entity.PlayerEntity;
 import com.linlazy.mmorpg.module.common.event.ActorEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
@@ -22,10 +23,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
 
 /**
  * 玩家服务类
@@ -62,6 +63,8 @@ public class PlayerService {
                     player.setName(playerEntity.getUsername());
                     player.setHp(playerEntity.getHp());
                     player.setSceneEntityType(SceneEntityType.PLAYER);
+                    player.setProfession(playerEntity.getProfession());
+                    player.setLevel(playerEntity.getLevel());
 
                     return player;
                 }
@@ -77,11 +80,17 @@ public class PlayerService {
         return null;
     }
 
-    public Set<Player> getSameScenePlayerSet(long actorId){
+    public Map<Long,Player> getSameScenePlayerMap(long actorId){
         int sceneId = getPlayer(actorId).getSceneId();
-        return playerCache.asMap().values().stream()
-                .filter(player -> player.getSceneId() == sceneId)
-                .collect(Collectors.toSet());
+        Map<Long,Player> result = new HashMap<>();
+
+       playerCache.asMap().values().stream()
+               .filter(player -> player.getSceneId() == sceneId)
+               .forEach(player -> {
+                   result.put(player.getActorId(),player);
+               });
+
+       return result;
     }
 
     public Result<?> login(String username, String password, Channel channel) {
@@ -203,10 +212,24 @@ public class PlayerService {
         return Result.success("选择职业成功");
     }
 
-    public Result<?> attack(long actorId, long skillId) {
+    public Result<?> attack(long actorId, int skillId) {
         Player player = getPlayer(actorId);
+        if(!player.hasSkill(skillId)){
+           return Result.valueOf("玩家未拥有该技能");
+        }
         Skill skill = player.getPlayerSkillInfo().getSkillMap().get(skillId);
         skillService.attack(player,skill);
+        return Result.success();
+    }
+
+    public Result<?> upgradeSkill(long actorId, int skillId) {
+        return null;
+    }
+
+    public Result<?> upgradeLevel(long actorId) {
+        Player player = getPlayer(actorId);
+        player.setLevel(player.getLevel() + 1);
+        PlayerPushHelper.pushChange(actorId,new PlayerDTO(player));
         return Result.success();
     }
 }

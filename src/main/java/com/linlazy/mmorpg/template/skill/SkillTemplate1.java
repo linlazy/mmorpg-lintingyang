@@ -27,9 +27,12 @@ public  class SkillTemplate1 extends BaseSkillTemplate {
 
     @Override
     protected Set<SceneEntity> selectAttackedSceneEntity(SceneEntity sceneEntity, Skill skill, Set<SceneEntity> allSceneEntity) {
-        Set<SceneEntity> sceneEntitySet = new HashSet<>();
+        Set<SceneEntity> result = new HashSet<>();
 
         if(sceneEntity.getSceneEntityType() == SceneEntityType.PLAYER){
+
+            Set<SceneEntity> sceneEntitySet = new HashSet<>();
+
             Player player = (Player) sceneEntity;
 
             for (SceneEntity targetSceneEntity :allSceneEntity){
@@ -38,12 +41,18 @@ public  class SkillTemplate1 extends BaseSkillTemplate {
                     sceneEntitySet.add(targetSceneEntity);
                 }else {
                     // 非玩家队员
-                    Player playerSceneEntity= (Player) targetSceneEntity;
-                    if(player.getTeam().getPlayerTeamInfoMap().containsKey(playerSceneEntity.getActorId())){
-                        sceneEntitySet.add(sceneEntity);
+                    if( player.isTeam()){
+                        Player playerSceneEntity= (Player) targetSceneEntity;
+                        if(!player.getTeam().getPlayerTeamInfoMap().containsKey(playerSceneEntity.getActorId())){
+                            sceneEntitySet.add(sceneEntity);
+                        }
                     }
+
                 }
             }
+
+            SceneEntity sceneEntity1 = RandomUtils.randomElement(sceneEntitySet);
+            result.add(sceneEntity1);
 
         }else if(sceneEntity.getSceneEntityType() !=SceneEntityType.PLAYER){
             Set<SceneEntity> players = allSceneEntity.stream()
@@ -51,8 +60,8 @@ public  class SkillTemplate1 extends BaseSkillTemplate {
                     .filter(sceneEntity1 -> sceneEntity1.getHp() > 0 )
                     .collect(Collectors.toSet());
             SceneEntity sceneEntity1 = RandomUtils.randomElement(players);
-            sceneEntitySet.add(sceneEntity1);
+            result.add(sceneEntity1);
         }
-        return sceneEntitySet;
+        return result;
     }
 }

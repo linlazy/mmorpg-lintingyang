@@ -1,4 +1,4 @@
-package com.linlazy.mmorpg.module.backpack;
+package com.linlazy.mmorpg.backpack;
 
 import com.linlazy.mmorpg.domain.ItemContext;
 import com.linlazy.mmorpg.domain.Lattice;

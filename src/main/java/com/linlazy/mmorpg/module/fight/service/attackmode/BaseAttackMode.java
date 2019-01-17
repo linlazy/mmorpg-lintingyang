@@ -48,7 +48,7 @@
 //            return Result.valueOf(result.getCode());
 //        }
 //        //计算玩家攻击力
-//        int finalAttack = BaseActorAttack.computeFinalAttack(actorId, jsonObject);
+//        int finalAttack = BaseActorAttack.computeFinalDefense(actorId, jsonObject);
 //        // 受攻击场景实体集合集合
 //        Set<SceneEntity> attackedSceneEntity = getAttackedSceneEntity(actorId, jsonObject);
 //        attackedSceneEntity.stream()

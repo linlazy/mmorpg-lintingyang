@@ -77,8 +77,8 @@ public class SceneService {
                     scene.setNpcSet( npcDoSet);
 
                     //初始化玩家
-                    Set<Player> sameScenePlayerSet = playerService.getSameScenePlayerSet(actorId);
-                    scene.setPlayerSet(sameScenePlayerSet);
+                    Map<Long, Player> sameScenePlayerMap = playerService.getSameScenePlayerMap(actorId);
+                    scene.setPlayerMap(sameScenePlayerMap);
 
                     //初始化boss
                     scene.setBossList(bossService.getBOSSBySceneId(player.getSceneId()));
@@ -117,19 +117,19 @@ public class SceneService {
         if(isCopyScene(sceneEntity.getSceneId())){
 
             Copy copy =getCopy(sceneEntity.getCopyId());
-            Set<Player> playerSet = copy.getPlayerCopyInfoMap().values().stream()
-                    .filter(playerCopyInfo -> playerCopyInfo.getPlayer().getSceneId() == sceneEntity.getSceneId())
-                    .map(PlayerCopyInfo::getPlayer).collect(Collectors.toSet());
-            List<Boss> copyBoss = copy.getBossList();
+            Set<Player> playerSet = copy.getPlayerMap().values().stream()
+                    .filter(player -> player.getSceneId() == sceneEntity.getSceneId())
+                    .collect(Collectors.toSet());
+            Boss copyBoss = copy.getBossList().get(copy.getCurrentBossIndex());
             Collection<Monster> monsterSet = copy.getMonsterMap().values();
             sceneEntitySet.addAll(playerSet);
-            sceneEntitySet.addAll(copyBoss);
+            sceneEntitySet.add(copyBoss);
             sceneEntitySet.addAll(monsterSet);
 
         }else {
 
             Scene scene = getScene(sceneEntity.getSceneId());
-            Set<Player> playerSet = scene.getPlayerSet();
+            Collection<Player> playerSet = scene.getPlayerMap().values();
             Collection<Monster> monsterSet = scene.getMonsterMap().values();
             List<Boss> bossSet = scene.getBossList();
             sceneEntitySet.addAll(playerSet);
@@ -152,8 +152,8 @@ public class SceneService {
      */
     @Subscribe
     private void handlerSceneMonsterDead(SceneMonsterDeadEvent sceneMonsterDeadEvent) {
-        Set<Player> playerSet = sceneMonsterDeadEvent.getScene().getPlayerSet();
-        playerSet.stream()
+        Map<Long, Player> playerMap = sceneMonsterDeadEvent.getScene().getPlayerMap();
+        playerMap.values().stream()
             .forEach(player ->   ScenePushHelper.pushMonster(player.getActorId(), Lists.newArrayList(sceneMonsterDeadEvent.getMonster())));
     }
 
@@ -164,8 +164,8 @@ public class SceneService {
     @Subscribe
     private void handleSceneEnter(SceneEnterEvent sceneEnterEvent) {
         Player player = sceneEnterEvent.getPlayer();
-        Set<Player> sameScenePlayerSet = playerService.getSameScenePlayerSet(player.getActorId());
-        sameScenePlayerSet.stream()
+        Map<Long, Player> sameScenePlayerMap = playerService.getSameScenePlayerMap(player.getActorId());
+        sameScenePlayerMap.values().stream()
                 .filter(player1 -> player1.getActorId() != player.getActorId())
                 .forEach(player1 -> ScenePushHelper.pushEnterScene(player1.getActorId(),String.format("玩家【%s】进入了场景",player.getName())));
     }
@@ -208,7 +208,7 @@ public class SceneService {
 
         Player player = playerService.getPlayer(actorId);
         Scene scene = getScene(actorId);
-        scene.getPlayerSet().add(player);
+        scene.getPlayerMap().put(player.getActorId(),player);
 
         if(globalConfigService.isCopy(scene.getSceneId())){
             JSONObject jsonObject = new JSONObject();
@@ -229,7 +229,7 @@ public class SceneService {
         SceneDTO sceneDTO = new SceneDTO(scene);
         boolean closeOwn = jsonObject.getBooleanValue("closeOwn");
         if( closeOwn){
-            Set<PlayerDTO> playerSet = scene.getPlayerSet().stream()
+            Set<PlayerDTO> playerSet = scene.getPlayerMap().values().stream()
                     .filter(player1 -> player1.getActorId() != player.getActorId())
                     .map(PlayerDTO::new)
                     .collect(Collectors.toSet());

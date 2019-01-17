@@ -40,9 +40,10 @@ public class Copy extends Scene{
 
 
     /**
-     * 副本玩家信息
+     * 奖励
      */
-    private Map<Long,PlayerCopyInfo> playerCopyInfoMap = new ConcurrentHashMap<>();
+    List<Reward> rewardList;
+
 
     /**
      * 小怪自动攻击句柄
@@ -52,18 +53,16 @@ public class Copy extends Scene{
     /**
      * boss自动攻击句柄
      */
-    private static Map<Long, ScheduledFuture> bossIdAutoAttackScheduleMap = new ConcurrentHashMap<>();
-
-    /**
-     * 副本自动小怪刷新调度
-     */
-    private static Map<Long, ScheduledFuture> copyIdMonsterRefreshScheduleMap = new ConcurrentHashMap<>();
+    private ScheduledFuture<?> bossAutoAttackSchedule;
 
     /**
      * 副本调度线程池
      */
     ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(20);
     ScheduledFuture<?> quitSchedule;
+    /**
+     * 副本自动小怪刷新调度
+     */
     ScheduledFuture<?>  refreshMonsterScheduled;
 
 
@@ -77,7 +76,7 @@ public class Copy extends Scene{
         Map<Long, PlayerTeamInfo> playerTeamInfoMap = team.getPlayerTeamInfoMap();
         playerTeamInfoMap.values().stream()
                 .forEach(playerTeamInfo -> {
-                    playerCopyInfoMap.put(playerTeamInfo.getPlayer().getActorId(),new PlayerCopyInfo(copyId,playerTeamInfo.getPlayer()));
+                    playerMap.put(playerTeamInfo.getPlayer().getActorId(),playerTeamInfo.getPlayer());
                 });
     }
 
@@ -88,8 +87,8 @@ public class Copy extends Scene{
      * @return
      */
     public boolean isAllActorDead(){
-        return playerCopyInfoMap.values().stream()
-                .allMatch(playerCopyInfo -> playerCopyInfo.getPlayer().getHp() == 0);
+        return playerMap.values().stream()
+                .allMatch(player ->player.getHp() == 0);
     }
 
     /***
@@ -98,10 +97,6 @@ public class Copy extends Scene{
      */
     public boolean isFinalBossDead(){
         return bossList.size()-1 == currentBossIndex;
-    }
-
-    public List<Reward> getRewardList() {
-        return null;
     }
 
     /**
@@ -150,9 +145,9 @@ public class Copy extends Scene{
         //到达时间后挑战结束,退出副本触发事件
         quitSchedule = scheduledExecutorService.schedule(() -> {
             EventBusHolder.post(new CopyFailEvent(this));
-            this.getPlayerCopyInfoMap().values().stream()
-                    .forEach(playerCopyInfo -> {
-                        CopyPushHelper.pushCopyFail( playerCopyInfo.getPlayer().getActorId(),"超时，挑战失败");
+            this.playerMap.values().stream()
+                    .forEach(player -> {
+                        CopyPushHelper.pushCopyFail(player.getActorId(),"超时，挑战失败");
                     });
 
             logger.debug("到达时间后，触发挑战失败事件");
@@ -167,7 +162,7 @@ public class Copy extends Scene{
         Boss boss = this.bossList.get(this.currentBossIndex);
 
         SkillService skillService = SpringContextUtil.getApplicationContext().getBean(SkillService.class);
-        ScheduledFuture<?> scheduledFuture = scheduledExecutorService.scheduleAtFixedRate(() -> {
+        bossAutoAttackSchedule = scheduledExecutorService.scheduleAtFixedRate(() -> {
             //随机选择boss技能攻击
             logger.error("startBossAutoAttackScheduled");
 
@@ -175,7 +170,6 @@ public class Copy extends Scene{
             skillService.attack(boss,skill);
         }, 0L, 5L, TimeUnit.SECONDS);
 
-        bossIdAutoAttackScheduleMap.put(boss.getBossId(),scheduledFuture);
     }
 
     /**
@@ -189,25 +183,22 @@ public class Copy extends Scene{
         int targetSceneId = sceneConfig.getNeighborSet().get(0);
 
         //副本玩家移动到目标场景
-        this.getPlayerCopyInfoMap().values().stream()
-                .filter(playerCopyInfo -> playerCopyInfo.getPlayer().getSceneId() == this.getSceneId())
-                .forEach(playerCopyInfo ->{
-                    sceneService.moveToScene(playerCopyInfo.getPlayer().getActorId(),targetSceneId);
+        this.playerMap.values().stream()
+                .filter(player -> player.getSceneId() == this.getSceneId())
+                .forEach(player ->{
+                    sceneService.moveToScene(player.getActorId(),targetSceneId);
                 });
 
         //取消调度，怪物自动刷新，小怪，BOSS定时攻击,超时退出副本
-        bossIdAutoAttackScheduleMap.values()
-                .forEach(scheduledFuture -> scheduledFuture.cancel(true));
-        monsterIdAutoAttackScheduleMap.values()
-                .forEach(scheduledFuture -> scheduledFuture.cancel(true));
-        copyIdMonsterRefreshScheduleMap.values()
-                .forEach(scheduledFuture -> scheduledFuture.cancel(true));
+//        bossAutoAttackSchedule.cancel(true);
+//        monsterIdAutoAttackScheduleMap.values()
+//                .forEach(scheduledFuture -> scheduledFuture.cancel(true));
         quitSchedule.cancel(true);
-        refreshMonsterScheduled.cancel(true);
+//        refreshMonsterScheduled.cancel(true);
     }
 
     public void initCopyPlayerInfo(Player player) {
-        playerCopyInfoMap.put(player.getActorId(),new PlayerCopyInfo(copyId,player));
+        playerMap.put(player.getActorId(),player);
     }
 
 
@@ -220,4 +211,13 @@ public class Copy extends Scene{
         monsterIdAutoAttackScheduleMap.values()
                 .forEach(scheduledFuture -> scheduledFuture.cancel(true));
     }
+
+    public void cancelBossAutoAttackSchedule() {
+        bossAutoAttackSchedule.cancel(true);
+    }
+
+    public Boss nextBoss() {
+        return bossList.get(++currentBossIndex);
+    }
+
 }

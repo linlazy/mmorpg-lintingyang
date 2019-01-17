@@ -27,7 +27,7 @@ public class SceneDTO {
 
     public SceneDTO(Scene scene) {
         this.sceneName = scene.getSceneName();
-        this.playerDTOSet = scene.getPlayerSet().stream().map(PlayerDTO::new).collect(Collectors.toSet());
+        this.playerDTOSet = scene.getPlayerMap().values().stream().map(PlayerDTO::new).collect(Collectors.toSet());
         this.monsterDTOSet =  scene.getMonsterMap().values().stream().map(MonsterDTO::new).collect(Collectors.toSet());
         if(scene instanceof Copy){
             Copy copy = (Copy) scene;

@@ -2,7 +2,7 @@ package com.linlazy.mmorpg.domain;
 
 import com.linlazy.mmorpg.dao.GuildWarehouseDAO;
 import com.linlazy.mmorpg.entity.GuildWarehouseEntity;
-import com.linlazy.mmorpg.module.backpack.BackpackInterface;
+import com.linlazy.mmorpg.backpack.BackpackInterface;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import lombok.Data;
 

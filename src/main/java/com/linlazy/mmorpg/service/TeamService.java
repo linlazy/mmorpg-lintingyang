@@ -1,4 +1,4 @@
-package com.linlazy.mmorpg.module.team.service;
+package com.linlazy.mmorpg.service;
 
 import com.linlazy.mmorpg.domain.Player;
 import com.linlazy.mmorpg.domain.PlayerTeamInfo;
@@ -6,7 +6,6 @@ import com.linlazy.mmorpg.domain.Team;
 import com.linlazy.mmorpg.dto.TeamDTO;
 import com.linlazy.mmorpg.push.TeamPushHelper;
 import com.linlazy.mmorpg.server.common.Result;
-import com.linlazy.mmorpg.service.PlayerService;
 import com.linlazy.mmorpg.utils.SessionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

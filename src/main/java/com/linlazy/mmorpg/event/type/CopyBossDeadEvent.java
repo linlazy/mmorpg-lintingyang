@@ -8,7 +8,7 @@ import lombok.Data;
  * @author linlazy
  */
 @Data
-public class CopyBossDeadEvent extends BossDeadEvent{
+public class CopyBossDeadEvent {
 
     private Copy copy;
 

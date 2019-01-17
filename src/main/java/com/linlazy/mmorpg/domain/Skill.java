@@ -1,6 +1,7 @@
 package com.linlazy.mmorpg.domain;
 
 import com.alibaba.fastjson.JSONObject;
+import com.linlazy.mmorpg.entity.SkillEntity;
 import lombok.Data;
 
 import java.util.HashMap;
@@ -58,7 +59,7 @@ public class Skill {
     /**
      * 玩家技能映射
      */
-    private Map<Long, PlayerSkillInfo> playerSkillInfoMap = new HashMap<>();
+    private Map<Long, PlayerSkill> playerSkillInfoMap = new HashMap<>();
 
 
     /**
@@ -66,11 +67,18 @@ public class Skill {
      * @param actorId
      * @return
      */
-    public PlayerSkillInfo getPlayerSkillInfo(long actorId) {
+    public PlayerSkill getPlayerSkillInfo(long actorId) {
         return playerSkillInfoMap.get(actorId);
     }
 
 
-
+    public SkillEntity convertSkillEntity(){
+        SkillEntity skillEntity = new SkillEntity();
+        skillEntity.setSkillId(skillId);
+        skillEntity.setDressed(dress);
+        skillEntity.setLevel(level);
+        skillEntity.setNextCDResumeTimes(nextCDResumeTimes);
+        return skillEntity;
+    }
 
 }

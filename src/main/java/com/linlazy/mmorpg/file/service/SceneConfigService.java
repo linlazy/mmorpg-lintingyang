@@ -4,6 +4,7 @@ package com.linlazy.mmorpg.file.service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpg.file.config.SceneConfig;
+import com.linlazy.mmorpg.module.common.reward.Reward;
 import com.linlazy.mmorpg.server.common.ConfigFile;
 import com.linlazy.mmorpg.server.common.ConfigFileManager;
 import com.linlazy.mmorpg.server.common.GlobalConfigService;
@@ -50,6 +51,26 @@ public class SceneConfigService {
             sceneConfig.setName(name);
             sceneConfig.setNeighborSet(neighborSet);
             sceneConfig.setOverTimeSeconds(jsonObject.getIntValue("times"));
+
+            //初始化奖励
+            List<Reward> rewardList = sceneConfig.getRewardList();
+
+            JSONArray rewards = jsonObject.getJSONArray("rewards");
+            if(rewards != null){
+                for(int j= 0; j< rewards.size();j++){
+                    JSONArray reward = rewards.getJSONArray(j);
+
+                    Reward reward1 = new Reward();
+
+                    int itemId = reward.getIntValue(0);
+                    int num = reward.getIntValue(1);
+                    reward1.setRewardId(itemId);
+                    reward1.setCount(num);
+
+                    rewardList.add(reward1);
+                }
+            }
+
             map.put(sceneId,sceneConfig);
         }
     }

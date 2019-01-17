@@ -1,7 +1,11 @@
 package com.linlazy.mmorpg.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.linlazy.mmorpg.dao.SkillDAO;
+import com.linlazy.mmorpg.domain.PlayerSkill;
 import com.linlazy.mmorpg.domain.SceneEntity;
 import com.linlazy.mmorpg.domain.Skill;
 import com.linlazy.mmorpg.entity.SkillEntity;
@@ -10,10 +14,15 @@ import com.linlazy.mmorpg.file.service.SkillConfigService;
 import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.template.skill.BaseSkillTemplate;
 import com.linlazy.mmorpg.utils.DateUtils;
+import com.linlazy.mmorpg.utils.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 import static java.util.stream.Collectors.toList;
 
@@ -26,12 +35,53 @@ public class SkillService {
 
     @Autowired
     private SkillDAO skillDao;
+
+
     @Autowired
     private SkillConfigService skillConfigService;
 
+    /**
+     * 玩家技能缓存
+     */
+    public static LoadingCache<Long, PlayerSkill> playerSkillCache = CacheBuilder.newBuilder()
+            .maximumSize(10)
+            .expireAfterAccess(60, TimeUnit.SECONDS)
+            .recordStats()
+            .build(new CacheLoader<Long, PlayerSkill>() {
+                @Override
+                public PlayerSkill load(Long actorId) {
+
+                    PlayerSkill playerSkill = new PlayerSkill(actorId);
+                    Map<Integer,Skill>  skillMap = new HashMap<>();
 
 
-    public void  attack(SceneEntity sceneEntity, Skill skill){
+                    SkillDAO skillDAO = SpringContextUtil.getApplicationContext().getBean(SkillDAO.class);
+                    SkillConfigService skillConfigService = SpringContextUtil.getApplicationContext().getBean(SkillConfigService.class);
+                    List<SkillEntity> playerSkillList = skillDAO.getPlayerSkillList(actorId);
+                    playerSkillList.stream()
+                            .forEach(skillEntity -> {
+                                Skill skill = new Skill();
+
+                                skill.setSkillId(skillEntity.getSkillId());
+                                skill.setLevel(skill.getLevel());
+                                skill.setNextCDResumeTimes(skillEntity.getNextCDResumeTimes());
+
+                                SkillConfig skillConfig = skillConfigService.getSkillConfig(skillEntity.getSkillId());
+                                skill.setName(skillConfig.getName());
+                                skill.setSkillTemplateArgs(skillConfig.getSkillTemplateArgs());
+                                skill.setSkillTemplateId(skillConfig.getSkillTemplateId());
+
+                                skillMap.put(skill.getSkillId(),skill);
+                            });
+                    playerSkill.setSkillMap(skillMap);
+
+                    return playerSkill;
+                }
+            });
+
+
+
+    public void attack(SceneEntity sceneEntity, Skill skill){
         BaseSkillTemplate skillTemplate = BaseSkillTemplate.getSkillTemplate(skill.getSkillTemplateId());
         skillTemplate.useSkill(sceneEntity,skill);
     }
@@ -110,7 +160,38 @@ public class SkillService {
                 .collect(toList());
     }
 
-    public Skill getSkill(long skillId) {
+    public PlayerSkill getPlayerSkill(long actorId) {
+        try {
+            return playerSkillCache.get(actorId);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
         return null;
+    }
+
+    /**
+     * 获得技能
+     * @param actorId 玩家ID
+     * @param skillId 技能ID
+     * @return
+     */
+    public Result<?> gainSkill(long actorId, int skillId) {
+        PlayerSkill playerSkill = getPlayerSkill(actorId);
+        Skill skill = new Skill();
+
+        skill.setSkillId(skillId);
+        skill.setLevel(skill.getLevel());
+        skill.setNextCDResumeTimes(DateUtils.getNowMillis());
+
+        SkillConfig skillConfig = skillConfigService.getSkillConfig(skill.getSkillId());
+        skill.setName(skillConfig.getName());
+        skill.setSkillTemplateArgs(skillConfig.getSkillTemplateArgs());
+        skill.setSkillTemplateId(skillConfig.getSkillTemplateId());
+
+        playerSkill.getSkillMap().put(skill.getSkillId(),skill);
+
+        skillDao.insertQueue(skill.convertSkillEntity());
+
+        return Result.success();
     }
 }

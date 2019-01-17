@@ -1,14 +1,15 @@
 package com.linlazy.mmorpg.domain;
 
+import com.linlazy.mmorpg.attack.player.PlayerAttack;
+import com.linlazy.mmorpg.backpack.service.PlayerBackpackService;
 import com.linlazy.mmorpg.event.type.CopyPlayerDeadEvent;
 import com.linlazy.mmorpg.event.type.PlayerDeadEvent;
 import com.linlazy.mmorpg.file.service.SceneConfigService;
-import com.linlazy.mmorpg.module.backpack.service.PlayerBackpackService;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.equip.manager.domain.DressedEquip;
-import com.linlazy.mmorpg.module.team.service.TeamService;
 import com.linlazy.mmorpg.push.PlayerPushHelper;
 import com.linlazy.mmorpg.service.SkillService;
+import com.linlazy.mmorpg.service.TeamService;
 import com.linlazy.mmorpg.utils.DateUtils;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import lombok.Data;
@@ -56,7 +57,7 @@ public class Player extends SceneEntity {
 
     @Override
     public int computeAttack() {
-        return 0;
+        return PlayerAttack.computeFinalAttack(this);
     }
 
 
@@ -89,9 +90,9 @@ public class Player extends SceneEntity {
     /**
      * 玩家技能信息
      */
-    public PlayerSkillInfo getPlayerSkillInfo(){
-        SpringContextUtil.getApplicationContext().getBean(SkillService.class);
-        return null;
+    public PlayerSkill getPlayerSkillInfo(){
+        SkillService skillService = SpringContextUtil.getApplicationContext().getBean(SkillService.class);
+        return skillService.getPlayerSkill(actorId);
     }
 
     /**
@@ -180,6 +181,11 @@ public class Player extends SceneEntity {
             this.hp = 0;
             triggerDeadEvent();
         }
+    }
+
+    public boolean hasSkill(int skillId){
+        PlayerSkill playerSkillInfo = getPlayerSkillInfo();
+        return playerSkillInfo.getSkillMap().containsKey(skillId);
     }
 
 }
