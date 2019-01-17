@@ -8,6 +8,7 @@
   {
     "monsterId": 2,
     "name": "黑水玄蛇",
+    "attack": 5,
     "hp": 1000,
     "sceneIds": [1,2,3,4]
   }

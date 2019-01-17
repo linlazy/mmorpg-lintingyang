@@ -6,6 +6,7 @@ import com.google.common.cache.LoadingCache;
 import com.linlazy.mmorpg.constants.SceneEntityType;
 import com.linlazy.mmorpg.dao.PlayerDAO;
 import com.linlazy.mmorpg.domain.Player;
+import com.linlazy.mmorpg.domain.Skill;
 import com.linlazy.mmorpg.entity.PlayerEntity;
 import com.linlazy.mmorpg.module.common.event.ActorEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
@@ -37,6 +38,9 @@ public class PlayerService {
 
     @Autowired
     private PlayerDAO playerDAO;
+
+    @Autowired
+    private SkillService skillService;
 
     /**
      * 玩家缓存
@@ -187,17 +191,6 @@ public class PlayerService {
     }
 
 
-
-    /**
-     * 处理玩家受到伤害事件
-     * @param actorEvent
-     */
-    private void handleActorDamage(ActorEvent actorEvent) {
-//        JSONObject jsonObject = (JSONObject) actorEvent.getData();
-//        long actorId = actorEvent.getActorId();
-//        userManager.handleActorDamage(actorId,jsonObject);
-    }
-
     public Result<?> selectProfession(long actorId, int professionId) {
 
         //todo 校验
@@ -210,4 +203,10 @@ public class PlayerService {
         return Result.success("选择职业成功");
     }
 
+    public Result<?> attack(long actorId, long skillId) {
+        Player player = getPlayer(actorId);
+        Skill skill = player.getPlayerSkillInfo().getSkillMap().get(skillId);
+        skillService.attack(player,skill);
+        return Result.success();
+    }
 }

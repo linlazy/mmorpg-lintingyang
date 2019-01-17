@@ -37,6 +37,11 @@ public class SkillConfigService {
      */
     private static final Map<Long, List<SkillConfig>> bossIdSkillMap = new HashMap<>();
 
+    /**
+     * monsterID 与技能映射
+     */
+    private static final Map<Long, List<SkillConfig>> monsterIdSkillMap = new HashMap<>();
+
     @PostConstruct
     public void init(){
         JSONArray jsonArray = skillConfigFile.getJsonArray();
@@ -50,12 +55,14 @@ public class SkillConfigService {
             int skillTemplateId = jsonObject.getIntValue("skillTemplateId");
             JSONObject skillTemplateArgs = jsonObject.getJSONObject("skillTemplateArgs");
             List<Long> bossIds = jsonObject.getJSONArray("bossIds").toJavaList(Long.class);
+            List<Long> monsterIds = jsonObject.getJSONArray("monsterIds").toJavaList(Long.class);
 
             skillConfig.setSkillId(skillId);
             skillConfig.setName(name);
             skillConfig.setSkillTemplateId(skillTemplateId);
             skillConfig.setSkillTemplateArgs(skillTemplateArgs);
             skillConfig.setBossIds(bossIds);
+            skillConfig.setMonsterIds(monsterIds);
 
             SKILL_ID_MAP.putIfAbsent(skillId, skillConfig);
 
@@ -63,6 +70,13 @@ public class SkillConfigService {
             for(Long bossId: bossIds){
                 bossIdSkillMap.computeIfAbsent(bossId, k -> new ArrayList<>());
                 List<SkillConfig> skillConfigList = bossIdSkillMap.get(bossId);
+                skillConfigList.add(skillConfig);
+            }
+
+            // 构建monsterID 与技能映射
+            for(Long monsterId: monsterIds){
+                monsterIdSkillMap.computeIfAbsent(monsterId, k -> new ArrayList<>());
+                List<SkillConfig> skillConfigList = monsterIdSkillMap.get(monsterId);
                 skillConfigList.add(skillConfig);
             }
         }
@@ -87,5 +101,14 @@ public class SkillConfigService {
      */
     public List<SkillConfig> getBossSkillConfigList(long bossId){
         return bossIdSkillMap.get(bossId);
+    }
+
+    /**
+     * monster技能
+     * @param monsterId monster标识
+     * @return
+     */
+    public List<SkillConfig> getMonsterSkillConfigList(long monsterId){
+        return monsterIdSkillMap.get(monsterId);
     }
 }

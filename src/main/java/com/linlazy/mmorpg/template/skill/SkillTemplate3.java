@@ -35,16 +35,10 @@ public  class SkillTemplate3 extends BaseSkillTemplate {
 
     }
 
-    @Override
-    public void useSkill(SceneEntity sceneEntity, Skill skill) {
-        //获取使用技能对象的攻击力
-        int attack = skill.getSkillTemplateArgs().getIntValue("attack");
-        //获取使用技能对象所处的可受攻击对象
-        Set<SceneEntity> sceneEntitySet =attackedSceneEntitySet(sceneEntity,skill);
-        for(SceneEntity attackedSceneEntity: sceneEntitySet){
-            attackedSceneEntity.attacked(attack);
-        }
 
+    @Override
+    protected Set<SceneEntity> selectAttackedSceneEntity(SceneEntity sceneEntity, Skill skill, Set<SceneEntity> allSceneEntity) {
+        return null;
     }
 
     /**
@@ -64,6 +58,7 @@ public  class SkillTemplate3 extends BaseSkillTemplate {
             if(sceneEntity.getSceneEntityType() != SceneEntityType.PLAYER){
 
                 Set<Player> players = copy.getPlayerCopyInfoMap().values().stream()
+                        .filter(playerCopyInfo -> playerCopyInfo.getPlayer().getSceneId() == sceneEntity.getSceneId())
                         .map(PlayerCopyInfo::getPlayer)
                         .collect(Collectors.toSet());
 

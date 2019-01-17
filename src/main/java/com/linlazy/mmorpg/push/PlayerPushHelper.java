@@ -24,6 +24,11 @@ public class PlayerPushHelper {
         jsonObject.put("code",playerDTO.toString());
         PushHelper.push(actorId,jsonObject);
     }
+    public static void pushAttacked(long actorId, String message){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("code",message);
+        PushHelper.push(actorId,jsonObject);
+    }
 
     public static void pushLogin(long actorId, String message){
         JSONObject jsonObject = new JSONObject();

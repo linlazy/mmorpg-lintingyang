@@ -25,4 +25,14 @@ public class CopyPushHelper {
         PushHelper.push(actorId,jsonObject);
     }
 
+    /**
+     * 副本小怪刷新
+     * @param actorId
+     * @param message
+     */
+    public static void pushCopyMonsterRefresh(long actorId, String message){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("code",message);
+        PushHelper.push(actorId,jsonObject);
+    }
 }

@@ -93,4 +93,24 @@ public class SkillService {
                 })
                 .collect(toList());
     }
+
+    public List<Skill> getMonsterSkillList(long monsterId){
+        List<SkillConfig> monsterSkillConfigList = skillConfigService.getMonsterSkillConfigList(monsterId);
+        return monsterSkillConfigList.stream()
+                .map(skillConfig -> {
+                    Skill skill = new Skill();
+
+                    skill.setSkillId(skillConfig.getSkillId());
+                    skill.setSkillTemplateId(skillConfig.getSkillTemplateId());
+                    skill.setSkillTemplateArgs(skillConfig.getSkillTemplateArgs());
+                    skill.setName(skillConfig.getName());
+
+                    return skill;
+                })
+                .collect(toList());
+    }
+
+    public Skill getSkill(long skillId) {
+        return null;
+    }
 }

@@ -17,12 +17,7 @@ public class MonsterSkillInfo {
      */
     private long monsterId;
 
-    /**
-     * boss技能
-     */
-    private Set<Skill> skillSet = new HashSet<>();
 
-    public Skill randomSkill(){
-        return RandomUtils.randomElement(skillSet);
-    }
+
+
 }

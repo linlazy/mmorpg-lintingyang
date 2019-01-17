@@ -118,6 +118,7 @@ public class SceneService {
 
             Copy copy =getCopy(sceneEntity.getCopyId());
             Set<Player> playerSet = copy.getPlayerCopyInfoMap().values().stream()
+                    .filter(playerCopyInfo -> playerCopyInfo.getPlayer().getSceneId() == sceneEntity.getSceneId())
                     .map(PlayerCopyInfo::getPlayer).collect(Collectors.toSet());
             List<Boss> copyBoss = copy.getBossList();
             Collection<Monster> monsterSet = copy.getMonsterMap().values();

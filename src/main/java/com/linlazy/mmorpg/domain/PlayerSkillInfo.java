@@ -1,12 +1,15 @@
 package com.linlazy.mmorpg.domain;
 
-import java.util.HashSet;
-import java.util.Set;
+import lombok.Data;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 玩家技能信息
  * @author linlazy
  */
+@Data
 public class PlayerSkillInfo {
 
     /**
@@ -17,5 +20,5 @@ public class PlayerSkillInfo {
     /**
      * 玩家技能
      */
-    private Set<Skill> skillSet = new HashSet<>();
+    private Map<Long,Skill> skillMap = new HashMap<>();
 }

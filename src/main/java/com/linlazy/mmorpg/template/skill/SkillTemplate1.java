@@ -1,11 +1,16 @@
 package com.linlazy.mmorpg.template.skill;
 
 
-import com.alibaba.fastjson.JSONObject;
+import com.linlazy.mmorpg.constants.SceneEntityType;
+import com.linlazy.mmorpg.domain.Player;
 import com.linlazy.mmorpg.domain.SceneEntity;
 import com.linlazy.mmorpg.domain.Skill;
-import com.linlazy.mmorpg.utils.DateUtils;
+import com.linlazy.mmorpg.utils.RandomUtils;
 import org.springframework.stereotype.Component;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 攻击力为A，具有B秒冷却时间
@@ -20,19 +25,34 @@ public  class SkillTemplate1 extends BaseSkillTemplate {
         return 1;
     }
 
-    public void useSkill(SceneEntity sceneEntity, Skill skill, JSONObject jsonObject) {
-        JSONObject skillTemplateArgs = skill.getSkillTemplateArgs();
-        int attack = skillTemplateArgs.getIntValue("attack");
-        int skillAttack = sceneEntity.computeAttack();
+    @Override
+    protected Set<SceneEntity> selectAttackedSceneEntity(SceneEntity sceneEntity, Skill skill, Set<SceneEntity> allSceneEntity) {
+        Set<SceneEntity> sceneEntitySet = new HashSet<>();
 
-        int cd = skillTemplateArgs.getIntValue("cd");
-        skill.setNextCDResumeTimes(DateUtils.getNowMillis() + cd * 1000);
+        if(sceneEntity.getSceneEntityType() == SceneEntityType.PLAYER){
+            Player player = (Player) sceneEntity;
 
-        SceneEntity targetSceneEntity = jsonObject.getObject("targetSceneEntity", SceneEntity.class);
-        targetSceneEntity.attacked(attack+skillAttack);
+            for (SceneEntity targetSceneEntity :allSceneEntity){
+                //小怪，boss
+                if(targetSceneEntity.getSceneEntityType() !=SceneEntityType.PLAYER){
+                    sceneEntitySet.add(targetSceneEntity);
+                }else {
+                    // 非玩家队员
+                    Player playerSceneEntity= (Player) targetSceneEntity;
+                    if(player.getTeam().getPlayerTeamInfoMap().containsKey(playerSceneEntity.getActorId())){
+                        sceneEntitySet.add(sceneEntity);
+                    }
+                }
+            }
 
+        }else if(sceneEntity.getSceneEntityType() !=SceneEntityType.PLAYER){
+            Set<SceneEntity> players = allSceneEntity.stream()
+                    .filter(sceneEntity1 -> sceneEntity1.getSceneEntityType() == SceneEntityType.PLAYER)
+                    .filter(sceneEntity1 -> sceneEntity1.getHp() > 0 )
+                    .collect(Collectors.toSet());
+            SceneEntity sceneEntity1 = RandomUtils.randomElement(players);
+            sceneEntitySet.add(sceneEntity1);
+        }
+        return sceneEntitySet;
     }
-
-
-
 }

@@ -9,6 +9,8 @@ import com.linlazy.mmorpg.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Set;
+
 /**
  * 召唤召唤师协助作战,持续时间A秒，具有B秒冷却时间,消耗C点MP
  * @author linlazy
@@ -35,6 +37,11 @@ public  class SkillTemplate4 extends BaseSkillTemplate {
 
         int continueTime = skillTemplateArgs.getIntValue("continueTime");
         callService.createCall(sceneEntity,continueTime);
+    }
+
+    @Override
+    protected Set<SceneEntity> selectAttackedSceneEntity(SceneEntity sceneEntity, Skill skill, Set<SceneEntity> allSceneEntity) {
+        return null;
     }
 
 }

@@ -431,4 +431,15 @@ public class CmdHandler {
         return playerBackpackService.push(actorId, Lists.newArrayList(item));
     }
 
+    /**
+     *  攻击
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("attack")
+    public Result<?> attack(JSONObject jsonObject){
+        long actorId = jsonObject.getLong("actorId");
+        long skillId = jsonObject.getLong("skillId");
+        return playerService.attack(actorId,skillId);
+    }
 }

@@ -80,6 +80,22 @@ public class CopyService {
 
 
     @Subscribe
+    public void copyRefreshMonster(CopyRefreshMonsterEvent copyRefreshMonsterEvent) {
+        Copy copy = copyRefreshMonsterEvent.getCopy();
+
+        copy.cancelMonsterAutoAttackSchedule();
+        copy.clearMonster();
+        //初始化副本小怪信息信息
+        Map<Integer, Monster> monsterMap= monsterService.getMonsterBySceneId(copy.getSceneId());
+        monsterMap.values().forEach(monster ->monster.setCopyId(copy.getCopyId()));
+        copy.setMonsterMap(monsterMap);
+        copy.getPlayerCopyInfoMap().values().forEach(playerCopyInfo ->
+                CopyPushHelper.pushCopyMonsterRefresh(playerCopyInfo.getPlayer().getActorId(),"副本小怪刷新"));
+        //开启小怪定时攻击调度
+        copy.startMonsterAutoAttackScheduled();
+    }
+
+    @Subscribe
     public void enterCopy(CopyEnterEvent copyEnterEvent) {
         Player player =copyEnterEvent.getPlayer();
         //如果玩家不在副本中
@@ -109,6 +125,9 @@ public class CopyService {
     @Subscribe
     public void copyFail(CopyFailEvent copyFailEvent){
         Copy copy = copyFailEvent.getCopy();
+        copy.getPlayerCopyInfoMap().values()
+                .stream()
+                .forEach(playerCopyInfo -> playerCopyInfo.getPlayer().setHp(playerCopyInfo.getPlayer().getMaxHP()/2));
         clearCopy(copy);
     }
 
@@ -120,10 +139,14 @@ public class CopyService {
      */
     @Subscribe
     public void copyPlayerDead(CopyPlayerDeadEvent playerDeadEvent){
-        PlayerCopyInfo playerCopyInfo = playerDeadEvent.getPlayer().getPlayerCopyInfo();
+        Player player = playerDeadEvent.getPlayer();
 
-        Copy copy = getCopy(playerCopyInfo.getCopyId());
+        Copy copy = getCopy(player.getCopyId());
         if(copy.isAllActorDead()){
+            copy.getPlayerCopyInfoMap().values().stream()
+                    .forEach(playerCopyInfo -> {
+                        CopyPushHelper.pushCopyFail(playerCopyInfo.getPlayer().getActorId(),"挑战副本失败，全部玩家阵亡");
+                    });
             copyFail(new CopyFailEvent(copy));
         }
     }
@@ -197,11 +220,13 @@ public class CopyService {
         copy.setBossList(copyBoss);
         //初始化副本小怪信息信息
         Map<Integer, Monster> monsterMap= monsterService.getMonsterBySceneId(player.getSceneId());
+        monsterMap.values().forEach(monster ->monster.setCopyId(copy.getCopyId()));
         copy.setMonsterMap(monsterMap);
         //初始化副本玩家信息
 
-        Team team = teamService.getTeam(actorId);
-        if(team != null){
+
+        if(player.isTeam()){
+            Team team = teamService.getTeamByactorId(actorId);
             copy.initCopyPlayerInfo(team);
             team.getPlayerTeamInfoMap().values().forEach(playerTeamInfo -> {
                 long actorId1 = playerTeamInfo.getPlayer().getActorId();

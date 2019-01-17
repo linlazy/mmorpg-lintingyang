@@ -27,6 +27,11 @@ public class SkillConfig {
     private List<Long> bossIds;
 
     /**
+     * 具有该技能的怪物集合
+     */
+    private List<Long> monsterIds;
+
+    /**
      * 技能模板ID
      */
     private int skillTemplateId;

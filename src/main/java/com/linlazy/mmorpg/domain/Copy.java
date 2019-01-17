@@ -63,6 +63,8 @@ public class Copy extends Scene{
      * 副本调度线程池
      */
     ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(20);
+    ScheduledFuture<?> quitSchedule;
+    ScheduledFuture<?>  refreshMonsterScheduled;
 
 
     /**
@@ -116,10 +118,10 @@ public class Copy extends Scene{
                 .forEach(monster -> {
 
                     ScheduledFuture<?> scheduledFuture = scheduledExecutorService.scheduleAtFixedRate(() -> {
-                        Skill skill = monster.getMonsterSkillInfo().randomSkill();
+                        Skill skill = monster.randomSkill();
 
                         skillService.attack(monster,skill);
-                    }, 0L, 5L, TimeUnit.SECONDS);
+                    }, 0L, 2L, TimeUnit.SECONDS);
                     monsterIdAutoAttackScheduleMap.put(copyId,scheduledFuture);
                 });
     }
@@ -129,10 +131,12 @@ public class Copy extends Scene{
      */
     public void startRefreshMonsterScheduled() {
         //到达时间后挑战结束,退出副本触发事件
-        scheduledExecutorService.scheduleAtFixedRate(() -> {
+        refreshMonsterScheduled = scheduledExecutorService.scheduleAtFixedRate(() -> {
             EventBusHolder.post(new CopyRefreshMonsterEvent(this));
             logger.debug("到达时间后，触发小怪刷新事件");
-        }, 0L,300, TimeUnit.SECONDS);
+
+
+        }, 0L, 10L, TimeUnit.SECONDS);
     }
 
     /**
@@ -144,7 +148,7 @@ public class Copy extends Scene{
         SceneConfig sceneConfig = sceneConfigService.getSceneConfig(this.getSceneId());
         int times = sceneConfig.getOverTimeSeconds();
         //到达时间后挑战结束,退出副本触发事件
-        ScheduledFuture<?> schedule = scheduledExecutorService.schedule(() -> {
+        quitSchedule = scheduledExecutorService.schedule(() -> {
             EventBusHolder.post(new CopyFailEvent(this));
             this.getPlayerCopyInfoMap().values().stream()
                     .forEach(playerCopyInfo -> {
@@ -191,17 +195,29 @@ public class Copy extends Scene{
                     sceneService.moveToScene(playerCopyInfo.getPlayer().getActorId(),targetSceneId);
                 });
 
-        //取消调度，怪物自动刷新，小怪，BOSS定时攻击
+        //取消调度，怪物自动刷新，小怪，BOSS定时攻击,超时退出副本
         bossIdAutoAttackScheduleMap.values()
                 .forEach(scheduledFuture -> scheduledFuture.cancel(true));
         monsterIdAutoAttackScheduleMap.values()
                 .forEach(scheduledFuture -> scheduledFuture.cancel(true));
         copyIdMonsterRefreshScheduleMap.values()
                 .forEach(scheduledFuture -> scheduledFuture.cancel(true));
-
+        quitSchedule.cancel(true);
+        refreshMonsterScheduled.cancel(true);
     }
 
     public void initCopyPlayerInfo(Player player) {
         playerCopyInfoMap.put(player.getActorId(),new PlayerCopyInfo(copyId,player));
+    }
+
+
+
+    public void clearMonster() {
+        monsterMap.clear();
+    }
+
+    public void cancelMonsterAutoAttackSchedule() {
+        monsterIdAutoAttackScheduleMap.values()
+                .forEach(scheduledFuture -> scheduledFuture.cancel(true));
     }
 }

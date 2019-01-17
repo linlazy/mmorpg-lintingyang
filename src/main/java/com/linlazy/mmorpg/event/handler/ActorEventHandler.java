@@ -47,13 +47,9 @@ public class ActorEventHandler extends GameEvenHandler {
         sameScenePlayerSet.stream()
 //                .filter(sameScenePlayer -> sameScenePlayer.getActorId() != deadPlayer.getActorId())
                 .forEach(sameScenePlayer -> {
-                    PlayerPushHelper.pushPlayerDead(deadPlayer.getActorId(),String.format("玩家【%s】已死亡",deadPlayer.getName()));
+                    PlayerPushHelper.pushPlayerDead(sameScenePlayer.getActorId(),String.format("玩家【%s】已死亡",deadPlayer.getName()));
                 });
 
-//        //如果是副本，触发副本玩家死亡事件
-//        if(sceneConfigService.isCopyScene(deadPlayer.getSceneId())){
-//            EventBusHolder.register(new CopyPlayerDeadEvent(deadPlayer));
-//        }
     }
 
     /**

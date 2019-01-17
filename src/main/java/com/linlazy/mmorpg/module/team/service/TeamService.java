@@ -207,4 +207,8 @@ public class TeamService {
 
         return Result.success(new TeamDTO(team).toString());
     }
+
+    public boolean isTeam(long actorId) {
+        return playerTeamIdMap.get(actorId) != null;
+    }
 }

@@ -2,6 +2,7 @@ package com.linlazy.mmorpg.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpg.domain.Monster;
+import com.linlazy.mmorpg.domain.Skill;
 import com.linlazy.mmorpg.file.service.MonsterConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,8 @@ public class MonsterService {
 
     @Autowired
     private MonsterConfigService monsterConfigService;
-
+    @Autowired
+    private SkillService skillService;
 
     /**
      * 获取场景怪物
@@ -34,11 +36,16 @@ public class MonsterService {
             int monsterId = sceneMonsterConfig.getIntValue("monsterId");
             String name = sceneMonsterConfig.getString("name");
             int hp = sceneMonsterConfig.getIntValue("hp");
+            int attack = sceneMonsterConfig.getIntValue("attack");
             Monster monster = new Monster();
             monster.setMonsterId(monsterId);
             monster.setName(name);
             monster.setSceneId(sceneId);
             monster.setHp(hp);
+            monster.setAttack(attack);
+
+            List<Skill> monsterSkillList = skillService.getMonsterSkillList(monster.getMonsterId());
+            monster.setSkillList(monsterSkillList);
 
             monsterMap.put(monster.getMonsterId(),monster);
         }

@@ -1,6 +1,11 @@
 package com.linlazy.mmorpg.domain;
 
+import com.linlazy.mmorpg.utils.RandomUtils;
 import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 怪物
@@ -9,15 +14,26 @@ import lombok.Data;
 @Data
 public class Monster extends SceneEntity {
 
+    private static final AtomicLong atomicLong = new AtomicLong(0);
 
+    public Monster() {
+        this.id =atomicLong.incrementAndGet();
+    }
+
+
+    private long id;
     private int sceneId;
 
     private int monsterId;
 
+    private int attack;
+
     /**
-     * 小怪技能信息
+     * 小怪技能
      */
-    private MonsterSkillInfo monsterSkillInfo;
+    private List<Skill> skillList = new ArrayList<>();
+
+
 
     @Override
     protected int computeDefense() {
@@ -26,13 +42,16 @@ public class Monster extends SceneEntity {
 
     @Override
     public int computeAttack() {
-        return 0;
+        return attack;
     }
 
 
-    public MonsterSkillInfo getMonsterSkillInfo(){
-        return monsterSkillInfo;
+    public Skill randomSkill(){
+        return RandomUtils.randomElement(skillList);
     }
 
-
+    @Override
+    public int hashCode() {
+        return (int) this.id;
+    }
 }

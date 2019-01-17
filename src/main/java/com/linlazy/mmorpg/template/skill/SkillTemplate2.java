@@ -9,6 +9,8 @@ import com.linlazy.mmorpg.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Set;
+
 /**
  * 瞬时回复A点HP，具有B秒冷却时间,消耗C点MP
  * @author linlazy
@@ -24,7 +26,12 @@ public  class SkillTemplate2 extends BaseSkillTemplate {
         return 2;
     }
 
-//    @Override
+    @Override
+    protected Set<SceneEntity> selectAttackedSceneEntity(SceneEntity sceneEntity, Skill skill, Set<SceneEntity> allSceneEntity) {
+        return null;
+    }
+
+    //    @Override
     public void useSkill(SceneEntity sceneEntity, Skill skill,JSONObject jsonObject) {
         JSONObject skillTemplateArgs = skill.getSkillTemplateArgs();
         //技能冷却，消耗MP

@@ -40,7 +40,7 @@ public abstract class SceneEntity {
      */
     protected int hp;
 
-    private  int maxHP;
+    private  int maxHP = 300;
 
     /**
      * 蓝
@@ -57,7 +57,8 @@ public abstract class SceneEntity {
 
     protected abstract int computeDefense();
 
-    public void attacked(int attack){
+    public void attacked(SceneEntity sceneEntity, Skill skill){
+        int attack = sceneEntity.computeAttack();
         int defense = computeDefense();
         int damage = attack > defense?attack - defense: 1;
         this.hp -= damage;
@@ -119,10 +120,6 @@ public abstract class SceneEntity {
             }
         }
 
-        if(sceneEntityType == SceneEntityType.PLAYER){
-            Player player = (Player)this;
-            player.damageHp(damage);
-        }
 
         long actorId = jsonObject.getLongValue("actorId");
         if( actorId != 0){

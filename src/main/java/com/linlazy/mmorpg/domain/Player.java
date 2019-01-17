@@ -7,6 +7,9 @@ import com.linlazy.mmorpg.module.backpack.service.PlayerBackpackService;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.equip.manager.domain.DressedEquip;
 import com.linlazy.mmorpg.module.team.service.TeamService;
+import com.linlazy.mmorpg.push.PlayerPushHelper;
+import com.linlazy.mmorpg.service.SkillService;
+import com.linlazy.mmorpg.utils.DateUtils;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import lombok.Data;
 
@@ -56,16 +59,6 @@ public class Player extends SceneEntity {
         return 0;
     }
 
-    public int damageHp(int damageHp){
-        synchronized (this){
-            this.hp -= hp;
-            if(this.hp <0){
-                this.hp = 0;
-                EventBusHolder.post(new PlayerDeadEvent(this));
-            }
-            return this.hp;
-        }
-    }
 
     /**
      * 蓝
@@ -96,7 +89,10 @@ public class Player extends SceneEntity {
     /**
      * 玩家技能信息
      */
-    private PlayerSkillInfo playerSkillInfo;
+    public PlayerSkillInfo getPlayerSkillInfo(){
+        SpringContextUtil.getApplicationContext().getBean(SkillService.class);
+        return null;
+    }
 
     /**
      * 玩家任务信息
@@ -125,6 +121,12 @@ public class Player extends SceneEntity {
 
     public Player(Long actorId) {
         this.actorId =actorId;
+    }
+
+
+    public boolean isTeam(){
+        TeamService teamService = SpringContextUtil.getApplicationContext().getBean(TeamService.class);
+        return teamService.isTeam(actorId);
     }
 
     /**
@@ -164,6 +166,20 @@ public class Player extends SceneEntity {
         return Objects.hash(actorId);
     }
 
+    @Override
+    public void attacked(SceneEntity sceneEntity,Skill skill){
+        int attack = sceneEntity.computeAttack();
+        int defense = computeDefense();
+        int damage = attack > defense?attack - defense: 1;
+        this.hp -= damage;
 
+
+        if(hp > 0){
+            PlayerPushHelper.pushAttacked(actorId,String.format("%d 玩家【%s】受到【%s,hash码：%s】技能【%s】攻击：血量:%d", DateUtils.getNowMillis()/1000,name,sceneEntity.getName(),sceneEntity.hashCode(),skill.getName(),hp));
+        } else {
+            this.hp = 0;
+            triggerDeadEvent();
+        }
+    }
 
 }

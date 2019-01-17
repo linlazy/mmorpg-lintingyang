@@ -1,9 +1,8 @@
 package com.linlazy.mmorpg.template.skill;
 
-import com.google.common.collect.Sets;
 import com.linlazy.mmorpg.constants.SkillType;
-import com.linlazy.mmorpg.domain.Skill;
 import com.linlazy.mmorpg.domain.SceneEntity;
+import com.linlazy.mmorpg.domain.Skill;
 import com.linlazy.mmorpg.service.SceneService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -54,7 +53,7 @@ public abstract class BaseSkillTemplate {
             Set<SceneEntity> allSceneEntity = sceneService.getAllSceneEntity(sceneEntity);
             Set<SceneEntity> sceneEntitySet = selectAttackedSceneEntity(sceneEntity,skill, allSceneEntity);
             for(SceneEntity targetSceneEntity: sceneEntitySet){
-                targetSceneEntity.attacked(sceneEntity.computeAttack());
+                targetSceneEntity.attacked(sceneEntity,skill);
             }
         }
 
@@ -69,10 +68,7 @@ public abstract class BaseSkillTemplate {
 
     }
 
-    protected  Set<SceneEntity> selectAttackedSceneEntity(SceneEntity sceneEntity, Skill skill, Set<SceneEntity> allSceneEntity){
-
-        return Sets.newHashSet();
-    }
+    protected abstract Set<SceneEntity> selectAttackedSceneEntity(SceneEntity sceneEntity, Skill skill, Set<SceneEntity> allSceneEntity);
 
 
 }

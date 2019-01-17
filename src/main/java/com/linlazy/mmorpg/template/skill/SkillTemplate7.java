@@ -27,19 +27,7 @@ public class SkillTemplate7 extends BaseSkillTemplate {
         return 7;
     }
 
-    /**
-     *
-     * @param sceneEntity 使用技能的场景实体对象
-     * @param skill //场景实体使用的技能
-     */
-    public  void useSkill(SceneEntity sceneEntity, Skill skill, Set<SceneEntity> sceneEntitySet) {
-        //获取使用技能对象的攻击力
-        int attack = skill.getSkillTemplateArgs().getIntValue("attack");
-        //获取使用技能对象所处的可受攻击对象
-        for(SceneEntity attackedSceneEntity: sceneEntitySet){
-            attackedSceneEntity.attacked(attack);
-        }
-    }
+
 
     @Override
     protected Set<SceneEntity> selectAttackedSceneEntity(SceneEntity sceneEntity, Skill skill, Set<SceneEntity> allSceneEntity) {
