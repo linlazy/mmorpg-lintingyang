@@ -15,14 +15,16 @@ public class TeamPushHelper {
         PushHelper.push(actorId,jsonObject);
     }
 
-//    public static void pushShotOffTeam(long actorId,long sourceId,long targetId, int teamOperationType) {
-//        JSONObject jsonObject = new JSONObject();
-//        TeamDTO teamDTO = new TeamDTO();
-//        teamDTO.setSourceId(sourceId);
-//        teamDTO.setTargetId(targetId);
-//        teamDTO.setTeamOperatorType(teamOperationType);
-//        jsonObject.put("team", teamDTO);
-//        PushHelper.push(actorId,jsonObject);
-//    }
+    public static void pushTeamCaption(long actorId, String message) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("code", message);
+        PushHelper.push(actorId,jsonObject);
+    }
+
+    public static void pushLeaveTeam(long actorId, String message) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("code", message);
+        PushHelper.push(actorId,jsonObject);
+    }
 
 }

@@ -43,6 +43,11 @@ public class PlayerService {
     private SkillService skillService;
 
     /**
+     * 同步锁
+     */
+    private byte[] synLock = new byte[0];
+
+    /**
      * 玩家缓存
      */
     public static LoadingCache<Long, Player> playerCache = CacheBuilder.newBuilder()
@@ -167,27 +172,31 @@ public class PlayerService {
         if(!password.equals(confirmPassword)){
             return Result.valueOf("俩次输入密码不一致");
         }
+        PlayerEntity playerEntity = null;
+        synchronized (synLock){
+            playerEntity = playerDAO.getUserByUsername(username);
+            if(playerEntity != null){
+                return Result.valueOf("用户名已存在");
+            }
 
-        PlayerEntity playerEntity = playerDAO.getUserByUsername(username);
-        if(playerEntity != null){
-            return Result.valueOf("用户名已存在");
+            //注册
+            playerEntity = new PlayerEntity();
+            AtomicLong maxActorId = playerDAO.getMaxActorId();
+            playerEntity.setActorId(maxActorId.incrementAndGet());
+            playerEntity.setUsername(username);
+            playerEntity.setPassword(password);
+            playerDAO.insertQueue(playerEntity);
         }
-
-        //注册
-        playerEntity = new PlayerEntity();
-        AtomicLong maxActorId = playerDAO.getMaxActorId();
-        playerEntity.setActorId(maxActorId.incrementAndGet());
-        playerEntity.setUsername(username);
-        playerEntity.setPassword(password);
-        playerDAO.insertQueue(playerEntity);
+            SessionManager.bind(playerEntity.getActorId(),channel);
+            PlayerPushHelper.pushRegister(playerEntity.getActorId(),"请选择职业\n"+
+                    "输入profession 1，选择战士，高攻击，高防御\n"+
+                    "输入profession 2，选择牧师，携带治疗技能\n"+
+                    "输入profession 3，选择法师,携带群攻技能\n"+
+                    "输入profession 4，选择召唤师，携带召唤技能\n");
 
 
-        SessionManager.bind(playerEntity.getActorId(),channel);
-        PlayerPushHelper.pushRegister(playerEntity.getActorId(),"请选择职业\n"+
-                "输入profession 1，选择战士，高攻击，高防御\n"+
-                "输入profession 2，选择牧师，携带治疗技能\n"+
-                "输入profession 3，选择法师,携带群攻技能\n"+
-                "输入profession 4，选择召唤师，携带召唤技能\n");
+
+
         return Result.success("注册成功");
     }
 
