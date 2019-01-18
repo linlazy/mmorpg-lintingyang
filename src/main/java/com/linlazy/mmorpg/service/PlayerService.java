@@ -134,13 +134,12 @@ public class PlayerService {
             return Result.valueOf("已登录...");
         }
 
-        //todo 加密
         if(!playerEntity.getPassword().equals(password)){
             return Result.valueOf("用户名或密码不正确");
         }
 
         //登录同步锁
-//        synchronized (loginSynLock){
+        synchronized (loginSynLock){
 
             //同一个连接,不同账号登录
             if(SessionManager.getActorId(channel) != null &&
@@ -163,7 +162,7 @@ public class PlayerService {
             }
             //正常登录
             SessionManager.bind(playerEntity.getActorId(),channel);
-//        }
+        }
 
 
         EventBusHolder.post(new ActorEvent<>(playerEntity.getActorId(), EventType.LOGIN));
