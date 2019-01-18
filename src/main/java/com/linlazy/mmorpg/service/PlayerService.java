@@ -22,8 +22,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.PostConstruct;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -43,9 +47,14 @@ public class PlayerService {
     private SkillService skillService;
 
     /**
-     * 同步锁
+     * 注册同步锁
      */
-    private byte[] synLock = new byte[0];
+    private byte[] registerSynLock = new byte[0];
+
+    /**
+     * 登录同步锁
+     */
+    private byte[] loginSynLock = new byte[0];
 
     /**
      * 玩家缓存
@@ -66,6 +75,20 @@ public class PlayerService {
                     return player;
                 }
             });
+
+
+    /**
+     * 起服时构建set，供注册查询使用
+     */
+    private Set<String> set = new CopyOnWriteArraySet<>();
+    @PostConstruct
+    public void init(){
+        List<String> allPlayerUsername = playerDAO.selectAllPlayerUsername();
+        allPlayerUsername
+                .forEach(username->{
+                    set.add(username);
+                });
+    }
 
 
     public Player getPlayer(long actorId){
@@ -116,31 +139,32 @@ public class PlayerService {
             return Result.valueOf("用户名或密码不正确");
         }
 
+        //登录同步锁
+//        synchronized (loginSynLock){
 
-        //同一个连接,不同账号登录
-        if(SessionManager.getActorId(channel) != null &&
-                SessionManager.getActorId(channel) != playerEntity.getActorId()){
-            //原账号下线
-            SessionManager.unBind(channel);
-            //新账号上线
+            //同一个连接,不同账号登录
+            if(SessionManager.getActorId(channel) != null &&
+                    SessionManager.getActorId(channel) != playerEntity.getActorId()){
+                //原账号下线
+                SessionManager.unBind(channel);
+                //新账号上线
+                SessionManager.bind(playerEntity.getActorId(),channel);
+                PlayerPushHelper.pushLogin(playerEntity.getActorId(),"登录成功，原账号已下线");
+            }
+
+            //同一账号不同连接
+
+            if(SessionManager.getChannel(playerEntity.getActorId()) != null &&
+                    !SessionManager.getChannel(playerEntity.getActorId()).equals(channel)){
+                //通知原账号被迫下线
+                PlayerPushHelper.pushLogin(playerEntity.getActorId(),"被迫下线");
+                SessionManager.unBind(playerEntity.getActorId());
+                PlayerPushHelper.pushLogin(playerEntity.getActorId(),"登录成功，原账号已下线");
+            }
+            //正常登录
             SessionManager.bind(playerEntity.getActorId(),channel);
-            PlayerPushHelper.pushLogin(playerEntity.getActorId(),"登录成功，原账号已下线");
-        }
+//        }
 
-        //同一账号不同连接
-        if(SessionManager.getChannel(playerEntity.getActorId()) != null &&
-                !SessionManager.getChannel(playerEntity.getActorId()).equals(channel)){
-            //通知原账号被迫下线
-            PlayerPushHelper.pushLogin(playerEntity.getActorId(),"被迫下线");
-            SessionManager.unBind(playerEntity.getActorId());
-
-            //新账号上线
-            SessionManager.bind(playerEntity.getActorId(),channel);
-            PlayerPushHelper.pushLogin(playerEntity.getActorId(),"登录成功，原账号已下线");
-        }
-
-        //正常登录
-        SessionManager.bind(playerEntity.getActorId(),channel);
 
         EventBusHolder.post(new ActorEvent<>(playerEntity.getActorId(), EventType.LOGIN));
 
@@ -155,7 +179,9 @@ public class PlayerService {
     }
 
     public Result<?> logout(Channel channel) {
-        SessionManager.unBind(channel);
+        synchronized (loginSynLock){
+            SessionManager.unBind(channel);
+        }
         return Result.success("退出成功");
     }
 
@@ -173,19 +199,21 @@ public class PlayerService {
             return Result.valueOf("俩次输入密码不一致");
         }
         PlayerEntity playerEntity = null;
-        synchronized (synLock){
-            playerEntity = playerDAO.getUserByUsername(username);
-            if(playerEntity != null){
+        synchronized (registerSynLock){
+
+            if(set.contains(username)){
                 return Result.valueOf("用户名已存在");
             }
 
             //注册
+        System.out.println(Thread.currentThread().getName());
             playerEntity = new PlayerEntity();
             AtomicLong maxActorId = playerDAO.getMaxActorId();
             playerEntity.setActorId(maxActorId.incrementAndGet());
             playerEntity.setUsername(username);
             playerEntity.setPassword(password);
             playerDAO.insertQueue(playerEntity);
+            set.add(username);
         }
             SessionManager.bind(playerEntity.getActorId(),channel);
             PlayerPushHelper.pushRegister(playerEntity.getActorId(),"请选择职业\n"+
@@ -193,9 +221,6 @@ public class PlayerService {
                     "输入profession 2，选择牧师，携带治疗技能\n"+
                     "输入profession 3，选择法师,携带群攻技能\n"+
                     "输入profession 4，选择召唤师，携带召唤技能\n");
-
-
-
 
         return Result.success("注册成功");
     }

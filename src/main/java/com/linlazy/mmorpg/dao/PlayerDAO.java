@@ -6,7 +6,10 @@ import lombok.Data;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 /**
  * @author linlazy
@@ -25,6 +28,13 @@ public class PlayerDAO extends EntityDAO<PlayerEntity> {
         }else {
             maxActorId = new AtomicLong(selectMaxActorId());
         }
+    }
+
+    public List<String> selectAllPlayerUsername(){
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList("select * from player");
+        return maps.stream()
+                .map(map -> (String)map.get("username"))
+                .collect(Collectors.toList());
     }
 
     /**
