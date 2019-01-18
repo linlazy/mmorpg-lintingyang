@@ -100,8 +100,7 @@ public class PlayerService {
         return null;
     }
 
-    public Map<Long,Player> getSameScenePlayerMap(long actorId){
-        int sceneId = getPlayer(actorId).getSceneId();
+    public Map<Long,Player> getSameScenePlayerMap(int sceneId){
         Map<Long,Player> result = new HashMap<>();
 
        playerCache.asMap().values().stream()
@@ -173,6 +172,9 @@ public class PlayerService {
                     "输入profession 2，选择牧师，携带治疗技能\n"+
                     "输入profession 3，选择法师,携带群攻技能\n"+
                     "输入profession 4，选择召唤师，携带召唤技能\n");
+        }else {
+            Player player = getPlayer(playerEntity.getActorId());
+            PlayerPushHelper.pushPlayerInfo(player.getActorId(),new PlayerDTO(player));
         }
         return Result.success("登录成功");
     }
@@ -211,7 +213,10 @@ public class PlayerService {
             playerEntity.setActorId(maxActorId.incrementAndGet());
             playerEntity.setUsername(username);
             playerEntity.setPassword(password);
+            playerEntity.setHp(100);
             playerDAO.insertQueue(playerEntity);
+            Player player = new Player(playerEntity);
+            playerCache.put(player.getActorId(),player);
             set.add(username);
         }
             SessionManager.bind(playerEntity.getActorId(),channel);
@@ -227,13 +232,16 @@ public class PlayerService {
 
     public Result<?> selectProfession(long actorId, int professionId) {
 
-        //todo 校验
-        PlayerEntity playerEntity = playerDAO.getEntityByPK(actorId);
-        if(playerEntity.getProfession() != 0){
+        Player player = getPlayer(actorId);
+        if(player.getProfession() != 0){
             return Result.success("已选择职业...");
         }
-        playerEntity.setProfession(professionId);
-        playerDAO.updateQueue(playerEntity);
+        player.setProfession(professionId);
+        playerDAO.updateQueue(player.convertPlayerEntity());
+
+        skillService.initPlayerProfessionSkill(player);
+
+        PlayerPushHelper.pushPlayerInfo(player.getActorId(),new PlayerDTO(player));
         return Result.success("选择职业成功");
     }
 
@@ -255,7 +263,11 @@ public class PlayerService {
         Player player = getPlayer(actorId);
         player.setLevel(player.getLevel() + 1);
         PlayerPushHelper.pushChange(actorId,new PlayerDTO(player));
-        playerDAO.insertQueue(player.convertPlayerEntity());
+        playerDAO.updateQueue(player.convertPlayerEntity());
         return Result.success();
+    }
+
+    public void updatePlayer(Player player) {
+        playerDAO.updateQueue(player.convertPlayerEntity());
     }
 }

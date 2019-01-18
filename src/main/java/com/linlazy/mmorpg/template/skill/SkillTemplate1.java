@@ -51,16 +51,21 @@ public  class SkillTemplate1 extends BaseSkillTemplate {
                 }
             }
 
-            SceneEntity sceneEntity1 = RandomUtils.randomElement(sceneEntitySet);
-            result.add(sceneEntity1);
+            if(sceneEntitySet.size() > 0){
+                SceneEntity sceneEntity1 = RandomUtils.randomElement(sceneEntitySet);
+                result.add(sceneEntity1);
+            }
 
         }else if(sceneEntity.getSceneEntityType() !=SceneEntityType.PLAYER){
             Set<SceneEntity> players = allSceneEntity.stream()
                     .filter(sceneEntity1 -> sceneEntity1.getSceneEntityType() == SceneEntityType.PLAYER)
                     .filter(sceneEntity1 -> sceneEntity1.getHp() > 0 )
                     .collect(Collectors.toSet());
-            SceneEntity sceneEntity1 = RandomUtils.randomElement(players);
-            result.add(sceneEntity1);
+
+            if(players.size() >0){
+                SceneEntity sceneEntity1 = RandomUtils.randomElement(players);
+                result.add(sceneEntity1);
+            }
         }
         return result;
     }

@@ -70,7 +70,7 @@
 //        if(entityType == SceneEntityType.PLAYER){
 //             sceneEntity =SceneEntityDoFactory.newPlayerSceneEntityDo(entityId);
 //        }else {
-//            SceneDo sceneDo = sceneManager.getScene(actorId);
+//            SceneDo sceneDo = sceneManager.getSceneBySceneEntity(actorId);
 //            sceneEntity = sceneDo.getSceneEntitySet().stream()
 //                    .filter(sceneEntityDo1 -> sceneEntityDo1.getSceneEntityId() == entityId && sceneEntityDo1.getSceneEntityType() == entityType)
 //                    .findFirst().get();

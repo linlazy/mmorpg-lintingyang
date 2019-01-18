@@ -3,8 +3,7 @@ package com.linlazy.mmorpg.server.db.entity;
 import lombok.Data;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author linlazy
@@ -18,8 +17,8 @@ public abstract class Entity {
     private int operatorType;
 
 
-    private List<KeyValueEntry<String,Object>> pkKeyValue = new ArrayList<>();
-    private List<KeyValueEntry<String,Object>> ordinaryKeyValue = new ArrayList<>();
+    private Map<String,Object> pkKeyValue = new LinkedHashMap<>();
+    private Map<String,Object> ordinaryKeyValue = new LinkedHashMap<>();
 
     public Entity() {
         entityInfo = EntityInfo.ENTITY_INFO_MAP.get(this.getClass());
@@ -49,17 +48,14 @@ public abstract class Entity {
         init(pkKeyValue,entityInfo.getPkColumnNameList());
     }
 
-    private void init(List<KeyValueEntry<String, Object>> ordinaryKeyValue, List<String> ordinaryColumnNameList) {
+    private void init(Map<String, Object> ordinaryKeyValue, List<String> ordinaryColumnNameList) {
         for(String ordinaryColumnName: ordinaryColumnNameList){
             Class<? extends Entity> aClass = this.getClass();
             Field field = null;
             try {
                 field = aClass.getDeclaredField(ordinaryColumnName);
                 field.setAccessible(true);
-                KeyValueEntry<String,Object> keyValue = new KeyValueEntry<>() ;
-                keyValue.setKey(ordinaryColumnName);
-                keyValue.setValue(field.get(this));
-                ordinaryKeyValue.add(keyValue);
+                ordinaryKeyValue.put(ordinaryColumnName,field.get(this));
             } catch (NoSuchFieldException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {

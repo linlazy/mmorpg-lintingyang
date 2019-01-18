@@ -8,5 +8,5 @@ public interface SkillType {
     /**
      * 召唤类技能
      */
-    int CALL = 1;
+    int CALL = 2;
 }

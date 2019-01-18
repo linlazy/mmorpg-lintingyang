@@ -42,6 +42,12 @@ public class SkillConfigService {
      */
     private static final Map<Long, List<SkillConfig>> monsterIdSkillMap = new HashMap<>();
 
+
+    /**
+     * professionId 与技能映射
+     */
+    private static final Map<Long, List<SkillConfig>> professionIdSkillMap = new HashMap<>();
+
     @PostConstruct
     public void init(){
         JSONArray jsonArray = skillConfigFile.getJsonArray();
@@ -63,6 +69,9 @@ public class SkillConfigService {
             skillConfig.setSkillTemplateArgs(skillTemplateArgs);
             skillConfig.setBossIds(bossIds);
             skillConfig.setMonsterIds(monsterIds);
+            skillConfig.setProfessionId(jsonObject.getLongValue("professionId"));
+            skillConfig.setType(jsonObject.getIntValue("type"));
+
 
             SKILL_ID_MAP.putIfAbsent(skillId, skillConfig);
 
@@ -79,6 +88,11 @@ public class SkillConfigService {
                 List<SkillConfig> skillConfigList = monsterIdSkillMap.get(monsterId);
                 skillConfigList.add(skillConfig);
             }
+
+            // 构建professionId 与技能映射
+            professionIdSkillMap.computeIfAbsent(skillConfig.getProfessionId(), k -> new ArrayList<>());
+            List<SkillConfig> skillConfigList = professionIdSkillMap.get(skillConfig.getProfessionId());
+            skillConfigList.add(skillConfig);
         }
     }
 
@@ -110,5 +124,15 @@ public class SkillConfigService {
      */
     public List<SkillConfig> getMonsterSkillConfigList(long monsterId){
         return monsterIdSkillMap.get(monsterId);
+    }
+
+
+    /**
+     * 职业技能
+     * @param profession
+     * @return
+     */
+    public List<SkillConfig> getProfessionSkillConfig(long profession) {
+        return professionIdSkillMap.get(profession);
     }
 }

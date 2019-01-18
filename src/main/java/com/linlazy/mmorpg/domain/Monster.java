@@ -1,8 +1,12 @@
 package com.linlazy.mmorpg.domain;
 
+import com.linlazy.mmorpg.event.type.SceneMonsterDeadEvent;
+import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.push.PlayerPushHelper;
+import com.linlazy.mmorpg.service.SceneService;
 import com.linlazy.mmorpg.utils.DateUtils;
 import com.linlazy.mmorpg.utils.RandomUtils;
+import com.linlazy.mmorpg.utils.SpringContextUtil;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -38,7 +42,7 @@ public class Monster extends SceneEntity {
 
 
     @Override
-    protected int computeDefense() {
+    public int computeDefense() {
         return 0;
     }
 
@@ -75,5 +79,14 @@ public class Monster extends SceneEntity {
             this.hp = 0;
             triggerDeadEvent();
         }
+    }
+
+
+    @Override
+    protected void triggerDeadEvent() {
+        SceneService sceneService = SpringContextUtil.getApplicationContext().getBean(SceneService.class);
+        Scene scene = sceneService.getSceneBySceneEntity(this);
+        EventBusHolder.post(new SceneMonsterDeadEvent(scene,this));
+
     }
 }

@@ -56,7 +56,7 @@ public class Boss extends SceneEntity {
     }
 
     @Override
-    protected int computeDefense() {
+    public int computeDefense() {
         return 0;
     }
 

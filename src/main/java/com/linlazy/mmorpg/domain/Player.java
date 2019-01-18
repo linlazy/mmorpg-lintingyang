@@ -3,6 +3,7 @@ package com.linlazy.mmorpg.domain;
 import com.linlazy.mmorpg.attack.player.PlayerAttack;
 import com.linlazy.mmorpg.backpack.service.PlayerBackpackService;
 import com.linlazy.mmorpg.constants.SceneEntityType;
+import com.linlazy.mmorpg.defense.player.PlayerDefense;
 import com.linlazy.mmorpg.entity.PlayerEntity;
 import com.linlazy.mmorpg.event.type.CopyPlayerDeadEvent;
 import com.linlazy.mmorpg.event.type.PlayerDeadEvent;
@@ -37,6 +38,7 @@ public class Player extends SceneEntity {
         this.setSceneEntityType(SceneEntityType.PLAYER);
         this.setProfession(playerEntity.getProfession());
         this.setLevel(playerEntity.getLevel());
+        this.setSceneId(playerEntity.getSceneId());
     }
 
     /**
@@ -55,8 +57,8 @@ public class Player extends SceneEntity {
     private int level;
 
     @Override
-    protected int computeDefense() {
-        return 0;
+    public int computeDefense() {
+        return PlayerDefense.computeFinalDefense(this);
     }
 
     @Override
@@ -74,6 +76,7 @@ public class Player extends SceneEntity {
     public int computeAttack() {
         return PlayerAttack.computeFinalAttack(this);
     }
+
 
 
     /**
@@ -206,6 +209,7 @@ public class Player extends SceneEntity {
         playerEntity.setProfession(profession);
         playerEntity.setMp(mp);
         playerEntity.setGold(gold);
+        playerEntity.setSceneId(sceneId);
         return playerEntity;
     }
 

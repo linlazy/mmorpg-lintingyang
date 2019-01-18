@@ -43,7 +43,7 @@ public class ActorEventHandler extends GameEvenHandler {
     public void playerDead(PlayerDeadEvent playerDeadEvent){
         Player deadPlayer = playerDeadEvent.getPlayer();
         //广播通知与死亡玩家 同场景玩家
-        Map<Long, Player> sameScenePlayerMap = playerService.getSameScenePlayerMap(deadPlayer.getActorId());
+        Map<Long, Player> sameScenePlayerMap = playerService.getSameScenePlayerMap(deadPlayer.getSceneId());
         sameScenePlayerMap.values().stream()
 //                .filter(sameScenePlayer -> sameScenePlayer.getActorId() != deadPlayer.getActorId())
                 .forEach(sameScenePlayer -> {

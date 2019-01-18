@@ -1,6 +1,7 @@
 package com.linlazy.mmorpg.push;
 
 import com.alibaba.fastjson.JSONObject;
+import com.linlazy.mmorpg.domain.PlayerSkill;
 import com.linlazy.mmorpg.dto.PlayerDTO;
 import com.linlazy.mmorpg.server.common.PushHelper;
 
@@ -45,6 +46,18 @@ public class PlayerPushHelper {
     public static void pushPlayerDead(long actorId, String message) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("code",message);
+        PushHelper.push(actorId,jsonObject);
+    }
+
+    public static void pushPlayerInfo(long actorId,PlayerDTO playerDTO){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("code",playerDTO.toString());
+        PushHelper.push(actorId,jsonObject);
+    }
+
+    public static void pushPlayerSkillInfo(long actorId, PlayerSkill playerSkill){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("code",playerSkill.toString());
         PushHelper.push(actorId,jsonObject);
     }
 }

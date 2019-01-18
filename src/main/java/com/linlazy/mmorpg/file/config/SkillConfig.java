@@ -32,6 +32,11 @@ public class SkillConfig {
     private List<Long> monsterIds;
 
     /**
+     * 具备该技能的职业
+     */
+    private Long professionId;
+
+    /**
      * 技能模板ID
      */
     private int skillTemplateId;
@@ -41,5 +46,6 @@ public class SkillConfig {
      */
     private JSONObject skillTemplateArgs;
 
+    private int type;
 
 }

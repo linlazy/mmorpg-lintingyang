@@ -3,7 +3,6 @@ package com.linlazy.mmorpg.server.db.dao;
 
 import com.linlazy.mmorpg.server.db.entity.Entity;
 import com.linlazy.mmorpg.server.db.entity.EntityInfo;
-import com.linlazy.mmorpg.server.db.entity.KeyValueEntry;
 import com.linlazy.mmorpg.server.db.queue.DbQueueManager;
 import com.linlazy.mmorpg.server.db.statement.InsertStatement;
 import com.linlazy.mmorpg.server.db.statement.SelectStatement;
@@ -21,7 +20,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author linlazy
@@ -52,15 +50,12 @@ public  class BaseJdbc<T extends Entity>  {
 
         List<Object> args = new ArrayList<>();
         //获取主键参数值
-        List<KeyValueEntry<String, Object>> pkKeyValue = entity.getPkKeyValue();
-        List<Object> pkValueList = pkKeyValue.stream().map(KeyValueEntry::getValue).collect(Collectors.toList());
-        args.addAll(pkValueList);
+        Map<String, Object> pkKeyValue = entity.getPkKeyValue();
+        args.addAll(pkKeyValue.values());
 
         //获取普通列值
-        List<KeyValueEntry<String, Object>> ordinaryKeyValue = entity.getOrdinaryKeyValue();
-        List<Object> ordinaryValueList = ordinaryKeyValue.stream().map(KeyValueEntry::getValue).collect(Collectors.toList());
-        args.addAll(ordinaryValueList);
-
+        Map<String, Object> ordinaryKeyValue = entity.getOrdinaryKeyValue();
+        args.addAll(ordinaryKeyValue.values());
 
         String prepareSQL = InsertStatement.buildPrepareSQL(entity);
         jdbcTemplate.update(prepareSQL, args.toArray());
@@ -84,13 +79,11 @@ public  class BaseJdbc<T extends Entity>  {
         List<Object> args = new ArrayList<>();
 
         //获取普通列值
-        List<KeyValueEntry<String, Object>> ordinaryKeyValue = entity.getOrdinaryKeyValue();
-        List<Object> ordinaryValueList = ordinaryKeyValue.stream().map(KeyValueEntry::getValue).collect(Collectors.toList());
-        args.addAll(ordinaryValueList);
+        Map<String, Object> ordinaryKeyValue = entity.getOrdinaryKeyValue();
+        args.addAll( ordinaryKeyValue.values());
         //获取主键参数值
-        List<KeyValueEntry<String, Object>> pkKeyValue = entity.getPkKeyValue();
-        List<Object> pkValueList = pkKeyValue.stream().map(KeyValueEntry::getValue).collect(Collectors.toList());
-        args.addAll(pkValueList);
+        Map<String, Object> pkKeyValue = entity.getPkKeyValue();
+        args.addAll(pkKeyValue.values());
         String prepareSQL = UpdateStatement.buildPrepareSQL(entity);
         jdbcTemplate.update(prepareSQL,args.toArray());
     }
@@ -113,9 +106,8 @@ public  class BaseJdbc<T extends Entity>  {
         List<Object> args = new ArrayList<>();
 
         //获取主键参数值
-        List<KeyValueEntry<String, Object>> pkKeyValue = entity.getPkKeyValue();
-        List<Object> pkValueList = pkKeyValue.stream().map(KeyValueEntry::getValue).collect(Collectors.toList());
-        args.addAll(pkValueList);
+        Map<String, Object> pkKeyValue = entity.getPkKeyValue();
+        args.addAll(pkKeyValue.values());
         String prepareSQL = UpdateStatement.buildPrepareSQL(entity);
         jdbcTemplate.update(prepareSQL,args.toArray());
     }

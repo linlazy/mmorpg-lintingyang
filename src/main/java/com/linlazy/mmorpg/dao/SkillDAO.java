@@ -5,6 +5,8 @@ import com.linlazy.mmorpg.server.db.dao.EntityDAO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author linlazy
@@ -18,7 +20,17 @@ public class SkillDAO extends EntityDAO<SkillEntity> {
      * @return 返回玩家所有技能信息
      */
     public List<SkillEntity> getPlayerSkillList(long actorId){
-        return jdbcTemplate.queryForList("select * from skill where actorId = ?",new Object[]{actorId},SkillEntity.class);
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList("select * from skill where actorId = ?", actorId);
+        return maps.stream()
+                .map(map->{
+                    SkillEntity skillEntity = new SkillEntity();
+                    skillEntity.setActorId((Long) map.get("actorId"));
+                    skillEntity.setNextCDResumeTimes((Long) map.get("nextCDResumeTimes"));
+                    skillEntity.setLevel((Integer) map.get("level"));
+                    skillEntity.setDressed((Boolean) map.get("dressed"));
+                    skillEntity.setSkillId((Integer) map.get("skillId"));
+                    return skillEntity;
+                }).collect(Collectors.toList());
     }
 
     @Override

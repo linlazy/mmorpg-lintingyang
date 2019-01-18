@@ -3,10 +3,8 @@ package com.linlazy.mmorpg.server.db.statement;
 
 import com.linlazy.mmorpg.server.db.entity.Entity;
 import com.linlazy.mmorpg.server.db.entity.EntityInfo;
-import com.linlazy.mmorpg.server.db.entity.KeyValueEntry;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 更新语句
@@ -22,15 +20,13 @@ public class UpdateStatement {
         sql.append(entityInfo.getTableName() + " ");
 
         sql.append(" set ");
-        List<String> notNullOrdinaryColumnNameList = entity.getOrdinaryKeyValue().stream()
-                .map(KeyValueEntry::getKey).collect(Collectors.toList());
-
-        for(int i = 0; i < notNullOrdinaryColumnNameList.size(); i ++){
-            if(i == notNullOrdinaryColumnNameList.size() -1){
-                sql.append(notNullOrdinaryColumnNameList.get(i)).append("=").append(" ? ");
+        List<String> ordinaryColumnNameList =entityInfo.getOrdinaryColumnNameList();
+        for(int i = 0; i < ordinaryColumnNameList.size(); i ++){
+            if(i == ordinaryColumnNameList.size() -1){
+                sql.append(ordinaryColumnNameList.get(i)).append("=").append(" ? ");
                 break;
             }
-            sql.append(notNullOrdinaryColumnNameList.get(i)).append("=").append(" ? ").append(",");
+            sql.append(ordinaryColumnNameList.get(i)).append("=").append(" ? ").append(",");
         }
         sql.append(BaseStatement.whereSQL(entityInfo));
 

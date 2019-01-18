@@ -5,12 +5,14 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.linlazy.mmorpg.dao.SkillDAO;
+import com.linlazy.mmorpg.domain.Player;
 import com.linlazy.mmorpg.domain.PlayerSkill;
 import com.linlazy.mmorpg.domain.SceneEntity;
 import com.linlazy.mmorpg.domain.Skill;
 import com.linlazy.mmorpg.entity.SkillEntity;
 import com.linlazy.mmorpg.file.config.SkillConfig;
 import com.linlazy.mmorpg.file.service.SkillConfigService;
+import com.linlazy.mmorpg.push.PlayerPushHelper;
 import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.template.skill.BaseSkillTemplate;
 import com.linlazy.mmorpg.utils.DateUtils;
@@ -189,9 +191,44 @@ public class SkillService {
         skill.setSkillTemplateId(skillConfig.getSkillTemplateId());
 
         playerSkill.getSkillMap().put(skill.getSkillId(),skill);
-
-        skillDao.insertQueue(skill.convertSkillEntity());
+        SkillEntity skillEntity = skill.convertSkillEntity();
+        skillEntity.setActorId(actorId);
+        skillDao.insertQueue(skillEntity);
 
         return Result.success();
+    }
+
+    /**
+     * 初始化玩家职业技能
+     * @param player
+     */
+    public void initPlayerProfessionSkill(Player player) {
+        PlayerSkill playerSkill = new PlayerSkill(player.getActorId());
+        Map<Integer,Skill>  skillMap = new HashMap<>();
+
+        List<SkillConfig> professionSkillConfig = skillConfigService.getProfessionSkillConfig(player.getProfession());
+
+
+        professionSkillConfig.stream()
+                .forEach(skillConfig -> {
+                    Skill skill = new Skill();
+
+                    skill.setSkillId(skillConfig.getSkillId());
+                    skill.setNextCDResumeTimes(DateUtils.getNowMillis());
+                    skill.setName(skillConfig.getName());
+                    skill.setSkillTemplateArgs(skillConfig.getSkillTemplateArgs());
+                    skill.setSkillTemplateId(skillConfig.getSkillTemplateId());
+                    skill.setType(skillConfig.getType());
+
+                    SkillEntity skillEntity = skill.convertSkillEntity();
+                    skillEntity.setActorId(player.getActorId());
+                    skillDao.insertQueue(skillEntity);
+
+                    skillMap.put(skill.getSkillId(),skill);
+                });
+        playerSkill.setSkillMap(skillMap);
+
+        playerSkillCache.put(player.getActorId(),playerSkill);
+        PlayerPushHelper.pushPlayerSkillInfo(player.getActorId(),playerSkill);
     }
 }

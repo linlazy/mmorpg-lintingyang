@@ -55,7 +55,7 @@ public abstract class SceneEntity {
 
 
 
-    protected abstract int computeDefense();
+    public abstract int computeDefense();
 
     public void attacked(SceneEntity sceneEntity, Skill skill){
         int attack = sceneEntity.computeAttack();

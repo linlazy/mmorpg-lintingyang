@@ -4,6 +4,9 @@ import com.google.common.collect.Sets;
 import com.linlazy.mmorpg.domain.Boss;
 import com.linlazy.mmorpg.domain.Copy;
 import com.linlazy.mmorpg.domain.Scene;
+import com.linlazy.mmorpg.file.config.SceneConfig;
+import com.linlazy.mmorpg.file.service.SceneConfigService;
+import com.linlazy.mmorpg.utils.SpringContextUtil;
 import lombok.Data;
 
 import java.util.List;
@@ -40,5 +43,32 @@ public class SceneDTO {
          this.neighborSet =scene.getNeighborSet();
     }
 
+    @Override
+    public String toString() {
 
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("场景名称：").append(sceneName).append("\r\n");
+
+        SceneConfigService sceneConfigService = SpringContextUtil.getApplicationContext().getBean(SceneConfigService.class);
+        neighborSet.forEach(sceneId->{
+            SceneConfig sceneConfig = sceneConfigService.getSceneConfig(sceneId);
+            stringBuilder.append("相邻场景名称: ").append(sceneConfig.getName()).append(" 场景ID:").append(sceneConfig.getSceneId()).append("\r\n");
+        });
+
+        for(PlayerDTO playerDTO: playerDTOSet){
+            stringBuilder.append("场景玩家：").append(playerDTO.toString()).append("\r\n");
+        }
+        for(MonsterDTO monsterDTO: monsterDTOSet){
+            stringBuilder.append("场景小怪：").append(monsterDTO.toString()).append("\r\n");
+        }
+
+        for(BossDTO bossDTO: bossDTOSet){
+            stringBuilder.append("场景BOSS：").append(bossDTO.toString()).append("\r\n");
+        }
+
+        for(NpcDTO npcDTO: npcDTOSet){
+            stringBuilder.append("场景NPC：").append(npcDTO.toString()).append("\r\n");
+        }
+        return stringBuilder.toString();
+    }
 }

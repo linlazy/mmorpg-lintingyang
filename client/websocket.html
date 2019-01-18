@@ -13,24 +13,16 @@
 				var json = JSON.parse(event.data);
 				console.log(json.data);
 				ta.value += json.code + "\r\n";
-				if(json.command == "aoi"){
-					ta.value +="场景名称："+  JSON.stringify(json.data.sceneName) + "\r\n";
-					ta.value +="相邻场景："+  JSON.stringify(json.data.neighborSet) + "\r\n";
-					ta.value +="玩家："+  JSON.stringify(json.data.playerDTOSet) + "\r\n";
-					ta.value +="小怪："+  JSON.stringify(json.data.monsterDTOSet) + "\r\n";
-					ta.value +="npc："+  JSON.stringify(json.data.npcDTOSet) + "\r\n";
-					ta.value +="boss："+  JSON.stringify(json.data.bossDTOSet) + "\r\n";
-				}
-
 				if(json.command == "getBackpackInfo"){
 					ta.value +="玩家背包信息："+  JSON.stringify(json.data) + "\r\n";
-				}
-
-				if(json.command == "itemInfo"){
+				}else if(json.command == "itemInfo"){
 					ta.value +="游戏道具信息："+  JSON.stringify(json.data) + "\r\n";
-				}
-				if(json.command == "teamInfo"){
+				}else if(json.command == "teamInfo"){
 					ta.value +="队伍信息信息："+  json.data + "\r\n";
+				}else{
+					if(json.data){
+						ta.value += json.data + "\r\n";
+					}
 				}
 			};
 
@@ -233,6 +225,26 @@
 					console.log(jsonStr);
 					socket.send(jsonStr);
 					ta.value += "正在提升玩家等级..."+ "\r\n";
+				}
+
+				if(arr[0] == "cmd"){
+
+					var json ={};
+					json.command = "cmd";
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "查看指令..."+ "\r\n";
+				}
+
+				if(arr[0] == "skillInfo"){
+
+					var json ={};
+					json.command = "skillInfo";
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "查看技能..."+ "\r\n";
 				}
 
 			}else{

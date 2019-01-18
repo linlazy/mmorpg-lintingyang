@@ -2,11 +2,10 @@ package com.linlazy.mmorpg.handler;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
-import com.linlazy.mmorpg.domain.ItemContext;
 import com.linlazy.mmorpg.backpack.service.PlayerBackpackService;
+import com.linlazy.mmorpg.domain.ItemContext;
 import com.linlazy.mmorpg.module.equip.service.EquipmentService;
 import com.linlazy.mmorpg.module.item.manager.config.ItemConfigService;
-import com.linlazy.mmorpg.service.TeamService;
 import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.server.route.Cmd;
 import com.linlazy.mmorpg.service.*;
@@ -463,6 +462,27 @@ public class CmdHandler {
     public Result<?> upgradeLevel(JSONObject jsonObject){
         long actorId = jsonObject.getLong("actorId");
         return playerService.upgradeLevel(actorId);
+    }
+
+    /**
+     *  查看
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("skillInfo")
+    public Result<?> skillInfo(JSONObject jsonObject){
+        long actorId = jsonObject.getLong("actorId");
+        return Result.success(skillService.getPlayerSkill(actorId).toString());
+    }
+
+    @Cmd(value = "cmd",auth = false)
+    public Result<?> cmd(JSONObject jsonObject){
+       return Result.valueOf(
+               "upgradeLevel 提升玩家等级\n" +
+               "aoi 查看当前场景信息\n"+
+               "moveScene 2 移动到场景2\n"+
+               "gainSkill 2 得到技能2\n"
+       );
     }
 
 }

@@ -12,9 +12,9 @@ import java.util.List;
  */
 public class ScenePushHelper {
 
-    public static void pushMonster(long actorId, List<SceneEntity> data){
+    public static void pushMonsterDead(long actorId, String message){
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("monster-dead",data);
+        jsonObject.put("code",message);
         PushHelper.push(actorId,jsonObject);
     }
     public static void pushSceneEntityDamage(long actorId, List<SceneEntity> data){

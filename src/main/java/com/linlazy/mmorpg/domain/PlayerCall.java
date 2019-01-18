@@ -59,7 +59,7 @@ public class PlayerCall extends SceneEntity {
     }
 
     @Override
-    protected int computeDefense() {
+    public int computeDefense() {
         return 0;
     }
 

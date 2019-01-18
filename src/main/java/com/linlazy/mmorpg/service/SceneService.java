@@ -1,7 +1,6 @@
 package com.linlazy.mmorpg.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 import com.linlazy.mmorpg.domain.*;
 import com.linlazy.mmorpg.dto.PlayerDTO;
@@ -51,39 +50,38 @@ public class SceneService {
     @Autowired
     private GlobalConfigService globalConfigService;
 
-    public Scene getScene(long actorId){
-        Player player = playerService.getPlayer(actorId);
+    public Scene getSceneBySceneEntity(SceneEntity sceneEntity){
 
 
-            if(globalConfigService.isCopy(player.getSceneId())){
-                Copy copy = copyService.getCopy(player.getCopyId());
+            if(globalConfigService.isCopy(sceneEntity.getSceneId())){
+                Copy copy = copyService.getCopy(sceneEntity.getCopyId());
                 return copy;
             }else {
-                Scene scene = sceneMap.get(actorId);
+                Scene scene = sceneMap.get(sceneEntity.getSceneId());
                 if(scene == null){
                     scene = new Scene();
-                    scene.setSceneId(player.getSceneId());
+                    scene.setSceneId(sceneEntity.getSceneId());
 
-                    SceneConfig sceneConfig = sceneConfigService.getSceneConfig(player.getSceneId());
+                    SceneConfig sceneConfig = sceneConfigService.getSceneConfig(sceneEntity.getSceneId());
                     scene.setSceneName(sceneConfig.getName());
                     scene.setNeighborSet(sceneConfig.getNeighborSet());
 
                     //初始化怪物
-                    Map<Integer, Monster> monsterMap= monsterService.getMonsterBySceneId(player.getSceneId());
+                    Map<Integer, Monster> monsterMap= monsterService.getMonsterBySceneId(sceneEntity.getSceneId());
                     scene.setMonsterMap( monsterMap);
 
                     //初始化NPC
-                    Set<Npc> npcDoSet = npcService.getNPCDoBySceneId(player.getSceneId());
+                    Set<Npc> npcDoSet = npcService.getNPCDoBySceneId(sceneEntity.getSceneId());
                     scene.setNpcSet( npcDoSet);
 
                     //初始化玩家
-                    Map<Long, Player> sameScenePlayerMap = playerService.getSameScenePlayerMap(actorId);
+                    Map<Long, Player> sameScenePlayerMap = playerService.getSameScenePlayerMap(sceneEntity.getSceneId());
                     scene.setPlayerMap(sameScenePlayerMap);
 
                     //初始化boss
-                    scene.setBossList(bossService.getBOSSBySceneId(player.getSceneId()));
+                    scene.setBossList(bossService.getBOSSBySceneId(sceneEntity.getSceneId()));
 
-                    sceneMap.put(player.getSceneId(),scene);
+                    sceneMap.put(sceneEntity.getSceneId(),scene);
                 }
                 return scene;
             }
@@ -128,10 +126,16 @@ public class SceneService {
 
         }else {
 
-            Scene scene = getScene(sceneEntity.getSceneId());
-            Collection<Player> playerSet = scene.getPlayerMap().values();
-            Collection<Monster> monsterSet = scene.getMonsterMap().values();
-            List<Boss> bossSet = scene.getBossList();
+            Scene scene = getSceneBySceneEntity(sceneEntity);
+            Collection<Player> playerSet = scene.getPlayerMap().values().stream()
+                    .filter(player -> player.getHp() > 0)
+                    .collect(Collectors.toSet());
+            Collection<Monster> monsterSet = scene.getMonsterMap().values().stream()
+                    .filter(monster -> monster.getHp() >0)
+                    .collect(Collectors.toSet());
+            List<Boss> bossSet = scene.getBossList().stream()
+                    .filter(boss -> boss.getHp() > 0 )
+                    .collect(Collectors.toList());
             sceneEntitySet.addAll(playerSet);
             sceneEntitySet.addAll(monsterSet);
             sceneEntitySet.addAll(bossSet);
@@ -154,7 +158,7 @@ public class SceneService {
     private void handlerSceneMonsterDead(SceneMonsterDeadEvent sceneMonsterDeadEvent) {
         Map<Long, Player> playerMap = sceneMonsterDeadEvent.getScene().getPlayerMap();
         playerMap.values().stream()
-            .forEach(player ->   ScenePushHelper.pushMonster(player.getActorId(), Lists.newArrayList(sceneMonsterDeadEvent.getMonster())));
+            .forEach(player -> ScenePushHelper.pushMonsterDead(player.getActorId(), String.format("小怪【%s】已死亡",sceneMonsterDeadEvent.getMonster().getName())));
     }
 
     /**
@@ -164,7 +168,7 @@ public class SceneService {
     @Subscribe
     private void handleSceneEnter(SceneEnterEvent sceneEnterEvent) {
         Player player = sceneEnterEvent.getPlayer();
-        Map<Long, Player> sameScenePlayerMap = playerService.getSameScenePlayerMap(player.getActorId());
+        Map<Long, Player> sameScenePlayerMap = playerService.getSameScenePlayerMap(player.getSceneId());
         sameScenePlayerMap.values().stream()
                 .filter(player1 -> player1.getActorId() != player.getActorId())
                 .forEach(player1 -> ScenePushHelper.pushEnterScene(player1.getActorId(),String.format("玩家【%s】进入了场景",player.getName())));
@@ -190,7 +194,7 @@ public class SceneService {
         Player player = playerService.getPlayer(actorId);
 
         player.setSceneId(targetSceneId);
-
+        playerService.updatePlayer(player);
         EventBusHolder.post(new SceneEnterEvent(player));
 
         if(isCopyScene(targetSceneId)){
@@ -207,14 +211,14 @@ public class SceneService {
     public Result<?> enter(long actorId) {
 
         Player player = playerService.getPlayer(actorId);
-        Scene scene = getScene(actorId);
+        Scene scene = getSceneBySceneEntity(player);
         scene.getPlayerMap().put(player.getActorId(),player);
 
         if(globalConfigService.isCopy(scene.getSceneId())){
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("sceneId",scene.getSceneId());
         }
-        return Result.success(new SceneDTO(scene));
+        return Result.success(new SceneDTO(scene).toString());
     }
 
     /**
@@ -225,7 +229,7 @@ public class SceneService {
      */
     public Result<?> aoi(long actorId, JSONObject jsonObject) {
         Player player = playerService.getPlayer(actorId);
-        Scene scene = getScene(actorId);
+        Scene scene = getSceneBySceneEntity(player);
         SceneDTO sceneDTO = new SceneDTO(scene);
         boolean closeOwn = jsonObject.getBooleanValue("closeOwn");
         if( closeOwn){
@@ -235,7 +239,7 @@ public class SceneService {
                     .collect(Collectors.toSet());
             sceneDTO.setPlayerDTOSet(playerSet);
         }
-        return Result.success(sceneDTO);
+        return Result.success(sceneDTO.toString());
     }
 
     /**

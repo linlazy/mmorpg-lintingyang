@@ -38,7 +38,7 @@ public class Npc extends SceneEntity{
     private Map<Integer, List<String>> talkProcess = new HashMap<>();
 
     @Override
-    protected int computeDefense() {
+    public int computeDefense() {
         return 0;
     }
 

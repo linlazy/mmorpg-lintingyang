@@ -44,7 +44,7 @@
   {
     "skillId": 4,
     "name": "深渊召唤",
-    "type": 1,
+    "type": 2,
     "bossIds": [],
     "monsterIds": [],
     "skillTemplateId": 4,
