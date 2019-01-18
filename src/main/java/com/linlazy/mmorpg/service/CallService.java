@@ -3,9 +3,11 @@ package com.linlazy.mmorpg.service;
 import com.google.common.eventbus.Subscribe;
 import com.linlazy.mmorpg.domain.Player;
 import com.linlazy.mmorpg.domain.PlayerCall;
+import com.linlazy.mmorpg.domain.Scene;
 import com.linlazy.mmorpg.event.type.PlayerCallDisappearEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.domain.SceneEntity;
+import com.linlazy.mmorpg.utils.SpringContextUtil;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -37,7 +39,7 @@ public class CallService {
         callMap.remove(playerCall.getId());
     }
 
-    public void createCall(SceneEntity sceneEntity, int continueTime){
+    public PlayerCall createCall(SceneEntity sceneEntity, int continueTime){
         Player player = (Player) sceneEntity;
         PlayerCall playerCall = new PlayerCall(player);
 
@@ -46,6 +48,10 @@ public class CallService {
         playerCall.startPlayerCallDisAppearScheduled(continueTime);
 
         callMap.put(maxPlayerCallId.get(),playerCall);
+        SceneService sceneService = SpringContextUtil.getApplicationContext().getBean(SceneService.class);
+        Scene scene = sceneService.getSceneBySceneEntity(sceneEntity);
+        scene.getPlayerCallMap().put(playerCall.getId(),playerCall);
+        return playerCall;
     }
 
 }

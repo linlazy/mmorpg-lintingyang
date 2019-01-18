@@ -72,6 +72,7 @@ public class SkillService {
                                 skill.setName(skillConfig.getName());
                                 skill.setSkillTemplateArgs(skillConfig.getSkillTemplateArgs());
                                 skill.setSkillTemplateId(skillConfig.getSkillTemplateId());
+                                skill.setType(skillConfig.getType());
 
                                 skillMap.put(skill.getSkillId(),skill);
                             });

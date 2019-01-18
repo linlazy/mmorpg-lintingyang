@@ -37,6 +37,11 @@ public class Scene {
     protected Map<Integer,Monster> monsterMap;
 
     /**
+     * 场景召唤兽信息
+     */
+    protected Map<Long,PlayerCall> playerCallMap = new HashMap<>();
+
+    /**
      * 场景BOSS信息
      */
     protected List<Boss> bossList;

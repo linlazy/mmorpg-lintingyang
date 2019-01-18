@@ -2,10 +2,14 @@ package com.linlazy.mmorpg.template.skill;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.linlazy.mmorpg.domain.Scene;
 import com.linlazy.mmorpg.domain.SceneEntity;
 import com.linlazy.mmorpg.domain.Skill;
+import com.linlazy.mmorpg.push.SkillPushHelper;
 import com.linlazy.mmorpg.service.CallService;
+import com.linlazy.mmorpg.service.SceneService;
 import com.linlazy.mmorpg.utils.DateUtils;
+import com.linlazy.mmorpg.utils.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -37,6 +41,12 @@ public  class SkillTemplate4 extends BaseSkillTemplate {
 
         int continueTime = skillTemplateArgs.getIntValue("continueTime");
         callService.createCall(sceneEntity,continueTime);
+        SceneService sceneService = SpringContextUtil.getApplicationContext().getBean(SceneService.class);
+        Scene scene = sceneService.getSceneBySceneEntity(sceneEntity);
+        scene.getPlayerMap().values()
+                .forEach(player -> {
+                    SkillPushHelper.pushUseSkill(player.getActorId(),String.format("【%s】使用了召唤技能【%s】",sceneEntity.getName(),skill.getName()));
+                });
     }
 
     @Override
