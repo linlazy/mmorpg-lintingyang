@@ -26,6 +26,7 @@ public class SceneDTO {
     private  Set<MonsterDTO> monsterDTOSet;
     private  Set<BossDTO> bossDTOSet;
     private  Set<NpcDTO> npcDTOSet;
+    private  Set<PlayerCallDTO> playerCallDTOSet;
 
 
     public SceneDTO(Scene scene) {
@@ -40,7 +41,8 @@ public class SceneDTO {
             this.bossDTOSet =scene .getBossList().stream().map(BossDTO::new).collect(Collectors.toSet());
         }
         this.npcDTOSet = scene.getNpcSet().stream().map(NpcDTO::new).collect(Collectors.toSet());
-         this.neighborSet =scene.getNeighborSet();
+        this.neighborSet =scene.getNeighborSet();
+        this.playerCallDTOSet =scene.getPlayerCallMap().values().stream().map(PlayerCallDTO::new).collect(Collectors.toSet());
     }
 
     @Override
@@ -68,6 +70,9 @@ public class SceneDTO {
 
         for(NpcDTO npcDTO: npcDTOSet){
             stringBuilder.append("场景NPC：").append(npcDTO.toString()).append("\r\n");
+        }
+        for(PlayerCallDTO playerCallDTO: playerCallDTOSet){
+            stringBuilder.append("玩家召唤兽：").append(playerCallDTO.toString()).append("\r\n");
         }
         return stringBuilder.toString();
     }

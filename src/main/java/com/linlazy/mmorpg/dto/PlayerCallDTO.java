@@ -36,12 +36,15 @@ public class PlayerCallDTO {
     private Integer level;
 
     public PlayerCallDTO(PlayerCall playerCall) {
-
+        this.name = playerCall.getName();
+        this.hp = playerCall.getHp();
+        this.attack = playerCall.computeAttack();
+        this.defense = playerCall.computeDefense();
+        this.level = playerCall.getLevel();
     }
 
     @Override
     public String toString() {
-
         return String.format("召唤兽名称【%s】 攻击力【%d】 防御力【%d】 血量：%d 等级：【%d】",name,attack,defense,hp,level);
 
     }

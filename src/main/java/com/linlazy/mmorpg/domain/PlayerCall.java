@@ -25,6 +25,8 @@ public class PlayerCall extends SceneEntity {
 
     private long sourceId;
 
+    private int level;
+
     private PlayerCallSkill playerCallSkill;
 
     private static ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
