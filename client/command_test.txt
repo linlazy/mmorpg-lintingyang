@@ -20,3 +20,10 @@ aoi closeOwn
 6 邀请入队
 邀请指令           玩家ID
 inviteJoinTeam 4194308
+
+7 邀请入队
+接受队伍指令       玩家ID
+acceptJoinTeam 4194308
+
+锁定交易指令
+lockTrade itemId 1 num 2

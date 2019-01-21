@@ -52,12 +52,16 @@ public class PlayerBackpack extends Backpack {
     @Override
     protected void updateItem(Item item) {
         ItemDAO itemDAO = SpringContextUtil.getApplicationContext().getBean(ItemDAO.class);
-        itemDAO.updateQueue(item.convertItemEntity());
+        ItemEntity itemEntity = item.convertItemEntity();
+        itemEntity.setActorId(actorId);
+        itemDAO.updateQueue(itemEntity);
     }
 
     @Override
     protected void deleteItem(Item item) {
         ItemDAO itemDAO = SpringContextUtil.getApplicationContext().getBean(ItemDAO.class);
-        itemDAO.deleteQueue(item.convertItemEntity());
+        ItemEntity itemEntity = item.convertItemEntity();
+        itemEntity.setActorId(actorId);
+        itemDAO.deleteQueue(itemEntity);
     }
 }

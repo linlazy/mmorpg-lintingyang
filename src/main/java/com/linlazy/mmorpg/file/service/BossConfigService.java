@@ -50,8 +50,7 @@ public class BossConfigService {
             for(int j = 0; j < sceneIds.size(); j++){
 
                 Integer sceneId = sceneIds.getInteger(j);
-                sceneBossMap.computeIfAbsent(sceneId, k -> new ArrayList<>());
-                List<BossConfig> bossConfigs = sceneBossMap.get(sceneId);
+                List<BossConfig> bossConfigs = sceneBossMap.computeIfAbsent(sceneId, k -> new ArrayList<>());
 
                 BossConfig bossConfig = new BossConfig();
                 int bossId = jsonObject.getIntValue("bossId");

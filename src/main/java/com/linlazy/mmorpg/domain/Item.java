@@ -36,6 +36,11 @@ public class Item {
      */
     private int count;
 
+    /**
+     * 道具类型
+     */
+    private int itemType;
+
     private String ext;
 
 
@@ -98,7 +103,11 @@ public class Item {
     private void initConfig(int baseItemId) {
         ItemConfigService itemConfigService = SpringContextUtil.getApplicationContext().getBean(ItemConfigService.class);
         JSONObject itemConfig = itemConfigService.getItemConfig(baseItemId);
-        this.superPositionUp = itemConfig.getIntValue("superPositionUp");
-        this.superPosition = itemConfig.getBooleanValue("superPosition");
+        this.superPositionUp = itemConfig.getIntValue("superPosition");
+        if(superPositionUp == 0){
+            this.superPosition =false;
+        }else {
+            this.superPosition = true;
+        }
     }
 }

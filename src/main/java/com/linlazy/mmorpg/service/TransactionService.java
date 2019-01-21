@@ -1,14 +1,16 @@
 package com.linlazy.mmorpg.service;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpg.backpack.service.PlayerBackpackService;
 import com.linlazy.mmorpg.constants.TransactionOperatiorType;
 import com.linlazy.mmorpg.domain.ItemContext;
+import com.linlazy.mmorpg.domain.Player;
 import com.linlazy.mmorpg.domain.PlayerBackpack;
 import com.linlazy.mmorpg.domain.Transaction;
 import com.linlazy.mmorpg.push.TransactionPushHelper;
 import com.linlazy.mmorpg.server.common.Result;
+import com.linlazy.mmorpg.server.threadpool.ThreadOrderPool;
+import com.linlazy.mmorpg.utils.SessionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,8 @@ public class TransactionService {
 
     @Autowired
     private PlayerBackpackService playerBackpackService;
+    @Autowired
+    private PlayerService playerService;
 
     private Map<Integer, Transaction> transactionIdMap = new ConcurrentHashMap<>();
     private  Map<Long,Integer> actorIdTransactionIdMap = new ConcurrentHashMap<>();
@@ -52,12 +56,19 @@ public class TransactionService {
      * @return
      */
     public Result<?> inviteTrade(long actorId, long targetId) {
+
+
         if(isTrading(actorId,targetId)){
             return Result.valueOf("玩家已处于交易状态");
         }
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("sourceId",actorId);
-        TransactionPushHelper.pushTransactionOperation(targetId, TransactionOperatiorType.INVITE,jsonObject);
+        if( !SessionManager.isOnline(targetId)){
+            return Result.valueOf("玩家不在线");
+        }
+
+        Player player = playerService.getPlayer(actorId);
+        Player targetPlayer = playerService.getPlayer(targetId);
+
+        TransactionPushHelper.pushTransaction(targetId, String.format("玩家【%s】邀请您交易...",player.getName()));
         return Result.success();
     }
 
@@ -75,6 +86,9 @@ public class TransactionService {
      * @return
      */
     public Result<?> acceptTrade(long actorId, long targetId) {
+        Player player = playerService.getPlayer(actorId);
+
+
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("sourceId",actorId);
         TransactionPushHelper.pushTransactionOperation(targetId, TransactionOperatiorType.ACCEPT,jsonObject);
@@ -85,6 +99,7 @@ public class TransactionService {
         actorIdTransactionIdMap.put(actorId,transactionId);
         actorIdTransactionIdMap.put(targetId,transactionId);
         logger.debug("transactionInfo:{}", transaction);
+        TransactionPushHelper.pushTransaction(targetId, String.format("玩家【%s】接受了您的交易...",player.getName()));
         return Result.success();
     }
 
@@ -95,41 +110,37 @@ public class TransactionService {
      * @return
      */
     public Result<?> lockTrade(long actorId, JSONObject jsonObject) {
-        int transactionId = actorIdTransactionIdMap.get(actorId);
+        Integer transactionId = actorIdTransactionIdMap.get(actorId);
+        if(transactionId == null){
+            return Result.valueOf("参数错误");
+        }
+
+        List<ItemContext> itemContextList = new ArrayList<>();
+
+        long itemId = jsonObject.getLongValue("itemId");
+        int count = jsonObject.getIntValue("num");
+        if(itemId == 0){
+            return Result.valueOf("交易已锁定");
+        }
+        ItemContext itemContext = new ItemContext(itemId);
+        itemContext.setCount(count);
+        itemContextList.add(itemContext);
+
         Transaction transaction = transactionIdMap.get(transactionId);
         if( transaction.getInviter() == actorId){
             //邀请者锁定
-            transaction.setInviterLock(true);
-
-            List<ItemContext> itemContextList = new ArrayList<>();
-            JSONArray items = jsonObject.getJSONArray("items");
-            for(int i=0; i < items.size() ; i++){
-                JSONObject item = items.getJSONObject(i);
-                long itemId = item.getLongValue("itemId");
-                int count = item.getIntValue("num");
-                ItemContext itemContext = new ItemContext(itemId);
-                itemContext.setCount(count);
-                itemContextList.add(itemContext);
-            }
+            PlayerBackpack playerBackpack = playerBackpackService.getPlayerBackpack(transaction.getInviter());
+            playerBackpack.getReadWriteLock().readLock().lock();
             transaction.setInviterItemContextList(itemContextList);
         }else {
             //接受者锁定
-            transaction.setAcceptorLock(true);
-            List<ItemContext> itemList = new ArrayList<>();
-            JSONArray items = jsonObject.getJSONArray("items");
-            for(int i=0; i < items.size() ; i++){
-                JSONObject item = items.getJSONObject(i);
-                long itemId = item.getLongValue("itemId");
-                int count = item.getIntValue("num");
-                ItemContext itemContext = new ItemContext(itemId);
-                itemContext.setCount(count);
-                itemList.add(itemContext);
-            }
-            transaction.setAcceptorItemContextList(itemList);
+            PlayerBackpack playerBackpack = playerBackpackService.getPlayerBackpack(transaction.getAcceptor());
+            playerBackpack.getReadWriteLock().readLock().lock();
+            transaction.setAcceptorItemContextList(itemContextList);
         }
 
         logger.debug("transactionInfo:{}", transaction);
-        return Result.success();
+        return Result.success("交易已锁定");
     }
 
 
@@ -162,20 +173,47 @@ public class TransactionService {
             List<ItemContext> inviterItemContextList = transaction.getInviterItemContextList();
             List<ItemContext> acceptorItemContextList = transaction.getAcceptorItemContextList();
 
+
+            ThreadOrderPool actor = ThreadOrderPool.threadOrderPoolMap.get("actor");
+
             PlayerBackpack inviterPlayerBackpack = playerBackpackService.getPlayerBackpack(inviter);
+            Result<?> inviterEnough = playerBackpackService.isEnough(inviter, inviterItemContextList);
+            if(inviterEnough.isFail()){
+                return Result.valueOf(inviterEnough.getCode());
+            }
+            Result<?> inviterNotFull = playerBackpackService.isNotFull(inviter, acceptorItemContextList);
+            if(inviterNotFull.isFail()){
+                return Result.valueOf(inviterNotFull.getCode());
+            }
+
+
+
             PlayerBackpack acceptPlayerBackpack = playerBackpackService.getPlayerBackpack(acceptor);
+            Result<?> acceptorEnough = playerBackpackService.isEnough(acceptor, acceptorItemContextList);
+            if(acceptorEnough.isFail()){
+                return Result.valueOf(acceptorEnough.getCode());
+            }
+
+            Result<?> acceptorNotFull = playerBackpackService.isNotFull(acceptor, inviterItemContextList);
+            if(acceptorNotFull.isFail()){
+                return Result.valueOf(acceptorNotFull.getCode());
+            }
+
+            //校验通过后正式执行
             try{
                 inviterPlayerBackpack.getReadWriteLock().writeLock().lock();
                 acceptPlayerBackpack.getReadWriteLock().writeLock().lock();
 
                 inviterPlayerBackpack.pop(inviterItemContextList);
+                inviterPlayerBackpack.push(acceptorItemContextList);
+                acceptPlayerBackpack.pop(acceptorItemContextList);
                 acceptPlayerBackpack.push(inviterItemContextList);
 
-                playerBackpackService.getPlayerBackpack(acceptor).pop(acceptorItemContextList);
-                playerBackpackService.getPlayerBackpack(inviter).push(acceptorItemContextList);
             }finally {
                 inviterPlayerBackpack.getReadWriteLock().writeLock().unlock();
+                inviterPlayerBackpack.getReadWriteLock().readLock().unlock();
                 acceptPlayerBackpack.getReadWriteLock().writeLock().unlock();
+                acceptPlayerBackpack.getReadWriteLock().readLock().unlock();
             }
 
             transactionIdMap.remove(transactionId);
@@ -202,4 +240,12 @@ public class TransactionService {
     }
 
 
+    public void clear(long actorId) {
+        Integer transactionId = actorIdTransactionIdMap.remove(actorId);
+
+        Transaction transaction = transactionIdMap.remove(transactionId);
+        actorIdTransactionIdMap.remove(transaction.getInviter());
+        actorIdTransactionIdMap.remove(transaction.getAcceptor());
+
+    }
 }

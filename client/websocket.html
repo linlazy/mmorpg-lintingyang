@@ -163,6 +163,18 @@
 					ta.value += "正在放进玩家背包信息..."+ "\r\n";
 				}
 
+				if(arr[0] == "popBackpack"){
+
+					var json ={};
+					json.command = "popBackpack";
+					json.itemId = arr[1];
+					json.num = arr[2];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "正在丢弃玩家背包物品..."+ "\r\n";
+				}
+
 				if(arr[0] == "inviteJoinTeam"){
 
 					var json ={};
@@ -245,6 +257,50 @@
 					console.log(jsonStr);
 					socket.send(jsonStr);
 					ta.value += "查看技能..."+ "\r\n";
+				}
+
+				if(arr[0] == "inviteTrade"){
+
+					var json ={};
+					json.command = "inviteTrade";
+					json.targetId = arr[1];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "邀請交易中..."+ "\r\n";
+				}
+
+				if(arr[0] == "acceptTrade"){
+
+					var json ={};
+					json.command = "acceptTrade";
+					json.targetId = arr[1];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "接受交易中..."+ "\r\n";
+				}
+
+				if(arr[0] == "lockTrade"){
+
+					var json ={};
+					json.command = "lockTrade";
+					json.itemId =arr[2];
+					json.num = arr[4];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "锁定交易中..."+ "\r\n";
+				}
+
+				if(arr[0] == "enterTrade"){
+
+					var json ={};
+					json.command = "enterTrade";
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "确认交易中..."+ "\r\n";
 				}
 
 			}else{

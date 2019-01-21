@@ -15,11 +15,17 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author linlazy
  */
 public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> {
+
+    @Autowired
+    private GameRouter gameRouter;
 
     private static final String WEBSOCKET_PATH = "/websoket";
 
@@ -40,7 +46,16 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 
             JSONObject jsonObjectRequest = JSON.parseObject(text);
             jsonObjectRequest.put("channel",channelHandlerContext.channel());
-            Result<?> result = GameRouter.handleRoute(jsonObjectRequest);
+            Result<?> result = null;
+                GameRouter gameRouter = SpringContextUtil.getApplicationContext().getBean(GameRouter.class);
+            try {
+                result =gameRouter.handleRoute(jsonObjectRequest);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
             if(result == null){
                 throw new RuntimeException(String.format("not match !, cmd[%s]",jsonObjectRequest.getString("command")));
             }

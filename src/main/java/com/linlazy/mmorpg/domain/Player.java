@@ -56,6 +56,11 @@ public class Player extends SceneEntity {
      */
     private int level;
 
+    /***
+     * 是否交易锁定
+     */
+    private boolean isTransactionLock;
+
     @Override
     public int computeDefense() {
         return PlayerDefense.computeFinalDefense(this);

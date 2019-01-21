@@ -15,6 +15,5 @@ public class MmoRpgLinTingYangApplication {
 	public static void main(String[] args) {
 		ConfigurableApplicationContext app = SpringApplication.run(MmoRpgLinTingYangApplication.class, args);
 		SpringContextUtil.setApplicationContext(app);
-
 	}
 }

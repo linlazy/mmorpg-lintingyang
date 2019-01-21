@@ -14,4 +14,11 @@ public class TransactionPushHelper {
         jsonObject.put("operation",operatorType);
         PushHelper.push(actorId,jsonObject);
     }
+
+    public static void pushTransaction(long actorId,String message){
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("code", message);
+        PushHelper.push(actorId,jsonObject);
+    }
 }

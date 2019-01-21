@@ -116,6 +116,20 @@ public class PlayerBackpackService {
     }
 
     /**
+     *  玩家背包是否足够物品
+     * @param actorId 玩家ID
+     * @return
+     */
+    public Result<?> isEnough(long actorId, List<ItemContext> items)  {
+        PlayerBackpack playerBackpack = getPlayerBackpack(actorId);
+        boolean notEnough = playerBackpack.isNotEnough(items);
+        if(notEnough){
+            return Result.valueOf("背包物品不足");
+        }
+        return Result.success();
+    }
+
+    /**
      * 放进背包
      * @param actorId
      * @param itemList
@@ -128,6 +142,22 @@ public class PlayerBackpackService {
         }
         PlayerBackpack playerBackpack = getPlayerBackpack(actorId);
         playerBackpack.push(itemList);
+        return Result.success();
+    }
+
+    /**
+     * 丢弃背包物品
+     * @param actorId
+     * @param itemList
+     * @return
+     */
+    public Result<?> pop(long actorId, List<ItemContext> itemList) {
+        Result<?> enough = isEnough(actorId, itemList);
+        if(enough.isFail()){
+            return Result.valueOf(enough.getCode());
+        }
+        PlayerBackpack playerBackpack = getPlayerBackpack(actorId);
+        playerBackpack.pop(itemList);
         return Result.success();
     }
 }

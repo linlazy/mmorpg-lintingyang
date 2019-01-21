@@ -37,7 +37,8 @@ public class CmdHandler {
         long equipId = jsonObject.getLongValue("equipId");
         return equipmentService.unDressEquip(actorId,equipId);
     }
-//==========================================
+
+
     @Autowired
     private EmailService emailService;
 
@@ -427,6 +428,22 @@ public class CmdHandler {
         int num = jsonObject.getIntValue("num");
         item.setCount(num);
         return playerBackpackService.push(actorId, Lists.newArrayList(item));
+    }
+
+    /**
+     *  丢弃背包物品
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("popBackpack")
+    public Result<?> popBackpack(JSONObject jsonObject){
+        long actorId = jsonObject.getLong("actorId");
+
+        int baseItemId = jsonObject.getIntValue("itemId");
+        ItemContext item = new ItemContext(baseItemId);
+        int num = jsonObject.getIntValue("num");
+        item.setCount(num);
+        return playerBackpackService.pop(actorId, Lists.newArrayList(item));
     }
 
     /**

@@ -50,6 +50,14 @@ public class ItemEntity extends Entity {
     public void afterReadDB() {
         ItemConfigService bean = SpringContextUtil.getApplicationContext().getBean(ItemConfigService.class);
         JSONObject itemConfig = bean.getItemConfig(ItemIdUtil.getBaseItemId(this.itemId));
+        superPositionUp = itemConfig.getIntValue("superPositionUp");
+        if(superPositionUp == 0){
+            superPosition =false;
+        }else {
+            superPosition =true;
+        }
+
+        itemType = itemConfig.getIntValue("itemType");
     }
 
     @Override

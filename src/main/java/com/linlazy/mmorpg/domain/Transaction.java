@@ -23,15 +23,6 @@ public class Transaction {
      * 接受者
      */
     private long acceptor;
-    /**
-     * 邀请者锁定
-     */
-    private boolean inviterLock;
-
-    /**
-     * 接受者锁定
-     */
-    private boolean acceptorLock;
 
     /**
      * 邀请者确认

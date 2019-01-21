@@ -43,7 +43,7 @@ public abstract class Backpack implements BackpackInterface {
 
     private int computeHasNum(ItemContext itemContext) {
         return Arrays.stream(latticeArr)
-                .filter(Objects::isNull)
+                .filter(Objects::nonNull)
                 .filter(lattice -> ItemIdUtil.getBaseItemId(lattice.getItem().getItemId()) == ItemIdUtil.getBaseItemId(itemContext.getItemId()))
                 .map(lattice -> lattice.getItem().getCount())
                 .reduce(0,(a,b) -> a + b);
@@ -127,7 +127,7 @@ public abstract class Backpack implements BackpackInterface {
             if(count + addItemNum <= item.getSuperPositionUp()){
                 backPackLattice.getItem().setCount(count + addItemNum);
                 updateItem(backPackLattice.getItem());
-                break;
+                return true;
             }
 
             backPackLattice.getItem().setCount(item.getSuperPositionUp());
@@ -270,6 +270,7 @@ public abstract class Backpack implements BackpackInterface {
 
     private void popSuperPositionFromBackPack(ItemContext item) {
         List<Lattice> hasBaseItemIdBackPackLatticeList = Arrays.stream(latticeArr)
+                .filter(Objects::nonNull)
                 .filter(backPackLattice -> ItemIdUtil.getBaseItemId(backPackLattice.getItem().getItemId()) == ItemIdUtil.getBaseItemId(backPackLattice.getItem().getItemId()))
                 .collect(Collectors.toList());
 

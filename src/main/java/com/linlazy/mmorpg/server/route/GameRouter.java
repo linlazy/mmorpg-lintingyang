@@ -3,52 +3,91 @@ package com.linlazy.mmorpg.server.route;
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpg.handler.CmdHandler;
 import com.linlazy.mmorpg.server.common.Result;
+import com.linlazy.mmorpg.server.threadpool.BusinessTask;
+import com.linlazy.mmorpg.server.threadpool.ThreadOrderPool;
 import com.linlazy.mmorpg.utils.SessionManager;
-import com.linlazy.mmorpg.utils.SpringContextUtil;
 import io.netty.channel.Channel;
+import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * 游戏路由类
  * @author linlazy
  */
+@Data
+@Component
 public class GameRouter {
 
-    public static Result<?> handleRoute(JSONObject jsonObject){
+    @Autowired
+    private CmdHandler cmdHandler;
 
-        //获取模块处理器
-        CmdHandler cmdHandler = SpringContextUtil.getApplicationContext().getBean(CmdHandler.class);
+    private static ThreadOrderPool threadOrderPool = new ThreadOrderPool(16);
 
-                //获取处理方法
-                Method[] methods = cmdHandler.getClass().getMethods();
-                for(Method method :methods){
-                    Cmd cmd = method.getAnnotation(Cmd.class);
-                    if(cmd != null){
-                        String command = jsonObject.getString("command");
-                        if(cmd.value().equals(command)){
-                            //执行处理方法
+    private static Map<String,Method> map = new HashMap<>();
 
-                            //权限
-                            if(cmd.auth()){
-                                Channel channel = jsonObject.getObject("channel", Channel.class);
-                                if(SessionManager.getActorId(channel) == null){
-                                    return Result.valueOf("无权限执行此操作,请登录");
-                                }
-                                jsonObject.put("actorId",SessionManager.getActorId(channel));
-                            }
 
-                            try {
-                                return  (Result<?>) method.invoke(cmdHandler,jsonObject);
-                            } catch (IllegalAccessException e) {
-                                e.printStackTrace();
-                            } catch (InvocationTargetException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
+    @PostConstruct
+    public void init(){
+        //获取处理方法
+        Method[] methods =cmdHandler.getClass().getMethods();
+        for (Method method : methods) {
+            Cmd cmd = method.getAnnotation(Cmd.class);
+            if (cmd != null) {
+                map.put(cmd.value(),method);
+            }
+        }
+    }
+
+
+    public  Result<?> handleRoute(JSONObject jsonObject) throws InterruptedException, ExecutionException {
+
+        ThreadOrderPool.threadOrderPoolMap.putIfAbsent("actor",threadOrderPool);
+        Future<Result<?>> execute = threadOrderPool.execute(new BusinessTask() {
+            @Override
+            public Result<?> call() throws Exception {
+
+                String command = jsonObject.getString("command");
+                Method method = map.get(command);
+                if(method == null){
+                    throw  new RuntimeException(String.format("none match [%s]",command));
                 }
-        return null;
+
+                Cmd cmd = method.getAnnotation(Cmd.class);
+                //权限
+                if (cmd.auth()) {
+                    Channel channel = jsonObject.getObject("channel", Channel.class);
+                    if (SessionManager.getActorId(channel) == null) {
+                        return Result.valueOf("无权限执行此操作,请登录");
+                    }
+                    jsonObject.put("actorId", SessionManager.getActorId(channel));
+                }
+
+                try {
+                    return (Result<?>) method.invoke(cmdHandler, jsonObject);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+
+            @Override
+            public int identity() {
+                return 0;
+            }
+        });
+
+        return execute.get();
     }
 }
