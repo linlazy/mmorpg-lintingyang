@@ -17,6 +17,7 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -50,7 +51,7 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
                 GameRouter gameRouter = SpringContextUtil.getApplicationContext().getBean(GameRouter.class);
             try {
                 result =gameRouter.handleRoute(jsonObjectRequest);
-            } catch (InterruptedException e) {
+            } catch (InterruptedException | InvocationTargetException | IllegalAccessException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
                 e.printStackTrace();

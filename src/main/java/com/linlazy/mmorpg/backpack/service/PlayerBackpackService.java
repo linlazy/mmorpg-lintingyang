@@ -4,18 +4,17 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.linlazy.mmorpg.dao.ItemDAO;
-import com.linlazy.mmorpg.domain.Item;
-import com.linlazy.mmorpg.domain.ItemContext;
-import com.linlazy.mmorpg.domain.Lattice;
-import com.linlazy.mmorpg.domain.PlayerBackpack;
+import com.linlazy.mmorpg.domain.*;
 import com.linlazy.mmorpg.dto.LatticeDTO;
 import com.linlazy.mmorpg.dto.PlayerBackPackDTO;
 import com.linlazy.mmorpg.entity.ItemEntity;
 import com.linlazy.mmorpg.server.common.GlobalConfigService;
 import com.linlazy.mmorpg.server.common.Result;
+import com.linlazy.mmorpg.service.PlayerService;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -34,6 +33,9 @@ public class PlayerBackpackService {
 
     private static Logger logger = LoggerFactory.getLogger(PlayerBackpackService.class);
 
+
+    @Autowired
+    private PlayerService playerService;
 
     /**
      * 玩家背包缓存
@@ -140,8 +142,10 @@ public class PlayerBackpackService {
         if(notFull.isFail()){
             return Result.valueOf(notFull.getCode());
         }
+
         PlayerBackpack playerBackpack = getPlayerBackpack(actorId);
         playerBackpack.push(itemList);
+
         return Result.success();
     }
 

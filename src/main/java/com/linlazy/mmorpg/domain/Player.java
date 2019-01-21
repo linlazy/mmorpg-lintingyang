@@ -57,9 +57,9 @@ public class Player extends SceneEntity {
     private int level;
 
     /***
-     * 是否交易锁定
+     * 是否锁定背包
      */
-    private boolean isTransactionLock;
+    private volatile boolean lockBackpack;
 
     @Override
     public int computeDefense() {
@@ -218,4 +218,7 @@ public class Player extends SceneEntity {
         return playerEntity;
     }
 
+    public void lockBackpack(boolean lockBackpack) {
+        this.lockBackpack = lockBackpack;
+    }
 }

@@ -78,6 +78,7 @@ public abstract class Backpack implements BackpackInterface {
     }
     @Override
     public boolean push(List<ItemContext> itemList) {
+
         for(ItemContext item: itemList){
             //放置折叠物品进背包
             if(item.isSuperPosition()){

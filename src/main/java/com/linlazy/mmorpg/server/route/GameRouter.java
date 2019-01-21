@@ -48,46 +48,33 @@ public class GameRouter {
     }
 
 
-    public  Result<?> handleRoute(JSONObject jsonObject) throws InterruptedException, ExecutionException {
+    public  Result<?> handleRoute(JSONObject jsonObject) throws InterruptedException, ExecutionException, InvocationTargetException, IllegalAccessException {
 
-        ThreadOrderPool.threadOrderPoolMap.putIfAbsent("actor",threadOrderPool);
-        Future<Result<?>> execute = threadOrderPool.execute(new BusinessTask() {
-            @Override
-            public Result<?> call() throws Exception {
+        String command = jsonObject.getString("command");
+        Method method = map.get(command);
+        if(method == null){
+            throw  new RuntimeException(String.format("none match [%s]",command));
+        }
 
-                String command = jsonObject.getString("command");
-                Method method = map.get(command);
-                if(method == null){
-                    throw  new RuntimeException(String.format("none match [%s]",command));
-                }
-
-                Cmd cmd = method.getAnnotation(Cmd.class);
-                //权限
-                if (cmd.auth()) {
-                    Channel channel = jsonObject.getObject("channel", Channel.class);
-                    if (SessionManager.getActorId(channel) == null) {
-                        return Result.valueOf("无权限执行此操作,请登录");
-                    }
-                    jsonObject.put("actorId", SessionManager.getActorId(channel));
-                }
-
-                try {
+        Cmd cmd = method.getAnnotation(Cmd.class);
+        //权限
+        if (cmd.auth()) {
+            Channel channel = jsonObject.getObject("channel", Channel.class);
+            if (SessionManager.getActorId(channel) == null) {
+                return Result.valueOf("无权限执行此操作,请登录");
+            }
+            jsonObject.put("actorId", SessionManager.getActorId(channel));
+            ThreadOrderPool.threadOrderPoolMap.putIfAbsent("actor",threadOrderPool);
+            Future<Result<?>> execute = threadOrderPool.execute(new BusinessTask(SessionManager.getActorId(channel)) {
+                @Override
+                public Result<?> call() throws Exception {
                     return (Result<?>) method.invoke(cmdHandler, jsonObject);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
                 }
 
-                return null;
-            }
+            });
+            return execute.get();
+        }
 
-            @Override
-            public int identity() {
-                return 0;
-            }
-        });
-
-        return execute.get();
+        return (Result<?>) method.invoke(cmdHandler, jsonObject);
     }
 }

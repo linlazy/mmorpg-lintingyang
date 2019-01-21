@@ -9,7 +9,6 @@ import com.linlazy.mmorpg.domain.PlayerBackpack;
 import com.linlazy.mmorpg.domain.Transaction;
 import com.linlazy.mmorpg.push.TransactionPushHelper;
 import com.linlazy.mmorpg.server.common.Result;
-import com.linlazy.mmorpg.server.threadpool.ThreadOrderPool;
 import com.linlazy.mmorpg.utils.SessionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -129,13 +128,13 @@ public class TransactionService {
         Transaction transaction = transactionIdMap.get(transactionId);
         if( transaction.getInviter() == actorId){
             //邀请者锁定
-            PlayerBackpack playerBackpack = playerBackpackService.getPlayerBackpack(transaction.getInviter());
-            playerBackpack.getReadWriteLock().readLock().lock();
+            Player player = playerService.getPlayer(transaction.getInviter());
+            player.lockBackpack(true);
             transaction.setInviterItemContextList(itemContextList);
         }else {
             //接受者锁定
-            PlayerBackpack playerBackpack = playerBackpackService.getPlayerBackpack(transaction.getAcceptor());
-            playerBackpack.getReadWriteLock().readLock().lock();
+            Player player = playerService.getPlayer(transaction.getAcceptor());
+            player.lockBackpack(true);
             transaction.setAcceptorItemContextList(itemContextList);
         }
 
@@ -174,7 +173,6 @@ public class TransactionService {
             List<ItemContext> acceptorItemContextList = transaction.getAcceptorItemContextList();
 
 
-            ThreadOrderPool actor = ThreadOrderPool.threadOrderPoolMap.get("actor");
 
             PlayerBackpack inviterPlayerBackpack = playerBackpackService.getPlayerBackpack(inviter);
             Result<?> inviterEnough = playerBackpackService.isEnough(inviter, inviterItemContextList);
@@ -211,9 +209,7 @@ public class TransactionService {
 
             }finally {
                 inviterPlayerBackpack.getReadWriteLock().writeLock().unlock();
-                inviterPlayerBackpack.getReadWriteLock().readLock().unlock();
                 acceptPlayerBackpack.getReadWriteLock().writeLock().unlock();
-                acceptPlayerBackpack.getReadWriteLock().readLock().unlock();
             }
 
             transactionIdMap.remove(transactionId);

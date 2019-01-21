@@ -9,14 +9,11 @@ import java.util.concurrent.Callable;
  * @author linlazy
  */
 @Data
-public abstract class BusinessTask implements Callable<Result<?>> {
+public  abstract class BusinessTask implements Callable<Result<?>> {
 
+    protected long identity;
 
-
-    @Override
-    public Result<?> call() throws Exception {
-        return null;
+    public BusinessTask(long identity) {
+        this.identity = identity;
     }
-
-    public abstract int identity();
 }

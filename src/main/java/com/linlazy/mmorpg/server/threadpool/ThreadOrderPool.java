@@ -27,7 +27,7 @@ public class ThreadOrderPool {
 
     private final int nThreads;
 
-    private static final Map<Integer, Integer> map = new ConcurrentHashMap<>();
+    private static final Map<Long, Integer> map = new ConcurrentHashMap<>();
 
 
     private List<ExecutorService> executorServices;
@@ -48,10 +48,10 @@ public class ThreadOrderPool {
     }
 
     public Future<Result<?>> execute(BusinessTask businessTask){
-        Integer index = map.get(businessTask.identity());
+        Integer index = map.get(businessTask.getIdentity());
         if(index == null){
             index = this.index.getAndIncrement()%nThreads;
-            map.put(businessTask.identity(),index);
+            map.put(businessTask.getIdentity(),index);
         }
         return executorServices.get(index).submit(businessTask);
     }
