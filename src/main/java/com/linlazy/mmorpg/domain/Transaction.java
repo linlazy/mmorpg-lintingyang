@@ -2,6 +2,9 @@ package com.linlazy.mmorpg.domain;
 
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author linlazy
  */
@@ -40,14 +43,14 @@ public class Transaction {
      */
     private boolean acceptorEnter;
 
-//    /**
-//     * 邀请者交易道具
-//     */
-//    private Set<ItemDo> inviterItemDoSet = new HashSet<>();
-//
-//    /**
-//     * 接受者交易道具
-//     */
-//    private Set<ItemDo> acceptorItemDoSet = new HashSet<>();
+    /**
+     * 邀请者交易道具
+     */
+    private List<ItemContext> inviterItemContextList = new ArrayList<>();
+
+    /**
+     * 接受者交易道具
+     */
+    private List<ItemContext> acceptorItemContextList = new ArrayList<>();
 
 }

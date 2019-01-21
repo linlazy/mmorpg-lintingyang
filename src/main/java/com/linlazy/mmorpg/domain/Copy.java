@@ -190,11 +190,11 @@ public class Copy extends Scene{
                 });
 
         //取消调度，怪物自动刷新，小怪，BOSS定时攻击,超时退出副本
-//        bossAutoAttackSchedule.cancel(true);
-//        monsterIdAutoAttackScheduleMap.values()
-//                .forEach(scheduledFuture -> scheduledFuture.cancel(true));
+        bossAutoAttackSchedule.cancel(true);
+        monsterIdAutoAttackScheduleMap.values()
+                .forEach(scheduledFuture -> scheduledFuture.cancel(true));
         quitSchedule.cancel(true);
-//        refreshMonsterScheduled.cancel(true);
+        refreshMonsterScheduled.cancel(true);
     }
 
     public void initCopyPlayerInfo(Player player) {

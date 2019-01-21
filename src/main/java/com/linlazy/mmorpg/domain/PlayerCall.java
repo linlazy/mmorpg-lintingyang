@@ -42,13 +42,13 @@ public class PlayerCall extends SceneEntity {
         sourceId = player.getActorId();
 
         EventBusHolder.register(this);
-        startPlayerAutoAttackScheduled();
     }
 
     @Subscribe
     public void playerAttackEvent(PlayerAttackEvent playerAttackEvent){
         if(playerAttackEvent.getPlayer().getActorId() == sourceId){
             active =true;
+            startPlayerAutoAttackScheduled();
         }
     }
 

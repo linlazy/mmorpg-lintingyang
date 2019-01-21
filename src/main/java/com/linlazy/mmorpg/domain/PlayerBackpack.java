@@ -4,6 +4,7 @@ import com.linlazy.mmorpg.dao.ItemDAO;
 import com.linlazy.mmorpg.entity.ItemEntity;
 import com.linlazy.mmorpg.server.common.GlobalConfigService;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
+import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +14,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * 玩家背包信息
  * @author linlazy
  */
+@Data
 public class PlayerBackpack extends Backpack {
 
     private Logger logger = LoggerFactory.getLogger(PlayerBackpack.class);

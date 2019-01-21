@@ -8,6 +8,7 @@ import com.linlazy.mmorpg.event.type.PlayerCallDisappearEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.domain.SceneEntity;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -26,6 +27,8 @@ public class CallService {
 
     private AtomicLong maxPlayerCallId = new AtomicLong();
 
+    @Autowired
+    private SkillService skillService;
 
     @PostConstruct
     public void  init(){
@@ -42,6 +45,11 @@ public class CallService {
     public PlayerCall createCall(SceneEntity sceneEntity, int continueTime){
         Player player = (Player) sceneEntity;
         PlayerCall playerCall = new PlayerCall(player);
+
+//        skillService.getPlayerCallSkill();
+
+
+        playerCall.startPlayerAutoAttackScheduled();
 
         playerCall.setId(maxPlayerCallId.incrementAndGet());
 

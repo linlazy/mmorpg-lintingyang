@@ -1,14 +1,21 @@
 package com.linlazy.mmorpg.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.linlazy.mmorpg.backpack.service.PlayerBackpackService;
 import com.linlazy.mmorpg.constants.TransactionOperatiorType;
+import com.linlazy.mmorpg.domain.ItemContext;
+import com.linlazy.mmorpg.domain.PlayerBackpack;
 import com.linlazy.mmorpg.domain.Transaction;
 import com.linlazy.mmorpg.push.TransactionPushHelper;
 import com.linlazy.mmorpg.server.common.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -23,6 +30,8 @@ public class TransactionService {
 
     private AtomicInteger maxTransactionId = new AtomicInteger(0);
 
+    @Autowired
+    private PlayerBackpackService playerBackpackService;
 
     private Map<Integer, Transaction> transactionIdMap = new ConcurrentHashMap<>();
     private  Map<Long,Integer> actorIdTransactionIdMap = new ConcurrentHashMap<>();
@@ -92,33 +101,31 @@ public class TransactionService {
             //邀请者锁定
             transaction.setInviterLock(true);
 
-//            Set<ItemDo> itemDoSet = new HashSet<>();
-//            JSONArray items = jsonObject.getJSONArray("items");
-//            for(int i=0; i < items.size() ; i++){
-//                JSONObject item = items.getJSONObject(i);
-//                long itemId = item.getLongValue("itemId");
-//                int count = item.getIntValue("num");
-//                ItemDo itemDo = new ItemDo(itemId);
-//                itemDo.setCount(count);
-//                itemDo.setActorId(actorId);
-//                itemDoSet.add(itemDo);
-//            }
-//            transaction.setInviterItemDoSet(itemDoSet);
+            List<ItemContext> itemContextList = new ArrayList<>();
+            JSONArray items = jsonObject.getJSONArray("items");
+            for(int i=0; i < items.size() ; i++){
+                JSONObject item = items.getJSONObject(i);
+                long itemId = item.getLongValue("itemId");
+                int count = item.getIntValue("num");
+                ItemContext itemContext = new ItemContext(itemId);
+                itemContext.setCount(count);
+                itemContextList.add(itemContext);
+            }
+            transaction.setInviterItemContextList(itemContextList);
         }else {
-//            //接受者锁定
-//            transaction.setAcceptorLock(true);
-//            Set<ItemDo> itemDoSet = new HashSet<>();
-//            JSONArray items = jsonObject.getJSONArray("items");
-//            for(int i=0; i < items.size() ; i++){
-//                JSONObject item = items.getJSONObject(i);
-//                long itemId = item.getLongValue("itemId");
-//                int count = item.getIntValue("num");
-//                ItemDo itemDo = new ItemDo(itemId);
-//                itemDo.setCount(count);
-//                itemDo.setActorId(actorId);
-//                itemDoSet.add(itemDo);
-//            }
-//            transaction.setAcceptorItemDoSet(itemDoSet);
+            //接受者锁定
+            transaction.setAcceptorLock(true);
+            List<ItemContext> itemList = new ArrayList<>();
+            JSONArray items = jsonObject.getJSONArray("items");
+            for(int i=0; i < items.size() ; i++){
+                JSONObject item = items.getJSONObject(i);
+                long itemId = item.getLongValue("itemId");
+                int count = item.getIntValue("num");
+                ItemContext itemContext = new ItemContext(itemId);
+                itemContext.setCount(count);
+                itemList.add(itemContext);
+            }
+            transaction.setAcceptorItemContextList(itemList);
         }
 
         logger.debug("transactionInfo:{}", transaction);
@@ -152,20 +159,24 @@ public class TransactionService {
 
             long inviter = transaction.getInviter();
             long acceptor = transaction.getAcceptor();
-//            Set<ItemDo> inviterItemDoSet = transaction.getInviterItemDoSet();
-//            Set<ItemDo> acceptorItemDoSet = transaction.getAcceptorItemDoSet();
-//            inviterItemDoSet.stream()
-//                    .forEach(itemDo -> {
-//                        itemManager.consumeBackPackItem(inviter,itemDo.getItemId(),itemDo.getCount());
-//                        int baseItemId = ItemIdUtil.getBaseItemId(itemDo.getItemId());
-//                        itemManager.pushBackPack(acceptor,baseItemId,itemDo.getCount());
-//                    });
-//            acceptorItemDoSet.stream()
-//                    .forEach(itemDo -> {
-//                        itemManager.consumeBackPackItem(acceptor,itemDo.getItemId(),itemDo.getCount());
-//                        int baseItemId = ItemIdUtil.getBaseItemId(itemDo.getItemId());
-//                        itemManager.pushBackPack(inviter,baseItemId,itemDo.getCount());
-//                    });
+            List<ItemContext> inviterItemContextList = transaction.getInviterItemContextList();
+            List<ItemContext> acceptorItemContextList = transaction.getAcceptorItemContextList();
+
+            PlayerBackpack inviterPlayerBackpack = playerBackpackService.getPlayerBackpack(inviter);
+            PlayerBackpack acceptPlayerBackpack = playerBackpackService.getPlayerBackpack(acceptor);
+            try{
+                inviterPlayerBackpack.getReadWriteLock().writeLock().lock();
+                acceptPlayerBackpack.getReadWriteLock().writeLock().lock();
+
+                inviterPlayerBackpack.pop(inviterItemContextList);
+                acceptPlayerBackpack.push(inviterItemContextList);
+
+                playerBackpackService.getPlayerBackpack(acceptor).pop(acceptorItemContextList);
+                playerBackpackService.getPlayerBackpack(inviter).push(acceptorItemContextList);
+            }finally {
+                inviterPlayerBackpack.getReadWriteLock().writeLock().unlock();
+                acceptPlayerBackpack.getReadWriteLock().writeLock().unlock();
+            }
 
             transactionIdMap.remove(transactionId);
             actorIdTransactionIdMap.remove(transaction.getInviter());

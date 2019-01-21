@@ -105,11 +105,11 @@ public class CopyService {
 //            //开启副本超时调度
             copy.startQuitCopyScheduled();
 //            //开启定时刷新小怪调度
-//            copy.startRefreshMonsterScheduled();
+            copy.startRefreshMonsterScheduled();
 //            //开启小怪定时攻击调度
-//            copy.startMonsterAutoAttackScheduled();
+            copy.startMonsterAutoAttackScheduled();
             //开启BOSS定时攻击调度
-//            copy.startBossAutoAttackScheduled();
+            copy.startBossAutoAttackScheduled();
 
         }
 
