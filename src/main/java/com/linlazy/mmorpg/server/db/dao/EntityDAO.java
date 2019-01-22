@@ -44,7 +44,7 @@ public abstract class EntityDAO<T extends Entity> extends BaseJdbc<T>{
      * @param entity
      */
     public void deleteQueue(T entity){
-        entity.setOperatorType(EntityOperatorType.INSERT);
+        entity.setOperatorType(EntityOperatorType.DELETE);
         entity.beforeWriteDB();
         entity.init();
         //放进队列

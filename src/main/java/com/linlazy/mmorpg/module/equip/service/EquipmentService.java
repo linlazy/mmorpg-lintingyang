@@ -1,27 +1,38 @@
 package com.linlazy.mmorpg.module.equip.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
+import com.linlazy.mmorpg.backpack.service.PlayerBackpackService;
 import com.linlazy.mmorpg.constants.EquipType;
 import com.linlazy.mmorpg.constants.ItemType;
 import com.linlazy.mmorpg.dao.ItemDAO;
 import com.linlazy.mmorpg.domain.Equip;
+import com.linlazy.mmorpg.domain.ItemContext;
 import com.linlazy.mmorpg.domain.Player;
-import com.linlazy.mmorpg.domain.PlayerBackpack;
+import com.linlazy.mmorpg.dto.DressedEquipDTO;
+import com.linlazy.mmorpg.dto.EquipDTO;
+import com.linlazy.mmorpg.entity.ItemEntity;
 import com.linlazy.mmorpg.event.type.PlayerAttackEvent;
 import com.linlazy.mmorpg.event.type.PlayerAttackedEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.equip.manager.domain.DressedEquip;
+import com.linlazy.mmorpg.module.item.manager.config.ItemConfigService;
+import com.linlazy.mmorpg.push.EquipPushHelper;
 import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.service.PlayerService;
+import com.linlazy.mmorpg.utils.ItemIdUtil;
 import com.linlazy.mmorpg.utils.RandomUtils;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.Collection;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -35,6 +46,10 @@ public class EquipmentService {
     private ItemDAO itemDAO;
     @Autowired
     private PlayerService playerService;
+    @Autowired
+    private PlayerBackpackService playerBackpackService;
+    @Autowired
+    private ItemConfigService itemConfigService;
 
     /**
      * 玩家已穿戴装备缓存
@@ -55,7 +70,11 @@ public class EquipmentService {
                             .map(Equip::new)
                             .filter(equip -> equip.isDress())
                             .forEach(equip -> {
-                                dressedEquip.getEquipMap().put(equip.getItemId(),equip);
+
+                                int baseItemId = ItemIdUtil.getBaseItemId(equip.getItemId());
+                                int orderId = ItemIdUtil.getOrderId(equip.getItemId());
+                                long id  = ItemIdUtil.getNewItemId(orderId,0,baseItemId);
+                                dressedEquip.getEquipMap().put(id,equip);
                             });
                     return dressedEquip;
                 }
@@ -78,21 +97,32 @@ public class EquipmentService {
                     .collect(Collectors.toList())
         );
         equip.modifyDurability();
-        itemDAO.updateQueue(equip.convertItemEntity());
+        EquipPushHelper.pushDressedEquip(player.getActorId(),"受到攻击耐久度减少" + new EquipDTO(equip).toString());
+        ItemEntity itemEntity = equip.convertItemEntity();
+        itemEntity.setActorId(player.getActorId());
+        itemDAO.updateQueue(itemEntity);
     }
 
     @Subscribe
     private void handleAttack(PlayerAttackEvent playerAttackEvent) {
         Player player = playerAttackEvent.getPlayer();
+        Collection<Equip> equips = player.getDressedEquip().getEquipMap().values();
+        if(equips.size() == 0){
+            return;
+        }
+
         Equip equip = RandomUtils.randomElement(
-                player.getDressedEquip().getEquipMap().values()
-                        .stream()
+
+                equips .stream()
                         .filter(equip1 -> equip1.getEquipType() == EquipType.ARMS)
                         .filter(equip1 -> equip1.getDurability() > 0)
                         .collect(Collectors.toList())
         );
         equip.modifyDurability();
-        itemDAO.updateQueue(equip.convertItemEntity());
+        EquipPushHelper.pushDressedEquip(player.getActorId(),"攻击成功耐久度减少" + new EquipDTO(equip).toString());
+        ItemEntity itemEntity = equip.convertItemEntity();
+        itemEntity.setActorId(player.getActorId());
+        itemDAO.updateQueue(itemEntity);
     }
 
 
@@ -102,69 +132,131 @@ public class EquipmentService {
      * @param equipId
      * @return
      */
-    public Result<?> equip(long actorId, long equipId){
-//        JSONObject itemConfig = itemConfigService.getItemConfig(ItemIdUtil.getBaseItemId(equipId));
-//        int itemType = itemConfig.getIntValue("itemType");
-//        if( itemType!= ItemType.EQUIP){
-//            return Result.valueOf("参数有误");
-//        }
+    public Result<?> dressEquip(long actorId, long equipId){
+
+        ItemContext itemContext = new ItemContext(equipId);
+        itemContext.setCount(1);
+        Result<?> enough = playerBackpackService.isEnough(actorId, Lists.newArrayList(itemContext));
+        if(enough.isFail()){
+            return Result.valueOf(enough.getCode());
+        }
+
 
         Player player = playerService.getPlayer(actorId);
+        Equip equip = player.getBackPack().getEquip(equipId);
+        ItemContext equipItemContext = new ItemContext(equip.getItemId());
+        equipItemContext.setCount(equip.getCount());
+        player.getBackPack().pop(Lists.newArrayList(equipItemContext));
+
+
         DressedEquip dressedEquip = player.getDressedEquip();
-        PlayerBackpack backPack = player.getBackPack();
+        Collection<Equip> equips = dressedEquip.getEquipMap().values();
+        for(Equip dressEquip: equips){
+            if(dressEquip.getEquipType() == equip.getEquipType()){
+
+                int baseItemId = ItemIdUtil.getBaseItemId(dressEquip.getItemId());
+                int orderId = ItemIdUtil.getOrderId(dressEquip.getItemId());
+                long id  = ItemIdUtil.getNewItemId(orderId,0,baseItemId);
+
+                dressedEquip.getEquipMap().remove(id);
+
+                ItemContext dressedItemContext = new ItemContext(dressEquip.getItemId());
+                dressedItemContext.setCount(dressEquip.getCount());
+
+                player.getBackPack().push(Lists.newArrayList(dressedItemContext));
+            }
+        }
+
+
+        int baseItemId = ItemIdUtil.getBaseItemId(equip.getItemId());
+        int orderId = ItemIdUtil.getOrderId(equip.getItemId());
+        long id  = ItemIdUtil.getNewItemId(orderId,0,baseItemId);
+        dressedEquip.getEquipMap().put(id,equip);
+        equip.setItemId(id);
+        equip.setDress(true);
+        ItemEntity itemEntity = equip.convertItemEntity();
+        itemEntity.setActorId(actorId);
+        itemDAO.insertQueue(itemEntity);
+
         return Result.success();
     }
 
 
-//    /**
-//     * 卸载装备
-//     * @param actorId
-//     * @param equipId
-//     * @return
-//     */
-//    public Result<?> unEquip(long actorId, long equipId) {
-//        JSONObject itemConfig = itemConfigService.getItemConfig(ItemIdUtil.getBaseItemId(equipId));
-//        int itemType = itemConfig.getIntValue("itemType");
-//        if(itemType != ItemType.EQUIP){
-//            return Result.valueOf("参数有误");
-//        }
-//
-//        Item item = itemDao.getItem(actorId, equipId);
-//        EquipDo equipDo = new EquipDo(new ItemDo(item));
-//        if(equipDo == null || !equipDo.isDressed()){
-//            return Result.valueOf("参数有误");
-//        }
-//        equipManager.unDressEquipment(actorId,equipId);
-//        return Result.success();
-//    }
 
-//    /**
-//     * 修复装备
-//     * @param actorId 玩家ID
-//     * @param equipId 装备ID
-//     * @return
-//     */
-//    public Result<FixEquipmentDTO> fixEquipment(long actorId, long equipId) {
-////        //校验
-////        JSONObject itemConfig = itemConfigService.getItemConfig(ItemIdUtil.getBaseItemId(equipId));
-////        int itemType = itemConfig.getIntValue("itemType");
-////        if(itemType != ItemType.EQUIP){
-////            return Result.valueOf("参数有误");
-////        }
-////
-////
-////        FixEquipmentDTO fixEquipmentDTO = new FixEquipmentDTO();
-////        //修复耐久度
-////        EquipDo equipDo = equipManager.fixEquipment(actorId, equipId);
-////        fixEquipmentDTO.setEquipDTO(new EquipDTO(equipDo));
-//
-//        return Result.success(fixEquipmentDTO);
-//    }
+    /**
+     * 修复装备
+     * @param actorId 玩家ID
+     * @param equipId 装备ID
+     * @return
+     */
+    public Result<?> fixEquipment(long actorId, long equipId) {
 
-    public Result<?> unDressEquip(long actorId,long equipId) {
         Player player = playerService.getPlayer(actorId);
-        Equip equip = player.getDressedEquip().getEquipMap().remove(equipId);
-        PlayerBackpack backPack = player.getBackPack();
+
+        int baseItemId = ItemIdUtil.getBaseItemId(equipId);
+        int orderId = ItemIdUtil.getOrderId(equipId);
+        long id = ItemIdUtil.getNewItemId(orderId, 0, baseItemId);
+
+        Equip equip = player.getDressedEquip().getEquipMap().get(id);
+        JSONObject itemConfig = itemConfigService.getItemConfig(ItemIdUtil.getBaseItemId(equipId));
+        int durability = itemConfig.getIntValue("durability");
+        equip.setDurability(durability);
+        ItemEntity itemEntity = equip.convertItemEntity();
+        itemEntity.setActorId(actorId);
+        itemDAO.updateQueue(itemEntity);
+
+        return Result.success();
+    }
+
+    /**
+     * 卸载装备
+     * @param actorId
+     * @param equipId
+     * @return
+     */
+    public Result<?> unDressEquip(long actorId,long equipId) {
+        ItemContext itemContext = new ItemContext(equipId);
+        itemContext.setCount(1);
+
+        Result<?> notFull = playerBackpackService.isNotFull(actorId, Lists.newArrayList(itemContext));
+        if(notFull.isFail()){
+            return Result.valueOf(notFull.getCode());
+        }
+
+        Player player = playerService.getPlayer(actorId);
+        DressedEquip dressedEquip = player.getDressedEquip();
+        int baseItemId = ItemIdUtil.getBaseItemId(equipId);
+        int orderId = ItemIdUtil.getOrderId(equipId);
+        long id = ItemIdUtil.getNewItemId(orderId, 0, baseItemId);
+        Equip equip = dressedEquip.getEquipMap().remove(id);
+        ItemEntity itemEntity = equip.convertItemEntity();
+        itemEntity.setActorId(actorId);
+        itemDAO.deleteQueue(itemEntity);
+
+        playerBackpackService.push(actorId,Lists.newArrayList(itemContext));
+
+
+        return Result.success();
+    }
+
+
+    /**
+     * 获取玩家缓存装备
+     * @param playerId
+     * @return
+     */
+    public DressedEquip getDressedEquip(long playerId){
+        try {
+            return playerDressedEquipCache.get(playerId);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
         return null;
+    }
+
+    public Result<?> dressedEquipInfo(long actorId) {
+        DressedEquip dressedEquip = getDressedEquip(actorId);
+        EquipPushHelper.pushDressedEquip(actorId,new DressedEquipDTO(dressedEquip).toString());
+        return Result.success();
     }
 }

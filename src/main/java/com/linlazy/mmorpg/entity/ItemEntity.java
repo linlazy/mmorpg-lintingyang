@@ -46,6 +46,11 @@ public class ItemEntity extends Entity {
      */
     private int superPositionUp;
 
+    /**
+     * 名称
+     */
+    private String name;
+
     @Override
     public void afterReadDB() {
         ItemConfigService bean = SpringContextUtil.getApplicationContext().getBean(ItemConfigService.class);
@@ -58,6 +63,7 @@ public class ItemEntity extends Entity {
         }
 
         itemType = itemConfig.getIntValue("itemType");
+        name = itemConfig.getString("name");
     }
 
     @Override

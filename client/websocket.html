@@ -303,6 +303,49 @@
 					ta.value += "确认交易中..."+ "\r\n";
 				}
 
+				if(arr[0] == "dressedEquipInfo"){
+
+					var json ={};
+					json.command = "dressedEquipInfo";
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "查看装备信息中..."+ "\r\n";
+				}
+
+				if(arr[0] == "dressEquip"){
+
+					var json ={};
+					json.command = "dressEquip";
+					json.equipId = arr[1];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "穿戴装备中..."+ "\r\n";
+				}
+
+				if(arr[0] == "unDressEquip"){
+
+					var json ={};
+					json.command = "unDressEquip";
+					json.equipId = arr[1];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "卸载装备中..."+ "\r\n";
+				}
+
+				if(arr[0] == "fixEquip"){
+
+					var json ={};
+					json.command = "fixEquip";
+					json.equipId = arr[1];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "修复装备中..."+ "\r\n";
+				}
+
 			}else{
 				alert("WebSocket连接没有建立成功！！");
 			}

@@ -38,6 +38,18 @@ public class CmdHandler {
         return equipmentService.unDressEquip(actorId,equipId);
     }
 
+    /**
+     * 修复装备
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("fixEquip")
+    public Result<?> fixEquip(JSONObject jsonObject){
+        long actorId = jsonObject.getLongValue("actorId");
+        long equipId = jsonObject.getLongValue("equipId");
+        return equipmentService.fixEquipment(actorId,equipId);
+    }
+
 
     @Autowired
     private EmailService emailService;
@@ -490,6 +502,29 @@ public class CmdHandler {
     public Result<?> skillInfo(JSONObject jsonObject){
         long actorId = jsonObject.getLong("actorId");
         return Result.success(skillService.getPlayerSkill(actorId).toString());
+    }
+
+    /**
+     *  穿戴装备
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("dressEquip")
+    public Result<?> dressEquip(JSONObject jsonObject){
+        long actorId = jsonObject.getLong("actorId");
+        long equipId = jsonObject.getLongValue("equipId");
+        return equipmentService.dressEquip(actorId,equipId);
+    }
+
+    /**
+     *  查看穿戴装备信息
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("dressedEquipInfo")
+    public Result<?> dressedEquipInfo(JSONObject jsonObject){
+        long actorId = jsonObject.getLong("actorId");
+        return equipmentService.dressedEquipInfo(actorId);
     }
 
     @Cmd(value = "cmd",auth = false)

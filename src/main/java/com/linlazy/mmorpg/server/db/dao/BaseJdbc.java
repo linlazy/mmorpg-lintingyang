@@ -4,6 +4,7 @@ package com.linlazy.mmorpg.server.db.dao;
 import com.linlazy.mmorpg.server.db.entity.Entity;
 import com.linlazy.mmorpg.server.db.entity.EntityInfo;
 import com.linlazy.mmorpg.server.db.queue.DbQueueManager;
+import com.linlazy.mmorpg.server.db.statement.DeleteStatement;
 import com.linlazy.mmorpg.server.db.statement.InsertStatement;
 import com.linlazy.mmorpg.server.db.statement.SelectStatement;
 import com.linlazy.mmorpg.server.db.statement.UpdateStatement;
@@ -108,7 +109,8 @@ public  class BaseJdbc<T extends Entity>  {
         //获取主键参数值
         Map<String, Object> pkKeyValue = entity.getPkKeyValue();
         args.addAll(pkKeyValue.values());
-        String prepareSQL = UpdateStatement.buildPrepareSQL(entity);
+        EntityInfo entityInfo = EntityInfo.ENTITY_INFO_MAP.get(entity.getClass());
+        String prepareSQL = DeleteStatement.buildPrepareSQL(entityInfo);
         jdbcTemplate.update(prepareSQL,args.toArray());
     }
 

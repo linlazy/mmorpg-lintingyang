@@ -31,6 +31,8 @@ public class Item {
      */
     private int superPositionUp;
 
+    private String name;
+
     /**
      * 数量
      */
@@ -59,6 +61,8 @@ public class Item {
         this.superPosition = itemEntity.isSuperPosition();
         this.superPositionUp = itemEntity.getSuperPositionUp();
         this.count = itemEntity.getCount();
+        this.itemType = itemEntity.getItemType();
+        this.name = itemEntity.getName();
     }
 
     public Item(GuildWarehouseEntity guildWarehouseEntity) {
@@ -100,7 +104,7 @@ public class Item {
     /**
      * 初始化配置数据
      */
-    private void initConfig(int baseItemId) {
+    protected void initConfig(int baseItemId) {
         ItemConfigService itemConfigService = SpringContextUtil.getApplicationContext().getBean(ItemConfigService.class);
         JSONObject itemConfig = itemConfigService.getItemConfig(baseItemId);
         this.superPositionUp = itemConfig.getIntValue("superPosition");
@@ -109,5 +113,7 @@ public class Item {
         }else {
             this.superPosition = true;
         }
+
+         name = itemConfig.getString("name");
     }
 }

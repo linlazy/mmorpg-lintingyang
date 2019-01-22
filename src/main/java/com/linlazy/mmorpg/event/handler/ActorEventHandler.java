@@ -4,7 +4,6 @@ package com.linlazy.mmorpg.event.handler;
 import com.google.common.eventbus.Subscribe;
 import com.linlazy.mmorpg.domain.Player;
 import com.linlazy.mmorpg.event.GameEvenHandler;
-import com.linlazy.mmorpg.event.type.PlayerAttackEvent;
 import com.linlazy.mmorpg.event.type.PlayerDeadEvent;
 import com.linlazy.mmorpg.file.service.SceneConfigService;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
@@ -52,14 +51,5 @@ public class ActorEventHandler extends GameEvenHandler {
 
     }
 
-    /**
-     * 玩家攻击事件
-     * @param playerAttackEvent
-     */
-    @Subscribe
-    public void playerAttack(PlayerAttackEvent playerAttackEvent){
-        Player player = playerAttackEvent.getPlayer();
-        player.getPlayerCall().active();
 
-    }
 }

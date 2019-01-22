@@ -2,7 +2,7 @@
 //
 //import com.alibaba.fastjson.JSONArray;
 //import com.alibaba.fastjson.JSONObject;
-//import com.linlazy.mmorpg.module.equip.manager.domain.EquipDo;
+//import com.linlazy.mmorpg.module.dressEquip.manager.domain.EquipDo;
 //import com.linlazy.mmorpg.module.item.constants.ItemType;
 //import com.linlazy.mmorpg.module.item.manager.backpack.response.BackPackInfo;
 //import com.linlazy.mmorpg.module.item.manager.backpack.response.BackPackLatticeDTO;

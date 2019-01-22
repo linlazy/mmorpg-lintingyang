@@ -44,13 +44,22 @@
       "down": 50,
       "up": 95
     }
-  },  {
-  "itemId":5,
-  "itemType": 2,
-  "equipType": 2,
-  "name": "轻型战甲",
-  "level": 2,
-  "profession": "战士",
-  "sex": "男"
-}
+  },
+    {
+    "itemId":5,
+    "itemType": 2,
+    "equipType": 2,
+    "name": "轻型战甲",
+    "level": 2,
+    "profession": "战士",
+    "sex": "男",
+    "attack": 50,
+    "durability": 100,
+    "consumeDurability": 1,
+    "additions": {
+      "additionType": 1,
+      "down": 50,
+      "up": 95
+   }
+  }
 ]

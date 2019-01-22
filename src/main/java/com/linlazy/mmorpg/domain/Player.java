@@ -11,6 +11,7 @@ import com.linlazy.mmorpg.event.type.PlayerDeadEvent;
 import com.linlazy.mmorpg.file.service.SceneConfigService;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.equip.manager.domain.DressedEquip;
+import com.linlazy.mmorpg.module.equip.service.EquipmentService;
 import com.linlazy.mmorpg.push.PlayerPushHelper;
 import com.linlazy.mmorpg.service.SkillService;
 import com.linlazy.mmorpg.service.TeamService;
@@ -96,10 +97,6 @@ public class Player extends SceneEntity {
     private int gold;
 
 
-    /**
-     * 穿戴装备
-     */
-    private DressedEquip dressedEquip;
 
     /**
      *  玩家公会信息
@@ -222,5 +219,10 @@ public class Player extends SceneEntity {
 
     public void lockBackpack(boolean lockBackpack) {
         this.lockBackpack = lockBackpack;
+    }
+
+    public DressedEquip getDressedEquip(){
+        EquipmentService equipmentService = SpringContextUtil.getApplicationContext().getBean(EquipmentService.class);
+        return equipmentService.getDressedEquip(actorId);
     }
 }

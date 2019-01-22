@@ -1,4 +1,4 @@
-//package com.linlazy.mmorpg.module.equip.manager.domain;
+//package com.linlazy.mmorpg.module.dressEquip.manager.domain;
 //
 ///**
 // * 装备耐久度领域类

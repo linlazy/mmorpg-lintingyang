@@ -1,8 +1,8 @@
-//package com.linlazy.mmorpg.module.equip.handler;
+//package com.linlazy.mmorpg.module.dressEquip.handler;
 //
 //import com.alibaba.fastjson.JSONObject;
 //import com.linlazy.mmorpg.server.common.Result;
-//import com.linlazy.mmorpg.module.equip.service.EquipmentService;
+//import com.linlazy.mmorpg.module.dressEquip.service.EquipmentService;
 //import com.linlazy.mmorpg.server.route.Cmd;
 //import com.linlazy.mmorpg.server.route.Module;
 //import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@
 ///**
 // * @author linlazy
 // */
-//@Module("equip")
+//@Module("dressEquip")
 //@Component
 //public class EquipmentHandler {
 //
@@ -45,12 +45,12 @@
 //     * @param jsonObject
 //     * @return
 //     */
-//    @Cmd("equip")
-//    public Result<?> equip(JSONObject jsonObject){
+//    @Cmd("dressEquip")
+//    public Result<?> dressEquip(JSONObject jsonObject){
 //        long actorId = jsonObject.getLongValue("actorId");
 //        long equipId = jsonObject.getLongValue("itemId");
 //
-//        return equipmentService.equip(actorId,equipId);
+//        return equipmentService.dressEquip(actorId,equipId);
 //    }
 //
 //    /**

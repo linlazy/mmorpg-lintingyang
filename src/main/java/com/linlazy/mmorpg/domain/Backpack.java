@@ -1,6 +1,7 @@
 package com.linlazy.mmorpg.domain;
 
 import com.linlazy.mmorpg.backpack.BackpackInterface;
+import com.linlazy.mmorpg.constants.ItemType;
 import com.linlazy.mmorpg.utils.ItemIdUtil;
 import lombok.Data;
 
@@ -92,21 +93,38 @@ public abstract class Backpack implements BackpackInterface {
     }
 
     private boolean pushNonSuperPositionBackPack(ItemContext item) {
-        for(int i = 0; i < item.getCount(); i ++){
-            Lattice spaceBackPackLattice = findSpaceBackPackLattice();
 
+        //
+        Lattice spaceBackPackLattice = findSpaceBackPackLattice();
+        long newItemId = 0;
+        if(ItemIdUtil.getOrderId(item.getItemId()) != 0){
+            int index = spaceBackPackLattice.getIndex();
+            int orderId = ItemIdUtil.getOrderId(item.getItemId());
+            int baseItemId = ItemIdUtil.getBaseItemId(item.getItemId());
+             newItemId = ItemIdUtil.getNewItemId(orderId, index, baseItemId);
+
+        }else {
             int maxOrderId = Arrays.stream(latticeArr)
                     .filter(Objects::nonNull)
                     .map(Lattice::getItem)
                     .filter(item1 -> ItemIdUtil.getBaseItemId(item1.getItemId()) == ItemIdUtil.getBaseItemId(item.getItemId()))
                     .map(item1 -> ItemIdUtil.getOrderId(item1.getItemId()) )
                     .max(Integer::compareTo).orElse(0);
-            long newItemId = ItemIdUtil.getNewItemId(maxOrderId + 1, spaceBackPackLattice.getIndex(), ItemIdUtil.getBaseItemId(item.getItemId()));
-            Item newItem = new Item(newItemId,1);
-            spaceBackPackLattice.setItem(newItem);
-            latticeArr[spaceBackPackLattice.getIndex()] = spaceBackPackLattice;
-            addItem(newItem);
+             newItemId = ItemIdUtil.getNewItemId(maxOrderId + 1, spaceBackPackLattice.getIndex(), ItemIdUtil.getBaseItemId(item.getItemId()));
         }
+
+
+        //增加道具
+        Item newItem = null;
+        if(item.getItemType() == ItemType.EQUIP){
+            newItem = new Equip(newItemId,1);
+        }else {
+            newItem = new Item(newItemId,1);
+        }
+        spaceBackPackLattice.setItem(newItem);
+        latticeArr[spaceBackPackLattice.getIndex()] = spaceBackPackLattice;
+        addItem(newItem);
+
         return true;
     }
 
@@ -261,11 +279,15 @@ public abstract class Backpack implements BackpackInterface {
     }
 
     private void popNonSuperPositionFromBackPack(ItemContext item) {
+
         for(Lattice backPackLattice: Arrays.asList(latticeArr)){
-            if(backPackLattice.getItem().getItemId() == item.getItemId()){
-                latticeArr[backPackLattice.getIndex()] = null;
-                updateItem( backPackLattice.getItem());
+            if(backPackLattice != null){
+                if(backPackLattice.getItem().getItemId() == item.getItemId()){
+                    latticeArr[backPackLattice.getIndex()] = null;
+                    deleteItem( backPackLattice.getItem());
+                }
             }
+
         }
     }
 
@@ -312,4 +334,5 @@ public abstract class Backpack implements BackpackInterface {
                     addItem(item);
                 });
     }
+
 }

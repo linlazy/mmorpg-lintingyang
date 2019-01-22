@@ -107,6 +107,8 @@ public class PlayerCall extends SceneEntity {
     }
 
     public void quitAutoAttack() {
-        autoAttackScheduledFuture.cancel(true);
+        if(autoAttackScheduledFuture != null){
+            autoAttackScheduledFuture.cancel(true);
+        }
     }
 }

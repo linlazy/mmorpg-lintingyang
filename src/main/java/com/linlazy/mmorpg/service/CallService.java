@@ -65,7 +65,6 @@ public class CallService {
 
         playerCall.setId(maxPlayerCallId.incrementAndGet());
 
-        playerCall.startPlayerAutoAttackScheduled();
         playerCall.startPlayerCallDisAppearScheduled(continueTime);
 
         callMap.put(maxPlayerCallId.get(),playerCall);

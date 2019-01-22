@@ -20,6 +20,7 @@ public class ItemContext {
     private boolean superPosition;
 
     private int superPositionUp;
+    private int itemType;
 
     public ItemContext(long itemId) {
         this.itemId = itemId;
@@ -38,5 +39,7 @@ public class ItemContext {
             this.setSuperPosition(true);
         }
         this.setSuperPositionUp(superPositionUp);
+
+        this.setItemType(itemConfig.getIntValue("itemType"));
     }
 }

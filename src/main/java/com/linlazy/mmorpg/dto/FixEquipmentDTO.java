@@ -1,4 +1,4 @@
-//package com.linlazy.mmorpg.module.equip.dto;
+//package com.linlazy.mmorpg.module.dressEquip.dto;
 //
 //import lombok.Data;
 //

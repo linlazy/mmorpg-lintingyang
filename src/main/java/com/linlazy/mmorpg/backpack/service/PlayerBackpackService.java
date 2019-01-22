@@ -3,6 +3,7 @@ package com.linlazy.mmorpg.backpack.service;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.linlazy.mmorpg.constants.ItemType;
 import com.linlazy.mmorpg.dao.ItemDAO;
 import com.linlazy.mmorpg.domain.*;
 import com.linlazy.mmorpg.dto.LatticeDTO;
@@ -56,7 +57,24 @@ public class PlayerBackpackService {
                     List<ItemEntity> itemEntitySet = itemDAO.getItemList(actorId);
 
                     itemEntitySet.stream()
-                            .map(Item::new)
+                            .map(itemEntity->{
+                                Item item= null;
+                                if(itemEntity.getItemType() == ItemType.EQUIP){
+                                    item = new Equip(itemEntity);
+                                }else{
+                                    item = new Item(itemEntity);
+                                }
+                                return item;
+                            })
+                            .filter(item -> {
+                                if(item.getItemType() == ItemType.EQUIP){
+                                    Equip equip = (Equip) item;
+                                    if(!equip.isDress()){
+                                        return true;
+                                    }
+                                }
+                                return false;
+                            })
                             .map(Lattice::new)
                             .forEach(lattice -> {
                                 latticeArr[lattice.getIndex()] = lattice;

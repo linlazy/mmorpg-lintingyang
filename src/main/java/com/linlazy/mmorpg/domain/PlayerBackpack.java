@@ -1,5 +1,6 @@
 package com.linlazy.mmorpg.domain;
 
+import com.linlazy.mmorpg.constants.ItemType;
 import com.linlazy.mmorpg.dao.ItemDAO;
 import com.linlazy.mmorpg.entity.ItemEntity;
 import com.linlazy.mmorpg.server.common.GlobalConfigService;
@@ -8,6 +9,8 @@ import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
@@ -42,10 +45,8 @@ public class PlayerBackpack extends Backpack {
     @Override
     protected void addItem(Item item) {
         ItemDAO itemDAO = SpringContextUtil.getApplicationContext().getBean(ItemDAO.class);
-        ItemEntity itemEntity = new ItemEntity();
+        ItemEntity itemEntity = item.convertItemEntity();
         itemEntity.setActorId(actorId);
-        itemEntity.setItemId(item.getItemId());
-        itemEntity.setCount(item.getCount());
         itemDAO.insertQueue(itemEntity);
     }
 
@@ -63,5 +64,14 @@ public class PlayerBackpack extends Backpack {
         ItemEntity itemEntity = item.convertItemEntity();
         itemEntity.setActorId(actorId);
         itemDAO.deleteQueue(itemEntity);
+    }
+
+    public Equip getEquip(long equipId) {
+        return Arrays.stream(latticeArr)
+                .filter(Objects::nonNull)
+                .filter(lattice -> lattice.getItem().getItemId() == equipId)
+                .filter(lattice -> lattice.getItem().getItemType() == ItemType.EQUIP)
+                .map(lattice ->  (Equip)lattice.getItem())
+                .findFirst().get();
     }
 }

@@ -28,6 +28,7 @@ public class ItemDAO extends EntityDAO<ItemEntity> {
                     itemEntity.setActorId((Long) map.get("actorId"));
                     itemEntity.setExt((String) map.get("ext"));
                     itemEntity.setCount((Integer) map.get("count"));
+                    itemEntity.afterReadDB();
                     return itemEntity;
                 })
                 .collect(Collectors.toList());
