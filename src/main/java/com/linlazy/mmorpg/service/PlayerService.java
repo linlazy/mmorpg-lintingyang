@@ -8,6 +8,7 @@ import com.linlazy.mmorpg.domain.Player;
 import com.linlazy.mmorpg.domain.Skill;
 import com.linlazy.mmorpg.dto.PlayerDTO;
 import com.linlazy.mmorpg.entity.PlayerEntity;
+import com.linlazy.mmorpg.event.type.PlayerAttackEvent;
 import com.linlazy.mmorpg.module.common.event.ActorEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.common.event.EventType;
@@ -252,6 +253,7 @@ public class PlayerService {
         }
         Skill skill = player.getPlayerSkillInfo().getSkillMap().get(skillId);
         skillService.attack(player,skill);
+        EventBusHolder.post(new PlayerAttackEvent(player));
         return Result.success();
     }
 

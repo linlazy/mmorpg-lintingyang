@@ -6,6 +6,7 @@ import com.linlazy.mmorpg.constants.SceneEntityType;
 import com.linlazy.mmorpg.defense.player.PlayerDefense;
 import com.linlazy.mmorpg.entity.PlayerEntity;
 import com.linlazy.mmorpg.event.type.CopyPlayerDeadEvent;
+import com.linlazy.mmorpg.event.type.PlayerAttackedEvent;
 import com.linlazy.mmorpg.event.type.PlayerDeadEvent;
 import com.linlazy.mmorpg.file.service.SceneConfigService;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
@@ -196,6 +197,7 @@ public class Player extends SceneEntity {
 
         if(hp > 0){
             PlayerPushHelper.pushAttacked(actorId,String.format("%d 玩家【%s】受到【%s,hash码：%s】技能【%s】攻击：血量:%d", DateUtils.getNowMillis()/1000,name,sceneEntity.getName(),sceneEntity.hashCode(),skill.getName(),hp));
+            EventBusHolder.post(new PlayerAttackedEvent(this));
         } else {
             this.hp = 0;
             triggerDeadEvent();

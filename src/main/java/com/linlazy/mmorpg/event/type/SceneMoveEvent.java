@@ -7,10 +7,10 @@ import lombok.Data;
  * @author linlazy
  */
 @Data
-public class CopyEnterEvent {
+public class SceneMoveEvent {
     private Player player;
 
-    public CopyEnterEvent(Player player) {
+    public SceneMoveEvent( Player player) {
         this.player = player;
     }
 }

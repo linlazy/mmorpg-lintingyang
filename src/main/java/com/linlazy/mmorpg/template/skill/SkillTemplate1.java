@@ -3,14 +3,16 @@ package com.linlazy.mmorpg.template.skill;
 
 import com.linlazy.mmorpg.constants.SceneEntityType;
 import com.linlazy.mmorpg.domain.Player;
+import com.linlazy.mmorpg.domain.PlayerCall;
 import com.linlazy.mmorpg.domain.SceneEntity;
 import com.linlazy.mmorpg.domain.Skill;
+import com.linlazy.mmorpg.service.PlayerService;
 import com.linlazy.mmorpg.utils.RandomUtils;
+import com.linlazy.mmorpg.utils.SpringContextUtil;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * 攻击力为A，具有B秒冷却时间
@@ -29,44 +31,79 @@ public  class SkillTemplate1 extends BaseSkillTemplate {
     protected Set<SceneEntity> selectAttackedSceneEntity(SceneEntity sceneEntity, Skill skill, Set<SceneEntity> allSceneEntity) {
         Set<SceneEntity> result = new HashSet<>();
 
-        if(sceneEntity.getSceneEntityType() == SceneEntityType.PLAYER){
 
-            Set<SceneEntity> sceneEntitySet = new HashSet<>();
+        Set<SceneEntity> attackedSceneEntitySet = new HashSet<>();
+        for(SceneEntity targetSceneEntity :allSceneEntity){
+            if(sceneEntity.getSceneEntityType() == SceneEntityType.PLAYER_CALL){
+                PlayerCall playerCall = (PlayerCall) sceneEntity;
+                long sourceId = playerCall.getSourceId();
+                PlayerService playerService = SpringContextUtil.getApplicationContext().getBean(PlayerService.class);
+                Player player = playerService.getPlayer(sourceId);
 
-            Player player = (Player) sceneEntity;
 
-            for (SceneEntity targetSceneEntity :allSceneEntity){
-                //小怪，boss
-                if(targetSceneEntity.getSceneEntityType() !=SceneEntityType.PLAYER){
-                    sceneEntitySet.add(targetSceneEntity);
-                }else {
-                    // 非玩家队员
-                    if( player.isTeam()){
-                        Player playerSceneEntity= (Player) targetSceneEntity;
-                        if(!player.getTeam().getPlayerTeamInfoMap().containsKey(playerSceneEntity.getActorId())){
-                            sceneEntitySet.add(sceneEntity);
-                        }
+                if(targetSceneEntity.getSceneEntityType() == SceneEntityType.BOSS
+                ||targetSceneEntity.getSceneEntityType() == SceneEntityType.MONSTER) {
+                    attackedSceneEntitySet.add(targetSceneEntity);
+                    continue;
+                }
+
+                if(targetSceneEntity.getSceneEntityType() ==SceneEntityType.PLAYER){
+                    //攻击技能跳过自身
+                    Player targetPlayer = (Player) targetSceneEntity;
+                    if(targetPlayer.getActorId() == player.getActorId()){
+                        continue;
                     }
 
+                    if( player.isTeam()){
+                        if(!player.getTeam().getPlayerTeamInfoMap().containsKey(targetPlayer.getActorId())){
+                            attackedSceneEntitySet.add(targetPlayer);
+                        }
+                    }else {
+                        attackedSceneEntitySet.add(targetPlayer);
+                    }
+                }
+
+            }
+
+            if(sceneEntity.getSceneEntityType() == SceneEntityType.PLAYER){
+                Player player = (Player) sceneEntity;
+                if(targetSceneEntity.getSceneEntityType() == SceneEntityType.BOSS
+                        ||targetSceneEntity.getSceneEntityType() == SceneEntityType.MONSTER) {
+                    attackedSceneEntitySet.add(targetSceneEntity);
+                    continue;
+                }
+
+                if(targetSceneEntity.getSceneEntityType() ==SceneEntityType.PLAYER){
+                    //攻击技能跳过自身
+                    Player targetPlayer = (Player) targetSceneEntity;
+                    if(targetPlayer.getActorId() == player.getActorId()){
+                        continue;
+                    }
+                    if( player.isTeam()){
+                        if(!player.getTeam().getPlayerTeamInfoMap().containsKey(targetPlayer.getActorId())){
+                            attackedSceneEntitySet.add(targetPlayer);
+                        }
+                    }else {
+                        attackedSceneEntitySet.add(targetPlayer);
+                    }
                 }
             }
 
-            if(sceneEntitySet.size() > 0){
-                SceneEntity sceneEntity1 = RandomUtils.randomElement(sceneEntitySet);
-                result.add(sceneEntity1);
-            }
-
-        }else if(sceneEntity.getSceneEntityType() !=SceneEntityType.PLAYER){
-            Set<SceneEntity> players = allSceneEntity.stream()
-                    .filter(sceneEntity1 -> sceneEntity1.getSceneEntityType() == SceneEntityType.PLAYER)
-                    .filter(sceneEntity1 -> sceneEntity1.getHp() > 0 )
-                    .collect(Collectors.toSet());
-
-            if(players.size() >0){
-                SceneEntity sceneEntity1 = RandomUtils.randomElement(players);
-                result.add(sceneEntity1);
+            if(sceneEntity.getSceneEntityType() == SceneEntityType.MONSTER||
+                sceneEntity.getSceneEntityType() == SceneEntityType.BOSS
+            ){
+                if(targetSceneEntity.getSceneEntityType() == SceneEntityType.PLAYER
+                || targetSceneEntity.getSceneEntityType() == SceneEntityType.PLAYER_CALL
+                ){
+                    attackedSceneEntitySet.add(targetSceneEntity);
+                }
             }
         }
+
+        SceneEntity sceneEntity1 = RandomUtils.randomElement(attackedSceneEntitySet);
+
+        result.add(sceneEntity1);
+
         return result;
     }
 }

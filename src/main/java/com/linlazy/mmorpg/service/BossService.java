@@ -1,5 +1,6 @@
 package com.linlazy.mmorpg.service;
 
+import com.linlazy.mmorpg.constants.SceneEntityType;
 import com.linlazy.mmorpg.domain.Boss;
 import com.linlazy.mmorpg.domain.Skill;
 import com.linlazy.mmorpg.file.config.BossConfig;
@@ -33,6 +34,7 @@ public class BossService {
                     boss.setHp(bossConfig.getHp());
                     boss.setAttack(bossConfig.getAttack());
                     boss.setName(bossConfig.getName());
+                    boss.setSceneEntityType(SceneEntityType.BOSS);
 
                     List<Skill> bossSkillList = skillService.getBossSkillList(boss.getBossId());
                     boss.setSkillList(bossSkillList);

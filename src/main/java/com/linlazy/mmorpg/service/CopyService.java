@@ -95,8 +95,8 @@ public class CopyService {
     }
 
     @Subscribe
-    public void enterCopy(CopyEnterEvent copyEnterEvent) {
-        Player player =copyEnterEvent.getPlayer();
+    public void enterCopy(CopyMoveEvent copyMoveEvent) {
+        Player player = copyMoveEvent.getPlayer();
         //如果玩家不在副本中
         if(playerCopyIdMap.get(player.getActorId()) == null){
             //创建副本

@@ -5,13 +5,14 @@ import com.google.common.eventbus.Subscribe;
 import com.linlazy.mmorpg.domain.*;
 import com.linlazy.mmorpg.dto.PlayerDTO;
 import com.linlazy.mmorpg.dto.SceneDTO;
-import com.linlazy.mmorpg.event.type.CopyEnterEvent;
-import com.linlazy.mmorpg.event.type.PlayerMoveSceneEvent;
+import com.linlazy.mmorpg.event.type.CopyMoveEvent;
 import com.linlazy.mmorpg.event.type.SceneEnterEvent;
 import com.linlazy.mmorpg.event.type.SceneMonsterDeadEvent;
+import com.linlazy.mmorpg.event.type.SceneMoveEvent;
 import com.linlazy.mmorpg.file.config.SceneConfig;
 import com.linlazy.mmorpg.file.service.SceneConfigService;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
+import com.linlazy.mmorpg.push.PlayerCallPushHelper;
 import com.linlazy.mmorpg.push.ScenePushHelper;
 import com.linlazy.mmorpg.server.common.GlobalConfigService;
 import com.linlazy.mmorpg.server.common.Result;
@@ -49,6 +50,10 @@ public class SceneService {
     private BossService bossService;
     @Autowired
     private GlobalConfigService globalConfigService;
+
+
+
+
 
     public Scene getSceneBySceneEntity(SceneEntity sceneEntity){
 
@@ -88,17 +93,6 @@ public class SceneService {
 
     }
 
-    /**
-     * 移动到某个场景
-     * @param targetSceneId
-     */
-    public Result<?> moveToScene(long actorId , int targetSceneId){
-        Player player = playerService.getPlayer(actorId);
-        player.setSceneId(targetSceneId);
-
-        EventBusHolder.register(new PlayerMoveSceneEvent(player));
-        return Result.success();
-    }
 
 
     public boolean isCopyScene(int sceneId) {
@@ -174,6 +168,26 @@ public class SceneService {
                 .forEach(player1 -> ScenePushHelper.pushEnterScene(player1.getActorId(),String.format("玩家【%s】进入了场景",player.getName())));
     }
 
+    /**
+     * 处理玩家场景移动事件
+     * @param sceneMoveEvent
+     */
+    @Subscribe
+    private void handleSceneMove(SceneMoveEvent sceneMoveEvent) {
+        Player player = sceneMoveEvent.getPlayer();
+        PlayerCall playerCall = player.getPlayerCall();
+        if(playerCall != null){
+            Scene oldScene = getSceneBySceneEntity(playerCall);
+            oldScene.getPlayerCallMap().remove(playerCall.getId());
+
+            playerCall.setSceneId(player.getSceneId());
+            Scene newScene = getSceneBySceneEntity(playerCall);
+            newScene.getPlayerCallMap().put(playerCall.getId(),playerCall);
+            playerCall.quitAutoAttack();
+            PlayerCallPushHelper.moveScene(player.getActorId(),String.format("你的召唤兽从场景【%s】跟随移动到场景【%s】",oldScene.getSceneName(),newScene.getSceneName()));
+        }
+    }
+
 
     /**
      * 移动到某个场景
@@ -192,13 +206,12 @@ public class SceneService {
         }
 
         Player player = playerService.getPlayer(actorId);
-
         player.setSceneId(targetSceneId);
         playerService.updatePlayer(player);
-        EventBusHolder.post(new SceneEnterEvent(player));
+        EventBusHolder.post(new SceneMoveEvent(player));
 
         if(isCopyScene(targetSceneId)){
-            EventBusHolder.post(new CopyEnterEvent(player));
+            EventBusHolder.post(new CopyMoveEvent(player));
         }
         return Result.success();
     }
@@ -214,10 +227,8 @@ public class SceneService {
         Scene scene = getSceneBySceneEntity(player);
         scene.getPlayerMap().put(player.getActorId(),player);
 
-        if(globalConfigService.isCopy(scene.getSceneId())){
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("sceneId",scene.getSceneId());
-        }
+        EventBusHolder.post(new SceneEnterEvent(player));
+
         return Result.success(new SceneDTO(scene).toString());
     }
 

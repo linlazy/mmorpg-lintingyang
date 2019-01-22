@@ -3,6 +3,7 @@ package com.linlazy.mmorpg.file.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.linlazy.mmorpg.constants.SkillType;
 import com.linlazy.mmorpg.file.config.SkillConfig;
 import com.linlazy.mmorpg.server.common.ConfigFile;
 import com.linlazy.mmorpg.server.common.ConfigFileManager;
@@ -47,6 +48,12 @@ public class SkillConfigService {
      * professionId 与技能映射
      */
     private static final Map<Long, List<SkillConfig>> professionIdSkillMap = new HashMap<>();
+
+    /**
+     *  玩家召唤兽技能
+     */
+    private static final List<SkillConfig> playerCallskillList = new ArrayList<>();
+
 
     @PostConstruct
     public void init(){
@@ -93,6 +100,11 @@ public class SkillConfigService {
             professionIdSkillMap.computeIfAbsent(skillConfig.getProfessionId(), k -> new ArrayList<>());
             List<SkillConfig> skillConfigList = professionIdSkillMap.get(skillConfig.getProfessionId());
             skillConfigList.add(skillConfig);
+
+            //构建玩家召唤兽技能
+            if(skillConfig.getType() == SkillType.PLAYER_CALL){
+                playerCallskillList.add(skillConfig);
+            }
         }
     }
 
@@ -134,5 +146,9 @@ public class SkillConfigService {
      */
     public List<SkillConfig> getProfessionSkillConfig(long profession) {
         return professionIdSkillMap.get(profession);
+    }
+
+    public List<SkillConfig> getPlayerCallSkillConfig() {
+        return playerCallskillList;
     }
 }

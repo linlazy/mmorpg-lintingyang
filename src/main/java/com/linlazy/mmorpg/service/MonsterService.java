@@ -1,6 +1,7 @@
 package com.linlazy.mmorpg.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.linlazy.mmorpg.constants.SceneEntityType;
 import com.linlazy.mmorpg.domain.Monster;
 import com.linlazy.mmorpg.domain.Skill;
 import com.linlazy.mmorpg.file.service.MonsterConfigService;
@@ -43,6 +44,7 @@ public class MonsterService {
             monster.setSceneId(sceneId);
             monster.setHp(hp);
             monster.setAttack(attack);
+            monster.setSceneEntityType(SceneEntityType.MONSTER);
 
             List<Skill> monsterSkillList = skillService.getMonsterSkillList(monster.getMonsterId());
             monster.setSkillList(monsterSkillList);

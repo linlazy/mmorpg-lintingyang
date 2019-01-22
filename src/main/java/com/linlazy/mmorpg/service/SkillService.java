@@ -20,6 +20,7 @@ import com.linlazy.mmorpg.utils.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -231,5 +232,25 @@ public class SkillService {
 
         playerSkillCache.put(player.getActorId(),playerSkill);
         PlayerPushHelper.pushPlayerSkillInfo(player.getActorId(),playerSkill);
+    }
+
+    public List<Skill> getPlayerCallSkillList() {
+        List<SkillConfig> playerCallSkillConfig = skillConfigService.getPlayerCallSkillConfig();
+        List<Skill> playerCallSkill = new ArrayList<>();
+        playerCallSkillConfig.stream()
+                .forEach(skillConfig -> {
+                    Skill skill = new Skill();
+
+                    skill.setSkillId(skillConfig.getSkillId());
+                    skill.setNextCDResumeTimes(DateUtils.getNowMillis());
+                    skill.setName(skillConfig.getName());
+                    skill.setSkillTemplateArgs(skillConfig.getSkillTemplateArgs());
+                    skill.setSkillTemplateId(skillConfig.getSkillTemplateId());
+                    skill.setType(skillConfig.getType());
+
+                    playerCallSkill.add(skill);
+                });
+
+        return playerCallSkill;
     }
 }

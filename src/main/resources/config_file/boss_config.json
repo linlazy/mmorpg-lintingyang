@@ -5,7 +5,7 @@
     "attack": 50,
     "skillId":7,
     "hp": 100,
-    "sceneIds": [4]
+    "sceneIds": [2,4]
   },{
   "bossId": 2,
   "name": "张曼城",

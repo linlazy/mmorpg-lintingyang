@@ -186,7 +186,7 @@ public class Copy extends Scene{
         this.playerMap.values().stream()
                 .filter(player -> player.getSceneId() == this.getSceneId())
                 .forEach(player ->{
-                    sceneService.moveToScene(player.getActorId(),targetSceneId);
+                    sceneService.moveTo(player.getActorId(),targetSceneId);
                 });
 
         //取消调度，怪物自动刷新，小怪，BOSS定时攻击,超时退出副本

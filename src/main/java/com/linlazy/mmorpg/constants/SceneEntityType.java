@@ -8,4 +8,8 @@ public interface SceneEntityType {
     int MONSTER = 2;
     int NPC = 3;
     int BOSS = 4;
+    /**
+     * 玩家召唤兽
+     */
+    int PLAYER_CALL = 5;
 }

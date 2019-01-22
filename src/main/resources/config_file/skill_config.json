@@ -50,7 +50,7 @@
     "skillTemplateId": 4,
     "professionId": 4,
     "skillTemplateArgs": {
-      "continueTime":300,
+      "continueTime":60,
       "cd": 3,
       "mp": 50
     }
@@ -72,10 +72,10 @@
   {
     "skillId": 6,
     "name": "连心刺",
-    "type": 2,
+    "type": 3,
     "bossIds": [],
     "monsterIds": [],
-    "skillTemplateId": 6,
+    "skillTemplateId": 1,
     "skillTemplateArgs": {
       "attack":56,
       "cd": 3
@@ -84,7 +84,7 @@
   {
     "skillId": 7,
     "name": "全垒打",
-    "type": 3,
+    "type": 1,
     "bossIds": [1],
     "monsterIds": [],
     "skillTemplateId": 7,
@@ -95,7 +95,7 @@
   {
     "skillId": 8,
     "name": "夺命冰",
-    "type": 3,
+    "type": 1,
     "bossIds": [2],
     "monsterIds": [],
     "skillTemplateId": 8,
