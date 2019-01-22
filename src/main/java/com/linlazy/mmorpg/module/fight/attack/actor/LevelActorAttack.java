@@ -1,4 +1,4 @@
-//package com.linlazy.mmorpg.module.fight.attack.actor;
+//package com.linlazy.mmorpg.module.fight.useSkill.actor;
 //
 //import com.alibaba.fastjson.JSONObject;
 //import com.linlazy.mmorpg.module.user.manager.dao.UserDAO;

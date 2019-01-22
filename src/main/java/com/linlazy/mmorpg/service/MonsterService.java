@@ -37,7 +37,7 @@ public class MonsterService {
             int monsterId = sceneMonsterConfig.getIntValue("monsterId");
             String name = sceneMonsterConfig.getString("name");
             int hp = sceneMonsterConfig.getIntValue("hp");
-            int attack = sceneMonsterConfig.getIntValue("attack");
+            int attack = sceneMonsterConfig.getIntValue("useSkill");
             Monster monster = new Monster();
             monster.setMonsterId(monsterId);
             monster.setName(name);

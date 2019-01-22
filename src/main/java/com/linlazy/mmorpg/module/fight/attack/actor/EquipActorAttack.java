@@ -1,4 +1,4 @@
-//package com.linlazy.mmorpg.module.fight.attack.actor;
+//package com.linlazy.mmorpg.module.fight.useSkill.actor;
 //
 //import com.alibaba.fastjson.JSONObject;
 //import com.linlazy.mmorpg.module.dressEquip.manager.domain.EquipDo;
@@ -40,8 +40,8 @@
 //                .filter(equipDo -> equipDo.isDressed()&&equipDo.getDurability()>0)
 //                .map(equipDo -> {
 //                    JSONObject itemConfig = itemConfigService.getItemConfig(equipDo.getBaseItemId());
-//                    int attack = itemConfig.getIntValue("attack");
-//                    return attack + equipDo.getLevel() * 6;
+//                    int useSkill = itemConfig.getIntValue("useSkill");
+//                    return useSkill + equipDo.getLevel() * 6;
 //                }).reduce(0,(a,b) -> a + b);
 //    }
 //

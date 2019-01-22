@@ -26,13 +26,11 @@ public  class SkillTemplate2 extends BaseSkillTemplate {
         return 2;
     }
 
-    @Override
-    protected Set<SceneEntity> selectAttackedSceneEntity(SceneEntity sceneEntity, Skill skill, Set<SceneEntity> allSceneEntity) {
-        return null;
-    }
 
-    //    @Override
-    public void useSkill(SceneEntity sceneEntity, Skill skill,JSONObject jsonObject) {
+
+    @Override
+    public void useSkill(SceneEntity sceneEntity, Skill skill, JSONObject jsonObject) {
+
         JSONObject skillTemplateArgs = skill.getSkillTemplateArgs();
         //技能冷却，消耗MP
         int cd = skillTemplateArgs.getIntValue("cd");
@@ -41,9 +39,13 @@ public  class SkillTemplate2 extends BaseSkillTemplate {
         skill.setNextCDResumeTimes(DateUtils.getNowMillis() + cd * 1000);
 
         //恢复HP
-        int resumeHP =skillTemplateArgs .getIntValue("resumeHP");
-        SceneEntity targetSceneEntity = jsonObject.getObject("targetSceneEntity", SceneEntity.class);
-        targetSceneEntity.resumeHP(resumeHP);
+        Set<SceneEntity> targetSceneEntitySet = (Set<SceneEntity>) jsonObject.get("targetSceneEntitySet");
+        targetSceneEntitySet.stream()
+                .forEach(targetSceneEntity -> {
+                    int resumeHP =skillTemplateArgs .getIntValue("resumeHP");
+                    targetSceneEntity.resumeHP(resumeHP);
+                });
+
     }
 
 }

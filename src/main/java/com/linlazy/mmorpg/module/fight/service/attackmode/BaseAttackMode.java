@@ -1,7 +1,7 @@
 //package com.linlazy.mmorpg.module.fight.service.attackmode;
 //
 //import com.alibaba.fastjson.JSONObject;
-//import com.linlazy.mmorpg.module.fight.attack.actor.BaseActorAttack;
+//import com.linlazy.mmorpg.module.fight.useSkill.actor.BaseActorAttack;
 //import com.linlazy.mmorpg.module.fight.service.canattacked.BaseCanAttacked;
 //import com.linlazy.mmorpg.module.fight.service.sceneentity.SceneEntityDoFactory;
 //import com.linlazy.mmorpg.constants.SceneEntityType;
@@ -42,7 +42,7 @@
 //    @Autowired
 //    private SceneManager sceneManager;
 //
-//    public  Result<?> attack(long actorId, JSONObject jsonObject){
+//    public  Result<?> useSkill(long actorId, JSONObject jsonObject){
 //        Result<?> result = isCanAttack(actorId,jsonObject);
 //        if(result.isFail()){
 //            return Result.valueOf(result.getCode());

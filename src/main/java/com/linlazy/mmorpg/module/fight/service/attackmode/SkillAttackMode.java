@@ -45,8 +45,8 @@
 //    }
 //
 //    @Override
-//    public Result<?> attack(long actorId, JSONObject jsonObject) {
-//        return super.attack(actorId, jsonObject);
+//    public Result<?> useSkill(long actorId, JSONObject jsonObject) {
+//        return super.useSkill(actorId, jsonObject);
 //    }
 //
 //    @Override

@@ -463,7 +463,7 @@ public class CmdHandler {
      * @param jsonObject
      * @return
      */
-    @Cmd("attack")
+    @Cmd("useSkill")
     public Result<?> attack(JSONObject jsonObject){
         long actorId = jsonObject.getLong("actorId");
         int skillId = jsonObject.getIntValue("skillId");

@@ -14,7 +14,7 @@ import com.linlazy.mmorpg.file.config.SkillConfig;
 import com.linlazy.mmorpg.file.service.SkillConfigService;
 import com.linlazy.mmorpg.push.PlayerPushHelper;
 import com.linlazy.mmorpg.server.common.Result;
-import com.linlazy.mmorpg.template.skill.BaseSkillTemplate;
+import com.linlazy.mmorpg.template.skill.strategy.SkillTypeStrategy;
 import com.linlazy.mmorpg.utils.DateUtils;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,9 +85,9 @@ public class SkillService {
 
 
 
-    public void attack(SceneEntity sceneEntity, Skill skill){
-        BaseSkillTemplate skillTemplate = BaseSkillTemplate.getSkillTemplate(skill.getSkillTemplateId());
-        skillTemplate.useSkill(sceneEntity,skill);
+    public void useSkill(SceneEntity sceneEntity, Skill skill){
+        SkillTypeStrategy skillTypeStrategy = SkillTypeStrategy.getSkillTypeStrategy(skill.getType());
+        skillTypeStrategy.useSkill(sceneEntity,skill);
     }
 
 

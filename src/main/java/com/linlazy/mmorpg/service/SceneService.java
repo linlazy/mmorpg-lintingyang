@@ -110,29 +110,32 @@ public class SceneService {
 
             Copy copy =getCopy(sceneEntity.getCopyId());
             Set<Player> playerSet = copy.getPlayerMap().values().stream()
-                    .filter(player -> player.getSceneId() == sceneEntity.getSceneId())
                     .collect(Collectors.toSet());
             Boss copyBoss = copy.getBossList().get(copy.getCurrentBossIndex());
             Collection<Monster> monsterSet = copy.getMonsterMap().values();
+            Collection<PlayerCall> playerCallSet = copy.getPlayerCallMap().values();
+
             sceneEntitySet.addAll(playerSet);
             sceneEntitySet.add(copyBoss);
             sceneEntitySet.addAll(monsterSet);
-
+            sceneEntitySet.addAll(playerCallSet);
         }else {
 
             Scene scene = getSceneBySceneEntity(sceneEntity);
             Collection<Player> playerSet = scene.getPlayerMap().values().stream()
-                    .filter(player -> player.getHp() > 0)
                     .collect(Collectors.toSet());
             Collection<Monster> monsterSet = scene.getMonsterMap().values().stream()
-                    .filter(monster -> monster.getHp() >0)
                     .collect(Collectors.toSet());
             List<Boss> bossSet = scene.getBossList().stream()
-                    .filter(boss -> boss.getHp() > 0 )
                     .collect(Collectors.toList());
+            Collection<PlayerCall> playerCallSet = scene.getPlayerCallMap().values();
+
+
+
             sceneEntitySet.addAll(playerSet);
             sceneEntitySet.addAll(monsterSet);
             sceneEntitySet.addAll(bossSet);
+            sceneEntitySet.addAll(playerCallSet);
         }
 
 

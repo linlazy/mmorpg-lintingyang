@@ -115,7 +115,7 @@ public class Copy extends Scene{
                     ScheduledFuture<?> scheduledFuture = scheduledExecutorService.scheduleAtFixedRate(() -> {
                         Skill skill = monster.randomSkill();
 
-                        skillService.attack(monster,skill);
+                        skillService.useSkill(monster,skill);
                     }, 0L, 2L, TimeUnit.SECONDS);
                     monsterIdAutoAttackScheduleMap.put(copyId,scheduledFuture);
                 });
@@ -167,7 +167,7 @@ public class Copy extends Scene{
             logger.error("startBossAutoAttackScheduled");
 
             Skill skill = boss.randomSkill();
-            skillService.attack(boss,skill);
+            skillService.useSkill(boss,skill);
         }, 0L, 5L, TimeUnit.SECONDS);
 
     }

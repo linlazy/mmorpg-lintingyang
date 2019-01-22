@@ -5,7 +5,6 @@ import com.linlazy.mmorpg.constants.SceneEntityType;
 import com.linlazy.mmorpg.domain.*;
 import com.linlazy.mmorpg.event.type.PlayerCallDisappearEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
-import com.linlazy.mmorpg.push.PlayerCallPushHelper;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -49,7 +48,6 @@ public class CallService {
 
         Player player = playerService.getPlayer(playerCall.getSourceId());
         player.setPlayerCall(null);
-        PlayerCallPushHelper.pushDisappear(playerCall.getSourceId(),String.format("你的召唤兽【%s】到达时间后消失",playerCall.getName()));
     }
 
     public PlayerCall createCall(SceneEntity sceneEntity, int continueTime){

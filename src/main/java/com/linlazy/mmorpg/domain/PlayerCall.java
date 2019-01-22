@@ -5,6 +5,7 @@ import com.linlazy.mmorpg.event.type.PlayerAttackEvent;
 import com.linlazy.mmorpg.event.type.PlayerAttackedEvent;
 import com.linlazy.mmorpg.event.type.PlayerCallDisappearEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
+import com.linlazy.mmorpg.push.PlayerCallPushHelper;
 import com.linlazy.mmorpg.push.PlayerPushHelper;
 import com.linlazy.mmorpg.service.SkillService;
 import com.linlazy.mmorpg.utils.RandomUtils;
@@ -88,7 +89,7 @@ public class PlayerCall extends SceneEntity {
                 //随机选择召唤兽技能攻击
                 Skill skill = this.randomSkill();
             PlayerPushHelper.pushAttack(sourceId,String.format("您的召唤兽【%s】使用了【%s】技能",this.name,skill.getName()));
-            skillService.attack(this,skill);
+            skillService.useSkill(this,skill);
 //            }
         }, 0L, 5L, TimeUnit.SECONDS);
 
@@ -101,6 +102,7 @@ public class PlayerCall extends SceneEntity {
     public void startPlayerCallDisAppearScheduled(int continueTime) {
         //到达时间后，清理召唤兽事件
         scheduledExecutorService.schedule(() -> {
+            PlayerCallPushHelper.pushDisappear(this.getSourceId(),String.format("你的召唤兽【%s】到达时间后消失",this.getName()));
             EventBusHolder.post(new PlayerCallDisappearEvent(this));
             logger.debug("到达时间后，触发召唤兽消失事件");
         }, continueTime, TimeUnit.SECONDS);
@@ -110,5 +112,22 @@ public class PlayerCall extends SceneEntity {
         if(autoAttackScheduledFuture != null){
             autoAttackScheduledFuture.cancel(true);
         }
+    }
+
+
+    @Override
+    public void attacked(SceneEntity sceneEntity, Skill skill) {
+        super.attacked(sceneEntity, skill);
+
+        if(this.hp <= 0){
+            this.hp = 0;
+            triggerDeadEvent();
+        }
+    }
+
+    @Override
+    protected void triggerDeadEvent() {
+        PlayerCallPushHelper.pushDisappear(this.getSourceId(),String.format("你的召唤兽【%s】已死亡",this.getName()));
+        EventBusHolder.post(new PlayerCallDisappearEvent(this));
     }
 }

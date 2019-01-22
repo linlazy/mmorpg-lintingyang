@@ -185,15 +185,11 @@ public class Player extends SceneEntity {
     }
 
     @Override
-    public void attacked(SceneEntity sceneEntity,Skill skill){
-        int attack = sceneEntity.computeAttack();
-        int defense = computeDefense();
-        int damage = attack > defense?attack - defense: 1;
-        this.hp -= damage;
-
+    public void attacked(SceneEntity sceneEntity, Skill skill){
+        super.attacked(sceneEntity,skill);
 
         if(hp > 0){
-            PlayerPushHelper.pushAttacked(actorId,String.format("%d 玩家【%s】受到【%s,hash码：%s】技能【%s】攻击：血量:%d", DateUtils.getNowMillis()/1000,name,sceneEntity.getName(),sceneEntity.hashCode(),skill.getName(),hp));
+            PlayerPushHelper.pushAttacked(actorId,String.format("%d 玩家【%s】受到【%s,hash码：%s】技能【%s】攻击：血量:%d", DateUtils.getNowMillis()/1000,name,sceneEntity.getName(),sceneEntity.hashCode(), skill.getName(),hp));
             EventBusHolder.post(new PlayerAttackedEvent(this));
         } else {
             this.hp = 0;

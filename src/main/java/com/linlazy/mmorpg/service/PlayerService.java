@@ -252,7 +252,7 @@ public class PlayerService {
            return Result.valueOf("玩家未拥有该技能");
         }
         Skill skill = player.getPlayerSkillInfo().getSkillMap().get(skillId);
-        skillService.attack(player,skill);
+        skillService.useSkill(player,skill);
         EventBusHolder.post(new PlayerAttackEvent(player));
         return Result.success();
     }

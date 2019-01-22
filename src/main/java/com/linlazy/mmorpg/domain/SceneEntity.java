@@ -3,12 +3,10 @@ package com.linlazy.mmorpg.domain;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.linlazy.mmorpg.constants.SceneEntityType;
-import com.linlazy.mmorpg.dto.PlayerDTO;
 import com.linlazy.mmorpg.module.common.event.ActorEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.common.event.EventType;
 import com.linlazy.mmorpg.module.fight.defense.Defense;
-import com.linlazy.mmorpg.push.PlayerPushHelper;
 import com.linlazy.mmorpg.push.ScenePushHelper;
 import com.linlazy.mmorpg.server.common.GlobalConfigService;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
@@ -58,21 +56,12 @@ public abstract class SceneEntity {
     public abstract int computeDefense();
 
     public void attacked(SceneEntity sceneEntity, Skill skill){
-        int attack = sceneEntity.computeAttack();
+        JSONObject skillTemplateArgs = skill.getSkillTemplateArgs();
+        int attack = sceneEntity.computeAttack() + skillTemplateArgs.getIntValue("attack");
         int defense = computeDefense();
         int damage = attack > defense?attack - defense: 1;
         this.hp -= damage;
 
-        if(sceneEntityType == SceneEntityType.PLAYER){
-            Player player = (Player)this;
-            if(hp > 0){
-                PlayerPushHelper.pushChange(player.getActorId(),new PlayerDTO(player));
-            }
-        }
-        if(this.hp <= 0){
-            this.hp = 0;
-            triggerDeadEvent();
-        }
     }
 
     protected  void triggerDeadEvent(){
@@ -177,7 +166,17 @@ public abstract class SceneEntity {
 
     public  int resumeHP(int resumeHP){
         synchronized (this){
-            this.hp -= resumeHP;
+            this.hp += resumeHP;
+            if(this.hp >= maxHP){
+                this.hp = maxHP;
+            }
+            return this.hp;
+        }
+    }
+
+    public  int consumeHP(int consumeHP){
+        synchronized (this){
+            this.hp -= consumeHP;
             if(this.hp >= maxHP){
                 this.hp = maxHP;
             }

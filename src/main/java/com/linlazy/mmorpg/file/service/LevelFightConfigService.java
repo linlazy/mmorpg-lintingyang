@@ -34,7 +34,7 @@ public class LevelFightConfigService {
 
             LevelFightConfig levelFightConfig = new LevelFightConfig();
             int professionId = jsonObject.getIntValue("professionId");
-            int attack = jsonObject.getIntValue("attack");
+            int attack = jsonObject.getIntValue("useSkill");
             int defense = jsonObject.getIntValue("defense");
             levelFightConfig.setProfessionId(professionId);
             levelFightConfig.setAttack(attack);

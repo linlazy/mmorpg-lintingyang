@@ -13,8 +13,6 @@ import com.linlazy.mmorpg.utils.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
-
 /**
  * 召唤召唤师协助作战,持续时间A秒，具有B秒冷却时间,消耗C点MP
  * @author linlazy
@@ -31,7 +29,7 @@ public  class SkillTemplate4 extends BaseSkillTemplate {
     }
 
     @Override
-    protected void useCallSkill(SceneEntity sceneEntity, Skill skill) {
+    public void useSkill(SceneEntity sceneEntity, Skill skill, JSONObject jsonObject) {
         JSONObject skillTemplateArgs = skill.getSkillTemplateArgs();
         int mp = skillTemplateArgs.getIntValue("mp");
         sceneEntity.consumeMP(mp);
@@ -49,9 +47,5 @@ public  class SkillTemplate4 extends BaseSkillTemplate {
                 });
     }
 
-    @Override
-    protected Set<SceneEntity> selectAttackedSceneEntity(SceneEntity sceneEntity, Skill skill, Set<SceneEntity> allSceneEntity) {
-        return null;
-    }
 
 }

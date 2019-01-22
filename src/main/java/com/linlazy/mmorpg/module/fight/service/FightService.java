@@ -11,8 +11,8 @@
 //@Component
 //public class FightService {
 //
-//    public Result<?> attack(long actorId, JSONObject jsonObject) {
+//    public Result<?> useSkill(long actorId, JSONObject jsonObject) {
 //        int attackMode = jsonObject.getIntValue("attackMode");
-//        return BaseAttackMode.getAttackMode(attackMode).attack(actorId,jsonObject);
+//        return BaseAttackMode.getAttackMode(attackMode).useSkill(actorId,jsonObject);
 //    }
 //}

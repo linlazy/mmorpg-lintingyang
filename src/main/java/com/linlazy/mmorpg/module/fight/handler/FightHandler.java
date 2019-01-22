@@ -23,10 +23,10 @@
 //     * @param jsonObject
 //     * @return
 //     */
-//    @Cmd("attack")
-//    public Result<?> attack(JSONObject jsonObject){
+//    @Cmd("useSkill")
+//    public Result<?> useSkill(JSONObject jsonObject){
 //        long actorId = jsonObject.getLongValue("actorId");
-//        return fightService.attack(actorId,jsonObject);
+//        return fightService.useSkill(actorId,jsonObject);
 //    }
 //
 //}

@@ -23,7 +23,7 @@ public class PlayerCallSkillAttack extends PlayerCallAttack{
 
     @Override
     protected int computeAttack(PlayerCall playerCall, Skill skill) {
-        return skill.getSkillTemplateArgs().getIntValue("attack");
+        return skill.getSkillTemplateArgs().getIntValue("useSkill");
     }
 
 

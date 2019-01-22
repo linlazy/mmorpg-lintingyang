@@ -1,4 +1,4 @@
-//package com.linlazy.mmorpg.module.fight.attack.actor;
+//package com.linlazy.mmorpg.module.fight.useSkill.actor;
 //
 //import com.alibaba.fastjson.JSONObject;
 //import com.linlazy.mmorpg.file.service.SkillConfigService;
@@ -43,6 +43,6 @@
 //        int skillId = jsonObject.getIntValue("skillId");
 //        SkillEntity skillEntity = skillDao.getSkill(actorId, skillId);
 //        JSONObject skillConfig = skillConfigService.getSkillConfig(skillId);
-//        return skillConfig.getIntValue("attack") + skillEntity.getLevel() * 6;
+//        return skillConfig.getIntValue("useSkill") + skillEntity.getLevel() * 6;
 //    }
 //}
