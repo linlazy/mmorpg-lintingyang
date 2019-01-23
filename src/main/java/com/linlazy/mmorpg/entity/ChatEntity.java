@@ -19,11 +19,6 @@ public class ChatEntity extends Entity {
     private long chatId;
 
     /**
-     * 聊天类型
-     */
-    @Cloumn
-    private int chatType;
-    /**
      * 来源
      */
     @Cloumn

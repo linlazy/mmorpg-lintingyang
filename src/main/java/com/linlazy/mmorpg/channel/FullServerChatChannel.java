@@ -1,12 +1,13 @@
 package com.linlazy.mmorpg.channel;
 
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.Sets;
-import com.linlazy.mmorpg.dao.ChatDAO;
 import com.linlazy.mmorpg.constants.ChatType;
+import com.linlazy.mmorpg.dao.ChatDAO;
+import com.linlazy.mmorpg.domain.Player;
 import com.linlazy.mmorpg.dto.ChatDTO;
 import com.linlazy.mmorpg.push.ChatPushHelper;
 import com.linlazy.mmorpg.server.common.Result;
+import com.linlazy.mmorpg.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,9 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class FullServerChatChannel extends BaseChatChannel {
+
+    @Autowired
+    private PlayerService playerService;
 
     @Override
     protected int chatType() {
@@ -36,7 +40,8 @@ public class FullServerChatChannel extends BaseChatChannel {
         chatDTO.setSourceId(actorId);
         chatDTO.setContent(content);
         chatDTO.setChatType(ChatType.FULL_SERVER);
-        ChatPushHelper.broadcastChatContent(actorId, Sets.newHashSet(chatDTO));
+        Player player = playerService.getPlayer(actorId);
+        ChatPushHelper.broadcastChatContent(actorId, String.format("【全服消息】玩家【%s】对你说:【%s】",player.getName(),content));
         return Result.success();
 
     }

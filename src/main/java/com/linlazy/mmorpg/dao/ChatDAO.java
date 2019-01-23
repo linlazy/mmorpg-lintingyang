@@ -6,6 +6,8 @@ import com.linlazy.mmorpg.server.db.dao.EntityDAO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author linlazy
@@ -21,7 +23,18 @@ public class ChatDAO extends EntityDAO<ChatEntity> {
      * @return 返回相应频道上接受者的聊天信息
      */
     public List<ChatEntity> getReceiveChatSet(long receiver){
-        return jdbcTemplate.queryForList("select * from chat where receiver = ?",new  Object[]{receiver},ChatEntity.class);
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList("select * from chat where receiver = ?", receiver);
+        return maps.stream()
+                .map(map ->{
+                    ChatEntity chatEntity = new ChatEntity();
+                    chatEntity.setChatId((Long) map.get("chatId"));
+                    chatEntity.setReceiver((Long) map.get("receiver"));
+                    chatEntity.setSourceId((Long) map.get("sourceId"));
+                    chatEntity.setContent((String) map.get("content"));
+
+                    return chatEntity;
+                })
+                .collect(Collectors.toList());
     }
 
     /**

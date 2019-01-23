@@ -367,6 +367,28 @@
 					ta.value += "使用道具中..."+ "\r\n";
 				}
 
+				if(arr[0] == "sendChat"){
+
+					var json ={};
+					json.command = "sendChat";
+
+					if(arr[1] == "private"){
+						json.chatType = 1;
+						json.targetId = arr[2];
+						json.content = arr[3];
+					}
+
+					if(arr[1] == "full"){
+						json.chatType = 2;
+						json.content = arr[2];
+					}
+
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "发送聊天信息..."+ "\r\n";
+				}
+
 			}else{
 				alert("WebSocket连接没有建立成功！！");
 			}

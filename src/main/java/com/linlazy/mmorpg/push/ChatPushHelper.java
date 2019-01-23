@@ -18,9 +18,15 @@ public class ChatPushHelper {
         PushHelper.push(actorId, jsonObject);
     }
 
-    public static void broadcastChatContent(long actorId, Set<ChatDTO> chatDTO) {
+    public static void broadcastChatContent(long actorId,String message) {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("chat", chatDTO);
+        jsonObject.put("code", message);
         PushHelper.broadcast(jsonObject);
+    }
+
+    public static void pushPrivateChatContent(long actorId, String message) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("code", message);
+        PushHelper.push(actorId, jsonObject);
     }
 }

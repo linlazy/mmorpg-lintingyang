@@ -1,25 +1,24 @@
 package com.linlazy.mmorpg.channel;
 
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.Sets;
 import com.google.common.eventbus.Subscribe;
-import com.linlazy.mmorpg.dao.ChatDAO;
-import com.linlazy.mmorpg.entity.ChatEntity;
 import com.linlazy.mmorpg.constants.ChatType;
+import com.linlazy.mmorpg.dao.ChatDAO;
+import com.linlazy.mmorpg.domain.Player;
 import com.linlazy.mmorpg.dto.ChatDTO;
-import com.linlazy.mmorpg.push.ChatPushHelper;
+import com.linlazy.mmorpg.entity.ChatEntity;
 import com.linlazy.mmorpg.module.common.event.ActorEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.common.event.EventType;
+import com.linlazy.mmorpg.push.ChatPushHelper;
 import com.linlazy.mmorpg.server.common.Result;
+import com.linlazy.mmorpg.service.PlayerService;
 import com.linlazy.mmorpg.utils.SessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * 私聊频道
@@ -30,6 +29,8 @@ public class PrivateChatChannel extends BaseChatChannel {
 
     @Autowired
     private ChatDAO chatDao;
+    @Autowired
+    private PlayerService playerService;
 
     /**
      * 订阅事件
@@ -51,10 +52,11 @@ public class PrivateChatChannel extends BaseChatChannel {
         if(actorEvent.getEventType().equals(EventType.LOGIN)){
             List<ChatEntity> chatSet = chatDao.getReceiveChatSet(actorEvent.getActorId());
             if(chatSet.size() > 0){
-                Set<ChatDTO> chatDTOS = chatSet.stream()
+                chatSet.stream()
                         .map(ChatDTO::new)
-                        .collect(Collectors.toSet());
-                ChatPushHelper.pushChatContent(actorEvent.getActorId(),chatDTOS);
+                        .forEach(chatDTO -> {
+                            ChatPushHelper.pushPrivateChatContent(actorEvent.getActorId(),chatDTO.toString());
+                        });
             }
 
             //推送后删除
@@ -84,7 +86,9 @@ public class PrivateChatChannel extends BaseChatChannel {
             chatDTO.setSourceId(actorId);
             chatDTO.setContent(content);
             chatDTO.setChatType(ChatType.PRIVATE);
-            ChatPushHelper.pushChatContent(targetId, Sets.newHashSet(chatDTO));
+
+            Player player = playerService.getPlayer(actorId);
+            ChatPushHelper.pushPrivateChatContent(targetId, String.format("玩家【%s】对你说：【%s】",player.getName(),content));
             return Result.success();
         }else {
             //存档私聊内容
@@ -95,7 +99,6 @@ public class PrivateChatChannel extends BaseChatChannel {
                 }
 
             chat.setChatId(maxChatId + 1);
-            chat.setChatType(ChatType.PRIVATE);
             chat.setSourceId(actorId);
             chat.setContent(content);
             chat.setReceiver(targetId);
