@@ -31,11 +31,10 @@ public  class SkillTemplate3 extends BaseSkillTemplate {
         skill.setNextCDResumeTimes(DateUtils.getNowMillis() + cd * 1000);
 
 
-        int attack = skillTemplateArgs.getIntValue("attack");
         Set<SceneEntity> targetSceneEntitySet = (Set<SceneEntity>) jsonObject.get("targetSceneEntitySet");
+        int attackNum = skillTemplateArgs.getIntValue("attackNum");
         targetSceneEntitySet.stream()
-                .forEach(sceneEntity1 -> {
-                    sceneEntity1.attacked(sceneEntity,attack);
-                });
+                .limit(attackNum)
+                .forEach(targetSceneEntity-> targetSceneEntity.attacked(sceneEntity,skill));
     }
 }

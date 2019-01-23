@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.Set;
 
 /**
- * 攻击力为A，具有B秒冷却时间
+ * 攻击力为A,造成可以攻击B人,具有C秒冷却时间
  * @author linlazy
  */
 @Component
@@ -30,92 +30,11 @@ public  class SkillTemplate1 extends BaseSkillTemplate {
         int cd = skillTemplateArgs.getIntValue("cd");
         skill.setNextCDResumeTimes(DateUtils.getNowMillis() + cd * 1000);
 
-        int attack = skillTemplateArgs.getIntValue("attack");
         Set<SceneEntity> targetSceneEntitySet = (Set<SceneEntity>) jsonObject.get("targetSceneEntitySet");
+        int attackNum = skillTemplateArgs.getIntValue("attackNum");
         targetSceneEntitySet.stream()
-                .forEach(sceneEntity1 -> {
-                    sceneEntity1.attacked(sceneEntity,attack);
-                });
+                .limit(attackNum)
+                .forEach(targetSceneEntity-> targetSceneEntity.attacked(sceneEntity,skill));
 
     }
-
-//    @Override
-//    protected Set<SceneEntity> selectAttackedSceneEntity(SceneEntity sceneEntity, Skill skill, Set<SceneEntity> allSceneEntity) {
-//        Set<SceneEntity> result = new HashSet<>();
-//
-//
-//        Set<SceneEntity> attackedSceneEntitySet = new HashSet<>();
-//        for(SceneEntity targetSceneEntity :allSceneEntity){
-//            if(sceneEntity.getSceneEntityType() == SceneEntityType.PLAYER_CALL){
-//                PlayerCall playerCall = (PlayerCall) sceneEntity;
-//                long sourceId = playerCall.getSourceId();
-//                PlayerService playerService = SpringContextUtil.getApplicationContext().getBean(PlayerService.class);
-//                Player player = playerService.getPlayer(sourceId);
-//
-//
-//                if(targetSceneEntity.getSceneEntityType() == SceneEntityType.BOSS
-//                ||targetSceneEntity.getSceneEntityType() == SceneEntityType.MONSTER) {
-//                    attackedSceneEntitySet.add(targetSceneEntity);
-//                    continue;
-//                }
-//
-//                if(targetSceneEntity.getSceneEntityType() ==SceneEntityType.PLAYER){
-//                    //攻击技能跳过自身
-//                    Player targetPlayer = (Player) targetSceneEntity;
-//                    if(targetPlayer.getActorId() == player.getActorId()){
-//                        continue;
-//                    }
-//
-//                    if( player.isTeam()){
-//                        if(!player.getTeam().getPlayerTeamInfoMap().containsKey(targetPlayer.getActorId())){
-//                            attackedSceneEntitySet.add(targetPlayer);
-//                        }
-//                    }else {
-//                        attackedSceneEntitySet.add(targetPlayer);
-//                    }
-//                }
-//
-//            }
-//
-//            if(sceneEntity.getSceneEntityType() == SceneEntityType.PLAYER){
-//                Player player = (Player) sceneEntity;
-//                if(targetSceneEntity.getSceneEntityType() == SceneEntityType.BOSS
-//                        ||targetSceneEntity.getSceneEntityType() == SceneEntityType.MONSTER) {
-//                    attackedSceneEntitySet.add(targetSceneEntity);
-//                    continue;
-//                }
-//
-//                if(targetSceneEntity.getSceneEntityType() ==SceneEntityType.PLAYER){
-//                    //攻击技能跳过自身
-//                    Player targetPlayer = (Player) targetSceneEntity;
-//                    if(targetPlayer.getActorId() == player.getActorId()){
-//                        continue;
-//                    }
-//                    if( player.isTeam()){
-//                        if(!player.getTeam().getPlayerTeamInfoMap().containsKey(targetPlayer.getActorId())){
-//                            attackedSceneEntitySet.add(targetPlayer);
-//                        }
-//                    }else {
-//                        attackedSceneEntitySet.add(targetPlayer);
-//                    }
-//                }
-//            }
-//
-//            if(sceneEntity.getSceneEntityType() == SceneEntityType.MONSTER||
-//                sceneEntity.getSceneEntityType() == SceneEntityType.BOSS
-//            ){
-//                if(targetSceneEntity.getSceneEntityType() == SceneEntityType.PLAYER
-//                || targetSceneEntity.getSceneEntityType() == SceneEntityType.PLAYER_CALL
-//                ){
-//                    attackedSceneEntitySet.add(targetSceneEntity);
-//                }
-//            }
-//        }
-//
-//        SceneEntity sceneEntity1 = RandomUtils.randomElement(attackedSceneEntitySet);
-//
-//        result.add(sceneEntity1);
-//
-//        return result;
-//    }
 }

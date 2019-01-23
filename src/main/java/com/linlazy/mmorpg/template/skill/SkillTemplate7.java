@@ -26,13 +26,11 @@ public class SkillTemplate7 extends BaseSkillTemplate {
 
     @Override
     public void useSkill(SceneEntity sceneEntity, Skill skill, JSONObject jsonObject) {
-        JSONObject skillTemplateArgs = skill.getSkillTemplateArgs();
-        int attack = skillTemplateArgs.getIntValue("attack");
 
         Set<SceneEntity> targetSceneEntitySet = (Set<SceneEntity>) jsonObject.get("targetSceneEntitySet");
         targetSceneEntitySet.stream()
                 .forEach(sceneEntity1 -> {
-                    sceneEntity1.attacked(sceneEntity,attack);
+                    sceneEntity1.attacked(sceneEntity,skill);
                 });
     }
 

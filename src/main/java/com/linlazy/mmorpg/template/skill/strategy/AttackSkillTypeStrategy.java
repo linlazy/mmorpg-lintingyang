@@ -6,6 +6,7 @@ import com.linlazy.mmorpg.domain.SceneEntity;
 import com.linlazy.mmorpg.domain.Skill;
 import com.linlazy.mmorpg.service.SceneService;
 import com.linlazy.mmorpg.template.skill.BaseSkillTemplate;
+import com.linlazy.mmorpg.template.skill.strategy.attack.AttackSkill;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -37,6 +38,7 @@ public class AttackSkillTypeStrategy extends SkillTypeStrategy{
     }
 
     private Set<SceneEntity> selectAttackedSceneEntitySet(SceneEntity sceneEntity, Skill skill, Set<SceneEntity> allSceneEntity) {
-        return null;
+        AttackSkill attackSkill = AttackSkill.getAttackSkill(sceneEntity.getSceneEntityType());
+        return attackSkill.selectAttackedSceneEntitySet(sceneEntity,skill,allSceneEntity);
     }
 }
