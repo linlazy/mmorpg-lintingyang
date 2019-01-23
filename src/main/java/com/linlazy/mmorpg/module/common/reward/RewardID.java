@@ -7,18 +7,14 @@ public interface RewardID {
     /**
      * 红药
      */
-    long HP = 1;
+    int HP = 60000;
     /**
      * 蓝药
      */
-    long MP = 2;
-    /**
-     * 装备耐久度
-     */
-    long DURABILITY = 3;
+    int MP = 60001;
 
     /**
      * 金币
      */
-    long GOLD = 4;
+    int GOLD = 60002;
 }

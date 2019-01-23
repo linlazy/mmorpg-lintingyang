@@ -3,6 +3,7 @@ package com.linlazy.mmorpg.template.skill.strategy.recovery;
 import com.linlazy.mmorpg.constants.SceneEntityType;
 import com.linlazy.mmorpg.domain.SceneEntity;
 import com.linlazy.mmorpg.domain.Skill;
+import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,6 +12,7 @@ import java.util.Set;
  * 小怪恢复技能
  * @author linlazy
  */
+@Component
 public class MonsterRecoverySkill extends RecoverySkill {
     @Override
     protected Integer sceneEntityType() {

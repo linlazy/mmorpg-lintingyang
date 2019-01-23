@@ -4,8 +4,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.linlazy.mmorpg.backpack.service.PlayerBackpackService;
 import com.linlazy.mmorpg.domain.ItemContext;
+import com.linlazy.mmorpg.domain.Player;
+import com.linlazy.mmorpg.dto.PlayerDTO;
 import com.linlazy.mmorpg.module.equip.service.EquipmentService;
 import com.linlazy.mmorpg.module.item.manager.config.ItemConfigService;
+import com.linlazy.mmorpg.push.PlayerPushHelper;
 import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.server.route.Cmd;
 import com.linlazy.mmorpg.service.*;
@@ -526,6 +529,36 @@ public class CmdHandler {
         long actorId = jsonObject.getLong("actorId");
         return equipmentService.dressedEquipInfo(actorId);
     }
+
+
+    /**
+     *  查看穿戴装备信息
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("playerInfo")
+    public Result<?> playerInfo(JSONObject jsonObject){
+        long actorId = jsonObject.getLong("actorId");
+        Player player = playerService.getPlayer(actorId);
+        PlayerPushHelper.pushChange(actorId,new PlayerDTO(player));
+        return Result.success();
+    }
+
+
+    @Autowired
+    private ItemService itemService;
+    /**
+     *  消耗道具
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("consumeItem")
+    public Result<?> consumeItem(JSONObject jsonObject){
+        long actorId = jsonObject.getLong("actorId");
+        long itemId = jsonObject.getLongValue("itemId");
+        return itemService.consumeItem(actorId,itemId);
+    }
+
 
     @Cmd(value = "cmd",auth = false)
     public Result<?> cmd(JSONObject jsonObject){

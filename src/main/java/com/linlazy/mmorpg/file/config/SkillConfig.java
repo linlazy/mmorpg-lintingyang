@@ -37,6 +37,11 @@ public class SkillConfig {
     private Long professionId;
 
     /**
+     * 玩家召唤兽技能
+     */
+    private boolean playerCallType;
+
+    /**
      * 技能模板ID
      */
     private int skillTemplateId;

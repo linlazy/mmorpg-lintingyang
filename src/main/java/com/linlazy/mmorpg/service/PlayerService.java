@@ -14,6 +14,7 @@ import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.common.event.EventType;
 import com.linlazy.mmorpg.push.PlayerPushHelper;
 import com.linlazy.mmorpg.server.common.Result;
+import com.linlazy.mmorpg.utils.DateUtils;
 import com.linlazy.mmorpg.utils.SessionManager;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import io.netty.channel.Channel;
@@ -251,7 +252,20 @@ public class PlayerService {
         if(!player.hasSkill(skillId)){
            return Result.valueOf("玩家未拥有该技能");
         }
+
+
+
         Skill skill = player.getPlayerSkillInfo().getSkillMap().get(skillId);
+
+
+        int mp = skill.getSkillTemplateArgs().getIntValue("mp");
+        if(player.getMp() < mp){
+            return Result.valueOf("MP不足");
+        }
+        if(DateUtils.getNowMillis() <  skill.getNextCDResumeTimes()){
+            return Result.valueOf("技能冷卻中");
+        }
+
         skillService.useSkill(player,skill);
         EventBusHolder.post(new PlayerAttackEvent(player));
         return Result.success();

@@ -6,26 +6,24 @@ package com.linlazy.mmorpg.constants;
 public interface SkillType {
 
     /**
+     * 攻击类技能
+     */
+    int ATTACK = 1;
+    /**
      * 恢复类技能
      */
-    int RECOVERY = 1;
+    int RECOVERY = 2;
 
     /**
      * 召唤类技能
      */
-    int CALL = 2;
-    /**
-     * 玩家召唤兽技能
-     */
-    int PLAYER_CALL = 3;
+    int CALL = 3;
 
     /**
      * 嘲讽类技能
      */
     int TAUNT = 4;
 
-    /**
-     * 攻击类技能
-     */
-    int ATTACK = 5;
+
+
 }

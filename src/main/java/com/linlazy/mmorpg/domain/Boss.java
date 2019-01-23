@@ -31,12 +31,8 @@ public class Boss extends SceneEntity {
      */
     private long bossId;
 
-    /**
-     * boss血量
-     */
-    private int hp;
 
-
+    private int attack;
     /**
      * 名称
      */

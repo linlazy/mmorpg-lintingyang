@@ -47,6 +47,14 @@ public class Equip extends Item{
     private boolean isDress;
 
 
+    public int finalAttack(){
+        return attack + level * 6;
+    }
+
+    public int finalDefense(){
+        return defense + level * 6;
+    }
+
     public Equip(ItemEntity entity) {
         super(entity);
         String ext = entity.getExt();
@@ -60,6 +68,8 @@ public class Equip extends Item{
         ItemConfigService itemConfigService = SpringContextUtil.getApplicationContext().getBean(ItemConfigService.class);
         JSONObject itemConfig = itemConfigService.getItemConfig(ItemIdUtil.getBaseItemId(getItemId()));
         equipType = itemConfig.getIntValue("equipType");
+        attack = itemConfig.getIntValue("attack");
+        defense = itemConfig.getIntValue("defense");
     }
 
     public Equip(long itemId, int count) {
@@ -102,5 +112,7 @@ public class Equip extends Item{
         this.level = itemConfig.getIntValue("level");
         this.setItemType(itemConfig.getIntValue("itemType"));
         this.equipType =itemConfig.getIntValue("equipType");
+        attack = itemConfig.getIntValue("attack");
+        defense = itemConfig.getIntValue("defense");
     }
 }

@@ -24,7 +24,7 @@ public class TauntSkillTypeStrategy extends SkillTypeStrategy{
 
     @Override
     protected Integer skillType() {
-        return SkillType.ATTACK;
+        return SkillType.TAUNT;
     }
 
     @Override

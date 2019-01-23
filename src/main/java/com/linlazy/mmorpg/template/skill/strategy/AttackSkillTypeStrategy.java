@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 攻击类技能策略
@@ -38,7 +39,14 @@ public class AttackSkillTypeStrategy extends SkillTypeStrategy{
     }
 
     private Set<SceneEntity> selectAttackedSceneEntitySet(SceneEntity sceneEntity, Skill skill, Set<SceneEntity> allSceneEntity) {
+
+        //存活的场景实体
+        Set<SceneEntity> liveSceneEntitySet = allSceneEntity.stream()
+                .filter(sceneEntity1 -> sceneEntity1.getHp() > 0)
+                .collect(Collectors.toSet());
+
+
         AttackSkill attackSkill = AttackSkill.getAttackSkill(sceneEntity.getSceneEntityType());
-        return attackSkill.selectAttackedSceneEntitySet(sceneEntity,skill,allSceneEntity);
+        return attackSkill.selectAttackedSceneEntitySet(sceneEntity,skill,liveSceneEntitySet);
     }
 }

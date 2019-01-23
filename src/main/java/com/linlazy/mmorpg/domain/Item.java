@@ -115,5 +115,6 @@ public class Item {
         }
 
          name = itemConfig.getString("name");
+        itemType = itemConfig.getIntValue("itemType");
     }
 }

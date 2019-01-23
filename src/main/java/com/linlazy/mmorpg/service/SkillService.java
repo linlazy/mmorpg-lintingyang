@@ -86,6 +86,8 @@ public class SkillService {
 
 
     public void useSkill(SceneEntity sceneEntity, Skill skill){
+
+
         SkillTypeStrategy skillTypeStrategy = SkillTypeStrategy.getSkillTypeStrategy(skill.getType());
         skillTypeStrategy.useSkill(sceneEntity,skill);
     }
@@ -191,6 +193,7 @@ public class SkillService {
         skill.setName(skillConfig.getName());
         skill.setSkillTemplateArgs(skillConfig.getSkillTemplateArgs());
         skill.setSkillTemplateId(skillConfig.getSkillTemplateId());
+        skill.setType(skillConfig.getType());
 
         playerSkill.getSkillMap().put(skill.getSkillId(),skill);
         SkillEntity skillEntity = skill.convertSkillEntity();

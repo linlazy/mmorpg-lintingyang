@@ -20,4 +20,17 @@ public class PlayerBackPackDTO {
     public PlayerBackPackDTO(Long actorId) {
         this.actorId = actorId;
     }
+
+
+    @Override
+    public String toString() {
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for(LatticeDTO latticeDTO: backPackLatticeList){
+            stringBuilder.append(latticeDTO.toString()).append("\r\n");
+        }
+
+        return stringBuilder.toString();
+    }
 }

@@ -21,6 +21,16 @@ public class PlayerDTO {
     private Integer hp;
 
     /**
+     * 蓝量
+     */
+    private Integer mp;
+
+    /**
+     * 金币
+     */
+    private Long gold;
+
+    /**
      * 等级
      */
     private Integer level;
@@ -41,6 +51,9 @@ public class PlayerDTO {
     public PlayerDTO(Player player) {
         username = player.getName();
         hp = player.getHp();
+        mp = player.getMp();
+        gold = player.getGold();
+
         level = player.getLevel();
         attack = player.computeAttack();
         defense = player.computeDefense();
@@ -68,6 +81,6 @@ public class PlayerDTO {
 
     @Override
     public String toString() {
-        return String.format("玩家名称【%s】职业【%s】 攻击力【%d】 防御力【%d】 血量：%d 等级：【%d】",username,profession,attack,defense,hp,level);
+        return String.format("玩家名称【%s】职业【%s】 攻击力【%d】 防御力【%d】 血量【%d】 蓝量【%d】 金币【%d】 等级：【%d】",username,profession,attack,defense,hp,mp,gold,level);
     }
 }

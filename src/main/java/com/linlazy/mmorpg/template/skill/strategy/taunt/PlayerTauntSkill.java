@@ -4,6 +4,7 @@ import com.linlazy.mmorpg.constants.SceneEntityType;
 import com.linlazy.mmorpg.domain.Player;
 import com.linlazy.mmorpg.domain.SceneEntity;
 import com.linlazy.mmorpg.domain.Skill;
+import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,6 +13,7 @@ import java.util.Set;
  * 玩家嘲讽技能
  * @author linlazy
  */
+@Component
 public class PlayerTauntSkill extends TauntSkill {
     @Override
     protected Integer sceneEntityType() {

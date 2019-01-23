@@ -3,7 +3,6 @@ package com.linlazy.mmorpg.file.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.linlazy.mmorpg.constants.SkillType;
 import com.linlazy.mmorpg.file.config.SkillConfig;
 import com.linlazy.mmorpg.server.common.ConfigFile;
 import com.linlazy.mmorpg.server.common.ConfigFileManager;
@@ -78,6 +77,7 @@ public class SkillConfigService {
             skillConfig.setMonsterIds(monsterIds);
             skillConfig.setProfessionId(jsonObject.getLongValue("professionId"));
             skillConfig.setType(jsonObject.getIntValue("type"));
+            skillConfig.setPlayerCallType(jsonObject.getBooleanValue("playerCallType"));
 
 
             SKILL_ID_MAP.putIfAbsent(skillId, skillConfig);
@@ -102,7 +102,7 @@ public class SkillConfigService {
             skillConfigList.add(skillConfig);
 
             //构建玩家召唤兽技能
-            if(skillConfig.getType() == SkillType.PLAYER_CALL){
+            if(skillConfig.isPlayerCallType()){
                 playerCallskillList.add(skillConfig);
             }
         }

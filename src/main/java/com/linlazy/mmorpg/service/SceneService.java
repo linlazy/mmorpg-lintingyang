@@ -5,10 +5,7 @@ import com.google.common.eventbus.Subscribe;
 import com.linlazy.mmorpg.domain.*;
 import com.linlazy.mmorpg.dto.PlayerDTO;
 import com.linlazy.mmorpg.dto.SceneDTO;
-import com.linlazy.mmorpg.event.type.CopyMoveEvent;
-import com.linlazy.mmorpg.event.type.SceneEnterEvent;
-import com.linlazy.mmorpg.event.type.SceneMonsterDeadEvent;
-import com.linlazy.mmorpg.event.type.SceneMoveEvent;
+import com.linlazy.mmorpg.event.type.*;
 import com.linlazy.mmorpg.file.config.SceneConfig;
 import com.linlazy.mmorpg.file.service.SceneConfigService;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
@@ -156,6 +153,18 @@ public class SceneService {
         Map<Long, Player> playerMap = sceneMonsterDeadEvent.getScene().getPlayerMap();
         playerMap.values().stream()
             .forEach(player -> ScenePushHelper.pushMonsterDead(player.getActorId(), String.format("小怪【%s】已死亡",sceneMonsterDeadEvent.getMonster().getName())));
+    }
+
+    /**
+     * 处理场景BOSS死亡事件
+     * @param bossDeadEvent
+     */
+    @Subscribe
+    private void handlerSceneBossDead(BossDeadEvent bossDeadEvent) {
+        Scene scene = getSceneBySceneEntity(bossDeadEvent.getBoss());
+        Map<Long, Player> playerMap =scene.getPlayerMap();
+        playerMap.values().stream()
+                .forEach(player -> ScenePushHelper.pushMonsterDead(player.getActorId(), String.format("BOSS【%s】已死亡",bossDeadEvent.getBoss().getName())));
     }
 
     /**

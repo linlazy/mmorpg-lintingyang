@@ -45,6 +45,9 @@ public abstract class SceneEntity {
      */
     protected int mp;
 
+    private  int maxMP = 300;
+
+
 
     /**
      * 嘲讽状态
@@ -152,6 +155,17 @@ public abstract class SceneEntity {
 //            EventBusHolder.post(new ActorEvent(sceneEntityId, EventType.COPY_BOSS_DEAD,jsonObject));
         }
     }
+
+    public  int resumeMP(int resumeMP){
+        synchronized (this){
+            this.mp += resumeMP;
+            if(this.mp >= maxMP){
+                this.mp = maxMP;
+            }
+            return this.mp;
+        }
+    }
+
 
 
     public  int consumeMP(int mp){

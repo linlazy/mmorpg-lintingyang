@@ -14,7 +14,7 @@
 				console.log(json.data);
 				ta.value += json.code + "\r\n";
 				if(json.command == "getBackpackInfo"){
-					ta.value +="玩家背包信息："+  JSON.stringify(json.data) + "\r\n";
+					ta.value +="玩家背包信息："+  json.data + "\r\n";
 				}else if(json.command == "itemInfo"){
 					ta.value +="游戏道具信息："+  JSON.stringify(json.data) + "\r\n";
 				}else if(json.command == "teamInfo"){
@@ -207,15 +207,15 @@
 					ta.value += "正在查看队伍信息..."+ "\r\n";
 				}
 
-				if(arr[0] == "attack"){
+				if(arr[0] == "useSkill"){
 
 					var json ={};
-					json.command = "attack";
+					json.command = "useSkill";
 					json.skillId = arr[1];
 					var jsonStr = JSON.stringify(json);
 					console.log(jsonStr);
 					socket.send(jsonStr);
-					ta.value += "正在使用技能攻击..."+ "\r\n";
+					ta.value += "正在使用技能..."+ "\r\n";
 				}
 
 				if(arr[0] == "gainSkill"){
@@ -344,6 +344,27 @@
 					console.log(jsonStr);
 					socket.send(jsonStr);
 					ta.value += "修复装备中..."+ "\r\n";
+				}
+
+				if(arr[0] == "playerInfo"){
+
+					var json ={};
+					json.command = "playerInfo";
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "查看玩家信息中..."+ "\r\n";
+				}
+
+				if(arr[0] == "consumeItem"){
+
+					var json ={};
+					json.command = "consumeItem";
+					json.itemId = arr[1];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "使用道具中..."+ "\r\n";
 				}
 
 			}else{

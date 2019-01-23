@@ -37,6 +37,7 @@ public class Player extends SceneEntity {
         this.setMp(playerEntity.getMp());
         this.setName(playerEntity.getUsername());
         this.setHp(playerEntity.getHp());
+        this.setGold(playerEntity.getGold());
         this.setSceneEntityType(SceneEntityType.PLAYER);
         this.setProfession(playerEntity.getProfession());
         this.setLevel(playerEntity.getLevel());
@@ -87,14 +88,9 @@ public class Player extends SceneEntity {
 
 
     /**
-     * 蓝
-     */
-    private int mp;
-
-    /**
      * 金币
      */
-    private int gold;
+    private long gold;
 
 
 
@@ -145,6 +141,14 @@ public class Player extends SceneEntity {
     public boolean isTeam(){
         TeamService teamService = SpringContextUtil.getApplicationContext().getBean(TeamService.class);
         return teamService.isTeam(actorId);
+    }
+
+    public  long resumeGold(int resumeGold){
+        synchronized (this){
+            this.gold += resumeGold;
+
+            return this.gold;
+        }
     }
 
     /**

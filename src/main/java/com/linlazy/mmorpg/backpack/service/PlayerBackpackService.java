@@ -104,7 +104,7 @@ public class PlayerBackpackService {
                     .map(LatticeDTO::new).collect(Collectors.toList());
             playerBackPackDTO.setBackPackLatticeList(latticeDTOList);
         }
-        return  Result.success(playerBackPackDTO);
+        return  Result.success(playerBackPackDTO.toString());
     }
 
     /**

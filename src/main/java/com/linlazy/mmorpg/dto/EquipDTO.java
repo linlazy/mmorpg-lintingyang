@@ -23,6 +23,10 @@ public class EquipDTO {
 
     private Integer level;
 
+    private Integer attack;
+
+    private Integer defense;
+
 
     /**
      * 耐久度
@@ -34,12 +38,14 @@ public class EquipDTO {
         this.durability = equip.getDurability();
         level = equip.getLevel();
         name =equip.getName();
+        attack = equip.finalAttack();
+        defense = equip.finalDefense();
     }
 
 
     @Override
     public String toString() {
 
-        return String.format(" 装备名称【%s】 耐久度【%d】 等级【%d】 道具ID【%d】",name,durability,level,equipId);
+        return String.format(" 装备名称【%s】 攻击力【%d】 防御力【%d】 耐久度【%d】 等级【%d】 道具ID【%d】",name,attack,defense,durability,level,equipId);
     }
 }
