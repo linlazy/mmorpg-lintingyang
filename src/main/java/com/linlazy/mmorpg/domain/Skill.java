@@ -81,4 +81,47 @@ public class Skill {
         return skillEntity;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(String.format("拥有技能【%s】 等级【%s】 ID【%d】",this.getName(),this.getLevel(),this.getSkillId()));
+
+
+        Integer attack = skillTemplateArgs.getInteger("attack");
+        if(attack != null){
+            stringBuilder.append(String.format("攻击力【%d】 ",attack));
+        }
+        Integer attackNum = skillTemplateArgs.getInteger("attackNum");
+        if(attackNum != null){
+            if (attackNum != 0){
+                stringBuilder.append(String.format("攻击人数【%d】 ",attackNum));
+            }  else {
+                stringBuilder.append(String.format("攻击人数【全体】 "));
+            }
+        }
+        Integer cd = skillTemplateArgs.getInteger("cd");
+        if(cd != null){
+            stringBuilder.append(String.format("冷却时间【%d】秒 ",cd));
+        }
+        Integer mp = skillTemplateArgs.getInteger("mp");
+        if(mp != null){
+            stringBuilder.append(String.format("消耗【%d】点MP ",mp));
+        }
+        Integer hp = skillTemplateArgs.getInteger("resumeHP");
+        if(hp != null){
+            stringBuilder.append(String.format("恢复【%d】点HP ",hp));
+        }
+        Integer continueTime = skillTemplateArgs.getInteger("continueTime");
+        if(continueTime != null){
+            stringBuilder.append(String.format("技能持续【%d】秒 ",continueTime));
+        }
+
+        Integer duration = skillTemplateArgs.getInteger("duration");
+        Integer decreaseHP = skillTemplateArgs.getInteger("decreaseHP");
+        if(duration != null && decreaseHP != null){
+            stringBuilder.append(String.format("每隔【%d】秒减少【%d】点HP ",duration,decreaseHP));
+        }
+
+        return stringBuilder.toString();
+    }
 }

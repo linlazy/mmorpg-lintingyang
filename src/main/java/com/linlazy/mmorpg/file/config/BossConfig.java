@@ -1,5 +1,6 @@
 package com.linlazy.mmorpg.file.config;
 
+import com.linlazy.mmorpg.module.common.reward.Reward;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -35,5 +36,10 @@ public class BossConfig {
      * 所处场景
      */
     private List<Integer> sceneIdSet = new ArrayList<>();
+
+    /**
+     * 奖励
+     */
+    private List<Reward> rewardList;
 
 }

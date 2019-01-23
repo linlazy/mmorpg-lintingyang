@@ -12,6 +12,8 @@ import com.linlazy.mmorpg.server.common.GlobalConfigService;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import lombok.Data;
 
+import java.util.concurrent.ScheduledFuture;
+
 /**
  * 场景实体类
  * @author linlazy
@@ -19,6 +21,10 @@ import lombok.Data;
 @Data
 public abstract class SceneEntity {
 
+    /**
+     * 嘲讽状态调度
+     */
+    ScheduledFuture<?> tauntStatusScheduledFuture;
     /**
      * 场景ID
      */
@@ -68,7 +74,9 @@ public abstract class SceneEntity {
     }
 
     protected  void triggerDeadEvent(){
-
+        if(tauntStatusScheduledFuture != null){
+            tauntStatusScheduledFuture.cancel(true);
+        }
     }
 
     /**

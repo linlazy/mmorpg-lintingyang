@@ -7,7 +7,11 @@ import com.linlazy.mmorpg.domain.Skill;
 import com.linlazy.mmorpg.utils.DateUtils;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import static java.util.stream.Collectors.groupingBy;
 
 /**
  * 攻击力为A,造成可以攻击B人,具有C秒冷却时间
@@ -32,9 +36,30 @@ public  class SkillTemplate1 extends BaseSkillTemplate {
 
         Set<SceneEntity> targetSceneEntitySet = (Set<SceneEntity>) jsonObject.get("targetSceneEntitySet");
         int attackNum = skillTemplateArgs.getIntValue("attackNum");
-        targetSceneEntitySet.stream()
+        Map<Boolean, List<SceneEntity>> collectMap = targetSceneEntitySet.stream()
+                .collect(groupingBy(SceneEntity::isTauntStatus));
+        List<SceneEntity> tauntSceneEntities = collectMap.get(true);
+
+        if(tauntSceneEntities == null){
+            List<SceneEntity> unTauntSceneEntities = collectMap.get(false);
+            unTauntSceneEntities.stream()
+                    .limit(attackNum)
+                    .forEach(targetSceneEntity->targetSceneEntity.attacked(sceneEntity,skill));
+            return;
+        }else if(tauntSceneEntities.size() >= attackNum){
+                tauntSceneEntities.stream()
+                        .forEach(targetSceneEntity->targetSceneEntity.attacked(sceneEntity,skill));
+                return;
+        }else {
+            tauntSceneEntities.stream()
+                    .forEach(sceneEntity1 -> sceneEntity1.attacked(sceneEntity,skill));
+            attackNum -=tauntSceneEntities.size();
+        }
+
+        List<SceneEntity> unTauntSceneEntities = collectMap.get(false);
+        unTauntSceneEntities.stream()
                 .limit(attackNum)
-                .forEach(targetSceneEntity-> targetSceneEntity.attacked(sceneEntity,skill));
+                .forEach(targetSceneEntity->targetSceneEntity.attacked(sceneEntity,skill));
 
     }
 }

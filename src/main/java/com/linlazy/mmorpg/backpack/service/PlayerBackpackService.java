@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -42,8 +41,6 @@ public class PlayerBackpackService {
      * 玩家背包缓存
      */
     public static LoadingCache<Long, PlayerBackpack> playerBackpackCache = CacheBuilder.newBuilder()
-            .maximumSize(10)
-            .expireAfterAccess(60, TimeUnit.SECONDS)
             .recordStats()
             .build(new CacheLoader<Long, PlayerBackpack>() {
                 @Override
@@ -69,11 +66,11 @@ public class PlayerBackpackService {
                             .filter(item -> {
                                 if(item.getItemType() == ItemType.EQUIP){
                                     Equip equip = (Equip) item;
-                                    if(!equip.isDress()){
-                                        return true;
+                                    if(equip.isDress()){
+                                        return false;
                                     }
                                 }
-                                return false;
+                                return true;
                             })
                             .map(Lattice::new)
                             .forEach(lattice -> {

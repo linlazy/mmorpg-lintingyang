@@ -89,13 +89,15 @@ public class EquipmentService {
     @Subscribe
     private void handleAttacked(PlayerAttackedEvent playerAttackedEvent) {
         Player player = playerAttackedEvent.getPlayer();
-        Equip equip = RandomUtils.randomElement(
-                player.getDressedEquip().getEquipMap().values()
-                    .stream()
-                    .filter(equip1 -> equip1.getEquipType() != EquipType.ARMS)
-                    .filter(equip1 -> equip1.getDurability() > 0)
-                    .collect(Collectors.toList())
-        );
+        Collection<Equip> equips =  player.getDressedEquip().getEquipMap().values().stream()
+                .filter(equip1 -> equip1.getEquipType() != EquipType.ARMS)
+                .filter(equip1 -> equip1.getDurability() > 0)
+                .collect(Collectors.toList());
+        if(equips.size() == 0){
+            return;
+        }
+
+        Equip equip = RandomUtils.randomElement(equips);
         equip.modifyDurability();
         EquipPushHelper.pushDressedEquip(player.getActorId(),"受到攻击耐久度减少" + new EquipDTO(equip).toString());
         ItemEntity itemEntity = equip.convertItemEntity();
@@ -106,18 +108,17 @@ public class EquipmentService {
     @Subscribe
     private void handleAttack(PlayerAttackEvent playerAttackEvent) {
         Player player = playerAttackEvent.getPlayer();
-        Collection<Equip> equips = player.getDressedEquip().getEquipMap().values();
+        Collection<Equip> equips = player.getDressedEquip().getEquipMap().values()
+                .stream()
+                .filter(equip1 -> equip1.getEquipType() == EquipType.ARMS)
+                .filter(equip1 -> equip1.getDurability() > 0)
+                .collect(Collectors.toList());
         if(equips.size() == 0){
             return;
         }
 
-        Equip equip = RandomUtils.randomElement(
+        Equip equip = RandomUtils.randomElement(equips );
 
-                equips .stream()
-                        .filter(equip1 -> equip1.getEquipType() == EquipType.ARMS)
-                        .filter(equip1 -> equip1.getDurability() > 0)
-                        .collect(Collectors.toList())
-        );
         equip.modifyDurability();
         EquipPushHelper.pushDressedEquip(player.getActorId(),"攻击成功耐久度减少" + new EquipDTO(equip).toString());
         ItemEntity itemEntity = equip.convertItemEntity();

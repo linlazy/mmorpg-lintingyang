@@ -71,6 +71,7 @@ public class Player extends SceneEntity {
 
     @Override
     protected void triggerDeadEvent() {
+        super.triggerDeadEvent();
         EventBusHolder.post(new PlayerDeadEvent(this));
         SceneConfigService sceneConfigService = SpringContextUtil.getApplicationContext().getBean(SceneConfigService.class);
         if(sceneConfigService.isCopyScene(this.sceneId)){

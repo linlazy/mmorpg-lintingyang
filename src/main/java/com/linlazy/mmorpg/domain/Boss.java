@@ -4,6 +4,7 @@ import com.linlazy.mmorpg.event.type.BossDeadEvent;
 import com.linlazy.mmorpg.event.type.CopyBossDeadEvent;
 import com.linlazy.mmorpg.file.service.SceneConfigService;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
+import com.linlazy.mmorpg.module.common.reward.Reward;
 import com.linlazy.mmorpg.push.PlayerPushHelper;
 import com.linlazy.mmorpg.service.CopyService;
 import com.linlazy.mmorpg.utils.DateUtils;
@@ -38,6 +39,8 @@ public class Boss extends SceneEntity {
      */
     private String name;
 
+    private Reward reward;
+
     /**
      * boss技能列表
      */
@@ -46,6 +49,9 @@ public class Boss extends SceneEntity {
     public Skill randomSkill(){
         return RandomUtils.randomElement(skillList);
     }
+
+
+
 
     @Override
     public int computeDefense() {
@@ -80,6 +86,7 @@ public class Boss extends SceneEntity {
 
     @Override
     protected void triggerDeadEvent() {
+        super.triggerDeadEvent();
 
         EventBusHolder.post(new BossDeadEvent(this));
         SceneConfigService sceneConfigService = SpringContextUtil.getApplicationContext().getBean(SceneConfigService.class);

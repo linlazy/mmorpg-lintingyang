@@ -1,7 +1,10 @@
 package com.linlazy.mmorpg.domain;
 
+import com.google.common.collect.Lists;
 import com.linlazy.mmorpg.event.type.SceneMonsterDeadEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
+import com.linlazy.mmorpg.module.common.reward.Reward;
+import com.linlazy.mmorpg.module.common.reward.RewardService;
 import com.linlazy.mmorpg.push.PlayerPushHelper;
 import com.linlazy.mmorpg.service.SceneService;
 import com.linlazy.mmorpg.utils.DateUtils;
@@ -33,6 +36,8 @@ public class Monster extends SceneEntity {
     private int monsterId;
 
     private int attack;
+
+    private Reward reward;
 
     /**
      * 小怪技能
@@ -77,6 +82,7 @@ public class Monster extends SceneEntity {
             }
         } else {
             this.hp = 0;
+
             triggerDeadEvent();
         }
     }
@@ -84,9 +90,22 @@ public class Monster extends SceneEntity {
 
     @Override
     protected void triggerDeadEvent() {
+        super.triggerDeadEvent();
+
         SceneService sceneService = SpringContextUtil.getApplicationContext().getBean(SceneService.class);
         Scene scene = sceneService.getSceneBySceneEntity(this);
         EventBusHolder.post(new SceneMonsterDeadEvent(scene,this));
+
+        if(sceneService.isCopyScene(scene.getSceneId())){
+
+            RewardService rewardService = SpringContextUtil.getApplicationContext().getBean(RewardService.class);
+            scene.getPlayerMap().values()
+                    .stream()
+                    .forEach(player -> {
+                        rewardService.addRewardList(player.getActorId(), Lists.newArrayList(reward));
+                        PlayerPushHelper.pushReward(player.getActorId(),"获得小怪奖励："+ reward.toString());
+                    });
+        }
 
     }
 }

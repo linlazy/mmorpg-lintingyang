@@ -29,9 +29,7 @@ public class SkillTemplate7 extends BaseSkillTemplate {
 
         Set<SceneEntity> targetSceneEntitySet = (Set<SceneEntity>) jsonObject.get("targetSceneEntitySet");
         targetSceneEntitySet.stream()
-                .forEach(sceneEntity1 -> {
-                    sceneEntity1.attacked(sceneEntity,skill);
-                });
+                .forEach(sceneEntity1 -> sceneEntity1.attacked(sceneEntity,skill));
     }
 
 

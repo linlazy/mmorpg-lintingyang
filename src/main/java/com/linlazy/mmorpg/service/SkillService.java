@@ -144,6 +144,7 @@ public class SkillService {
                     skill.setSkillTemplateId(skillConfig.getSkillTemplateId());
                     skill.setSkillTemplateArgs(skillConfig.getSkillTemplateArgs());
                     skill.setName(skillConfig.getName());
+                    skill.setType(skillConfig.getType());
 
                     return skill;
                 })
@@ -160,6 +161,7 @@ public class SkillService {
                     skill.setSkillTemplateId(skillConfig.getSkillTemplateId());
                     skill.setSkillTemplateArgs(skillConfig.getSkillTemplateArgs());
                     skill.setName(skillConfig.getName());
+                    skill.setType(skillConfig.getType());
 
                     return skill;
                 })

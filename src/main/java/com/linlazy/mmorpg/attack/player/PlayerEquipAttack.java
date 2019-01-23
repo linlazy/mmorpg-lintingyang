@@ -22,6 +22,7 @@ public class PlayerEquipAttack extends PlayerAttack{
     protected int computeAttack(Player player) {
        return   player.getDressedEquip().getEquipMap().values()
                 .stream()
+                .filter(equip -> equip.getDurability() > 0)
                 .map(Equip::finalAttack)
                 .reduce(0,(a ,b ) -> a + b);
     }

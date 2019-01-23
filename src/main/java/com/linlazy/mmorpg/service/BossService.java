@@ -5,6 +5,8 @@ import com.linlazy.mmorpg.domain.Boss;
 import com.linlazy.mmorpg.domain.Skill;
 import com.linlazy.mmorpg.file.config.BossConfig;
 import com.linlazy.mmorpg.file.service.BossConfigService;
+import com.linlazy.mmorpg.module.common.reward.Reward;
+import com.linlazy.mmorpg.utils.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +37,8 @@ public class BossService {
                     boss.setAttack(bossConfig.getAttack());
                     boss.setName(bossConfig.getName());
                     boss.setSceneEntityType(SceneEntityType.BOSS);
+                    Reward reward = RandomUtils.randomElement(bossConfig.getRewardList());
+                    boss.setReward(reward);
 
                     List<Skill> bossSkillList = skillService.getBossSkillList(boss.getBossId());
                     boss.setSkillList(bossSkillList);

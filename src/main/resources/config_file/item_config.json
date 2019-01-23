@@ -4,7 +4,7 @@
     "itemType": 1,
     "name": "金创药",
     "level": 1,
-    "effect": "瞬间恢复500HP、100MP",
+    "desc": "瞬间恢复500HP、100MP",
     "source": "随身商店，商城购买",
     "rewards": "[[60000,500],[60001,100]]",
     "superPosition": 50
@@ -14,7 +14,7 @@
     "itemType": 1,
     "name": "金创药",
     "level": 1,
-    "effect": "瞬间恢复500HP、100MP",
+    "desc": "瞬间恢复500HP、100MP",
     "source": "随身商店，商城购买",
     "rewards": "[[60000,500],[60001,100]]",
     "superPosition": 50
@@ -24,7 +24,7 @@
     "itemType": 2,
     "name": "修复水晶",
     "level": 1,
-    "effect": "恢复5点耐久度",
+    "desc": "恢复5点耐久度",
     "source": "随身商店，商城购买",
     "durability": 5
   },

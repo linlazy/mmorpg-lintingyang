@@ -12,6 +12,10 @@ import lombok.Data;
 public class PlayerDTO {
 
     /**
+     * 玩家ID
+     */
+    private Long actorId;
+    /**
      * 用户名
      */
     private String username;
@@ -49,6 +53,7 @@ public class PlayerDTO {
 
 
     public PlayerDTO(Player player) {
+        actorId = player.getActorId();
         username = player.getName();
         hp = player.getHp();
         mp = player.getMp();
@@ -81,6 +86,6 @@ public class PlayerDTO {
 
     @Override
     public String toString() {
-        return String.format("玩家名称【%s】职业【%s】 攻击力【%d】 防御力【%d】 血量【%d】 蓝量【%d】 金币【%d】 等级：【%d】",username,profession,attack,defense,hp,mp,gold,level);
+        return String.format("玩家ID【%d】 玩家名称【%s】职业【%s】 攻击力【%d】 防御力【%d】 血量【%d】 蓝量【%d】 金币【%d】 等级：【%d】",actorId,username,profession,attack,defense,hp,mp,gold,level);
     }
 }

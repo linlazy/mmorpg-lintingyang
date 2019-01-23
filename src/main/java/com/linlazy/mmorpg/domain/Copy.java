@@ -131,7 +131,7 @@ public class Copy extends Scene{
             logger.debug("到达时间后，触发小怪刷新事件");
 
 
-        }, 0L, 10L, TimeUnit.SECONDS);
+        }, 0L, 60L, TimeUnit.SECONDS);
     }
 
     /**

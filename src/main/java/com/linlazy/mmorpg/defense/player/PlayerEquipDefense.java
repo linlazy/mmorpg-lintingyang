@@ -21,6 +21,7 @@ public class PlayerEquipDefense extends PlayerDefense{
     protected int computeDefense(Player player) {
         return   player.getDressedEquip().getEquipMap().values()
                 .stream()
+                .filter(equip -> equip.getDurability() > 0)
                 .map(Equip::finalDefense)
                 .reduce(0,(a ,b ) -> a + b);
     }

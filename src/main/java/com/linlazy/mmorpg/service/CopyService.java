@@ -1,5 +1,6 @@
 package com.linlazy.mmorpg.service;
 
+import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 import com.linlazy.mmorpg.domain.*;
 import com.linlazy.mmorpg.event.type.*;
@@ -9,6 +10,7 @@ import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.common.reward.Reward;
 import com.linlazy.mmorpg.module.common.reward.RewardService;
 import com.linlazy.mmorpg.push.CopyPushHelper;
+import com.linlazy.mmorpg.push.PlayerPushHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,8 +108,6 @@ public class CopyService {
             copy.startQuitCopyScheduled();
 //            //开启定时刷新小怪调度
             copy.startRefreshMonsterScheduled();
-//            //开启小怪定时攻击调度
-            copy.startMonsterAutoAttackScheduled();
             //开启BOSS定时攻击调度
             copy.startBossAutoAttackScheduled();
 
@@ -157,6 +157,14 @@ public class CopyService {
     @Subscribe
     public void copyBossDead(CopyBossDeadEvent copyBossDeadEvent){
         Copy copy = copyBossDeadEvent.getCopy();
+        Boss deadBoss = copy.getBossList().get(copy.getCurrentBossIndex());
+        Reward reward = deadBoss.getReward();
+        copy.getPlayerMap().values().stream()
+                .forEach(player -> {
+                    rewardService.addRewardList(player.getActorId(), Lists.newArrayList(reward));
+                    PlayerPushHelper.pushReward(player.getActorId(),"获得boss奖励："+ reward.toString());
+                });
+
         if(copy.isFinalBossDead()){
             EventBusHolder.post(new CopySuccessEvent(copy));
         }else {

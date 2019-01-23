@@ -5,6 +5,9 @@ import com.linlazy.mmorpg.constants.SceneEntityType;
 import com.linlazy.mmorpg.domain.Monster;
 import com.linlazy.mmorpg.domain.Skill;
 import com.linlazy.mmorpg.file.service.MonsterConfigService;
+import com.linlazy.mmorpg.module.common.reward.Reward;
+import com.linlazy.mmorpg.utils.RandomUtils;
+import com.linlazy.mmorpg.utils.RewardUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,6 +41,10 @@ public class MonsterService {
             String name = sceneMonsterConfig.getString("name");
             int hp = sceneMonsterConfig.getIntValue("hp");
             int attack = sceneMonsterConfig.getIntValue("useSkill");
+            String rewards = sceneMonsterConfig.getString("rewards");
+            List<Reward> rewardList = RewardUtils.parseRewards(rewards);
+            Reward reward = RandomUtils.randomElement(rewardList);
+
             Monster monster = new Monster();
             monster.setMonsterId(monsterId);
             monster.setName(name);
@@ -45,6 +52,7 @@ public class MonsterService {
             monster.setHp(hp);
             monster.setAttack(attack);
             monster.setSceneEntityType(SceneEntityType.MONSTER);
+            monster.setReward(reward);
 
             List<Skill> monsterSkillList = skillService.getMonsterSkillList(monster.getMonsterId());
             monster.setSkillList(monsterSkillList);

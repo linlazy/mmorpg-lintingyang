@@ -33,12 +33,12 @@ public class ItemContext {
         JSONObject itemConfig = itemConfigService.getItemConfig(baseItemId);
         Integer superPositionUp = itemConfig.getInteger("superPosition");
         if(superPositionUp == null){
-            superPositionUp =1;
+            this.setSuperPositionUp(1);
             this.setSuperPosition(false);
         }else {
             this.setSuperPosition(true);
+            this.setSuperPositionUp(superPositionUp);
         }
-        this.setSuperPositionUp(superPositionUp);
 
         this.setItemType(itemConfig.getIntValue("itemType"));
     }

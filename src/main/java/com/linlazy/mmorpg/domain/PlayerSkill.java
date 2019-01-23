@@ -32,7 +32,7 @@ public class PlayerSkill {
         StringBuilder stringBuilder = new StringBuilder();
         skillMap.values().stream()
                 .forEach(skill -> {
-                    stringBuilder.append(String.format("拥有技能【%s】 等级【%s】 ID【%d】",skill.getName(),skill.getLevel(),skill.getSkillId())).append("\r\n");
+                    stringBuilder.append(skill.toString()).append("\r\n");
                 });
 
         return stringBuilder.toString();

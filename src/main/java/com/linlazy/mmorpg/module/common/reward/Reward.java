@@ -31,4 +31,13 @@ public class Reward {
         this.count = count;
         this.rewardDBType = rewardDBType;
     }
+
+    @Override
+    public String toString() {
+        return "Reward{" +
+                "rewardId=" + rewardId +
+                ", count=" + count +
+                ", rewardDBType=" + rewardDBType +
+                '}';
+    }
 }

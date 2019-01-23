@@ -2,14 +2,18 @@ package com.linlazy.mmorpg.template.skill;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.linlazy.mmorpg.domain.Scene;
 import com.linlazy.mmorpg.domain.SceneEntity;
 import com.linlazy.mmorpg.domain.Skill;
+import com.linlazy.mmorpg.push.SkillPushHelper;
+import com.linlazy.mmorpg.service.SceneService;
 import com.linlazy.mmorpg.utils.DateUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -21,6 +25,9 @@ public  class SkillTemplate5 extends BaseSkillTemplate {
 
     private static ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
+
+    @Autowired
+    private SceneService sceneService;
 
     @Override
     protected int skillTemplateId() {
@@ -40,22 +47,20 @@ public  class SkillTemplate5 extends BaseSkillTemplate {
         int continueTime = skillTemplateArgs.getIntValue("continueTime");
 
 
-        Set<SceneEntity> targetSceneEntitySet = (Set<SceneEntity>) jsonObject.get("targetSceneEntitySet");
-        targetSceneEntitySet.stream()
-                .forEach(sceneEntity1 -> {
-                    sceneEntity1.setTauntStatus(true);
-                });
-        scheduledExecutorService.schedule(new Runnable() {
+        sceneEntity.setTauntStatus(true);
+        Scene sceneBySceneEntity = sceneService.getSceneBySceneEntity(sceneEntity);
+        sceneBySceneEntity.getPlayerMap().values().stream()
+                .forEach(player-> SkillPushHelper.pushUseSkill(player.getActorId(),String.format("【%s】处于嘲讽状态",sceneEntity.getName())));
+
+        ScheduledFuture<?> tauntStatusScheduledFuture = scheduledExecutorService.schedule(new Runnable() {
             @Override
             public void run() {
-
-                targetSceneEntitySet.stream()
-                        .forEach(sceneEntity1 -> {
-                            sceneEntity1.setTauntStatus(false);
-                        });
+                sceneEntity.setTauntStatus(false);
+                sceneBySceneEntity.getPlayerMap().values().stream()
+                        .forEach(player -> SkillPushHelper.pushUseSkill(player.getActorId(), String.format("【%s】嘲讽状态结束", sceneEntity.getName())));
             }
-        },continueTime, TimeUnit.SECONDS);
-
+        }, continueTime, TimeUnit.SECONDS);
+        sceneEntity.setTauntStatusScheduledFuture(tauntStatusScheduledFuture);
     }
 
 }

@@ -5,8 +5,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.linlazy.mmorpg.file.config.BossConfig;
+import com.linlazy.mmorpg.module.common.reward.Reward;
 import com.linlazy.mmorpg.server.common.ConfigFile;
 import com.linlazy.mmorpg.server.common.ConfigFileManager;
+import com.linlazy.mmorpg.utils.RewardUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -57,6 +59,9 @@ public class BossConfigService {
                 String name = jsonObject.getString("name");
                 int attack = jsonObject.getIntValue("useSkill");
                 int hp = jsonObject.getIntValue("hp");
+                String rewards = jsonObject.getString("rewards");
+                List<Reward> rewardList = RewardUtils.parseRewards(rewards);
+                bossConfig.setRewardList(rewardList);
                 bossConfig.setBossId(bossId);
                 bossConfig.setHp(hp);
                 bossConfig.setName(name);

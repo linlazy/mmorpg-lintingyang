@@ -127,6 +127,7 @@ public class PlayerCall extends SceneEntity {
 
     @Override
     protected void triggerDeadEvent() {
+        super.triggerDeadEvent();
         PlayerCallPushHelper.pushDisappear(this.getSourceId(),String.format("你的召唤兽【%s】已死亡",this.getName()));
         EventBusHolder.post(new PlayerCallDisappearEvent(this));
     }
