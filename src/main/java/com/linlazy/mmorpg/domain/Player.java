@@ -92,6 +92,16 @@ public class Player extends SceneEntity {
      */
     private long gold;
 
+    public long consumeGold(long consumeGold){
+        synchronized (this){
+            gold -=consumeGold;
+            if(gold < 0){
+                gold = 0;
+            }
+        }
+        return gold;
+    }
+
 
 
     /**

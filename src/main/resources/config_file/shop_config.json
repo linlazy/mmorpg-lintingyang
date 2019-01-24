@@ -1,9 +1,30 @@
 [
   {
     "goodsId":1,
-    "name": "药品大礼包",
-    "itemId":1,
-    "itemNum": 50,
-    "moneyNum": 30
+    "name": "药品大礼包(每日)",
+    "rewards": [[1,50]],
+    "moneyType": 1,
+    "moneyNum": 30,
+    "resetType":1,
+    "limitTimes": 5
+  },
+  {
+    "goodsId":2,
+    "name": "装备大礼包（每周）",
+    "rewards": [[1,50]],
+    "moneyType": 1,
+    "moneyNum": 30,
+    "resetType":2,
+    "limitTimes": 3
+  }
+,
+  {
+    "goodsId":3,
+    "name": "药品大礼包（不限购）",
+    "rewards": [[1,5]],
+    "moneyType": 1,
+    "moneyNum": 30,
+    "resetType":0,
+    "limitTimes": 0
   }
 ]
