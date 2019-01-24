@@ -1,4 +1,4 @@
-package com.linlazy.mmorpg.shop.money;
+package com.linlazy.mmorpg.module.shop.money;
 
 import com.linlazy.mmorpg.domain.Player;
 import com.linlazy.mmorpg.domain.Shop;

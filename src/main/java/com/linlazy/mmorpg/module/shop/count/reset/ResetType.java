@@ -1,4 +1,4 @@
-package com.linlazy.mmorpg.shop.count.reset;
+package com.linlazy.mmorpg.module.shop.count.reset;
 
 /**
  * @author linlazy

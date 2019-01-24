@@ -6,12 +6,14 @@ import com.google.common.cache.LoadingCache;
 import com.linlazy.mmorpg.dao.ShopDAO;
 import com.linlazy.mmorpg.domain.PlayerShop;
 import com.linlazy.mmorpg.domain.Shop;
+import com.linlazy.mmorpg.entity.ShopEntity;
 import com.linlazy.mmorpg.file.service.ShopConfigService;
 import com.linlazy.mmorpg.module.common.reward.Reward;
 import com.linlazy.mmorpg.module.common.reward.RewardService;
 import com.linlazy.mmorpg.server.common.Result;
-import com.linlazy.mmorpg.shop.count.ShopBuyCount;
-import com.linlazy.mmorpg.shop.money.BaseMoney;
+import com.linlazy.mmorpg.module.shop.count.ShopBuyCount;
+import com.linlazy.mmorpg.module.shop.money.BaseMoney;
+import com.linlazy.mmorpg.utils.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -43,12 +45,20 @@ public class ShopService {
                 public PlayerShop load(Long actorId) {
                     PlayerShop playerShop = new PlayerShop();
 
+                    ShopDAO shopDAO = SpringContextUtil.getApplicationContext().getBean(ShopDAO.class);
+                    List<ShopEntity> playerShopEntity = shopDAO.getPlayerShopEntity(actorId);
+                    playerShopEntity.stream()
+                            .forEach(shopEntity -> {
+                                Shop shop = new Shop(shopEntity);
+                                playerShop.getMap().put(shop.getGoodsId(),shop);
+                            });
+
                     return playerShop;
                 }
             });
 
 
-    public Result<?> buy(long actorId, long goodsId, int num) {
+    public Result<?> buy(long actorId, long goodsId) {
 
         if(isNotExist(goodsId)){
             return Result.valueOf("商品不存在");
@@ -57,6 +67,11 @@ public class ShopService {
 
         PlayerShop playerShop = getPlayerShop(actorId);
         Shop shop = playerShop.getMap().get(goodsId);
+        if(shop == null){
+            shop = new Shop(goodsId);
+            shop.setActorId(actorId);
+            playerShop.getMap().put(shop.getGoodsId(),shop);
+        }
 
         //购买次数
         Result<?> countEnough = ShopBuyCount.isEnough(shop);

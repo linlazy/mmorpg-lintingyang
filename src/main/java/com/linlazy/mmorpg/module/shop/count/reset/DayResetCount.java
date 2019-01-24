@@ -1,12 +1,14 @@
-package com.linlazy.mmorpg.shop.count.reset;
+package com.linlazy.mmorpg.module.shop.count.reset;
 
 import com.linlazy.mmorpg.domain.Shop;
 import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.utils.DateUtils;
+import org.springframework.stereotype.Component;
 
 /**
  * @author linlazy
  */
+@Component
 public class DayResetCount extends BaseResetCount {
     @Override
     protected Integer resetType() {

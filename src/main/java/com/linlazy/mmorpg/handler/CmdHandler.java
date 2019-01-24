@@ -366,12 +366,11 @@ public class CmdHandler {
      * @param jsonObject
      * @return
      */
-    @Cmd("buy")
-    public Result<?> buy(JSONObject jsonObject){
+    @Cmd("buyShop")
+    public Result<?> buyShop(JSONObject jsonObject){
         long actorId = jsonObject.getLongValue("actorId");
         long goodsId = jsonObject.getLongValue("goodsId");
-        int num = jsonObject.getIntValue("num");
-        return shopService.buy(actorId,goodsId,num);
+        return shopService.buy(actorId,goodsId);
     }
 
     @Autowired
@@ -582,6 +581,7 @@ public class CmdHandler {
         long itemId = jsonObject.getLongValue("itemId");
         return itemService.consumeItem(actorId,itemId);
     }
+
 
 
     @Cmd(value = "cmd",auth = false)

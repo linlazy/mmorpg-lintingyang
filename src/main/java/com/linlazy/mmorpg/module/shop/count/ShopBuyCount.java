@@ -1,8 +1,8 @@
-package com.linlazy.mmorpg.shop.count;
+package com.linlazy.mmorpg.module.shop.count;
 
 import com.linlazy.mmorpg.domain.Shop;
 import com.linlazy.mmorpg.server.common.Result;
-import com.linlazy.mmorpg.shop.count.reset.BaseResetCount;
+import com.linlazy.mmorpg.module.shop.count.reset.BaseResetCount;
 
 /**
  * @author linlazy

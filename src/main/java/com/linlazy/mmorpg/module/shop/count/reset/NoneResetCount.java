@@ -1,11 +1,13 @@
-package com.linlazy.mmorpg.shop.count.reset;
+package com.linlazy.mmorpg.module.shop.count.reset;
 
 import com.linlazy.mmorpg.domain.Shop;
 import com.linlazy.mmorpg.server.common.Result;
+import org.springframework.stereotype.Component;
 
 /**
  * @author linlazy
  */
+@Component
 public class NoneResetCount extends BaseResetCount {
     @Override
     protected Integer resetType() {

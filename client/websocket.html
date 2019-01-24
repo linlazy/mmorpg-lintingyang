@@ -437,6 +437,17 @@
 					ta.value += "删除邮件..."+ "\r\n";
 				}
 
+				if(arr[0] == "buyShop"){
+
+					var json ={};
+					json.command = "buyShop";
+					json.goodsId =arr[1];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "商城购买商品中..."+ "\r\n";
+				}
+
 			}else{
 				alert("WebSocket连接没有建立成功！！");
 			}

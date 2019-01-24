@@ -59,6 +59,17 @@ public class Shop {
      */
     private List<Reward> rewardList;
 
+    public Shop(long goodsId) {
+
+        ShopConfigService shopConfigService = SpringContextUtil.getApplicationContext().getBean(ShopConfigService.class);
+        ShopConfig goodsConfig = shopConfigService.getGoodsConfig(goodsId);
+        resetType = goodsConfig.getResetType();
+        limitBuyCount = goodsConfig.getLimitTimes();
+        moneyType = goodsConfig.getMoneyType();
+        consumeMoneyCount = goodsConfig.getMoneyCount();
+        rewardList = goodsConfig.getRewardList();
+    }
+
 
     public Shop(ShopEntity shopEntity) {
          goodsId = shopEntity.getGoodsId();
