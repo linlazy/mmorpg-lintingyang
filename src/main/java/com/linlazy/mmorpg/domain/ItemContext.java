@@ -1,7 +1,7 @@
 package com.linlazy.mmorpg.domain;
 
 import com.alibaba.fastjson.JSONObject;
-import com.linlazy.mmorpg.module.item.manager.config.ItemConfigService;
+import com.linlazy.mmorpg.file.service.ItemConfigService;
 import com.linlazy.mmorpg.utils.ItemIdUtil;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import lombok.Data;

@@ -6,8 +6,8 @@ import com.linlazy.mmorpg.backpack.service.PlayerBackpackService;
 import com.linlazy.mmorpg.domain.ItemContext;
 import com.linlazy.mmorpg.domain.Player;
 import com.linlazy.mmorpg.dto.PlayerDTO;
-import com.linlazy.mmorpg.module.equip.service.EquipmentService;
-import com.linlazy.mmorpg.module.item.manager.config.ItemConfigService;
+import com.linlazy.mmorpg.service.EquipmentService;
+import com.linlazy.mmorpg.file.service.ItemConfigService;
 import com.linlazy.mmorpg.push.PlayerPushHelper;
 import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.server.route.Cmd;
@@ -63,7 +63,7 @@ public class CmdHandler {
      * @return
      */
     @Cmd("sendEmail")
-    public Result<?> send(JSONObject jsonObject){
+    public Result<?> sendEmail(JSONObject jsonObject){
         long actorId = jsonObject.getLongValue("actorId");
         return emailService.sendEmail(actorId,jsonObject);
     }
@@ -73,10 +73,34 @@ public class CmdHandler {
      * @return
      */
     @Cmd("readEmail")
-    public Result<?> read(JSONObject jsonObject){
+    public Result<?> readEmail(JSONObject jsonObject){
         long actorId = jsonObject.getLongValue("actorId");
         long targetId = jsonObject.getLongValue("targetId");
         return emailService.readEmail(actorId,targetId);
+    }
+
+    /**
+     * 领取邮件
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("rewardEmail")
+    public Result<?> rewardEmail(JSONObject jsonObject){
+        long actorId = jsonObject.getLongValue("actorId");
+        long targetId = jsonObject.getLongValue("targetId");
+        return emailService.rewardEmail(actorId,targetId);
+    }
+
+    /**
+     * 删除邮件
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("deleteEmail")
+    public Result<?> deleteEmail(JSONObject jsonObject){
+        long actorId = jsonObject.getLongValue("actorId");
+        long targetId = jsonObject.getLongValue("targetId");
+        return emailService.deleteEmail(actorId,targetId);
     }
 
     @Autowired

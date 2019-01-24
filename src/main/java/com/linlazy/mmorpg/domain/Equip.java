@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpg.entity.ItemEntity;
 import com.linlazy.mmorpg.event.type.EquipDamageEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
-import com.linlazy.mmorpg.module.item.manager.config.ItemConfigService;
+import com.linlazy.mmorpg.file.service.ItemConfigService;
 import com.linlazy.mmorpg.utils.ItemIdUtil;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import lombok.Data;

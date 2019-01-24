@@ -29,7 +29,7 @@ public class ChatDAO extends EntityDAO<ChatEntity> {
                     ChatEntity chatEntity = new ChatEntity();
                     chatEntity.setChatId((Long) map.get("chatId"));
                     chatEntity.setReceiver((Long) map.get("receiver"));
-                    chatEntity.setSourceId((Long) map.get("sourceId"));
+                    chatEntity.setSourceId((Long) map.get("senderId"));
                     chatEntity.setContent((String) map.get("content"));
 
                     return chatEntity;

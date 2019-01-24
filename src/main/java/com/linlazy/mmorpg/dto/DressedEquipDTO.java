@@ -1,6 +1,6 @@
 package com.linlazy.mmorpg.dto;
 
-import com.linlazy.mmorpg.module.equip.manager.domain.DressedEquip;
+import com.linlazy.mmorpg.domain.DressedEquip;
 
 import java.util.Collection;
 import java.util.stream.Collectors;

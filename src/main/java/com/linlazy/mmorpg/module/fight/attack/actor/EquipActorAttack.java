@@ -3,7 +3,7 @@
 //import com.alibaba.fastjson.JSONObject;
 //import com.linlazy.mmorpg.module.dressEquip.manager.domain.EquipDo;
 //import com.linlazy.mmorpg.module.item.manager.backpack.domain.ItemDo;
-//import com.linlazy.mmorpg.module.item.manager.config.ItemConfigService;
+//import com.linlazy.mmorpg.file.service.ItemConfigService;
 //import com.linlazy.mmorpg.module.item.manager.dao.ItemDao;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.stereotype.Component;

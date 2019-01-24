@@ -1,4 +1,4 @@
-package com.linlazy.mmorpg.module.equip.manager.domain;
+package com.linlazy.mmorpg.domain;
 
 import com.linlazy.mmorpg.domain.Equip;
 import lombok.Data;

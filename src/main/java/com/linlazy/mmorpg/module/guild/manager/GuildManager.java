@@ -74,7 +74,7 @@
 //
 //        GuildDo guildDo = getGuildDo(guildId);
 //        JSONObject jsonObject = new JSONObject();
-//        jsonObject.put("sourceId",actorId);
+//        jsonObject.put("senderId",actorId);
 //        Set<Long> hasAuthInviteSet = guildDo.getHasAuthInviteSet();
 //        for(Long targetId:hasAuthInviteSet){
 //            //在线则直接推送
@@ -85,7 +85,7 @@
 //                GuildOffLine guildOffLine = new GuildOffLine();
 //                guildOffLine.setGuild(guildId);
 //                guildOffLine.setReceiver(targetId);
-//                guildOffLine.setSourceId(actorId);
+//                guildOffLine.setSenderId(actorId);
 //                guildOffLine.setType(GuildOpertorType.APPLY_JOIN);
 //                guildOffLineDao.addGuildOffLine(guildOffLine);
 //            }

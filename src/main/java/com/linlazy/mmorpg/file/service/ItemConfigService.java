@@ -1,4 +1,4 @@
-package com.linlazy.mmorpg.module.item.manager.config;
+package com.linlazy.mmorpg.file.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;

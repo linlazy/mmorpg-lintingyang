@@ -389,6 +389,54 @@
 					ta.value += "发送聊天信息..."+ "\r\n";
 				}
 
+				if(arr[0] == "sendEmail"){
+
+					var json ={};
+					json.command = "sendEmail";
+					json.targetId =arr[1];
+					json.emailTemplateId = arr[2];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "发送邮件..."+ "\r\n";
+				}
+
+				if(arr[0] == "readEmail"){
+
+					var json ={};
+					json.command = "readEmail";
+					json.targetId =arr[1];
+					json.emailId = arr[2];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "读取邮件..."+ "\r\n";
+				}
+
+				if(arr[0] == "rewardEmail"){
+
+					var json ={};
+					json.command = "rewardEmail";
+					json.targetId =arr[1];
+					json.emailId = arr[2];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "领取邮件..."+ "\r\n";
+				}
+
+				if(arr[0] == "deleteEmail"){
+
+					var json ={};
+					json.command = "deleteEmail";
+					json.targetId =arr[1];
+					json.emailId = arr[2];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "删除邮件..."+ "\r\n";
+				}
+
 			}else{
 				alert("WebSocket连接没有建立成功！！");
 			}

@@ -1,5 +1,7 @@
 package com.linlazy.mmorpg.module.common.reward;
 
+import com.linlazy.mmorpg.domain.Item;
+import com.linlazy.mmorpg.dto.ItemDTO;
 import lombok.Data;
 
 /**
@@ -34,10 +36,29 @@ public class Reward {
 
     @Override
     public String toString() {
-        return "Reward{" +
-                "rewardId=" + rewardId +
-                ", count=" + count +
-                ", rewardDBType=" + rewardDBType +
-                '}';
+        StringBuilder stringBuilder = new StringBuilder();
+
+
+        switch (rewardId){
+            case RewardID.HP:
+                stringBuilder.append("HP");
+                stringBuilder.append(String.format("数量【%d】",count));
+                break;
+            case RewardID.MP:
+                stringBuilder.append("MP");
+                stringBuilder.append(String.format("数量【%d】",count));
+                break;
+            case RewardID.GOLD:
+                stringBuilder.append("金币");
+                stringBuilder.append(String.format("数量【%d】",count));
+                break;
+            default:
+                stringBuilder.append(new ItemDTO(new Item(rewardId,count)).toString());
+        }
+
+
+
+
+        return stringBuilder.toString();
     }
 }

@@ -73,7 +73,7 @@ public class TransactionService {
 
     public Result<?> rejectTrade(long actorId, long targetId) {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("sourceId",actorId);
+        jsonObject.put("senderId",actorId);
         TransactionPushHelper.pushTransactionOperation(targetId, TransactionOperatiorType.REJECT,jsonObject);
         return Result.success();
     }
@@ -89,7 +89,7 @@ public class TransactionService {
 
 
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("sourceId",actorId);
+        jsonObject.put("senderId",actorId);
         TransactionPushHelper.pushTransactionOperation(targetId, TransactionOperatiorType.ACCEPT,jsonObject);
         int transactionId = maxTransactionId.incrementAndGet();
 

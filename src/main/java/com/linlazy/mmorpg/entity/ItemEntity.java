@@ -2,7 +2,7 @@ package com.linlazy.mmorpg.entity;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.linlazy.mmorpg.module.item.manager.config.ItemConfigService;
+import com.linlazy.mmorpg.file.service.ItemConfigService;
 import com.linlazy.mmorpg.server.db.annotation.Cloumn;
 import com.linlazy.mmorpg.server.db.annotation.Table;
 import com.linlazy.mmorpg.server.db.entity.Entity;

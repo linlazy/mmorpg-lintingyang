@@ -6,6 +6,7 @@ import com.linlazy.mmorpg.domain.Player;
 import com.linlazy.mmorpg.event.type.LoginEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.server.common.LogoutListener;
+import com.linlazy.mmorpg.service.EmailService;
 import com.linlazy.mmorpg.service.PlayerService;
 import com.linlazy.mmorpg.service.SkillService;
 import com.linlazy.mmorpg.service.TaskService;
@@ -50,6 +51,7 @@ public class PlayerCacheHandler implements LogoutListener {
                 SkillService.playerSkillCache.invalidate(actorId);
                 TaskService.playerTaskCache.invalidate(actorId);
                 PlayerBackpackService.playerBackpackCache.invalidate(actorId);
+                EmailService.playerEmailCache.invalidate(actorId);
             }
         }, 60L, TimeUnit.SECONDS);
 

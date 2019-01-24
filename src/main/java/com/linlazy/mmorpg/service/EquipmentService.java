@@ -1,4 +1,4 @@
-package com.linlazy.mmorpg.module.equip.service;
+package com.linlazy.mmorpg.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.cache.CacheBuilder;
@@ -18,12 +18,11 @@ import com.linlazy.mmorpg.dto.EquipDTO;
 import com.linlazy.mmorpg.entity.ItemEntity;
 import com.linlazy.mmorpg.event.type.PlayerAttackEvent;
 import com.linlazy.mmorpg.event.type.PlayerAttackedEvent;
+import com.linlazy.mmorpg.file.service.ItemConfigService;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
-import com.linlazy.mmorpg.module.equip.manager.domain.DressedEquip;
-import com.linlazy.mmorpg.module.item.manager.config.ItemConfigService;
+import com.linlazy.mmorpg.domain.DressedEquip;
 import com.linlazy.mmorpg.push.EquipPushHelper;
 import com.linlazy.mmorpg.server.common.Result;
-import com.linlazy.mmorpg.service.PlayerService;
 import com.linlazy.mmorpg.utils.ItemIdUtil;
 import com.linlazy.mmorpg.utils.RandomUtils;
 import com.linlazy.mmorpg.utils.SpringContextUtil;

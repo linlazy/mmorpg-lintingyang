@@ -7,7 +7,7 @@ import com.linlazy.mmorpg.domain.ItemContext;
 import com.linlazy.mmorpg.domain.PlayerBackpack;
 import com.linlazy.mmorpg.module.common.reward.Reward;
 import com.linlazy.mmorpg.module.common.reward.RewardService;
-import com.linlazy.mmorpg.module.item.manager.config.ItemConfigService;
+import com.linlazy.mmorpg.file.service.ItemConfigService;
 import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.utils.ItemIdUtil;
 import com.linlazy.mmorpg.utils.RewardUtils;

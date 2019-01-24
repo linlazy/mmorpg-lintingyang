@@ -3,6 +3,12 @@
     "emailTemplateId":1,
     "title": "系统异常问题补偿邮件",
     "content": "药品",
-    "attachment": "[[1,500],[2,100]]"
+    "attachment": [[1,500],[2,100]]
+  },
+  {
+    "emailTemplateId":2,
+    "title": "赠送邮件",
+    "content": "玩家%s赠送了你一份好礼",
+    "attachment": [[1,500],[2,100]]
   }
 ]
