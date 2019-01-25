@@ -15,7 +15,6 @@ import com.linlazy.mmorpg.module.player.domain.Player;
 import com.linlazy.mmorpg.module.player.dto.PlayerDTO;
 import com.linlazy.mmorpg.module.player.push.PlayerPushHelper;
 import com.linlazy.mmorpg.module.player.service.PlayerService;
-import com.linlazy.mmorpg.module.scene.copy.service.CopyService;
 import com.linlazy.mmorpg.module.scene.service.SceneService;
 import com.linlazy.mmorpg.module.shop.service.ShopService;
 import com.linlazy.mmorpg.module.skill.service.SkillService;
@@ -34,9 +33,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class CmdHandler {
 
-
-    @Autowired
-    private CopyService copyService;
+//-------------------------------------------------------装备--------------------------------------------------------
+    /**
+     * 装备
+     */
     @Autowired
     private EquipmentService equipmentService;
 
@@ -102,6 +102,11 @@ public class CmdHandler {
     }
 
 
+
+//-------------------------------------------------------邮件--------------------------------------------------------
+    /**
+     * 邮件
+     */
     @Autowired
     private EmailService emailService;
 
@@ -151,9 +156,14 @@ public class CmdHandler {
         return emailService.deleteEmail(actorId,targetId);
     }
 
+
+
+
+    //-------------------------------------------------------组队--------------------------------------------------------
+
+
     @Autowired
     private TeamService teamService;
-
     /**
      * 邀请加入
      * @param jsonObject
@@ -318,19 +328,30 @@ public class CmdHandler {
         return playerService.gainGold(actorId,gold);
     }
 
+
     /**
-     * 获取玩家信息
+     *  查看玩家信息
      * @param jsonObject
      * @return
      */
-    @Cmd(value = "getPlayer")
-    public Result<?> getPlayer(JSONObject jsonObject){
-        long actorId = jsonObject.getLongValue("actorId");
-        return Result.success(playerService.getPlayer(actorId));
+    @Cmd("playerInfo")
+    public Result<?> playerInfo(JSONObject jsonObject){
+        long actorId = jsonObject.getLong("actorId");
+        Player player = playerService.getPlayer(actorId);
+        PlayerPushHelper.pushChange(actorId,new PlayerDTO(player));
+        return Result.success();
     }
 
-
-
+    /**
+     *  升级
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("upgradeLevel")
+    public Result<?> upgradeLevel(JSONObject jsonObject){
+        long actorId = jsonObject.getLong("actorId");
+        return playerService.upgradeLevel(actorId);
+    }
 
     @Autowired
     private SkillService skillService;
@@ -451,17 +472,6 @@ public class CmdHandler {
     @Autowired
     private SceneService sceneService;
 
-    /**
-     * 移动场景
-     * @param jsonObject
-     * @return
-     */
-    @Cmd("move")
-    public Result<?> move(JSONObject jsonObject){
-        long actorId = jsonObject.getLong("actorId");
-        int targetSceneId = jsonObject.getIntValue("targetSceneId");
-        return sceneService.moveTo(actorId,targetSceneId);
-    }
 
     /**
      * 进入场景
@@ -574,7 +584,7 @@ public class CmdHandler {
     }
 
     /**
-     *  攻击
+     *  使用技能
      * @param jsonObject
      * @return
      */
@@ -597,16 +607,7 @@ public class CmdHandler {
         return skillService.gainSkill(actorId,skillId);
     }
 
-    /**
-     *  升级
-     * @param jsonObject
-     * @return
-     */
-    @Cmd("upgradeLevel")
-    public Result<?> upgradeLevel(JSONObject jsonObject){
-        long actorId = jsonObject.getLong("actorId");
-        return playerService.upgradeLevel(actorId);
-    }
+
 
     /**
      *  查看
@@ -621,22 +622,13 @@ public class CmdHandler {
 
 
 
+
+
+
+//------------------------------------------------------任务--------------------------------------------------------------------------------
     /**
-     *  查看玩家信息
-     * @param jsonObject
-     * @return
+     * 任务
      */
-    @Cmd("playerInfo")
-    public Result<?> playerInfo(JSONObject jsonObject){
-        long actorId = jsonObject.getLong("actorId");
-        Player player = playerService.getPlayer(actorId);
-        PlayerPushHelper.pushChange(actorId,new PlayerDTO(player));
-        return Result.success();
-    }
-
-
-
-
     @Autowired
     private TaskService taskService;
 
