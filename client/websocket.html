@@ -569,6 +569,30 @@
 					ta.value += "查看公会仓库中..."+ "\r\n";
 				}
 
+				if(arr[0] == "pushGuildWareHouse"){
+
+					var json ={};
+					json.command = "pushGuildWareHouse";
+					json.itemId = arr[1];
+					json.num = arr[2];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "正在将物品放进公会仓库..."+ "\r\n";
+				}
+
+				if(arr[0] == "popGuildWareHouse"){
+
+					var json ={};
+					json.command = "popGuildWareHouse";
+					json.itemId = arr[1];
+					json.num = arr[2];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "正在从公会仓库中取出物品..."+ "\r\n";
+				}
+
 			}else{
 				alert("WebSocket连接没有建立成功！！");
 			}

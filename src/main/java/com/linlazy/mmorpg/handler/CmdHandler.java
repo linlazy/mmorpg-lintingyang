@@ -66,6 +66,42 @@ public class CmdHandler {
     }
 
 
+    /**
+     *  穿戴装备
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("dressEquip")
+    public Result<?> dressEquip(JSONObject jsonObject){
+        long actorId = jsonObject.getLong("actorId");
+        long equipId = jsonObject.getLongValue("equipId");
+        return equipmentService.dressEquip(actorId,equipId);
+    }
+
+    /**
+     *  升级装备
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("upgradeEquip")
+    public Result<?> upgradeEquip(JSONObject jsonObject){
+        long actorId = jsonObject.getLong("actorId");
+        long equipId = jsonObject.getLongValue("equipId");
+        return equipmentService.upgradeEquip(actorId,equipId);
+    }
+
+    /**
+     *  查看穿戴装备信息
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("dressedEquipInfo")
+    public Result<?> dressedEquipInfo(JSONObject jsonObject){
+        long actorId = jsonObject.getLong("actorId");
+        return equipmentService.dressedEquipInfo(actorId);
+    }
+
+
     @Autowired
     private EmailService emailService;
 
@@ -156,7 +192,7 @@ public class CmdHandler {
 
 
     /**
-     * 同意加入
+     * 队伍信息
      * @param jsonObject
      * @return
      */
@@ -271,6 +307,18 @@ public class CmdHandler {
     }
 
     /**
+     * 获得金币
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("gainGold")
+    public Result<?> gainGold(JSONObject jsonObject){
+        long actorId = jsonObject.getLongValue("actorId");
+        long gold = jsonObject.getLongValue("gold");
+        return playerService.gainGold(actorId,gold);
+    }
+
+    /**
      * 获取玩家信息
      * @param jsonObject
      * @return
@@ -280,6 +328,8 @@ public class CmdHandler {
         long actorId = jsonObject.getLongValue("actorId");
         return Result.success(playerService.getPlayer(actorId));
     }
+
+
 
 
     @Autowired
@@ -396,17 +446,7 @@ public class CmdHandler {
         return shopService.buy(actorId,goodsId);
     }
 
-    /**
-     * 获得金币
-     * @param jsonObject
-     * @return
-     */
-    @Cmd("gainGold")
-    public Result<?> gainGold(JSONObject jsonObject){
-        long actorId = jsonObject.getLongValue("actorId");
-        long gold = jsonObject.getLongValue("gold");
-        return playerService.gainGold(actorId,gold);
-    }
+
 
     @Autowired
     private SceneService sceneService;
@@ -519,6 +559,20 @@ public class CmdHandler {
         return playerBackpackService.pop(actorId, Lists.newArrayList(item));
     }
 
+    @Autowired
+    private ItemService itemService;
+    /**
+     *  消耗道具
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("consumeItem")
+    public Result<?> consumeItem(JSONObject jsonObject){
+        long actorId = jsonObject.getLong("actorId");
+        long itemId = jsonObject.getLongValue("itemId");
+        return itemService.consumeItem(actorId,itemId);
+    }
+
     /**
      *  攻击
      * @param jsonObject
@@ -565,44 +619,10 @@ public class CmdHandler {
         return Result.success(skillService.getPlayerSkill(actorId).toString());
     }
 
-    /**
-     *  穿戴装备
-     * @param jsonObject
-     * @return
-     */
-    @Cmd("dressEquip")
-    public Result<?> dressEquip(JSONObject jsonObject){
-        long actorId = jsonObject.getLong("actorId");
-        long equipId = jsonObject.getLongValue("equipId");
-        return equipmentService.dressEquip(actorId,equipId);
-    }
-
-    /**
-     *  穿戴装备
-     * @param jsonObject
-     * @return
-     */
-    @Cmd("upgradeEquip")
-    public Result<?> upgradeEquip(JSONObject jsonObject){
-        long actorId = jsonObject.getLong("actorId");
-        long equipId = jsonObject.getLongValue("equipId");
-        return equipmentService.upgradeEquip(actorId,equipId);
-    }
-
-    /**
-     *  查看穿戴装备信息
-     * @param jsonObject
-     * @return
-     */
-    @Cmd("dressedEquipInfo")
-    public Result<?> dressedEquipInfo(JSONObject jsonObject){
-        long actorId = jsonObject.getLong("actorId");
-        return equipmentService.dressedEquipInfo(actorId);
-    }
 
 
     /**
-     *  查看穿戴装备信息
+     *  查看玩家信息
      * @param jsonObject
      * @return
      */
@@ -615,19 +635,7 @@ public class CmdHandler {
     }
 
 
-    @Autowired
-    private ItemService itemService;
-    /**
-     *  消耗道具
-     * @param jsonObject
-     * @return
-     */
-    @Cmd("consumeItem")
-    public Result<?> consumeItem(JSONObject jsonObject){
-        long actorId = jsonObject.getLong("actorId");
-        long itemId = jsonObject.getLongValue("itemId");
-        return itemService.consumeItem(actorId,itemId);
-    }
+
 
     @Autowired
     private TaskService taskService;
@@ -654,7 +662,10 @@ public class CmdHandler {
         long actorId = jsonObject.getLong("actorId");
         return taskService.taskInfo(actorId);
     }
-
+//------------------------------------------------------公会--------------------------------------------------------------------------------
+    /**
+     * 公会
+     */
     @Autowired
     private GuildService guildService;
 
