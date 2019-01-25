@@ -2,7 +2,7 @@ package com.linlazy.mmorpg.module.team.logout;
 
 
 import com.linlazy.mmorpg.module.player.domain.Player;
-import com.linlazy.mmorpg.domain.PlayerTeamInfo;
+import com.linlazy.mmorpg.module.player.domain.PlayerTeamInfo;
 import com.linlazy.mmorpg.module.team.push.TeamPushHelper;
 import com.linlazy.mmorpg.server.common.LogoutListener;
 import com.linlazy.mmorpg.module.player.service.PlayerService;

@@ -8,11 +8,11 @@ public interface GuildAuthLevel {
     /**
      * 会长
      */
-    int PRESIDENT =1;
+    int PRESIDENT =5;
     /**
      * 副会长
      */
-    int VICE_PRESIDENT = 2;
+    int VICE_PRESIDENT = 4;
 
     /**
      * 优秀会员
@@ -22,10 +22,10 @@ public interface GuildAuthLevel {
     /**
      * 普通会员
      */
-    int ORDINARY_MEMBER = 4;
+    int ORDINARY_MEMBER = 2;
 
     /**
      * 新进会员
      */
-    int NEW_MEMBER = 5;
+    int NEW_MEMBER = 1;
 }

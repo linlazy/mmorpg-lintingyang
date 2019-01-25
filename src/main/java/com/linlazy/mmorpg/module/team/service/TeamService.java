@@ -1,7 +1,7 @@
 package com.linlazy.mmorpg.module.team.service;
 
 import com.linlazy.mmorpg.module.player.domain.Player;
-import com.linlazy.mmorpg.domain.PlayerTeamInfo;
+import com.linlazy.mmorpg.module.player.domain.PlayerTeamInfo;
 import com.linlazy.mmorpg.module.team.domain.Team;
 import com.linlazy.mmorpg.module.team.dto.TeamDTO;
 import com.linlazy.mmorpg.module.team.push.TeamPushHelper;

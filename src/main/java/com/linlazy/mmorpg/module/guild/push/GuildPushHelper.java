@@ -8,11 +8,9 @@ import com.linlazy.mmorpg.server.common.PushHelper;
  */
 public class GuildPushHelper {
 
-
-
-
-    public static void pushGuildOperator(long actorId,int operatorType, JSONObject jsonObject){
-
+    public static void pushGuild(long actorId, String message){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("code",message);
         PushHelper.push(actorId,jsonObject);
     }
 }

@@ -12,6 +12,9 @@ import java.util.List;
 @Component
 public class GuildPlayerDAO extends EntityDAO<GuildPlayerEntity> {
 
+
+
+
     /**
      * 获取公会所有玩家信息
      * @param guildId  公会ID

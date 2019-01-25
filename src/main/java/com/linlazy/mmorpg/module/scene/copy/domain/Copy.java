@@ -1,6 +1,6 @@
 package com.linlazy.mmorpg.module.scene.copy.domain;
 
-import com.linlazy.mmorpg.domain.PlayerTeamInfo;
+import com.linlazy.mmorpg.module.player.domain.PlayerTeamInfo;
 import com.linlazy.mmorpg.event.type.CopyFailEvent;
 import com.linlazy.mmorpg.event.type.CopyRefreshMonsterEvent;
 import com.linlazy.mmorpg.file.config.SceneConfig;

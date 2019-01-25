@@ -1,4 +1,4 @@
-package com.linlazy.mmorpg.domain;
+package com.linlazy.mmorpg.module.guild.domain;
 
 import com.linlazy.mmorpg.dao.GuildWarehouseDAO;
 import com.linlazy.mmorpg.entity.GuildWarehouseEntity;
@@ -36,21 +36,43 @@ public class GuildWarehouse extends Backpack implements BackpackInterface {
     @Override
     protected void addItem(Item item) {
         GuildWarehouseDAO guildWarehouseDAO = SpringContextUtil.getApplicationContext().getBean(GuildWarehouseDAO.class);
+
         GuildWarehouseEntity guildWarehouseEntity = new GuildWarehouseEntity();
+
         guildWarehouseEntity.setGuildId(guildId);
         guildWarehouseEntity.setCount(item.getCount());
         guildWarehouseEntity.setItemId(item.getItemId());
+        guildWarehouseEntity.setExt(item.getExt());
+
         guildWarehouseDAO.insertQueue(guildWarehouseEntity);
     }
 
     @Override
-    protected void updateItem(Item backPackLattice) {
+    protected void updateItem(Item item) {
+        GuildWarehouseDAO guildWarehouseDAO = SpringContextUtil.getApplicationContext().getBean(GuildWarehouseDAO.class);
 
+        GuildWarehouseEntity guildWarehouseEntity = new GuildWarehouseEntity();
+
+        guildWarehouseEntity.setGuildId(guildId);
+        guildWarehouseEntity.setCount(item.getCount());
+        guildWarehouseEntity.setItemId(item.getItemId());
+        guildWarehouseEntity.setExt(item.getExt());
+
+        guildWarehouseDAO.updateQueue(guildWarehouseEntity);
     }
 
     @Override
     protected void deleteItem(Item item) {
+        GuildWarehouseDAO guildWarehouseDAO = SpringContextUtil.getApplicationContext().getBean(GuildWarehouseDAO.class);
 
+        GuildWarehouseEntity guildWarehouseEntity = new GuildWarehouseEntity();
+
+        guildWarehouseEntity.setGuildId(guildId);
+        guildWarehouseEntity.setCount(item.getCount());
+        guildWarehouseEntity.setItemId(item.getItemId());
+
+
+        guildWarehouseDAO.deleteQueue(guildWarehouseEntity);
     }
 
 

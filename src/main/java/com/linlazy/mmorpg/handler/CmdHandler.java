@@ -2,24 +2,25 @@ package com.linlazy.mmorpg.handler;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import com.linlazy.mmorpg.file.service.ItemConfigService;
 import com.linlazy.mmorpg.module.backpack.service.PlayerBackpackService;
+import com.linlazy.mmorpg.module.chat.service.ChatService;
+import com.linlazy.mmorpg.module.email.service.EmailService;
+import com.linlazy.mmorpg.module.equip.service.EquipmentService;
+import com.linlazy.mmorpg.module.guild.service.GuildService;
 import com.linlazy.mmorpg.module.item.domain.ItemContext;
+import com.linlazy.mmorpg.module.item.service.ItemService;
 import com.linlazy.mmorpg.module.player.domain.Player;
 import com.linlazy.mmorpg.module.player.dto.PlayerDTO;
-import com.linlazy.mmorpg.module.chat.service.ChatService;
-import com.linlazy.mmorpg.module.scene.copy.service.CopyService;
-import com.linlazy.mmorpg.module.email.service.EmailService;
-import com.linlazy.mmorpg.module.item.service.ItemService;
+import com.linlazy.mmorpg.module.player.push.PlayerPushHelper;
 import com.linlazy.mmorpg.module.player.service.PlayerService;
+import com.linlazy.mmorpg.module.scene.copy.service.CopyService;
 import com.linlazy.mmorpg.module.scene.service.SceneService;
 import com.linlazy.mmorpg.module.shop.service.ShopService;
 import com.linlazy.mmorpg.module.skill.service.SkillService;
 import com.linlazy.mmorpg.module.task.service.TaskService;
 import com.linlazy.mmorpg.module.team.service.TeamService;
-import com.linlazy.mmorpg.module.equip.service.EquipmentService;
-import com.linlazy.mmorpg.file.service.ItemConfigService;
 import com.linlazy.mmorpg.module.transaction.service.TransactionService;
-import com.linlazy.mmorpg.module.player.push.PlayerPushHelper;
 import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.server.route.Cmd;
 import io.netty.channel.Channel;
@@ -651,6 +652,20 @@ public class CmdHandler {
     public Result<?> taskInfo(JSONObject jsonObject){
         long actorId = jsonObject.getLong("actorId");
         return taskService.taskInfo(actorId);
+    }
+
+    @Autowired
+    private GuildService guildService;
+
+    /**
+     * 创建公会
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("createGuild")
+    public Result<?> createGuild(JSONObject jsonObject){
+        long actorId = jsonObject.getLongValue("actorId");
+        return guildService.createGuild(actorId);
     }
 
     @Cmd(value = "cmd",auth = false)

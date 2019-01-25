@@ -4,7 +4,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.linlazy.mmorpg.dao.GuildWarehouseDAO;
-import com.linlazy.mmorpg.domain.GuildWarehouse;
+import com.linlazy.mmorpg.module.guild.domain.GuildWarehouse;
 import com.linlazy.mmorpg.module.item.domain.Item;
 import com.linlazy.mmorpg.module.item.domain.ItemContext;
 import com.linlazy.mmorpg.module.backpack.domain.Lattice;

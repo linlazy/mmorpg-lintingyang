@@ -16,17 +16,17 @@ public class GuildOffLineEntity extends Entity {
      * 公会Id
      */
     @Cloumn(pk = true)
-    private long guild;
+    private long guildId;
 
     /**
      * 消息接受者
      */
-    @Cloumn
-    private long receiver;
+    @Cloumn(pk = true)
+    private long receiverId;
     /**
      * 消息来源
      */
-    @Cloumn
-    private long sourceId;
+    @Cloumn(pk = true)
+    private long senderId;
 
 }

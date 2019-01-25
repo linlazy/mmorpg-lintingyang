@@ -1,7 +1,7 @@
 package com.linlazy.mmorpg.module.team.domain;
 
 import com.linlazy.mmorpg.module.player.domain.Player;
-import com.linlazy.mmorpg.domain.PlayerTeamInfo;
+import com.linlazy.mmorpg.module.player.domain.PlayerTeamInfo;
 import com.linlazy.mmorpg.server.common.GlobalConfigService;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import lombok.Data;
