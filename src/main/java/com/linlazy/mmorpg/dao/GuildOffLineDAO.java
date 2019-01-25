@@ -24,11 +24,11 @@ public class GuildOffLineDAO extends EntityDAO<GuildOffLineEntity> {
 
     /**
      * 获取公会接受者的信息集合
-     * @param receiver  公会信息接受者
+     * @param receiverId  公会信息接受者
      * @return 返回相应频道上接受者的信息
      */
-    public List<GuildOffLineEntity> getReceiveChatSet(long guildId,long receiver){
-        List<Map<String, Object>> maps = jdbcTemplate.queryForList("select * from guild_offline where guildId = ? and receiver = ?", guildId,receiver);
+    public List<GuildOffLineEntity> getReceiveChatSet(long guildId,long receiverId){
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList("select * from guild_offline where guildId = ? and receiverId = ?", guildId,receiverId);
         return maps.stream()
                 .map(map ->{
                     GuildOffLineEntity guildOffLineEntity = new GuildOffLineEntity();

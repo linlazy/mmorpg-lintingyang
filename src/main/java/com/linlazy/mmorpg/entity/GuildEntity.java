@@ -22,7 +22,7 @@ public class GuildEntity extends Entity {
      * 金币
      */
     @Cloumn
-    private int gold;
+    private long gold;
 
     /**
      * 公会等级

@@ -19,7 +19,7 @@ public class GuildWarehouseDAO extends EntityDAO<GuildWarehouseEntity> {
      * @return 返回公会仓库信息
      */
     public List<GuildWarehouseEntity> getGuildWarehouseEntity(long guildId){
-        return jdbcTemplate.queryForList("select * from guild_warehouse where guidId = ?",new Object[]{guildId},GuildWarehouseEntity.class);
+        return jdbcTemplate.queryForList("select * from guild_warehouse where guildId = ?",new Object[]{guildId},GuildWarehouseEntity.class);
     }
 
     /**

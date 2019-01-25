@@ -492,13 +492,81 @@
 				}
 
 				if(arr[0] == "taskInfo"){
-
 					var json ={};
 					json.command = "taskInfo";
 					var jsonStr = JSON.stringify(json);
 					console.log(jsonStr);
 					socket.send(jsonStr);
 					ta.value += "查看任务信息中..."+ "\r\n";
+				}
+
+				if(arr[0] == "createGuild"){
+					var json ={};
+					json.command = "createGuild";
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "创建公会中..."+ "\r\n";
+				}
+
+				if(arr[0] == "applyJoinGuild"){
+					var json ={};
+					json.command = "applyJoinGuild";
+					json.guildId = arr[1];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "申请加入公会中..."+ "\r\n";
+				}
+
+				if(arr[0] == "acceptJoinGuild"){
+					var json ={};
+					json.command = "acceptJoinGuild";
+					json.guildId = arr[1];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "同意加入公会中..."+ "\r\n";
+				}
+
+				if(arr[0] == "guildAppoint"){
+					var json ={};
+					json.command = "guildAppoint";
+					json.targetId = arr[1];
+					json.authLevel = arr[2];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "任命公会成员权限中..."+ "\r\n";
+				}
+
+				if(arr[0] == "shotOffGuild"){
+					var json ={};
+					json.command = "shotOffGuild";
+					json.targetId = arr[1];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "踢出公会中..."+ "\r\n";
+				}
+
+				if(arr[0] == "donateGold"){
+					var json ={};
+					json.command = "donateGold";
+					json.gold = arr[1];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "捐献金币进公会中..."+ "\r\n";
+				}
+
+				if(arr[0] == "guildWareHouseInfo"){
+					var json ={};
+					json.command = "guildWareHouseInfo";
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "查看公会仓库中..."+ "\r\n";
 				}
 
 			}else{

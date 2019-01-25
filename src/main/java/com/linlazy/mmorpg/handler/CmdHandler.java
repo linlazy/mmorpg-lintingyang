@@ -3,6 +3,7 @@ package com.linlazy.mmorpg.handler;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.linlazy.mmorpg.file.service.ItemConfigService;
+import com.linlazy.mmorpg.module.backpack.service.GuildWarehouseService;
 import com.linlazy.mmorpg.module.backpack.service.PlayerBackpackService;
 import com.linlazy.mmorpg.module.chat.service.ChatService;
 import com.linlazy.mmorpg.module.email.service.EmailService;
@@ -666,6 +667,118 @@ public class CmdHandler {
     public Result<?> createGuild(JSONObject jsonObject){
         long actorId = jsonObject.getLongValue("actorId");
         return guildService.createGuild(actorId);
+    }
+
+    /**
+     * 申请加入公会
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("applyJoinGuild")
+    public Result<?> applyJoinGuild(JSONObject jsonObject){
+        long actorId = jsonObject.getLongValue("actorId");
+        long guildId = jsonObject.getLongValue("guildId");
+        return guildService.applyJoin(actorId,guildId);
+    }
+
+    /**
+     * 同意加入公会
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("acceptJoinGuild")
+    public Result<?> acceptJoinGuild(JSONObject jsonObject){
+        long actorId = jsonObject.getLongValue("actorId");
+        long guildId = jsonObject.getLongValue("guildId");
+        return guildService.acceptJoin(actorId,guildId);
+    }
+
+    /**
+     * 任命公会成员权限
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("guildAppoint")
+    public Result<?> guildAppoint(JSONObject jsonObject){
+        long actorId = jsonObject.getLongValue("actorId");
+        long targetId = jsonObject.getLongValue("targetId");
+        int authLevel = jsonObject.getIntValue("authLevel");
+        return guildService.appoint(actorId,targetId,authLevel);
+    }
+
+    /**
+     * 踢出公会
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("shotOffGuild")
+    public Result<?> shotOffGuild(JSONObject jsonObject){
+        long actorId = jsonObject.getLongValue("actorId");
+        long targetId = jsonObject.getLongValue("targetId");
+        return guildService.shotOffGuild(actorId,targetId);
+    }
+
+    /**
+     * 捐献金币
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("donateGold")
+    public Result<?> donateGold(JSONObject jsonObject){
+        long actorId = jsonObject.getLongValue("actorId");
+        long gold = jsonObject.getLongValue("gold");
+        return guildService.donateGold(actorId,gold);
+    }
+
+
+    @Autowired
+    private GuildWarehouseService guildWarehouseService;
+
+    /**
+     * 公会仓库信息
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("guildWareHouseInfo")
+    public Result<?> guildWareHouseInfo(JSONObject jsonObject){
+        long actorId = jsonObject.getLongValue("actorId");
+        return guildService.guildWareHouseInfo(actorId);
+    }
+
+    /**
+     * 放进公会仓库
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("pushGuildWareHouse")
+    public Result<?> pushGuildWareHouse(JSONObject jsonObject){
+        long actorId = jsonObject.getLong("actorId");
+
+        int baseItemId = jsonObject.getIntValue("itemId");
+        ItemContext item = new ItemContext(baseItemId);
+        int num = jsonObject.getIntValue("num");
+        item.setCount(num);
+
+        return guildService.push(actorId, Lists.newArrayList(item));
+    }
+
+    /**
+     * 从公会仓库取出物品
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("popGuildWareHouse")
+    public Result<?> popGuildWareHouse(JSONObject jsonObject){
+
+
+        long actorId = jsonObject.getLongValue("actorId");
+
+        int baseItemId = jsonObject.getIntValue("itemId");
+        ItemContext item = new ItemContext(baseItemId);
+        int num = jsonObject.getIntValue("num");
+        item.setCount(num);
+//
+        return guildService.pop(actorId,Lists.newArrayList(item));
     }
 
     @Cmd(value = "cmd",auth = false)

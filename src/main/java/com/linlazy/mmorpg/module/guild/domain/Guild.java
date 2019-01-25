@@ -54,6 +54,12 @@ public class Guild {
     }
 
     public GuildEntity convertGuildEntity() {
-        return null;
+        GuildEntity guildEntity = new GuildEntity();
+
+        guildEntity.setGuildId(guildId);
+        guildEntity.setLevel(level);
+        guildEntity.setGold(gold);
+
+        return guildEntity;
     }
 }

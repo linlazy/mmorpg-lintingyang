@@ -5,6 +5,8 @@ import com.linlazy.mmorpg.server.db.dao.EntityDAO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author linlazy
@@ -16,16 +18,27 @@ public class GuildPlayerDAO extends EntityDAO<GuildPlayerEntity> {
 
 
     /**
-     * 获取公会所有玩家信息
-     * @param guildId  公会ID
+     * 获取所有公会玩家信息
      * @return 返回公会所有玩家信息
      */
-    List<GuildPlayerEntity> getGuildPlayerList(long guildId){
-        return jdbcTemplate.queryForList("select * from guild_actor where guildId = ?",new Object[]{guildId},GuildPlayerEntity.class);
+    public List<GuildPlayerEntity> getGuildPlayerList(){
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList("select * from guild_player");
+        return maps.stream()
+                .map(map->{
+                    GuildPlayerEntity guildPlayerEntity = new GuildPlayerEntity();
+
+                    guildPlayerEntity.setGuildId((Long) map.get("guildId"));
+                    guildPlayerEntity.setActorId((Long) map.get("actorId"));
+                    guildPlayerEntity.setAuthLevel((Integer) map.get("authLevel"));
+
+                    return guildPlayerEntity;
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
     protected Class<GuildPlayerEntity> forClass() {
         return GuildPlayerEntity.class;
     }
+
 }

@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -71,7 +72,7 @@ public class GuildWarehouseService {
      * @param guildId
      * @return
      */
-    public static GuildWarehouse getGuildWarehouse(long guildId){
+    public GuildWarehouse getGuildWarehouse(long guildId){
 
         GuildWarehouse guildWarehouse = null;
         try {
@@ -131,5 +132,42 @@ public class GuildWarehouseService {
         }
 
         return playerBackpackService.push(actorId,itemList);
+    }
+
+    public Result<?> push(Long guildId, long actorId, ArrayList<ItemContext> itemContexts) {
+
+        Result<?> enough = playerBackpackService.isEnough(actorId, itemContexts);
+        if(enough.isFail()){
+            return Result.valueOf(enough.getCode());
+        }
+
+        Result<?> notFull = isNotFull(guildId, itemContexts);
+        if(notFull.isFail()){
+            return Result.valueOf(notFull.getCode());
+        }
+
+        GuildWarehouse guildWarehouse = getGuildWarehouse(guildId);
+        try{
+            guildWarehouse.getReadWriteLock().writeLock().lock();
+            guildWarehouse.push(itemContexts);
+        }finally {
+            guildWarehouse.getReadWriteLock().writeLock().unlock();
+        }
+
+        return playerBackpackService.pop(actorId,itemContexts);
+    }
+
+    private Result<?> isNotFull(Long guildId, ArrayList<ItemContext> itemContexts) {
+        GuildWarehouse guildWarehouse = getGuildWarehouse(guildId);
+        try{
+            guildWarehouse.getReadWriteLock().readLock().lock();
+            boolean full = guildWarehouse.isFull(itemContexts);
+            if(full){
+                return Result.valueOf("公会仓库已满");
+            }
+        }finally {
+            guildWarehouse.getReadWriteLock().readLock().unlock();
+        }
+        return Result.success();
     }
 }

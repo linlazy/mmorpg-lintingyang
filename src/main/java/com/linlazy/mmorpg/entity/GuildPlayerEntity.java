@@ -21,7 +21,7 @@ public class GuildPlayerEntity extends Entity {
     /**
      * 玩家ID
      */
-    @Cloumn
+    @Cloumn(pk = true)
     private long actorId;
 
     /**

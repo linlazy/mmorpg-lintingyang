@@ -1,13 +1,5 @@
 
 package com.linlazy.mmorpg.module.guild.service;
-//
-//import com.alibaba.fastjson.JSONObject;
-//import com.linlazy.mmorpg.module.guild.manager.GuildManager;
-//import com.linlazy.mmorpg.module.guild.validator.GuildValidator;
-//import com.linlazy.mmorpg.server.common.Result;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Component;
-//
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.eventbus.Subscribe;
@@ -17,13 +9,18 @@ import com.linlazy.mmorpg.dao.GuildPlayerDAO;
 import com.linlazy.mmorpg.entity.GuildEntity;
 import com.linlazy.mmorpg.entity.GuildOffLineEntity;
 import com.linlazy.mmorpg.entity.GuildPlayerEntity;
+import com.linlazy.mmorpg.module.backpack.dto.LatticeDTO;
+import com.linlazy.mmorpg.module.backpack.service.GuildWarehouseService;
 import com.linlazy.mmorpg.module.common.event.ActorEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.common.event.EventType;
 import com.linlazy.mmorpg.module.guild.constants.GuildAuthLevel;
 import com.linlazy.mmorpg.module.guild.domain.Guild;
 import com.linlazy.mmorpg.module.guild.domain.GuildPlayer;
+import com.linlazy.mmorpg.module.guild.domain.GuildWarehouse;
+import com.linlazy.mmorpg.module.guild.dto.GuildWarehouseDTO;
 import com.linlazy.mmorpg.module.guild.push.GuildPushHelper;
+import com.linlazy.mmorpg.module.item.domain.ItemContext;
 import com.linlazy.mmorpg.module.player.domain.Player;
 import com.linlazy.mmorpg.module.player.service.PlayerService;
 import com.linlazy.mmorpg.server.common.Result;
@@ -32,28 +29,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
 
 /**
  * @author linlazy
  */
 @Component
-public class GuildService {
+public class GuildService{
 
-    private Map<Long,Long> actorIdGuildIdMap = new ConcurrentHashMap<>();
-    private Map<Long,Guild> guildMap = new ConcurrentHashMap<>();
+    private static Map<Long,Long> actorIdGuildIdMap = new ConcurrentHashMap<>();
+    private static Map<Long,Guild> guildMap = new ConcurrentHashMap<>();
 
     @Autowired
     private GuildPlayerDAO guildPlayerDAO;
     @Autowired
-    private GuildDAO guildDAO;
+    private  GuildDAO guildDAO;
     @Autowired
     private GuildOffLineDAO guildOffLineDAO;
     @Autowired
     private PlayerService playerService;
+    @Autowired
+    private  GuildWarehouseService guildWarehouseService;
+
 
     @PostConstruct
     public void init(){
@@ -63,15 +64,17 @@ public class GuildService {
     @Subscribe
     public void listenEvent(ActorEvent<JSONObject> actorEvent){
         if(actorEvent.getEventType().equals(EventType.LOGIN)){
+            initGuidData();
             Long guildId = actorIdGuildIdMap.get(actorEvent.getActorId());
-            List<GuildOffLineEntity> receiveChatSet = guildOffLineDAO.getReceiveChatSet(guildId, actorEvent.getActorId());
-            receiveChatSet.stream()
-                    .forEach(guildOffLineEntity -> {
-                        Player player = playerService.getPlayer(guildOffLineEntity.getSenderId());
-                        GuildPushHelper.pushGuild(guildOffLineEntity.getReceiverId(),String.format("玩家【%s】 申请加入公会",player.getName()));
-                        guildOffLineDAO.deleteQueue(guildOffLineEntity);
-                    });
-
+            if(guildId != null){
+                List<GuildOffLineEntity> receiveChatSet = guildOffLineDAO.getReceiveChatSet(guildId, actorEvent.getActorId());
+                receiveChatSet.stream()
+                        .forEach(guildOffLineEntity -> {
+                            Player player = playerService.getPlayer(guildOffLineEntity.getSenderId());
+                            GuildPushHelper.pushGuild(guildOffLineEntity.getReceiverId(),String.format("玩家【%s】 申请加入公会",player.getName()));
+                            guildOffLineDAO.deleteQueue(guildOffLineEntity);
+                        });
+            }
         }
 
     }
@@ -107,12 +110,12 @@ public class GuildService {
 
 
     /**
-     * 加入公会
+     * 申请加入公会
      * @param actorId
      * @param guildId
      * @return
      */
-    public Result<?> applyJoin(long actorId, long guildId) {
+    public Result<?> applyJoin(long actorId,long guildId) {
 
         if(hasGuild(actorId)){
             return Result.valueOf("已加入公会");
@@ -147,7 +150,7 @@ public class GuildService {
      */
     public Result<?> acceptJoin(long actorId, long targetId) {
         Long guildId = actorIdGuildIdMap.get(actorId);
-        actorIdGuildIdMap.put(actorId,guildId);
+        actorIdGuildIdMap.put(targetId,guildId);
         GuildPlayerEntity guildPlayerEntity = new GuildPlayerEntity();
         guildPlayerEntity.setActorId(targetId);
         guildPlayerEntity.setGuildId(guildId);
@@ -173,8 +176,7 @@ public class GuildService {
         if(!hasAuth(actorId,targetId,authLevel)){
             return Result.valueOf("无权限");
         }
-        Long guildId = actorIdGuildIdMap.get(actorId);
-        Guild guild = guildMap.get(guildId);
+        Guild guild = getGuildByActorId(actorId);
         GuildPlayer guildPlayer = guild.getGuildPlayerMap().get(targetId);
         guildPlayer.setAuthLevel(authLevel);
         guildPlayerDAO.updateQueue(guildPlayer.convertGuildPlayerEntity());
@@ -205,8 +207,19 @@ public class GuildService {
      * @return
      */
     public Result<?> guildWareHouseInfo(long actorId) {
+        initGuidData();
+        Long guildId = actorIdGuildIdMap.get(actorId);
+        GuildWarehouse guildWarehouse = guildWarehouseService.getGuildWarehouse(guildId);
 
-        return null;
+        GuildWarehouseDTO guildWarehouseDTO =new GuildWarehouseDTO(guildId);
+
+        if( guildWarehouse != null){
+            List<LatticeDTO> latticeDTOList = Arrays.stream(guildWarehouse.getBackPack())
+                    .filter(Objects::nonNull)
+                    .map(LatticeDTO::new).collect(Collectors.toList());
+            guildWarehouseDTO.setBackPackLatticeList(latticeDTOList);
+        }
+        return  Result.success(guildWarehouseDTO.toString());
     }
 
 
@@ -216,9 +229,21 @@ public class GuildService {
      * @param gold
      * @return
      */
-    public Result<?> donateGold(long actorId, int gold) {
+    public Result<?> donateGold(long actorId, long gold) {
+
+        Player player = playerService.getPlayer(actorId);
+        if(player.getGold() < gold){
+            return Result.valueOf("金币不足");
+        }
 
         Long guildId = actorIdGuildIdMap.get(actorId);
+        if(guildId == null){
+           return   Result.valueOf("未加入公会");
+        }
+
+        player.setGold(player.getGold() - gold);
+        playerService.updatePlayer(player);
+
         Guild guild = guildMap.get(guildId);
         guild.setGold(guild.getGold() + gold);
         guildDAO.updateQueue(guild.convertGuildEntity());
@@ -228,12 +253,12 @@ public class GuildService {
 
 
     public boolean hasGuild(long actorId) {
+       initGuidData();
         return actorIdGuildIdMap.get(actorId) != null;
     }
 
     public boolean hasAuth(long actorId, long targetId) {
-        Long guildId = actorIdGuildIdMap.get(actorId);
-        Guild guild = guildMap.get(guildId);
+        Guild guild = getGuildByActorId(actorId);
         GuildPlayer guildPlayer = guild.getGuildPlayerMap().get(actorId);
         GuildPlayer targetGuildPlayer = guild.getGuildPlayerMap().get(targetId);
         if(guildPlayer.getAuthLevel() >= GuildAuthLevel.VICE_PRESIDENT
@@ -244,8 +269,7 @@ public class GuildService {
     }
 
     public boolean hasAuth(long actorId,long targetId,int authLevel){
-        Long guildId = actorIdGuildIdMap.get(actorId);
-        Guild guild = guildMap.get(guildId);
+        Guild guild = getGuildByActorId(actorId);
         GuildPlayer guildPlayer = guild.getGuildPlayerMap().get(actorId);
         GuildPlayer targetGuildPlayer = guild.getGuildPlayerMap().get(targetId);
         if(guildPlayer.getAuthLevel() >= GuildAuthLevel.VICE_PRESIDENT
@@ -254,5 +278,50 @@ public class GuildService {
             return true;
         }
         return false;
+    }
+
+    public Guild getGuildByActorId(long actorId){
+        initGuidData();
+        Long guildId = actorIdGuildIdMap.get(actorId);
+        return guildMap.get(guildId);
+    }
+
+    private void initGuidData() {
+        List<GuildPlayerEntity> allGuildPlayerList = guildPlayerDAO.getGuildPlayerList();
+        Map<Long, List<GuildPlayerEntity>> guildPlayerMap = allGuildPlayerList.stream()
+                .collect(groupingBy(GuildPlayerEntity::getGuildId));
+        List<GuildEntity> guildList = guildDAO.getGuildList();
+        guildList.stream().forEach(guildEntity -> {
+            Guild guild = new Guild();
+
+            guild.setGuildId(guildEntity.getGuildId());
+            guild.setGold(guildEntity.getGold());
+            guild.setLevel(guild.getLevel());
+
+            guildPlayerMap.get(guild.getGuildId()) .forEach(guildPlayerEntity -> {
+                GuildPlayer guildPlayer =new GuildPlayer(guildPlayerEntity);
+                guild.getGuildPlayerMap().put(guildPlayer.getPlayer().getActorId(),guildPlayer);
+                actorIdGuildIdMap.put(guildPlayer.getPlayer().getActorId(),guild.getGuildId());
+            });
+
+            GuildWarehouse guildWarehouse = guildWarehouseService.getGuildWarehouse(guild.getGuildId());
+            guild.setGuildWarehouse(guildWarehouse);
+
+            guildMap.put(guild.getGuildId(),guild);
+        });
+    }
+
+    public Result<?> pop(long actorId, ArrayList<ItemContext> itemContexts) {
+        initGuidData();
+        Long guildId = actorIdGuildIdMap.get(actorId);
+
+        return guildWarehouseService.pop(guildId,actorId,itemContexts);
+    }
+
+    public Result<?> push(long actorId, ArrayList<ItemContext> itemContexts) {
+        initGuidData();
+        Long guildId = actorIdGuildIdMap.get(actorId);
+
+        return guildWarehouseService.push(guildId,actorId,itemContexts);
     }
 }

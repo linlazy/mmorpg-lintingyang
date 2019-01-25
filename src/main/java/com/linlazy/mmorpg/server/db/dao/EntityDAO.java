@@ -65,5 +65,4 @@ public abstract class EntityDAO<T extends Entity> extends BaseJdbc<T>{
         return this.query(entityInfo,selectPrepareSQL,args);
     }
 
-
 }

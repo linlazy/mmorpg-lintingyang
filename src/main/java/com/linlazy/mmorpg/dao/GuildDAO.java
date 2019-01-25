@@ -6,7 +6,10 @@ import lombok.Data;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 /**
  * 公会访问类
@@ -38,5 +41,23 @@ public class GuildDAO extends EntityDAO<GuildEntity> {
      */
     public Long selectMaxGuildId(){
         return jdbcTemplate.queryForObject("select max(guildId) from guild",Long.class);
+    }
+
+    /**
+     * 获得所有公会
+     * @return
+     */
+    public List<GuildEntity> getGuildList() {
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList("select * from guild");
+        return maps.stream()
+                .map(map->{
+                    GuildEntity guildEntity = new GuildEntity();
+
+                    guildEntity.setLevel((Integer) map.get("level"));
+                    guildEntity.setGold((Long) map.get("gold"));
+                    guildEntity.setGuildId((Long) map.get("guildId"));
+
+                    return guildEntity;
+                }).collect(Collectors.toList());
     }
 }
