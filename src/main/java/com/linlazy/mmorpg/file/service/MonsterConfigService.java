@@ -33,6 +33,7 @@ public class MonsterConfigService {
      */
     private static Map<Integer, List<JSONObject>> sceneMonsterMap = new HashMap<>();
 
+
     @PostConstruct
     public void init(){
         JSONArray jsonArray = monsterConfigFile.getJsonArray();

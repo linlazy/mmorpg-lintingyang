@@ -16,18 +16,18 @@
       "gold": 300
     },
     "beginTime": "2018-09-11 00:00:00",
-    "endTime": "2018-09-12 00:00:00",
+    "endTime": "2030-09-12 00:00:00",
     "rewards": [[1,50]]
   },
   {
     "taskId": 3,
     "taskTemplateId": 3,
     "taskTemplateArgs": {
-      "monsterId": 1,
+      "monsterName": "黑水玄蛇",
       "targetCount": 5
     },
     "beginTime": "2018-09-11 00:00:00",
-    "endTime": "2018-09-12 00:00:00",
+    "endTime": "2030-09-12 00:00:00",
     "rewards": [[1,50]]
   },
   {
@@ -37,7 +37,7 @@
       "dressEquipLevelTotal": 20
     },
     "beginTime": "2018-09-11 00:00:00",
-    "endTime": "2018-09-12 00:00:00",
+    "endTime": "2030-09-12 00:00:00",
     "rewards": [[1,50]]
   },
   {
@@ -47,7 +47,7 @@
       "copyId": 4
     },
     "beginTime": "2018-09-11 00:00:00",
-    "endTime": "2018-09-12 00:00:00",
+    "endTime": "2030-09-12 00:00:00",
     "rewards": [[1,50]]
   }
 ]

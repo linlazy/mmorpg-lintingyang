@@ -1,11 +1,14 @@
 package com.linlazy.mmorpg.module.scene.copy.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 import com.linlazy.mmorpg.event.type.*;
 import com.linlazy.mmorpg.file.config.SceneConfig;
 import com.linlazy.mmorpg.file.service.SceneConfigService;
+import com.linlazy.mmorpg.module.common.event.ActorEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
+import com.linlazy.mmorpg.module.common.event.EventType;
 import com.linlazy.mmorpg.module.common.reward.Reward;
 import com.linlazy.mmorpg.module.common.reward.RewardService;
 import com.linlazy.mmorpg.module.player.domain.Player;
@@ -177,6 +180,12 @@ public class CopyService {
 
         if(copy.isFinalBossDead()){
             EventBusHolder.post(new CopySuccessEvent(copy));
+            copy.getPlayerMap().values().stream()
+                    .forEach(player -> {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("copyId",copy.getSceneId());
+                        EventBusHolder.post(new ActorEvent<>(player.getActorId(), EventType.COPY_SUCCESS,jsonObject));
+                    });
         }else {
 //            copy.cancelBossAutoAttackSchedule();
             Boss boss = copy.nextBoss();

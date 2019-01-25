@@ -1,11 +1,13 @@
 package com.linlazy.mmorpg.module.task.domain;
 
 import com.alibaba.fastjson.JSONObject;
+import com.linlazy.mmorpg.dao.TaskDAO;
 import com.linlazy.mmorpg.module.task.constants.TaskStatus;
 import com.linlazy.mmorpg.entity.TaskEntity;
 import com.linlazy.mmorpg.file.config.TaskConfig;
 import com.linlazy.mmorpg.module.common.reward.Reward;
 import com.linlazy.mmorpg.module.task.trigger.BaseTaskTrigger;
+import com.linlazy.mmorpg.utils.SpringContextUtil;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,7 +125,8 @@ public class Task {
         BaseTaskTrigger taskTrigger = BaseTaskTrigger.getTaskTrigger(triggerType);
         if(taskTrigger.isTrigger(this)){
             this.status = TaskStatus.START_UNCOMPLETE;
-
+            TaskDAO taskDAO = SpringContextUtil.getApplicationContext().getBean(TaskDAO.class);
+            taskDAO.insertQueue(this.convertTask());
             return true;
         }else {
             return false;

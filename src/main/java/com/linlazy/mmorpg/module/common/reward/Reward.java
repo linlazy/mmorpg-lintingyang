@@ -1,7 +1,5 @@
 package com.linlazy.mmorpg.module.common.reward;
 
-import com.linlazy.mmorpg.module.item.domain.Item;
-import com.linlazy.mmorpg.module.item.dto.ItemDTO;
 import lombok.Data;
 
 /**
@@ -48,7 +46,7 @@ public class Reward {
             stringBuilder.append("金币");
             stringBuilder.append(String.format("数量【%d】",count));
         }else {
-            stringBuilder.append(new ItemDTO(new Item(rewardId,count)).toString());
+//            stringBuilder.append(new ItemDTO(new Item(rewardId,count)).toString());
         }
 
         return stringBuilder.toString();

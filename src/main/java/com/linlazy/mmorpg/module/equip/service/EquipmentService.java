@@ -7,6 +7,8 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 import com.linlazy.mmorpg.module.backpack.service.PlayerBackpackService;
+import com.linlazy.mmorpg.module.common.event.ActorEvent;
+import com.linlazy.mmorpg.module.common.event.EventType;
 import com.linlazy.mmorpg.module.equip.constants.EquipType;
 import com.linlazy.mmorpg.module.item.constants.ItemType;
 import com.linlazy.mmorpg.dao.ItemDAO;
@@ -179,6 +181,7 @@ public class EquipmentService {
         itemEntity.setActorId(actorId);
         itemDAO.insertQueue(itemEntity);
 
+        EventBusHolder.post(new ActorEvent<>(actorId, EventType.DRESS_EQUIP));
         return Result.success();
     }
 
@@ -258,6 +261,20 @@ public class EquipmentService {
     public Result<?> dressedEquipInfo(long actorId) {
         DressedEquip dressedEquip = getDressedEquip(actorId);
         EquipPushHelper.pushDressedEquip(actorId,new DressedEquipDTO(dressedEquip).toString());
+        return Result.success();
+    }
+
+    public Result<?> upgradeEquip(long actorId,long equipId) {
+        DressedEquip dressedEquip = getDressedEquip(actorId);
+        Equip equip = dressedEquip.getEquipMap().get(equipId);
+        if(equip != null){
+            equip.setLevel(equip.getLevel() + 1);
+            ItemEntity itemEntity = equip.convertItemEntity();
+            itemEntity.setActorId(actorId);
+            itemDAO.updateQueue(itemEntity);
+        }
+        EquipPushHelper.pushDressedEquip(actorId,new DressedEquipDTO(dressedEquip).toString());
+        EventBusHolder.post(new ActorEvent<>(actorId,EventType.DRESS_EQUIP));
         return Result.success();
     }
 }

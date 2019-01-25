@@ -73,6 +73,7 @@ public abstract class SceneEntity {
     }
 
     protected  void triggerDeadEvent(){
+
         if(tauntStatusScheduledFuture != null){
             tauntStatusScheduledFuture.cancel(true);
         }
@@ -86,13 +87,6 @@ public abstract class SceneEntity {
         return true;
     }
 
-
-
-    private void triggerMonsterDeadEvent(JSONObject jsonObject) {
-        jsonObject.put("sceneId",sceneId);
-        jsonObject.put("monsterDo",this);
-        EventBusHolder.post(new ActorEvent(0,EventType.SCENE_MONSTER_DEAD,jsonObject));
-    }
 
 
     /**

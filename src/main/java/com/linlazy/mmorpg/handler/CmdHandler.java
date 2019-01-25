@@ -576,6 +576,18 @@ public class CmdHandler {
     }
 
     /**
+     *  穿戴装备
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("upgradeEquip")
+    public Result<?> upgradeEquip(JSONObject jsonObject){
+        long actorId = jsonObject.getLong("actorId");
+        long equipId = jsonObject.getLongValue("equipId");
+        return equipmentService.upgradeEquip(actorId,equipId);
+    }
+
+    /**
      *  查看穿戴装备信息
      * @param jsonObject
      * @return

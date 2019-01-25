@@ -53,7 +53,7 @@ public class TaskService {
                     Collection<TaskConfig> allTaskConfig = taskConfigService.getAllTaskConfig();
                      allTaskConfig.stream()
                             .forEach(taskConfig-> {
-                                TaskEntity taskEntity = taskDao.getEntityByPK(actorId,taskConfig.getTaskId());
+                                TaskEntity taskEntity = taskDao.getEntityByPK(taskConfig.getTaskId(),actorId);
                                 if(taskEntity == null){
                                     taskEntity = new TaskEntity();
                                     taskEntity.setTaskId(taskConfig.getTaskId());
@@ -89,14 +89,14 @@ public class TaskService {
             return;
         }
         BaseTaskTemplate taskTemplate = BaseTaskTemplate.getTaskTemplate(task.getTaskTemplateId());
-        if(taskTemplate.isReachCondition(actorId, task)){
+        if(taskTemplate.isReachCondition(actorId, task) && task.getStatus() == TaskStatus.START_UNCOMPLETE){
             task.setStatus(TaskStatus.COMPLETE_UNREWARD);
             //存档
             taskDao.updateQueue(task.convertTask());
             return;
         }
         taskTemplate.updateTaskData(actorId,jsonObject, task);
-        if(taskTemplate.isReachCondition(actorId, task)){
+        if(taskTemplate.isReachCondition(actorId, task) && task.getStatus() == TaskStatus.START_UNCOMPLETE){
             task.setStatus(TaskStatus.COMPLETE_UNREWARD);
         }
         //存档
@@ -107,8 +107,7 @@ public class TaskService {
         if(!task.isStart()){
             return false;
         }
-        taskDao.insertQueue(task.convertTask());
-        if (task.getStatus() != TaskStatus.START_UNCOMPLETE){
+        if (task.getStatus() < TaskStatus.START_UNCOMPLETE){
             return false;
         }
         BaseTaskTemplate taskTemplate = BaseTaskTemplate.getTaskTemplate(task.getTaskTemplateId());

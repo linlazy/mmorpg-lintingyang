@@ -294,6 +294,7 @@ public class PlayerService {
         Player player = getPlayer(actorId);
         player.setGold(player.getGold() + addGold);
         playerDAO.updateQueue(player.convertPlayerEntity());
+        EventBusHolder.post(new ActorEvent<>(actorId,EventType.ACTOR_GOLD_CHANGE));
         return Result.success();
     }
 }

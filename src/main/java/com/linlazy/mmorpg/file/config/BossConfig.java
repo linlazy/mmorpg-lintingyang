@@ -40,6 +40,6 @@ public class BossConfig {
     /**
      * 奖励
      */
-    private List<Reward> rewardList;
+    private List<Reward> rewardList = new ArrayList<>();
 
 }

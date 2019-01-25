@@ -324,6 +324,17 @@
 					ta.value += "穿戴装备中..."+ "\r\n";
 				}
 
+				if(arr[0] == "upgradeEquip"){
+
+					var json ={};
+					json.command = "upgradeEquip";
+					json.equipId = arr[1];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "升级装备中..."+ "\r\n";
+				}
+
 				if(arr[0] == "unDressEquip"){
 
 					var json ={};

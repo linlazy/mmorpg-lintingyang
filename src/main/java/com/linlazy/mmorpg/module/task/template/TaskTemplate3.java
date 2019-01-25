@@ -2,8 +2,9 @@ package com.linlazy.mmorpg.module.task.template;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Sets;
-import com.linlazy.mmorpg.module.task.domain.Task;
 import com.linlazy.mmorpg.module.common.event.EventType;
+import com.linlazy.mmorpg.module.scene.domain.Monster;
+import com.linlazy.mmorpg.module.task.domain.Task;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -14,6 +15,7 @@ import java.util.Set;
  */
 @Component
 public class TaskTemplate3 extends BaseTaskTemplate {
+
     /**
      * 关心场景怪物死亡事件
      * @return
@@ -37,10 +39,10 @@ public class TaskTemplate3 extends BaseTaskTemplate {
      */
     @Override
     public boolean isPreCondition(long actorId, JSONObject jsonObject, Task task) {
-        int entityId = jsonObject.getIntValue("entityId");
-        JSONObject data = task.getData();
-        int monsterId = data.getIntValue("monsterId");
-        return entityId == monsterId;
+        Monster monster = (Monster) jsonObject.get("monster");
+        JSONObject taskTemplateArgs = task.getTaskTemplateArgs();
+        String monsterName = taskTemplateArgs.getString("monsterName");
+        return monster.getName().equals(monsterName) ;
     }
 
     /**
@@ -52,11 +54,10 @@ public class TaskTemplate3 extends BaseTaskTemplate {
      */
     @Override
     public Task updateTaskData(long actorId, JSONObject jsonObject, Task task) {
-        int increaseCount = jsonObject.getIntValue("num");
 
         JSONObject data = task.getData();
         int count = data.getIntValue("count");
-        data.put("count",count + increaseCount);
+        data.put("count",count + 1);
         return task;
     }
 
