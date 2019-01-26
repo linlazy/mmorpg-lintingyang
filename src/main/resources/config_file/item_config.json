@@ -59,5 +59,50 @@
       "down": 50,
       "up": 95
    }
+  },
+  {
+    "itemId":6,
+    "itemType": 2,
+    "equipType": 2,
+    "name": "战神之鞋",
+    "defense": 50,
+    "durability": 100,
+    "consumeDurability": 1
+  },
+  {
+    "itemId":7,
+    "itemType": 2,
+    "equipType": 2,
+    "name": "战神护甲",
+    "defense": 50,
+    "durability": 100,
+    "consumeDurability": 1
+  },
+  {
+    "itemId":8,
+    "itemType": 2,
+    "equipType": 2,
+    "name": "战神披风",
+    "defense": 50,
+    "durability": 100,
+    "consumeDurability": 1
+  },
+  {
+    "itemId":9,
+    "itemType": 2,
+    "equipType": 2,
+    "name": "战神手套",
+    "defense": 50,
+    "durability": 100,
+    "consumeDurability": 1
+  },
+  {
+    "itemId":10,
+    "itemType": 2,
+    "equipType": 2,
+    "name": "战神之剑",
+    "attack": 50,
+    "durability": 100,
+    "consumeDurability": 1
   }
 ]

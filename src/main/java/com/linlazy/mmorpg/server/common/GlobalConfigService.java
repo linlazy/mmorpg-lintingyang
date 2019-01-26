@@ -64,6 +64,14 @@ public class GlobalConfigService {
         return jsonObject.getIntValue("initScene");
     }
 
+    /**
+     * 获取斗罗副本场景
+     * @return
+     */
+    public int getfightCopyScene(){
+        return jsonObject.getIntValue("fightCopyScene");
+    }
+
 
     /**
      * 是否为副本场景

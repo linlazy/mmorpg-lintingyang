@@ -18,6 +18,6 @@
     "sceneId":6,
     "name":"斗罗之路",
     "neighborSet":[2],
-    "bossIds": [1,2,3,4]
+    "bossIds": [1,2,3,4,5]
   }
 ]

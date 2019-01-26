@@ -6,14 +6,38 @@
     "skillId":7,
     "hp": 100,
     "sceneIds": [2,4],
-    "rewards": [[4,1],[60002,50]]
+    "rewards": [[6,1]]
   },{
   "bossId": 2,
   "name": "张曼城",
   "attack": 100,
   "hp": 1000,
-  "skillId":8,
+  "skillId":7,
   "sceneIds": [4],
-  "rewards": [[5,1],[60002,100]]
+  "rewards": [[7,1]]
+},{
+  "bossId": 3,
+  "name": "邓茂",
+  "attack": 150,
+  "hp": 2000,
+  "skillId":7,
+  "sceneIds": [6],
+  "rewards": [[8,1]]
+},{
+  "bossId": 4,
+  "name": "波才",
+  "attack": 200,
+  "hp": 3000,
+  "skillId":7,
+  "sceneIds": [6],
+  "rewards": [[9,1]]
+},{
+  "bossId": 5,
+  "name": "余毒",
+  "attack": 300,
+  "hp": 5000,
+  "skillId":7,
+  "sceneIds": [6],
+  "rewards": [[10,1]]
 }
 ]
