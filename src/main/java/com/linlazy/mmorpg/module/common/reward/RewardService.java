@@ -32,24 +32,21 @@ public class RewardService {
         Player player = playerService.getPlayer(actorId);
         for(Reward reward: rewardList){
 
-        switch (reward.getRewardId()){
-            case RewardID.HP:
+
+            if(reward.getRewardId() == RewardID.HP){
                 player.resumeHP(reward.getCount());
                 playerService.updatePlayer(player);
-                break;
-            case RewardID.MP:
+            }else if(reward.getRewardId() == RewardID.MP){
                 player.resumeMP(reward.getCount());
                 playerService.updatePlayer(player);
-                break;
-            case RewardID.GOLD:
+            }else if(reward.getRewardId() == RewardID.GOLD){
                 player.resumeGold(reward.getCount());
                 playerService.updatePlayer(player);
-                break;
-            default:
-            ItemContext itemContext = new ItemContext(reward.getRewardId());
-            itemContext.setCount(reward.getCount());
-            Result<?> push = playerBackpackService.push(actorId, Lists.newArrayList(itemContext));
-        }
+            }else {
+                ItemContext itemContext = new ItemContext(reward.getRewardId());
+                itemContext.setCount(reward.getCount());
+                playerBackpackService.push(actorId, Lists.newArrayList(itemContext));
+            }
 
         }
     }

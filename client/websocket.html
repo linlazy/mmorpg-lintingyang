@@ -437,6 +437,16 @@
 					ta.value += "删除邮件..."+ "\r\n";
 				}
 
+				if(arr[0] == "shopInfo"){
+
+					var json ={};
+					json.command = "shopInfo";
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "查看商品信息中..."+ "\r\n";
+				}
+
 				if(arr[0] == "buyShop"){
 
 					var json ={};
@@ -446,6 +456,17 @@
 					console.log(jsonStr);
 					socket.send(jsonStr);
 					ta.value += "商城购买商品中..."+ "\r\n";
+				}
+
+				if(arr[0] == "gainGold"){
+
+					var json ={};
+					json.command = "gainGold";
+					json.gold =arr[1];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "增加金币中..."+ "\r\n";
 				}
 
 			}else{

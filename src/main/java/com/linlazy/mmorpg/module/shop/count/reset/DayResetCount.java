@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class DayResetCount extends BaseResetCount {
+
+
     @Override
     protected Integer resetType() {
         return ResetType.DAY;
@@ -20,6 +22,7 @@ public class DayResetCount extends BaseResetCount {
         if(shop.getNextResetTime() < DateUtils.getNowMillis()){
             shop.setHasBuyCount(0);
             shop.setNextResetTime(DateUtils.getTomorrowMillis());
+            shopDAO.updateQueue(shop.convertEntity());
         }
 
         return Result.success();

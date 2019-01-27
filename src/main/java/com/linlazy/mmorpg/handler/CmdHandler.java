@@ -362,6 +362,17 @@ public class CmdHandler {
 
 
     /**
+     * 查看商城信息
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("shopInfo")
+    public Result<?> shopInfo(JSONObject jsonObject){
+        long actorId = jsonObject.getLongValue("actorId");
+        return shopService.shopInfo(actorId);
+    }
+
+    /**
      * 商城购买
      * @param jsonObject
      * @return
@@ -371,6 +382,18 @@ public class CmdHandler {
         long actorId = jsonObject.getLongValue("actorId");
         long goodsId = jsonObject.getLongValue("goodsId");
         return shopService.buy(actorId,goodsId);
+    }
+
+    /**
+     * 获得金币
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("gainGold")
+    public Result<?> gainGold(JSONObject jsonObject){
+        long actorId = jsonObject.getLongValue("actorId");
+        long gold = jsonObject.getLongValue("gold");
+        return playerService.gainGold(actorId,gold);
     }
 
     @Autowired

@@ -12,6 +12,7 @@ import com.linlazy.mmorpg.file.service.SceneConfigService;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.service.EquipmentService;
 import com.linlazy.mmorpg.push.PlayerPushHelper;
+import com.linlazy.mmorpg.service.ShopService;
 import com.linlazy.mmorpg.service.SkillService;
 import com.linlazy.mmorpg.service.TeamService;
 import com.linlazy.mmorpg.utils.DateUtils;
@@ -234,5 +235,10 @@ public class Player extends SceneEntity {
     public DressedEquip getDressedEquip(){
         EquipmentService equipmentService = SpringContextUtil.getApplicationContext().getBean(EquipmentService.class);
         return equipmentService.getDressedEquip(actorId);
+    }
+
+    public PlayerShop getPlayerShop(){
+        ShopService shopService = SpringContextUtil.getApplicationContext().getBean(ShopService.class);
+        return shopService.getPlayerShop(actorId);
     }
 }

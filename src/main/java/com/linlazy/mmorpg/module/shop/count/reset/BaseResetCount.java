@@ -1,7 +1,9 @@
 package com.linlazy.mmorpg.module.shop.count.reset;
 
+import com.linlazy.mmorpg.dao.ShopDAO;
 import com.linlazy.mmorpg.domain.Shop;
 import com.linlazy.mmorpg.server.common.Result;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
@@ -15,6 +17,8 @@ public abstract class BaseResetCount {
 
     private static Map<Integer, BaseResetCount> map = new HashMap<>();
 
+    @Autowired
+    protected ShopDAO shopDAO;
 
     @PostConstruct
     public void init(){

@@ -20,7 +20,7 @@ public class RewardUtils {
             JSONArray jsonArray1 = jsonArray.getJSONArray(i);
 
             Reward reward = new Reward();
-            int rewardId = jsonArray1.getIntValue(0);
+            long rewardId = jsonArray1.getLongValue(0);
             int rewardCount = jsonArray1.getIntValue(1);
 
             reward.setRewardId(rewardId);

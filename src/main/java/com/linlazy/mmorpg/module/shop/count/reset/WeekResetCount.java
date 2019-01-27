@@ -22,6 +22,7 @@ public class WeekResetCount extends BaseResetCount {
         if(shop.getNextResetTime() < DateUtils.getNowMillis()){
             shop.setHasBuyCount(0);
             shop.setNextResetTime(DateUtils.nextWeek(DayOfWeek.SATURDAY));
+            shopDAO.updateQueue(shop.convertEntity());
         }
 
         return Result.success();

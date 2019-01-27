@@ -62,7 +62,7 @@ public class SceneConfigService {
 
                     Reward reward1 = new Reward();
 
-                    int itemId = reward.getIntValue(0);
+                    long itemId = reward.getLongValue(0);
                     int num = reward.getIntValue(1);
                     reward1.setRewardId(itemId);
                     reward1.setCount(num);

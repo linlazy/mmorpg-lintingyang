@@ -10,6 +10,7 @@ import com.linlazy.mmorpg.utils.RewardUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,5 +59,9 @@ public class ShopConfigService {
 
     public ShopConfig getGoodsConfig(long goodsId) {
         return map.get(goodsId);
+    }
+
+    public Collection<ShopConfig> getAllShopConfig(){
+        return map.values();
     }
 }

@@ -15,5 +15,5 @@ public interface ResetType {
     /**
      * 不重置
      */
-    int NONE = 3;
+    int NONE = 0;
 }

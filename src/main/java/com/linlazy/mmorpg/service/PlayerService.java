@@ -286,4 +286,11 @@ public class PlayerService {
     public void updatePlayer(Player player) {
         playerDAO.updateQueue(player.convertPlayerEntity());
     }
+
+    public Result<?> gainGold(long actorId, long addGold) {
+        Player player = getPlayer(actorId);
+        player.setGold(player.getGold() + addGold);
+        playerDAO.updateQueue(player.convertPlayerEntity());
+        return Result.success();
+    }
 }

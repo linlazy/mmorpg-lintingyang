@@ -31,7 +31,7 @@ public class ItemIdUtil {
      * @param baseItemId
      * @return
      */
-    public static long getNewItemId(long orderId, int backPackIndex, int baseItemId) {
+    public static long getNewItemId(long orderId, long backPackIndex, int baseItemId) {
         long i = (orderId << 40) + (backPackIndex << 28) + baseItemId;
         return i;
     }

@@ -14,7 +14,7 @@ public class Reward {
      * 奖励ID
      */
 
-    private int rewardId;
+    private long rewardId;
     /**
      * 奖励数量
      */
@@ -28,7 +28,7 @@ public class Reward {
     public Reward() {
     }
 
-    public Reward(int rewardId, int count, int rewardDBType) {
+    public Reward(long rewardId, int count, int rewardDBType) {
         this.rewardId = rewardId;
         this.count = count;
         this.rewardDBType = rewardDBType;
@@ -38,26 +38,18 @@ public class Reward {
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
 
-
-        switch (rewardId){
-            case RewardID.HP:
-                stringBuilder.append("HP");
-                stringBuilder.append(String.format("数量【%d】",count));
-                break;
-            case RewardID.MP:
-                stringBuilder.append("MP");
-                stringBuilder.append(String.format("数量【%d】",count));
-                break;
-            case RewardID.GOLD:
-                stringBuilder.append("金币");
-                stringBuilder.append(String.format("数量【%d】",count));
-                break;
-            default:
-                stringBuilder.append(new ItemDTO(new Item(rewardId,count)).toString());
+        if(rewardId == RewardID.HP){
+            stringBuilder.append("HP");
+            stringBuilder.append(String.format("数量【%d】",count));
+        }else if(rewardId == RewardID.MP){
+            stringBuilder.append("MP");
+            stringBuilder.append(String.format("数量【%d】",count));
+        }else if(rewardId == RewardID.GOLD){
+            stringBuilder.append("金币");
+            stringBuilder.append(String.format("数量【%d】",count));
+        }else {
+            stringBuilder.append(new ItemDTO(new Item(rewardId,count)).toString());
         }
-
-
-
 
         return stringBuilder.toString();
     }

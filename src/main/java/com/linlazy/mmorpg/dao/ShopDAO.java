@@ -21,7 +21,7 @@ public class ShopDAO extends EntityDAO<ShopEntity> {
 
 
     public List<ShopEntity> getPlayerShopEntity(long actorId){
-        List<Map<String, Object>> maps = jdbcTemplate.queryForList("select * from shop where actorId", actorId);
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList("select * from shop where actorId = ?", actorId);
         return maps.stream()
                 .map(map->{
                     ShopEntity shopEntity = new ShopEntity();

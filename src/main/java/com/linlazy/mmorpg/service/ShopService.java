@@ -4,19 +4,23 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.linlazy.mmorpg.dao.ShopDAO;
+import com.linlazy.mmorpg.domain.Player;
 import com.linlazy.mmorpg.domain.PlayerShop;
 import com.linlazy.mmorpg.domain.Shop;
 import com.linlazy.mmorpg.entity.ShopEntity;
+import com.linlazy.mmorpg.file.config.ShopConfig;
 import com.linlazy.mmorpg.file.service.ShopConfigService;
 import com.linlazy.mmorpg.module.common.reward.Reward;
 import com.linlazy.mmorpg.module.common.reward.RewardService;
-import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.module.shop.count.ShopBuyCount;
+import com.linlazy.mmorpg.module.shop.count.reset.BaseResetCount;
 import com.linlazy.mmorpg.module.shop.money.BaseMoney;
+import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -33,7 +37,8 @@ public class ShopService {
     private RewardService rewardService;
     @Autowired
     private ShopDAO shopDAO;
-
+    @Autowired
+    private PlayerService playerService;
 
     /**
      * 玩家商店缓存
@@ -99,7 +104,7 @@ public class ShopService {
         return Result.success();
     }
 
-    private PlayerShop getPlayerShop(long actorId) {
+    public PlayerShop getPlayerShop(long actorId) {
         try {
             return playerShopCache.get(actorId);
         } catch (ExecutionException e) {
@@ -112,4 +117,22 @@ public class ShopService {
         return shopConfigService.getGoodsConfig(goodsId) == null;
     }
 
+    public Result<?> shopInfo(long actorId) {
+
+        Collection<ShopConfig> allShopConfig = shopConfigService.getAllShopConfig();
+        Player player = playerService.getPlayer(actorId);
+        PlayerShop playerShop = player.getPlayerShop();
+        allShopConfig.forEach(shopConfig -> {
+            Shop shop = playerShop.getMap().get(shopConfig.getGoodsId());
+            if(shop == null){
+                 shop = new Shop(shopConfig.getGoodsId());
+                shop.setActorId(actorId);
+                playerShop.getMap().put(shop.getGoodsId(),shop);
+            }else {
+                BaseResetCount baseResetCount = BaseResetCount.getBaseResetCount(shop.getResetType());
+                baseResetCount.doReset(shop);
+            }
+        });
+        return Result.success(playerShop.toString());
+    }
 }
