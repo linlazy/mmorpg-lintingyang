@@ -1,6 +1,6 @@
 package com.linlazy.mmorpg.event.type;
 
-import com.linlazy.mmorpg.domain.Player;
+import com.linlazy.mmorpg.module.player.domain.Player;
 
 /**
  * @author linlazy

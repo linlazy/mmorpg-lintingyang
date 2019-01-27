@@ -1,6 +1,6 @@
 package com.linlazy.mmorpg.event.type;
 
-import com.linlazy.mmorpg.domain.PlayerCall;
+import com.linlazy.mmorpg.module.playercall.domain.PlayerCall;
 import lombok.Data;
 
 /**

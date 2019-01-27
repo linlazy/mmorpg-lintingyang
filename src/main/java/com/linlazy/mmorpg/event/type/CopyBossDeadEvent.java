@@ -1,6 +1,6 @@
 package com.linlazy.mmorpg.event.type;
 
-import com.linlazy.mmorpg.domain.Copy;
+import com.linlazy.mmorpg.module.scene.copy.domain.Copy;
 import lombok.Data;
 
 /**

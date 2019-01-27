@@ -24,11 +24,9 @@ public class TaskConfigService {
 
     private static ConfigFile taskConfigFile;
 
-
     static {
         taskConfigFile =  ConfigFileManager.use("config_file/task_config.json");
     }
-
 
     private static Map<Long, TaskConfig> map = new HashMap<>();
 

@@ -1,7 +1,7 @@
 package com.linlazy.mmorpg.module.shop.count.reset;
 
 import com.linlazy.mmorpg.dao.ShopDAO;
-import com.linlazy.mmorpg.domain.Shop;
+import com.linlazy.mmorpg.module.shop.domain.Shop;
 import com.linlazy.mmorpg.server.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 

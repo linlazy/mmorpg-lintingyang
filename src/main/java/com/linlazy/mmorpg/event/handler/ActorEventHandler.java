@@ -2,13 +2,13 @@ package com.linlazy.mmorpg.event.handler;
 
 
 import com.google.common.eventbus.Subscribe;
-import com.linlazy.mmorpg.domain.Player;
+import com.linlazy.mmorpg.module.player.domain.Player;
 import com.linlazy.mmorpg.event.GameEvenHandler;
 import com.linlazy.mmorpg.event.type.PlayerDeadEvent;
 import com.linlazy.mmorpg.file.service.SceneConfigService;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
-import com.linlazy.mmorpg.push.PlayerPushHelper;
-import com.linlazy.mmorpg.service.PlayerService;
+import com.linlazy.mmorpg.module.player.push.PlayerPushHelper;
+import com.linlazy.mmorpg.module.player.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

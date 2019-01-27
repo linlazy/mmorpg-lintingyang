@@ -1,6 +1,6 @@
 package com.linlazy.mmorpg.module.shop.count.reset;
 
-import com.linlazy.mmorpg.domain.Shop;
+import com.linlazy.mmorpg.module.shop.domain.Shop;
 import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.utils.DateUtils;
 import org.springframework.stereotype.Component;

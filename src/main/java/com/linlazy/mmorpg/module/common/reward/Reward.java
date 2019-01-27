@@ -1,7 +1,7 @@
 package com.linlazy.mmorpg.module.common.reward;
 
-import com.linlazy.mmorpg.domain.Item;
-import com.linlazy.mmorpg.dto.ItemDTO;
+import com.linlazy.mmorpg.module.item.domain.Item;
+import com.linlazy.mmorpg.module.item.dto.ItemDTO;
 import lombok.Data;
 
 /**

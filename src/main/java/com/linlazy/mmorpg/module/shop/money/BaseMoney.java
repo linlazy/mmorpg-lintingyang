@@ -1,6 +1,6 @@
 package com.linlazy.mmorpg.module.shop.money;
 
-import com.linlazy.mmorpg.domain.Shop;
+import com.linlazy.mmorpg.module.shop.domain.Shop;
 import com.linlazy.mmorpg.server.common.Result;
 
 import javax.annotation.PostConstruct;

@@ -1,6 +1,6 @@
 package com.linlazy.mmorpg.event.type;
 
-import com.linlazy.mmorpg.domain.Equip;
+import com.linlazy.mmorpg.module.equip.domain.Equip;
 import lombok.Data;
 
 /**

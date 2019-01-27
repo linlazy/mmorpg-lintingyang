@@ -1,5 +1,6 @@
 package com.linlazy.mmorpg.domain;
 
+import com.linlazy.mmorpg.module.player.domain.Player;
 import lombok.Data;
 
 /**

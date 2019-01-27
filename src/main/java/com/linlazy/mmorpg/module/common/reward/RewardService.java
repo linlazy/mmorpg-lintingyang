@@ -1,11 +1,11 @@
 package com.linlazy.mmorpg.module.common.reward;
 
 import com.google.common.collect.Lists;
-import com.linlazy.mmorpg.backpack.service.PlayerBackpackService;
-import com.linlazy.mmorpg.domain.ItemContext;
-import com.linlazy.mmorpg.domain.Player;
+import com.linlazy.mmorpg.module.backpack.service.PlayerBackpackService;
+import com.linlazy.mmorpg.module.item.domain.ItemContext;
+import com.linlazy.mmorpg.module.player.domain.Player;
 import com.linlazy.mmorpg.server.common.Result;
-import com.linlazy.mmorpg.service.PlayerService;
+import com.linlazy.mmorpg.module.player.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

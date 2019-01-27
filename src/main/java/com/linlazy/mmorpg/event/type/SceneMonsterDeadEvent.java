@@ -1,7 +1,7 @@
 package com.linlazy.mmorpg.event.type;
 
-import com.linlazy.mmorpg.domain.Monster;
-import com.linlazy.mmorpg.domain.Scene;
+import com.linlazy.mmorpg.module.scene.domain.Monster;
+import com.linlazy.mmorpg.module.scene.domain.Scene;
 import lombok.Data;
 
 /**

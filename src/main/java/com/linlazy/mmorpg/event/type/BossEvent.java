@@ -1,6 +1,6 @@
 package com.linlazy.mmorpg.event.type;
 
-import com.linlazy.mmorpg.domain.Boss;
+import com.linlazy.mmorpg.module.scene.domain.Boss;
 import lombok.Data;
 
 /**

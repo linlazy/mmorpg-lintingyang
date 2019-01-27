@@ -1,9 +1,9 @@
 package com.linlazy.mmorpg.module.shop.money;
 
-import com.linlazy.mmorpg.domain.Player;
-import com.linlazy.mmorpg.domain.Shop;
+import com.linlazy.mmorpg.module.player.domain.Player;
+import com.linlazy.mmorpg.module.shop.domain.Shop;
 import com.linlazy.mmorpg.server.common.Result;
-import com.linlazy.mmorpg.service.PlayerService;
+import com.linlazy.mmorpg.module.player.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
