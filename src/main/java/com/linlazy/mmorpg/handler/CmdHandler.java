@@ -605,7 +605,31 @@ public class CmdHandler {
         return itemService.consumeItem(actorId,itemId);
     }
 
+    @Autowired
+    private TaskService taskService;
 
+    /**
+     * 领取任务奖励
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("rewardTask")
+    public Result<?> rewardTask(JSONObject jsonObject){
+        long actorId = jsonObject.getLong("actorId");
+        long taskId = jsonObject.getLongValue("taskId");
+        return taskService.rewardTask(actorId,taskId);
+    }
+
+    /**
+     * 查看任务信息
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("taskInfo")
+    public Result<?> taskInfo(JSONObject jsonObject){
+        long actorId = jsonObject.getLong("actorId");
+        return taskService.taskInfo(actorId);
+    }
 
     @Cmd(value = "cmd",auth = false)
     public Result<?> cmd(JSONObject jsonObject){

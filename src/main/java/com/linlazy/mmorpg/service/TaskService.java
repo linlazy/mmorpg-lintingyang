@@ -7,22 +7,23 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.eventbus.Subscribe;
 import com.linlazy.mmorpg.constants.TaskStatus;
 import com.linlazy.mmorpg.dao.TaskDAO;
+import com.linlazy.mmorpg.domain.PlayerTask;
 import com.linlazy.mmorpg.domain.Task;
 import com.linlazy.mmorpg.entity.TaskEntity;
+import com.linlazy.mmorpg.file.config.TaskConfig;
 import com.linlazy.mmorpg.file.service.TaskConfigService;
 import com.linlazy.mmorpg.module.common.event.ActorEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
+import com.linlazy.mmorpg.module.common.reward.RewardService;
+import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.template.task.BaseTaskTemplate;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
-import java.util.Set;
+import java.util.Collection;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * 任务系统服务类
@@ -30,31 +31,38 @@ import java.util.stream.Collectors;
  */
 @Component
 public class TaskService {
+
+    @Autowired
+    private RewardService rewardService;
+
+
     /**
      * 玩家任务缓存
      */
-    public static LoadingCache<Long, List<Task>> playerTaskCache = CacheBuilder.newBuilder()
-            .maximumSize(10)
-            .expireAfterAccess(60, TimeUnit.SECONDS)
+    public static LoadingCache<Long, PlayerTask> playerTaskCache = CacheBuilder.newBuilder()
             .recordStats()
-            .build(new CacheLoader<Long,List<Task>>() {
+            .build(new CacheLoader<Long,PlayerTask>() {
                 @Override
-                public List<Task> load(Long actorId) {
+                public PlayerTask load(Long actorId) {
+
+                    PlayerTask playerTask = new PlayerTask();
 
                     TaskConfigService taskConfigService = SpringContextUtil.getApplicationContext().getBean(TaskConfigService.class);
                     TaskDAO taskDao = SpringContextUtil.getApplicationContext().getBean(TaskDAO.class);
 
-                    Set<JSONObject> allTaskConfig = taskConfigService.getAllTaskConfig();
-                    return allTaskConfig.stream()
-                            .map(taskConfig-> {
-                                TaskEntity task = taskDao.getEntityByPK(actorId,taskConfig.getIntValue("taskId"));
-                                if(task == null){
-                                    task = new TaskEntity();
-                                    task.setTaskId(taskConfig.getIntValue("taskId"));
-                                    task.setActorId(actorId);
+                    Collection<TaskConfig> allTaskConfig = taskConfigService.getAllTaskConfig();
+                     allTaskConfig.stream()
+                            .forEach(taskConfig-> {
+                                TaskEntity taskEntity = taskDao.getEntityByPK(actorId,taskConfig.getTaskId());
+                                if(taskEntity == null){
+                                    taskEntity = new TaskEntity();
+                                    taskEntity.setTaskId(taskConfig.getTaskId());
+                                    taskEntity.setActorId(actorId);
                                 }
-                                return new Task(taskConfig,task);
-                            }).collect(Collectors.toList());
+                                Task task = new Task(taskConfig, taskEntity);
+                                playerTask.getMap().put(task.getTaskId(),task);
+                            });
+                    return playerTask;
                 }
             });
 
@@ -70,16 +78,14 @@ public class TaskService {
 
     @Subscribe
     public void listenEvent(ActorEvent<JSONObject> actorEvent){
-        List<Task> allTask =getActorAllTaskDo(actorEvent.getActorId());
-        allTask.stream()
+        PlayerTask playerTask = getPlayerTask(actorEvent.getActorId());
+        playerTask.getMap().values().stream()
             .filter(taskDo -> BaseTaskTemplate.getTaskTemplate(taskDo.getTaskTemplateId()).likeEvent().contains(actorEvent.getEventType()))
             .forEach(taskDo -> doComplete(actorEvent.getActorId(),actorEvent.getData(),taskDo));
     }
 
     private void doComplete(long actorId, JSONObject jsonObject, Task task) {
         if(!doPreCondition(actorId,jsonObject, task)){
-            //存档
-            taskDao.updateQueue(task.convertTask());
             return;
         }
         BaseTaskTemplate taskTemplate = BaseTaskTemplate.getTaskTemplate(task.getTaskTemplateId());
@@ -101,6 +107,7 @@ public class TaskService {
         if(!task.isStart()){
             return false;
         }
+        taskDao.insertQueue(task.convertTask());
         if (task.getStatus() != TaskStatus.START_UNCOMPLETE){
             return false;
         }
@@ -109,12 +116,61 @@ public class TaskService {
     }
 
 
-    public List<Task> getActorAllTaskDo(long actorId){
+    public PlayerTask getPlayerTask(long actorId){
         try {
             return playerTaskCache.get(actorId);
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 领取任务奖励
+     * @param actorId
+     * @param taskId
+     * @return
+     */
+    public Result<?> rewardTask(long actorId, long taskId){
+
+        PlayerTask playerTask = getPlayerTask(actorId);
+        Task task = playerTask.getMap().get(taskId);
+        if(task == null){
+            return Result.valueOf("参数有误");
+        }
+
+        if(task.getStatus() != TaskStatus.COMPLETE_UNREWARD){
+            return  Result.valueOf("任务状态不对");
+        }
+
+        task.setStatus(TaskStatus.REWARDED);
+        rewardService.addRewardList(actorId,task.getRewardList());
+
+
+        return Result.success();
+    }
+
+
+    /**
+     * 查看玩家任务信息
+     * @param actorId
+     * @return
+     */
+    public Result<?> taskInfo(long actorId){
+        Collection<TaskConfig> allTaskConfig = taskConfigService.getAllTaskConfig();
+        PlayerTask playerTask = getPlayerTask(actorId);
+
+        allTaskConfig.stream().forEach(taskConfig -> {
+            Task task = playerTask.getMap().get(taskConfig.getTaskId());
+            if(task == null){
+
+                TaskEntity taskEntity = new TaskEntity();
+                taskEntity.setActorId(actorId);
+                task = new Task(taskConfig,taskEntity);
+                playerTask.getMap().put(task.getTaskId(),task);
+            }
+        });
+
+        return Result.success(playerTask.toString());
     }
 }

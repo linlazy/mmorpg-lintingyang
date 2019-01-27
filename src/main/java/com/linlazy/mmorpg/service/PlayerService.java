@@ -1,5 +1,6 @@
 package com.linlazy.mmorpg.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -280,6 +281,7 @@ public class PlayerService {
         player.setLevel(player.getLevel() + 1);
         PlayerPushHelper.pushChange(actorId,new PlayerDTO(player));
         playerDAO.updateQueue(player.convertPlayerEntity());
+        EventBusHolder.post(new ActorEvent<JSONObject>(actorId,EventType.ACTOR_LEVEL_UP));
         return Result.success();
     }
 

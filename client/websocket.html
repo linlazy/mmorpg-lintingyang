@@ -469,6 +469,27 @@
 					ta.value += "增加金币中..."+ "\r\n";
 				}
 
+				if(arr[0] == "rewardTask"){
+
+					var json ={};
+					json.command = "gainGold";
+					json.taskId =arr[1];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "领取任务奖励中..."+ "\r\n";
+				}
+
+				if(arr[0] == "taskInfo"){
+
+					var json ={};
+					json.command = "taskInfo";
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "查看任务信息中..."+ "\r\n";
+				}
+
 			}else{
 				alert("WebSocket连接没有建立成功！！");
 			}
