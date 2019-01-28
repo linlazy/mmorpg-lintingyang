@@ -111,4 +111,12 @@ public class GlobalConfigService {
         return jsonObject.getIntValue("maxTeamNum");
     }
 
+    /**
+     * 获取斗罗大陆副本场景
+     * @return
+     */
+    public int getFightCopySceneId(){
+        return jsonObject.getIntValue("fightCopySceneId");
+    }
+
 }

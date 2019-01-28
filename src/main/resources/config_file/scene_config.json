@@ -1,6 +1,6 @@
 [
   {"sceneId":0,"name":"起始之地","neighborSet":[2]},
-  {"sceneId":2,"name":"村子","neighborSet":[0,3,4,5]},
+  {"sceneId":2,"name":"村子","neighborSet":[0,3,4,5,6]},
   {"sceneId":3,"name":"野外","neighborSet":[2]},
   {"sceneId":4,
     "name":"黄巾前锋营",
@@ -17,6 +17,7 @@
   {
     "sceneId":6,
     "name":"斗罗之路",
+    "times": 600,
     "neighborSet":[2],
     "bossIds": [1,2,3,4]
   }

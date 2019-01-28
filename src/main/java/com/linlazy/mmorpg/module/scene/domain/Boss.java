@@ -1,14 +1,16 @@
 package com.linlazy.mmorpg.module.scene.domain;
 
-import com.linlazy.mmorpg.module.scene.copy.domain.Copy;
 import com.linlazy.mmorpg.event.type.BossDeadEvent;
 import com.linlazy.mmorpg.event.type.CopyBossDeadEvent;
 import com.linlazy.mmorpg.file.service.SceneConfigService;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.common.reward.Reward;
+import com.linlazy.mmorpg.module.copy.fighting.domain.FightingCopy;
+import com.linlazy.mmorpg.module.copy.fighting.event.CopyFightingBossDeadEvent;
 import com.linlazy.mmorpg.module.player.domain.Player;
 import com.linlazy.mmorpg.module.player.push.PlayerPushHelper;
 import com.linlazy.mmorpg.module.playercall.domain.PlayerCall;
+import com.linlazy.mmorpg.module.scene.copy.domain.Copy;
 import com.linlazy.mmorpg.module.scene.copy.service.CopyService;
 import com.linlazy.mmorpg.module.skill.domain.Skill;
 import com.linlazy.mmorpg.utils.DateUtils;
@@ -100,6 +102,11 @@ public class Boss extends SceneEntity {
             copy.getPlayerMap().values().stream()
                     .forEach(player ->PlayerPushHelper.pushAttacked(player.getActorId(),String.format("%d BOSS【%s】已死亡", DateUtils.getNowMillis()/1000,name)));
             EventBusHolder.post(new CopyBossDeadEvent(copy));
+
+
+            if(sceneConfigService.isFightCopyScene(this.sceneId)){
+                EventBusHolder.post(new CopyFightingBossDeadEvent((FightingCopy) copy));
+            }
         }
     }
 }

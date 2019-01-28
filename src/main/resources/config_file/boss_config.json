@@ -5,7 +5,7 @@
     "attack": 50,
     "skillId":7,
     "hp": 100,
-    "sceneIds": [2,4],
+    "sceneIds": [2,4,6],
     "rewards": [[6,1]]
   },{
   "bossId": 2,
@@ -13,7 +13,7 @@
   "attack": 100,
   "hp": 1000,
   "skillId":7,
-  "sceneIds": [4],
+  "sceneIds": [4,6],
   "rewards": [[7,1]]
 },{
   "bossId": 3,

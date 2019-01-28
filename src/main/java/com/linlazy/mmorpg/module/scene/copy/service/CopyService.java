@@ -11,19 +11,23 @@ import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.common.event.EventType;
 import com.linlazy.mmorpg.module.common.reward.Reward;
 import com.linlazy.mmorpg.module.common.reward.RewardService;
+import com.linlazy.mmorpg.module.copy.fighting.domain.FightingCopy;
+import com.linlazy.mmorpg.module.copy.fighting.event.CopyFightingUseSkillEvent;
+import com.linlazy.mmorpg.module.copy.fighting.service.PlayerFightingCopyProcess;
+import com.linlazy.mmorpg.module.player.constants.ProfessionType;
 import com.linlazy.mmorpg.module.player.domain.Player;
+import com.linlazy.mmorpg.module.player.push.PlayerPushHelper;
+import com.linlazy.mmorpg.module.player.service.PlayerService;
 import com.linlazy.mmorpg.module.scene.copy.domain.Copy;
+import com.linlazy.mmorpg.module.scene.copy.push.CopyPushHelper;
 import com.linlazy.mmorpg.module.scene.domain.Boss;
 import com.linlazy.mmorpg.module.scene.domain.Monster;
+import com.linlazy.mmorpg.module.scene.service.BossService;
+import com.linlazy.mmorpg.module.scene.service.MonsterService;
+import com.linlazy.mmorpg.module.scene.service.SceneService;
 import com.linlazy.mmorpg.module.skill.service.SkillService;
 import com.linlazy.mmorpg.module.team.domain.Team;
 import com.linlazy.mmorpg.module.team.service.TeamService;
-import com.linlazy.mmorpg.module.scene.copy.push.CopyPushHelper;
-import com.linlazy.mmorpg.module.player.push.PlayerPushHelper;
-import com.linlazy.mmorpg.module.scene.service.BossService;
-import com.linlazy.mmorpg.module.scene.service.MonsterService;
-import com.linlazy.mmorpg.module.player.service.PlayerService;
-import com.linlazy.mmorpg.module.scene.service.SceneService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,6 +128,10 @@ public class CopyService {
             //开启BOSS定时攻击调度
             copy.startBossAutoAttackScheduled();
 
+
+            if(sceneConfigService.isFightCopyScene(copy.getSceneId())){
+                EventBusHolder.post(new CopyFightingUseSkillEvent((FightingCopy) copy));
+            }
         }
 
         player.setCopyId(playerCopyIdMap.get(player.getActorId()));
@@ -240,7 +248,14 @@ public class CopyService {
     public Copy createCopy(long actorId){
         Player player = playerService.getPlayer(actorId);
 
-        Copy copy = new Copy();
+         Copy copy = null;
+        if(sceneConfigService.isFightCopyScene(player.getSceneId())){
+            FightingCopy fightingCopy = new FightingCopy();
+            copy = fightingCopy;
+        }else {
+            copy = new Copy();
+        }
+
         //初始化副本ID
         copy.setCopyId(maxCopyId.incrementAndGet());
         SceneConfig sceneConfig = sceneConfigService.getSceneConfig(player.getSceneId());
@@ -248,13 +263,15 @@ public class CopyService {
         copy.setSceneName(sceneConfig.getName());
         //初始化副本boss信息
         List<Boss> copyBoss = bossService.getBOSSBySceneId(player.getSceneId());
+        Copy finalCopy = copy;
         copyBoss.forEach(
-                boss -> boss.setCopyId(copy.getCopyId())
+                boss -> boss.setCopyId(finalCopy.getCopyId())
         );
         copy.setBossList(copyBoss);
         //初始化副本小怪信息信息
         Map<Integer, Monster> monsterMap= monsterService.getMonsterBySceneId(player.getSceneId());
-        monsterMap.values().forEach(monster ->monster.setCopyId(copy.getCopyId()));
+        Copy finalCopy1 = copy;
+        monsterMap.values().forEach(monster ->monster.setCopyId(finalCopy1.getCopyId()));
         copy.setMonsterMap(monsterMap);
         //初始化副本玩家信息
 
@@ -275,6 +292,27 @@ public class CopyService {
         //初始化奖励
         List<Reward> rewardList = sceneConfig.getRewardList();
         copy.setRewardList(rewardList);
+
+
+        if(sceneConfigService.isFightCopyScene(player.getSceneId())){
+            FightingCopy fightingCopy = (FightingCopy) copy;
+            fightingCopy.setCopyLevel(1);
+            PlayerFightingCopyProcess playerFightingCopyProcess = fightingCopy.getPlayerFightingCopyProcess();
+            boolean dressEuip = fightingCopy.getPlayerMap().values()
+                    .stream()
+                    .anyMatch(player1 ->player1.getDressedEquip().getEquipMap().size() > 0);
+            playerFightingCopyProcess.setDressedEquip(dressEuip);
+
+            if(player.isTeam()){
+                playerFightingCopyProcess.setTeam(true);
+
+                Team team = player.getTeam();
+                boolean teamWithMinister = team.getPlayerTeamInfoMap().values().stream()
+                        .anyMatch(playerTeamInfo -> playerTeamInfo.getPlayer().getProfession() == ProfessionType.minister);
+                playerFightingCopyProcess.setTeamWithMinister(teamWithMinister);
+            }
+
+        }
 
         copyIdCopyMap.put(copy.getCopyId(),copy);
         return copy;

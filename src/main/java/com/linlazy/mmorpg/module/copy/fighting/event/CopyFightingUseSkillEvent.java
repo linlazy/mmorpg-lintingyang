@@ -8,11 +8,10 @@ import lombok.Data;
  * @author linlazy
  */
 @Data
-public class CopyFightingSuccessEvent {
-
+public class CopyFightingUseSkillEvent {
     private FightingCopy fightingCopy;
 
-    public CopyFightingSuccessEvent(FightingCopy fightingCopy) {
+    public CopyFightingUseSkillEvent(FightingCopy fightingCopy) {
         this.fightingCopy = fightingCopy;
     }
 }

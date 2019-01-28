@@ -118,4 +118,8 @@ public class SceneConfigService {
     public SceneConfig getSceneConfig(int sceneId) {
         return map.get(sceneId);
     }
+
+    public boolean isFightCopyScene(int sceneId) {
+        return globalConfigService.getFightCopySceneId() == sceneId;
+    }
 }

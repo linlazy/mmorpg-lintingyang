@@ -231,6 +231,7 @@ public class SceneService {
         if(isCopyScene(targetSceneId)){
             EventBusHolder.post(new CopyMoveEvent(player));
         }
+
         return Result.success();
     }
 
