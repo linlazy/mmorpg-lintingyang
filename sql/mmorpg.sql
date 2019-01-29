@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50724
 File Encoding         : 65001
 
-Date: 2019-01-17 18:05:49
+Date: 2019-01-28 14:19:52
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -51,27 +51,22 @@ CREATE TABLE `email` (
   `sendTime` bigint(20) DEFAULT NULL,
   `receiverId` bigint(64) DEFAULT NULL,
   `expireTime` bigint(20) DEFAULT NULL,
+  `readStatus` bit(1) DEFAULT NULL,
+  `rewardStatus` bit(1) DEFAULT NULL,
+  `rewards` text,
+  `title` varchar(255) DEFAULT NULL,
+  `content` text,
   PRIMARY KEY (`emailId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
--- Table structure for guild_actor
+-- Table structure for guild
 -- ----------------------------
-DROP TABLE IF EXISTS `guild_actor`;
-CREATE TABLE `guild_actor` (
+DROP TABLE IF EXISTS `guild`;
+CREATE TABLE `guild` (
   `guildId` bigint(20) NOT NULL,
-  `actorId` bigint(20) NOT NULL,
-  `authLevel` int(11) DEFAULT NULL,
-  PRIMARY KEY (`guildId`,`actorId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- ----------------------------
--- Table structure for guild_gold
--- ----------------------------
-DROP TABLE IF EXISTS `guild_gold`;
-CREATE TABLE `guild_gold` (
-  `guildId` bigint(20) NOT NULL,
-  `gold` int(11) DEFAULT NULL,
+  `gold` bigint(11) DEFAULT NULL,
+  `level` int(11) DEFAULT NULL,
   PRIMARY KEY (`guildId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -81,10 +76,20 @@ CREATE TABLE `guild_gold` (
 DROP TABLE IF EXISTS `guild_offline`;
 CREATE TABLE `guild_offline` (
   `guildId` bigint(20) NOT NULL,
-  `receiver` bigint(20) DEFAULT NULL,
-  `sourceId` bigint(20) DEFAULT NULL,
-  `type` int(11) DEFAULT NULL,
+  `receiverId` bigint(20) DEFAULT NULL,
+  `senderId` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`guildId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for guild_player
+-- ----------------------------
+DROP TABLE IF EXISTS `guild_player`;
+CREATE TABLE `guild_player` (
+  `guildId` bigint(20) NOT NULL,
+  `actorId` bigint(20) NOT NULL,
+  `authLevel` int(11) DEFAULT NULL,
+  PRIMARY KEY (`guildId`,`actorId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
@@ -133,6 +138,18 @@ CREATE TABLE `player` (
 ) ENGINE=InnoDB AUTO_INCREMENT=4194311 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
+-- Table structure for shop
+-- ----------------------------
+DROP TABLE IF EXISTS `shop`;
+CREATE TABLE `shop` (
+  `goodsId` bigint(20) NOT NULL,
+  `actorId` bigint(20) NOT NULL,
+  `hasBuyTimes` int(11) DEFAULT NULL,
+  `nextResetTime` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`goodsId`,`actorId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
 -- Table structure for skill
 -- ----------------------------
 DROP TABLE IF EXISTS `skill`;
@@ -143,16 +160,6 @@ CREATE TABLE `skill` (
   `dressed` bit(1) NOT NULL,
   `nextCDResumeTimes` bigint(20) NOT NULL,
   PRIMARY KEY (`actorId`,`skillId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- ----------------------------
--- Table structure for student
--- ----------------------------
-DROP TABLE IF EXISTS `student`;
-CREATE TABLE `student` (
-  `id` bigint(20) NOT NULL,
-  `age` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------

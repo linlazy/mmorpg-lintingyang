@@ -5,11 +5,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpg.module.scene.domain.SceneEntity;
 import com.linlazy.mmorpg.module.skill.domain.Skill;
 import com.linlazy.mmorpg.utils.DateUtils;
+import com.linlazy.mmorpg.utils.RandomUtils;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
 
@@ -36,15 +37,17 @@ public  class SkillTemplate1 extends BaseSkillTemplate {
 
         Set<SceneEntity> targetSceneEntitySet = (Set<SceneEntity>) jsonObject.get("targetSceneEntitySet");
         int attackNum = skillTemplateArgs.getIntValue("attackNum");
-        Map<Boolean, List<SceneEntity>> collectMap = targetSceneEntitySet.stream()
-                .collect(groupingBy(SceneEntity::isTauntStatus));
-        List<SceneEntity> tauntSceneEntities = collectMap.get(true);
+        Map<Boolean, Set<SceneEntity>> collectMap = targetSceneEntitySet.stream()
+                .collect(groupingBy(SceneEntity::isTauntStatus,Collectors.toSet()));
+        Set<SceneEntity> tauntSceneEntities = collectMap.get(true);
 
         if(tauntSceneEntities == null){
-            List<SceneEntity> unTauntSceneEntities = collectMap.get(false);
-            unTauntSceneEntities.stream()
-                    .limit(attackNum)
-                    .forEach(targetSceneEntity->targetSceneEntity.attacked(sceneEntity,skill));
+            Set<SceneEntity> unTauntSceneEntities = collectMap.get(false);
+            for(int i = 1; i <= attackNum ; i++){
+                SceneEntity targetSceneEntity = RandomUtils.randomElement(unTauntSceneEntities);
+                unTauntSceneEntities.remove(targetSceneEntity);
+                targetSceneEntity.attacked(sceneEntity,skill);
+            }
             return;
         }else if(tauntSceneEntities.size() >= attackNum){
                 tauntSceneEntities.stream()
@@ -56,10 +59,12 @@ public  class SkillTemplate1 extends BaseSkillTemplate {
             attackNum -=tauntSceneEntities.size();
         }
 
-        List<SceneEntity> unTauntSceneEntities = collectMap.get(false);
-        unTauntSceneEntities.stream()
-                .limit(attackNum)
-                .forEach(targetSceneEntity->targetSceneEntity.attacked(sceneEntity,skill));
+        Set<SceneEntity> unTauntSceneEntities = collectMap.get(false);
+        for(int i = 1; i <= attackNum ; i++){
+            SceneEntity targetSceneEntity = RandomUtils.randomElement(unTauntSceneEntities);
+            unTauntSceneEntities.remove(targetSceneEntity);
+            targetSceneEntity.attacked(sceneEntity,skill);
+        }
 
     }
 }

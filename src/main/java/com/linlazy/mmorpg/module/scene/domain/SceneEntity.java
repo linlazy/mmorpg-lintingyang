@@ -1,11 +1,8 @@
 package com.linlazy.mmorpg.module.scene.domain;
 
 import com.alibaba.fastjson.JSONObject;
-import com.linlazy.mmorpg.module.skill.domain.Skill;
 import com.linlazy.mmorpg.module.scene.constants.SceneEntityType;
-import com.linlazy.mmorpg.module.common.event.ActorEvent;
-import com.linlazy.mmorpg.module.common.event.EventBusHolder;
-import com.linlazy.mmorpg.module.common.event.EventType;
+import com.linlazy.mmorpg.module.skill.domain.Skill;
 import lombok.Data;
 
 import java.util.concurrent.ScheduledFuture;
@@ -40,14 +37,14 @@ public abstract class SceneEntity {
      */
     protected int hp;
 
-    private  int maxHP = 300;
+    private  int maxHP = 30000;
 
     /**
      * 蓝
      */
     protected int mp;
 
-    private  int maxMP = 300;
+    private  int maxMP = 3000;
 
 
 

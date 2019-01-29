@@ -193,6 +193,15 @@ public class SceneService {
     @Subscribe
     private void handleSceneMove(SceneMoveEvent sceneMoveEvent) {
         Player player = sceneMoveEvent.getPlayer();
+
+
+        Scene sceneBySceneEntity = getSceneBySceneEntity(player);
+        sceneBySceneEntity.getPlayerMap().put(player.getActorId(),player);
+        sceneBySceneEntity.getPlayerMap().forEach(
+                (k,player1)->{
+                    ScenePushHelper.pushEnterScene(player1.getActorId(),String.format("玩家【%】进入了场景",player.getName()));
+                });
+
         PlayerCall playerCall = player.getPlayerCall();
         if(playerCall != null){
             Scene oldScene = getSceneBySceneEntity(playerCall);
