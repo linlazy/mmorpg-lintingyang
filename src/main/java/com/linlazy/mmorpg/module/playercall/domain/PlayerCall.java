@@ -38,6 +38,9 @@ public class PlayerCall extends SceneEntity {
 
     private int level;
 
+    private boolean fightStatus;
+
+
     private List<Skill> skillList = new ArrayList<>();
 
     Skill randomSkill(){
@@ -86,15 +89,17 @@ public class PlayerCall extends SceneEntity {
      */
     public void startPlayerAutoAttackScheduled() {
 
-        SkillService skillService = SpringContextUtil.getApplicationContext().getBean(SkillService.class);
-        autoAttackScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
-//            if(active){
+
+        if(!fightStatus){
+            SkillService skillService = SpringContextUtil.getApplicationContext().getBean(SkillService.class);
+            autoAttackScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
                 //随机选择召唤兽技能攻击
                 Skill skill = this.randomSkill();
-            PlayerPushHelper.pushAttack(sourceId,String.format("您的召唤兽【%s】使用了【%s】技能",this.name,skill.getName()));
-            skillService.useSkill(this,skill);
-//            }
-        }, 0L, 5L, TimeUnit.SECONDS);
+                PlayerPushHelper.pushAttack(sourceId,String.format("您的召唤兽【%s】使用了【%s】技能",this.name,skill.getName()));
+                skillService.useSkill(this,skill);
+                fightStatus =true;
+            }, 0L, 5L, TimeUnit.SECONDS);
+        }
 
     }
 

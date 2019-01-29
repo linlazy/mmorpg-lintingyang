@@ -199,7 +199,7 @@ public class SceneService {
         sceneBySceneEntity.getPlayerMap().put(player.getActorId(),player);
         sceneBySceneEntity.getPlayerMap().forEach(
                 (k,player1)->{
-                    ScenePushHelper.pushEnterScene(player1.getActorId(),String.format("玩家【%】进入了场景",player.getName()));
+                    ScenePushHelper.pushEnterScene(player1.getActorId(),String.format("玩家【%s】进入了场景",player.getName()));
                 });
 
         PlayerCall playerCall = player.getPlayerCall();

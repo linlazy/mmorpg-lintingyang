@@ -217,7 +217,7 @@ public class PlayerService {
             playerEntity.setActorId(maxActorId.incrementAndGet());
             playerEntity.setUsername(username);
             playerEntity.setPassword(password);
-            playerEntity.setHp(100);
+            playerEntity.setHp(10000);
             playerDAO.insertQueue(playerEntity);
             Player player = new Player(playerEntity);
             playerCache.put(player.getActorId(),player);

@@ -36,6 +36,7 @@ public class ServerBoot implements CommandLineRunner {
                 //绑定端口
                 .bind(port);
 
+
         channelFuture.addListener(future -> {
             if(future.isSuccess()){
                 System.out.println(String.format("bind port [%d] success",port));
@@ -43,6 +44,7 @@ public class ServerBoot implements CommandLineRunner {
                 System.out.println(String.format("bind port [%d] fail",port));
             }
         });
+
     }
 
     @Override

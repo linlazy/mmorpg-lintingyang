@@ -195,11 +195,11 @@ public class CopyService {
                         EventBusHolder.post(new ActorEvent<>(player.getActorId(), EventType.COPY_SUCCESS,jsonObject));
                     });
         }else {
-//            copy.cancelBossAutoAttackSchedule();
+            copy.cancelBossAutoAttackSchedule();
             Boss boss = copy.nextBoss();
             copy.getPlayerMap().values().forEach(player ->
                     CopyPushHelper.pushCopyBossRefresh(player.getActorId(),String.format("副本BOSS【%s】",boss.getName())));
-//            copy.startBossAutoAttackScheduled();
+            copy.startBossAutoAttackScheduled();
         }
     }
 
@@ -218,6 +218,9 @@ public class CopyService {
                     CopyPushHelper.pushCopySuccess(player.getActorId(),"副本挑战成功");
                     rewardService.addRewardList(player.getActorId(),rewardList);
                 });
+
+        copy.getPlayerCallMap().values().stream()
+                .forEach(playerCall -> playerCall.quitAutoAttack());
 
         clearCopy(copy);
     }

@@ -65,6 +65,11 @@ public class Player extends SceneEntity {
      */
     private int level;
 
+    /**
+     * 经验
+     */
+    private long exp;
+
     /***
      * 是否锁定背包
      */

@@ -79,7 +79,7 @@
     "monsterIds": [],
     "skillTemplateId": 1,
     "skillTemplateArgs": {
-      "attack":56,
+      "attack":200,
       "attackNum": 1,
       "cd": 3
     }
