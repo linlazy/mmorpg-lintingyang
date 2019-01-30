@@ -124,7 +124,7 @@ public class Task {
         }
         BaseTaskTrigger taskTrigger = BaseTaskTrigger.getTaskTrigger(triggerType);
         if(taskTrigger.isTrigger(this)){
-            this.status = TaskStatus.START_UNCOMPLETE;
+            this.status = TaskStatus.START_UN_ACCEPT;
             TaskDAO taskDAO = SpringContextUtil.getApplicationContext().getBean(TaskDAO.class);
             taskDAO.insertQueue(this.convertTask());
             return true;
@@ -145,10 +145,10 @@ public class Task {
             case TaskStatus.UN_START:
                 stringBuilder.append(String.format("任务状态【未开启】"));
                 break;
-            case TaskStatus.START_UNCOMPLETE:
+            case TaskStatus.START_UN_ACCEPT:
                 stringBuilder.append(String.format("任务状态【已开启未完成】"));
                 break;
-            case TaskStatus.COMPLETE_UNREWARD:
+            case TaskStatus.COMPLETE_UN_REWARD:
                 stringBuilder.append(String.format("任务状态【已完成未领奖】"));
                 break;
             case TaskStatus.REWARDED:

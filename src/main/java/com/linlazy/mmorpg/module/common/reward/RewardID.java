@@ -17,4 +17,8 @@ public interface RewardID {
      * 金币
      */
     long GOLD = 60002;
+    /**
+     * 经验
+     */
+    long EXP = 60003;
 }

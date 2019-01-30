@@ -36,7 +36,7 @@ public class Scene {
     /**
      * 场景怪物信息
      */
-    protected Map<Integer, Monster> monsterMap;
+    protected Map<Long, Monster> monsterMap;
 
     /**
      * 场景召唤兽信息

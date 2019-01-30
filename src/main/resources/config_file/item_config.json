@@ -3,16 +3,14 @@
     "itemId":1,
     "itemType": 1,
     "name": "金创药",
-    "level": 1,
-    "desc": "瞬间恢复500HP、100MP",
-    "source": "随身商店，商城购买",
-    "rewards": "[[60000,500],[60001,100]]",
+    "desc": "使用后可以回复100点生命",
+    "rewards": [[60000,100]],
     "superPosition": 50
   },
   {
-    "itemId":2,
-    "itemType": 1,
-    "name": "金创药",
+    "itemId":1,
+    "itemType": 3,
+    "name": "回春术秘籍",
     "level": 1,
     "desc": "瞬间恢复500HP、100MP",
     "source": "随身商店，商城购买",
@@ -104,5 +102,12 @@
     "attack": 50,
     "durability": 100,
     "consumeDurability": 1
+  },
+  {
+    "itemId":11,
+    "itemType": 1,
+    "name": "野猪肝",
+    "desc": "野猪的肝脏",
+    "source": "野猪岭的小红猪掉落"
   }
 ]

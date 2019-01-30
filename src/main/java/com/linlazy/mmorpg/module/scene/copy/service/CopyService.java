@@ -104,7 +104,7 @@ public class CopyService {
         copy.cancelMonsterAutoAttackSchedule();
         copy.clearMonster();
         //初始化副本小怪信息信息
-        Map<Integer, Monster> monsterMap= monsterService.getMonsterBySceneId(copy.getSceneId());
+        Map<Long, Monster> monsterMap= monsterService.getMonsterBySceneId(copy.getSceneId());
         monsterMap.values().forEach(monster ->monster.setCopyId(copy.getCopyId()));
         copy.setMonsterMap(monsterMap);
         copy.getPlayerMap().values().forEach(player ->
@@ -272,7 +272,7 @@ public class CopyService {
         );
         copy.setBossList(copyBoss);
         //初始化副本小怪信息信息
-        Map<Integer, Monster> monsterMap= monsterService.getMonsterBySceneId(player.getSceneId());
+        Map<Long, Monster> monsterMap= monsterService.getMonsterBySceneId(player.getSceneId());
         Copy finalCopy1 = copy;
         monsterMap.values().forEach(monster ->monster.setCopyId(finalCopy1.getCopyId()));
         copy.setMonsterMap(monsterMap);

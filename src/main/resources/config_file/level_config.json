@@ -1,29 +1,29 @@
 [
   {
     "level": 1,
-    "exp": 50
+    "maxExp": 50
   },
   {
     "level": 2,
-    "exp": 125
+    "maxExp": 125
   },
   {
     "level": 3,
-    "exp": 312
+    "maxExp": 312
   },  {
   "level": 4,
-  "exp": 781
+  "maxExp": 781
 },  {
   "level": 5,
-  "exp": 1953
+  "maxExp": 1953
 },  {
   "level": 6,
-  "exp": 4882
+  "maxExp": 4882
 },  {
   "level": 7,
-  "exp": 12207
+  "maxExp": 12207
 },  {
   "level": 8,
-  "exp": 99999999
+  "maxExp": 99999999
 }
 ]

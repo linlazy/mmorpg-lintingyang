@@ -1,0 +1,18 @@
+[
+  {
+    "itemType": 1,
+    "description": "消耗道具"
+  },
+  {
+    "itemType": 2,
+    "description": "装备道具"
+  },
+  {
+    "itemType": 3,
+    "description": "技能道具"
+  },
+  {
+    "itemType": 4,
+    "description": "【普通道具】玩家平时击败怪物后掉落，不能使用。这类道具可用作两方面用途：可在千货商处贩卖获得金钱，还可在游戏中作为完成任务需要上交的任务道具。"
+  }
+]

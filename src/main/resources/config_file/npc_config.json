@@ -1,14 +1,8 @@
 [
   {
     "npcId": 1,
-    "name": "张良",
-    "talk": "我是张良",
-    "sceneIds": [1,2,3]
-  },
-  {
-    "npcId": 2,
-    "name": "鲁班",
-    "talk": "我是鲁班",
-    "sceneIds": [1,2,3]
+    "name": "装备商人",
+    "talk": "兄台，你要装备吗，找我购买吧",
+    "sceneIds": [2]
   }
 ]

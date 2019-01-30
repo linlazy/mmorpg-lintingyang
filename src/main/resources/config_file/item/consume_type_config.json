@@ -1,0 +1,22 @@
+[
+  {
+    "consumeType": 1,
+    "description": "回复生命类道具"
+  },
+  {
+    "consumeType": 2,
+    "description": "回复体力类道具"
+  },
+  {
+    "consumeType": 3,
+    "description": "传送类道具"
+  },
+  {
+    "consumeType": 4,
+    "description": "技能升级道具"
+  },
+  {
+    "consumeType": 5,
+    "description": "其他类"
+  }
+]

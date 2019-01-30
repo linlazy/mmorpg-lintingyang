@@ -9,7 +9,10 @@ import lombok.Data;
  */
 @Data
 public class MonsterDTO {
-
+    /**
+     * 怪物标识
+      */
+    private Long id;
     /**
      * 怪物名称
      */
@@ -36,6 +39,7 @@ public class MonsterDTO {
     private Integer level;
 
     public MonsterDTO(Monster monster) {
+        id = monster.getId();
         monsterName = monster.getName();
         hp = monster.getHp();
         attack = monster.computeAttack();
@@ -44,6 +48,6 @@ public class MonsterDTO {
 
     @Override
     public String toString() {
-        return String.format("小怪名称【%s】 攻击力【%d】 防御力【%d】 血量：%d 等级：【%d】",monsterName,attack,defense,hp,level);
+        return String.format("小怪标识【%d】 小怪名称【%s】 攻击力【%d】 防御力【%d】 血量：%d 等级：【%d】",id,monsterName,attack,defense,hp,level);
     }
 }

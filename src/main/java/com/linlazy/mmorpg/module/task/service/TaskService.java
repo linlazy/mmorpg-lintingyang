@@ -89,15 +89,15 @@ public class TaskService {
             return;
         }
         BaseTaskTemplate taskTemplate = BaseTaskTemplate.getTaskTemplate(task.getTaskTemplateId());
-        if(taskTemplate.isReachCondition(actorId, task) && task.getStatus() == TaskStatus.START_UNCOMPLETE){
-            task.setStatus(TaskStatus.COMPLETE_UNREWARD);
+        if(taskTemplate.isReachCondition(actorId, task) && task.getStatus() == TaskStatus.ACCEPT_UN_COMPLETE){
+            task.setStatus(TaskStatus.COMPLETE_UN_REWARD);
             //存档
             taskDao.updateQueue(task.convertTask());
             return;
         }
         taskTemplate.updateTaskData(actorId,jsonObject, task);
-        if(taskTemplate.isReachCondition(actorId, task) && task.getStatus() == TaskStatus.START_UNCOMPLETE){
-            task.setStatus(TaskStatus.COMPLETE_UNREWARD);
+        if(taskTemplate.isReachCondition(actorId, task) && task.getStatus() == TaskStatus.ACCEPT_UN_COMPLETE){
+            task.setStatus(TaskStatus.COMPLETE_UN_REWARD);
         }
         //存档
         taskDao.updateQueue(task.convertTask());
@@ -107,7 +107,7 @@ public class TaskService {
         if(!task.isStart()){
             return false;
         }
-        if (task.getStatus() < TaskStatus.START_UNCOMPLETE){
+        if (task.getStatus() < TaskStatus.START_UN_ACCEPT){
             return false;
         }
         BaseTaskTemplate taskTemplate = BaseTaskTemplate.getTaskTemplate(task.getTaskTemplateId());
@@ -138,7 +138,7 @@ public class TaskService {
             return Result.valueOf("参数有误");
         }
 
-        if(task.getStatus() != TaskStatus.COMPLETE_UNREWARD){
+        if(task.getStatus() != TaskStatus.COMPLETE_UN_REWARD){
             return  Result.valueOf("任务状态不对");
         }
 
@@ -146,6 +146,30 @@ public class TaskService {
         rewardService.addRewardList(actorId,task.getRewardList());
 
 
+        return Result.success();
+    }
+
+
+    /**
+     * 接受任务
+     * @param actorId
+     * @param taskId
+     * @return
+     */
+    public Result<?> acceptTask(long actorId, long taskId){
+
+        PlayerTask playerTask = getPlayerTask(actorId);
+        Task task = playerTask.getMap().get(taskId);
+        if(task == null){
+            return Result.valueOf("参数有误");
+        }
+
+        if(task.getStatus() != TaskStatus.START_UN_ACCEPT){
+            return  Result.valueOf("任务状态不对");
+        }
+
+        task.setStatus(TaskStatus.ACCEPT_UN_COMPLETE);
+        taskDao.updateQueue(task.convertTask());
         return Result.success();
     }
 

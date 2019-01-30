@@ -29,6 +29,10 @@ import java.util.List;
 public class Boss extends SceneEntity {
 
     /**
+     * boss标识
+     */
+    private long id;
+    /**
      * 场景ID
      */
     private int sceneId;

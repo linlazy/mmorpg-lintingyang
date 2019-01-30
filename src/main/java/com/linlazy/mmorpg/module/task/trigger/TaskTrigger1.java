@@ -25,6 +25,6 @@ public class TaskTrigger1 extends BaseTaskTrigger {
         JSONObject triggerArgs = taskDo.getTriggerArgs();
         int taskId = triggerArgs.getIntValue("taskId");
         TaskEntity task = taskDao.getEntityByPK(taskDo.getActorId(), taskId);
-        return task.getStatus() >= TaskStatus.COMPLETE_UNREWARD;
+        return task.getStatus() >= TaskStatus.COMPLETE_UN_REWARD;
     }
 }

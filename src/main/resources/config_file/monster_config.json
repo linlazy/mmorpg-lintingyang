@@ -2,16 +2,26 @@
   {
     "monsterId": 1,
     "name": "竹叶青",
+    "level": 1,
+    "activeAttack": false,
     "hp": 100,
-    "sceneIds": [1,2,3],
-    "rewards": [[1,5]]
+    "sceneIds": [2],
+    "randomRewards": [[1,1,80],[2,1,20]]
   },
   {
     "monsterId": 2,
-    "name": "黑水玄蛇",
+    "name": "红貂",
+    "level": 3,
+    "hp": 150,
+    "sceneIds": [2],
+    "rewards": [[1,10]]
+  },
+  {
+    "monsterId": 3,
+    "name": "小红猪",
     "attack": 5,
     "hp": 1000,
-    "sceneIds": [1,2,3,4],
+    "sceneIds": [8],
     "rewards": [[1,10]]
   }
 ]

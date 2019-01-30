@@ -74,7 +74,7 @@ public class SceneService {
                     scene.setNeighborSet(sceneConfig.getNeighborSet());
 
                     //初始化怪物
-                    Map<Integer, Monster> monsterMap= monsterService.getMonsterBySceneId(sceneEntity.getSceneId());
+                    Map<Long, Monster> monsterMap= monsterService.getMonsterBySceneId(sceneEntity.getSceneId());
                     scene.setMonsterMap( monsterMap);
 
                     //初始化NPC

@@ -1,0 +1,23 @@
+[
+  {
+    "itemId":1,
+    "consumeType": 1,
+    "name": "金创药",
+    "desc": "使用后可以回复100点生命",
+    "rewards": [[60000,100]],
+    "superPosition": 99
+  },  {
+  "itemId":2,
+  "consumeType": 2,
+  "name": "清心露",
+  "desc": "使用后可以回复100点体力。",
+  "rewards": [[60001,100]],
+  "superPosition": 99
+},  {
+  "itemId":3,
+  "consumeType": 3,
+  "name": "回城符",
+  "desc": "回城所用的灵符。",
+  "superPosition": 99
+}
+]

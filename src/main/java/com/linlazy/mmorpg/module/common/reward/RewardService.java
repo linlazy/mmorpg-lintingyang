@@ -42,6 +42,9 @@ public class RewardService {
             }else if(reward.getRewardId() == RewardID.GOLD){
                 player.resumeGold(reward.getCount());
                 playerService.updatePlayer(player);
+            }else if(reward.getRewardId() == RewardID.EXP){
+                player.addExp(reward.getCount());
+                playerService.updatePlayer(player);
             }else {
                 ItemContext itemContext = new ItemContext(reward.getRewardId());
                 itemContext.setCount(reward.getCount());

@@ -1,6 +1,10 @@
 package com.linlazy.mmorpg.module.player.domain;
 
 import com.linlazy.mmorpg.domain.*;
+import com.linlazy.mmorpg.file.config.LevelConfig;
+import com.linlazy.mmorpg.file.service.LevelConfigService;
+import com.linlazy.mmorpg.module.common.event.ActorEvent;
+import com.linlazy.mmorpg.module.common.event.EventType;
 import com.linlazy.mmorpg.module.equip.domain.DressedEquip;
 import com.linlazy.mmorpg.module.player.attack.PlayerAttack;
 import com.linlazy.mmorpg.module.backpack.service.PlayerBackpackService;
@@ -37,7 +41,10 @@ public class Player extends SceneEntity {
 
     private PlayerEntity playerEntity;
 
+
     public Player(PlayerEntity playerEntity) {
+
+
         this.playerEntity =playerEntity;
         this.setActorId(playerEntity.getActorId());
         this.setMp(playerEntity.getMp());
@@ -48,6 +55,10 @@ public class Player extends SceneEntity {
         this.setProfession(playerEntity.getProfession());
         this.setLevel(playerEntity.getLevel());
         this.setSceneId(playerEntity.getSceneId());
+
+        LevelConfigService levelConfigService = SpringContextUtil.getApplicationContext().getBean(LevelConfigService.class);
+        LevelConfig levelConfig = levelConfigService.getLevelConfig(level);
+        this.setMaxExp(levelConfig.getMaxExp());
     }
 
     /**
@@ -69,6 +80,11 @@ public class Player extends SceneEntity {
      * 经验
      */
     private long exp;
+
+    /**
+     * 最大经验
+     */
+    private long maxExp;
 
     /***
      * 是否锁定背包
@@ -228,5 +244,22 @@ public class Player extends SceneEntity {
     public PlayerShop getPlayerShop(){
         ShopService shopService = SpringContextUtil.getApplicationContext().getBean(ShopService.class);
         return shopService.getPlayerShop(actorId);
+    }
+
+    /**
+     * 增加经验
+     * @param exp
+     */
+    public void addExp(long exp) {
+        LevelConfigService levelConfigService = SpringContextUtil.getApplicationContext().getBean(LevelConfigService.class);
+        this.exp += exp;
+
+        while(this.exp > maxExp){
+            this.level += 1;
+            this.exp -= maxExp;
+            LevelConfig levelConfig = levelConfigService.getLevelConfig(level);
+            maxExp =levelConfig.getMaxExp();
+            EventBusHolder.post(new ActorEvent<>(actorId, EventType.ACTOR_LEVEL_UP));
+        }
     }
 }

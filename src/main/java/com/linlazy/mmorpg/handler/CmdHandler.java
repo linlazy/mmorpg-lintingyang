@@ -328,6 +328,18 @@ public class CmdHandler {
         return playerService.gainGold(actorId,gold);
     }
 
+    /**
+     * 增加经验
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("addExp")
+    public Result<?> addExp(JSONObject jsonObject){
+        long actorId = jsonObject.getLongValue("actorId");
+        long exp = jsonObject.getLongValue("exp");
+        return playerService.addExp(actorId,exp);
+    }
+
 
     /**
      *  查看玩家信息

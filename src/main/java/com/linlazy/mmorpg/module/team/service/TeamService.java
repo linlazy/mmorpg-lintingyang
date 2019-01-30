@@ -2,11 +2,11 @@ package com.linlazy.mmorpg.module.team.service;
 
 import com.linlazy.mmorpg.module.player.domain.Player;
 import com.linlazy.mmorpg.module.player.domain.PlayerTeamInfo;
+import com.linlazy.mmorpg.module.player.service.PlayerService;
 import com.linlazy.mmorpg.module.team.domain.Team;
 import com.linlazy.mmorpg.module.team.dto.TeamDTO;
 import com.linlazy.mmorpg.module.team.push.TeamPushHelper;
 import com.linlazy.mmorpg.server.common.Result;
-import com.linlazy.mmorpg.module.player.service.PlayerService;
 import com.linlazy.mmorpg.utils.SessionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,7 +109,7 @@ public class TeamService {
             return Result.valueOf(result.getCode());
         }
 
-        TeamPushHelper.pushTeam(targetId,String.format("玩家【%s】邀请你加入队伍",player.getName()));
+        TeamPushHelper.pushTeam(targetId,String.format("玩家【%d】 玩家【%s】邀请你加入队伍",player.getActorId(),player.getName()));
         return Result.success();
     }
 
@@ -131,7 +131,7 @@ public class TeamService {
         }
 
         //推送通知对方
-        TeamPushHelper.pushTeam(targetId, String.format("玩家【%s】接受了你的队伍邀请",player.getName()));
+        TeamPushHelper.pushTeam(targetId, String.format("玩家ID【%d】 玩家【%s】接受了你的队伍邀请",player.getActorId(),player.getName()));
 
         return Result.success();
     }
@@ -203,6 +203,11 @@ public class TeamService {
     }
 
     public Result<?> teamInfo(long actorId) {
+        Long teamId = playerTeamIdMap.get(actorId);
+        if(teamId == null){
+            TeamPushHelper.pushTeam(actorId,"您没有组队");
+        }
+
         Team team = playerService.getPlayer(actorId).getTeam();
 
         return Result.success(new TeamDTO(team).toString());

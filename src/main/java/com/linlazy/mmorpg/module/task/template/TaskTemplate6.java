@@ -10,54 +10,49 @@ import org.springframework.stereotype.Component;
 import java.util.Set;
 
 /**
- *  击杀xxx小怪N只
+ *  在场景A杀死B只C小怪
  * @author linlazy
  */
 @Component
-public class TaskTemplate3 extends BaseTaskTemplate {
-
+public class TaskTemplate6 extends BaseTaskTemplate {
     /**
-     * 关心场景怪物死亡事件
+     * 关心事件小怪死亡
      * @return
      */
     @Override
     public Set<EventType> likeEvent() {
-        return Sets.newHashSet(EventType.SCENE_MONSTER_DEAD);
+        return Sets.newHashSet(EventType.SCENE_MONSTER_DEAD,EventType.ACTOR_LEVEL_UP);
     }
 
     @Override
     protected int templateId() {
-        return 3;
+        return 6;
     }
 
-    /**
-     * 前置条件是否通过
-     * @param actorId
-     * @param jsonObject
-     * @param task
-     * @return
-     */
+
+
     @Override
     public boolean isPreCondition(long actorId, JSONObject jsonObject, Task task) {
-        Monster monster = (Monster) jsonObject.get("monster");
         JSONObject taskTemplateArgs = task.getTaskTemplateArgs();
-        long monsterId = taskTemplateArgs.getLongValue("monsterId");
-        return monster.getMonsterId()== monsterId ;
+        Monster monster = (Monster) jsonObject.get("monster");
+
+        int targetSceneId = taskTemplateArgs.getIntValue("sceneId");
+        if(monster.getSceneId() != targetSceneId){
+            return false;
+        }
+
+        int monsterId = taskTemplateArgs.getIntValue("monsterId");
+        if(monster.getMonsterId() != monsterId){
+            return false;
+        }
+        return true;
     }
 
-    /**
-     * 更新任务数据
-     * @param actorId
-     * @param jsonObject
-     * @param task
-     * @return
-     */
     @Override
     public Task updateTaskData(long actorId, JSONObject jsonObject, Task task) {
-
         JSONObject data = task.getData();
-        int count = data.getIntValue("count");
-        data.put("count",count + 1);
+        int killedNum = data.getIntValue("killedNum");
+        data.put("killedNum",killedNum + 1);
         return task;
     }
 
@@ -69,9 +64,10 @@ public class TaskTemplate3 extends BaseTaskTemplate {
      */
     @Override
     public boolean isReachCondition(long actorId, Task task) {
-        JSONObject data = task.getData();
-        return data.getIntValue("count") >= task.getTaskTemplateArgs().getIntValue("targetCount");
+        JSONObject taskTemplateArgs = task.getTaskTemplateArgs();
+        int killNum = taskTemplateArgs.getIntValue("killNum");
+        int killedNum = task.getData().getIntValue("killedNum");
+        return killedNum >= killNum;
     }
-
 
 }

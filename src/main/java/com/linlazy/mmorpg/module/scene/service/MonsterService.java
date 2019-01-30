@@ -32,8 +32,8 @@ public class MonsterService {
      * @return
      * @param sceneId
      */
-    public  Map<Integer,Monster> getMonsterBySceneId(int sceneId){
-        Map<Integer,Monster> monsterMap = new HashMap<>();
+    public  Map<Long,Monster> getMonsterBySceneId(int sceneId){
+        Map<Long,Monster> monsterMap = new HashMap<>();
 
         List<JSONObject>  sceneMonsterConfigs= monsterConfigService.getMonsterBySceneId(sceneId);
         for(int i = 0; i < sceneMonsterConfigs.size(); i++){
@@ -58,7 +58,7 @@ public class MonsterService {
             List<Skill> monsterSkillList = skillService.getMonsterSkillList(monster.getMonsterId());
             monster.setSkillList(monsterSkillList);
 
-            monsterMap.put(monster.getMonsterId(),monster);
+            monsterMap.put(monster.getId(),monster);
         }
 
         return monsterMap;

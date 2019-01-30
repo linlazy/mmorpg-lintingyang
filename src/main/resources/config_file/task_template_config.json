@@ -9,7 +9,7 @@
   },
   {
     "taskTemplateId": 3,
-    "description": " 击杀xxx小怪N只"
+    "description": " 击杀A只B小怪"
   },
   {
     "taskTemplateId": 4,
@@ -18,5 +18,9 @@
   {
     "taskTemplateId": 5,
     "description": " 通过xxx副本"
+  },
+  {
+    "taskTemplateId": 6,
+    "description": "在场景A杀死B只C小怪"
   }
 ]

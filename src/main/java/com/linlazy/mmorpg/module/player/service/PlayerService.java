@@ -5,6 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.linlazy.mmorpg.dao.PlayerDAO;
+import com.linlazy.mmorpg.event.type.LoginEvent;
 import com.linlazy.mmorpg.module.player.domain.Player;
 import com.linlazy.mmorpg.module.skill.domain.Skill;
 import com.linlazy.mmorpg.module.player.dto.PlayerDTO;
@@ -73,8 +74,6 @@ public class PlayerService {
                     PlayerDAO playerDAO = SpringContextUtil.getApplicationContext().getBean(PlayerDAO.class);
                     PlayerEntity playerEntity = playerDAO.getEntityByPK(actorId);
                     Player player = new Player(playerEntity);
-
-
 
                     return player;
                 }
@@ -161,6 +160,7 @@ public class PlayerService {
                 //通知原账号被迫下线
                 PlayerPushHelper.pushLogin(playerEntity.getActorId(),"被迫下线");
                 SessionManager.unBind(playerEntity.getActorId());
+                SessionManager.bind(playerEntity.getActorId(),channel);
                 PlayerPushHelper.pushLogin(playerEntity.getActorId(),"登录成功，原账号已下线");
             }
             //正常登录
@@ -169,6 +169,7 @@ public class PlayerService {
 
 
         EventBusHolder.post(new ActorEvent<>(playerEntity.getActorId(), EventType.LOGIN));
+        EventBusHolder.post(new LoginEvent(getPlayer(playerEntity.getActorId())));
 
         if(playerEntity.getProfession() == 0 ){
             PlayerPushHelper.pushRegister(playerEntity.getActorId(),"请选择职业\n"+
@@ -217,6 +218,7 @@ public class PlayerService {
             playerEntity.setActorId(maxActorId.incrementAndGet());
             playerEntity.setUsername(username);
             playerEntity.setPassword(password);
+            playerEntity.setLevel(1);
             playerEntity.setHp(10000);
             playerDAO.insertQueue(playerEntity);
             Player player = new Player(playerEntity);
@@ -273,9 +275,6 @@ public class PlayerService {
         return Result.success();
     }
 
-    public Result<?> upgradeSkill(long actorId, int skillId) {
-        return null;
-    }
 
     public Result<?> upgradeLevel(long actorId) {
         Player player = getPlayer(actorId);
@@ -295,6 +294,13 @@ public class PlayerService {
         player.setGold(player.getGold() + addGold);
         playerDAO.updateQueue(player.convertPlayerEntity());
         EventBusHolder.post(new ActorEvent<>(actorId,EventType.ACTOR_GOLD_CHANGE));
+        return Result.success();
+    }
+
+    public Result<?> addExp(long actorId, long exp) {
+        Player player = getPlayer(actorId);
+        player.addExp(exp);
+        updatePlayer(player);
         return Result.success();
     }
 }

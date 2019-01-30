@@ -1,18 +1,23 @@
 package com.linlazy.mmorpg.module.player.logout;
 
 import com.google.common.eventbus.Subscribe;
-import com.linlazy.mmorpg.module.backpack.service.PlayerBackpackService;
-import com.linlazy.mmorpg.module.player.domain.Player;
 import com.linlazy.mmorpg.event.type.LoginEvent;
+import com.linlazy.mmorpg.file.config.SceneConfig;
+import com.linlazy.mmorpg.file.service.SceneConfigService;
+import com.linlazy.mmorpg.module.backpack.service.PlayerBackpackService;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.email.service.EmailService;
+import com.linlazy.mmorpg.module.player.domain.Player;
 import com.linlazy.mmorpg.module.player.service.PlayerService;
+import com.linlazy.mmorpg.module.scene.service.SceneService;
 import com.linlazy.mmorpg.module.shop.service.ShopService;
 import com.linlazy.mmorpg.module.skill.service.SkillService;
 import com.linlazy.mmorpg.module.task.service.TaskService;
 import com.linlazy.mmorpg.server.common.LogoutListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.Map;
 import java.util.concurrent.*;
 
@@ -26,9 +31,14 @@ public class PlayerCacheHandler implements LogoutListener {
 
     private static  ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
+    @Autowired
+    private SceneService sceneService;
+    @Autowired
+    private SceneConfigService sceneConfigService;
 
     private static Map<Long,ScheduledFuture<?>> map = new ConcurrentHashMap<>();
 
+    @PostConstruct
     public void init(){
         EventBusHolder.register(this);
     }
@@ -41,6 +51,14 @@ public class PlayerCacheHandler implements LogoutListener {
             scheduledFuture.cancel(true);
             map.remove(player.getActorId());
         }
+
+
+        SceneConfig sceneConfig = sceneConfigService.getSceneConfig(player.getSceneId());
+        int targetSceneId = sceneConfig.getNeighborSet().get(0);
+        if(sceneService.isCopyScene(player.getSceneId())){
+            sceneService.moveTo(player.getActorId(),targetSceneId);
+        }
+
     }
 
     @Override

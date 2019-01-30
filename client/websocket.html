@@ -212,6 +212,22 @@
 					var json ={};
 					json.command = "useSkill";
 					json.skillId = arr[1];
+
+					if(arr[2] == "player"){
+						json.sceneEntityType = 1;
+					}
+					if(arr[2] == "monster"){
+						json.sceneEntityType = 2;
+					}
+
+					if(arr[2] == "boss"){
+						json.sceneEntityType = 4;
+					}
+					if(arr[2] == "playerCall"){
+						json.sceneEntityType = 5;
+					}
+					json.sceneEntityId = arr[3];
+
 					var jsonStr = JSON.stringify(json);
 					console.log(jsonStr);
 					socket.send(jsonStr);
@@ -591,6 +607,17 @@
 					console.log(jsonStr);
 					socket.send(jsonStr);
 					ta.value += "正在从公会仓库中取出物品..."+ "\r\n";
+				}
+
+				if(arr[0] == "addExp"){
+
+					var json ={};
+					json.command = "addExp";
+					json.exp = arr[1];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "正在增加经验..."+ "\r\n";
 				}
 
 			}else{

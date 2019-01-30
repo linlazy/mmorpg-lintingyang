@@ -1,0 +1,26 @@
+[
+  {
+    "equipType": 1,
+    "description": "武器"
+  },
+  {
+    "equipType": 2,
+    "description": "头盔"
+  },
+  {
+    "equipType": 3,
+    "description": "衣甲"
+  },
+  {
+    "equipType": 4,
+    "description": "护手"
+  },
+  {
+    "equipType": 5,
+    "description": "下装"
+  },
+  {
+    "equipType": 6,
+    "description": "战靴"
+  }
+]

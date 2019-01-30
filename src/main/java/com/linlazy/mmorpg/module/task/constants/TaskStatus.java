@@ -8,16 +8,21 @@ public interface TaskStatus {
      * 未开启
      */
     int UN_START = 0;
+
     /**
-     * 已开启，未完成
+     * 已开启，未接受
      */
-    int START_UNCOMPLETE = 1;
+    int START_UN_ACCEPT = 1;
+    /**
+     * 已接受，未完成
+     */
+    int ACCEPT_UN_COMPLETE = 2;
     /**
      * 已完成，未领奖
      */
-    int COMPLETE_UNREWARD = 2;
+    int COMPLETE_UN_REWARD = 3;
     /**
      * 已领奖
      */
-    int REWARDED = 3;
+    int REWARDED = 4;
 }
