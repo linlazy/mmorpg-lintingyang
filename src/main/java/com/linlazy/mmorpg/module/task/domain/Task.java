@@ -2,10 +2,10 @@ package com.linlazy.mmorpg.module.task.domain;
 
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpg.dao.TaskDAO;
-import com.linlazy.mmorpg.module.task.constants.TaskStatus;
 import com.linlazy.mmorpg.entity.TaskEntity;
 import com.linlazy.mmorpg.file.config.TaskConfig;
 import com.linlazy.mmorpg.module.common.reward.Reward;
+import com.linlazy.mmorpg.module.task.constants.TaskStatus;
 import com.linlazy.mmorpg.module.task.trigger.BaseTaskTrigger;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import lombok.Data;
@@ -13,8 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author linlazy
@@ -56,50 +57,48 @@ public class Task {
     /**
      * 任务模板参数
      */
-    private JSONObject taskTemplateArgs = new JSONObject();
+    private JSONObject taskTemplateArgs;
+
 
     /**
-     * 触发类型
+     * 开启任务时自动接受任务
      */
-    private int triggerType;
-    /**
-     * 触发参数
-     */
-    private JSONObject triggerArgs = new JSONObject();
+    private boolean autoAcceptWithStart;
 
     /**
-     * 开启时间
+     * 达到条件时任务时自动完成
      */
-    private LocalDateTime beginTime;
+    private boolean autoCompleteWithReachCondition;
+
     /**
-     * 结束时间
+     * 触发条件
      */
-    private LocalDateTime endTime;
+    private Map<Integer,TriggerCondition> triggerConditionMap = new HashMap<>();
 
 
 
+    /**
+     * 奖励
+     */
     private List<Reward> rewardList;
 
     public Task(TaskConfig taskConfig, TaskEntity task) {
         this.taskId = taskConfig.getTaskId();
         this.actorId = task.getActorId();
-//        this.type = taskConfig.ge("type");
         if(!StringUtils.isEmpty(task.getData())){
             this.data =JSONObject.parseObject(task.getData());
         }
         this.status = task.getStatus();
         this.taskTemplateId = taskConfig.getTaskTemplateId() ;
         this.taskTemplateArgs = taskConfig.getTaskTemplateArgs();
-        this.triggerType = taskConfig.getTriggerType();
-        this.triggerArgs =taskConfig.getTriggerArgs();
-        this.beginTime = taskConfig.getBeginTime();
-        this.endTime = taskConfig.getEndTime();
         this.rewardList =taskConfig.getRewardList();
-
+        this.triggerConditionMap = taskConfig.getTriggerConditionMap();
+        this.autoAcceptWithStart = taskConfig.isAutoAcceptWithStart();
+        this.autoCompleteWithReachCondition = taskConfig.isAutoCompleteWithReachCondition();
     }
 
 
-    public TaskEntity convertTask(){
+    public TaskEntity convertTaskEntity(){
         TaskEntity task = new TaskEntity();
 
         task.setTaskId(this.taskId);
@@ -111,22 +110,28 @@ public class Task {
     }
 
     /**
-     * 任务是否被开启
+     * 任务是否开启
      * @return
      */
     public boolean isStart(){
-        if(LocalDateTime.now().isBefore(beginTime)||LocalDateTime.now().isAfter(endTime)){
-            return false;
-        }
-
         if(this.status > TaskStatus.UN_START){
             return true;
         }
-        BaseTaskTrigger taskTrigger = BaseTaskTrigger.getTaskTrigger(triggerType);
-        if(taskTrigger.isTrigger(this)){
-            this.status = TaskStatus.START_UN_ACCEPT;
+
+        boolean isStart = triggerConditionMap.values().stream()
+                .allMatch(triggerCondition -> {
+                    BaseTaskTrigger taskTrigger = BaseTaskTrigger.getTaskTrigger(triggerCondition.getTriggerType());
+                    return taskTrigger.isTrigger(this);
+                });
+
+        if(isStart){
+            if (isAutoAcceptWithStart()){
+                this.status = TaskStatus.ACCEPT_UN_COMPLETE;
+            }else {
+                this.status = TaskStatus.ACCEPT_UN_COMPLETE;
+            }
             TaskDAO taskDAO = SpringContextUtil.getApplicationContext().getBean(TaskDAO.class);
-            taskDAO.insertQueue(this.convertTask());
+            taskDAO.insertQueue(this.convertTaskEntity());
             return true;
         }else {
             return false;
@@ -145,7 +150,7 @@ public class Task {
             case TaskStatus.UN_START:
                 stringBuilder.append(String.format("任务状态【未开启】"));
                 break;
-            case TaskStatus.START_UN_ACCEPT:
+            case TaskStatus.ACCEPT_UN_COMPLETE:
                 stringBuilder.append(String.format("任务状态【已开启未完成】"));
                 break;
             case TaskStatus.COMPLETE_UN_REWARD:
@@ -156,8 +161,6 @@ public class Task {
                 break;
              default:
         }
-        stringBuilder.append(String.format("任务开启时间【%s】",beginTime.toString()));
-        stringBuilder.append(String.format("任务结束时间【%s】",endTime));
 
         stringBuilder.append(String.format("奖励内容"));
         rewardList.forEach(reward -> {

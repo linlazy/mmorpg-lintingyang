@@ -52,6 +52,9 @@ public class SceneConfigService {
             sceneConfig.setNeighborSet(neighborSet);
             sceneConfig.setOverTimeSeconds(jsonObject.getIntValue("times"));
 
+            JSONArray sceneEntities = jsonObject.getJSONArray("sceneEntities");
+            sceneConfig.setSceneEntities(sceneEntities);
+
             //初始化奖励
             List<Reward> rewardList = sceneConfig.getRewardList();
 

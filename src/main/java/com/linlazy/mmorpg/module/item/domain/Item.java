@@ -43,8 +43,14 @@ public class Item {
      */
     private int itemType;
 
+    /**
+     * 消耗道具类型
+     */
+    private int consumeType;
+
     private String ext;
 
+    private JSONObject extJsonObject;
 
     public Item() {
     }

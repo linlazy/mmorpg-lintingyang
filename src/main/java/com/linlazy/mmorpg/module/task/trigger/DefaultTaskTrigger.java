@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  * @author linlazy
  */
 @Component
-public class TaskTrigger0 extends BaseTaskTrigger {
+public class DefaultTaskTrigger extends BaseTaskTrigger {
     @Override
     protected int triggerType() {
         return 0;
@@ -16,7 +16,7 @@ public class TaskTrigger0 extends BaseTaskTrigger {
 
 
     @Override
-    public boolean isTrigger(Task taskDo) {
+    public boolean isTrigger(Task task) {
        return true;
     }
 }

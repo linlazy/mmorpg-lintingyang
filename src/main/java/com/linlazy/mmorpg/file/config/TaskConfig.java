@@ -2,10 +2,12 @@ package com.linlazy.mmorpg.file.config;
 
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpg.module.common.reward.Reward;
+import com.linlazy.mmorpg.module.task.domain.TriggerCondition;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 任务配置类
@@ -30,28 +32,23 @@ public class TaskConfig {
     private JSONObject taskTemplateArgs;
 
     /**
-     * 任务开启时间
-     */
-    private LocalDateTime beginTime;
-
-    /**
-     * 任务结束时间
-     */
-    private LocalDateTime endTime;
-
-    /**
      * 奖励
      */
     private List<Reward> rewardList;
 
     /**
-     * 触发类型
+     * 触发条件
      */
-    private int triggerType;
+    private Map<Integer, TriggerCondition> triggerConditionMap = new HashMap<>();
 
     /**
-     * 触发参数
+     * 开启任务时自动接受任务
      */
-    private JSONObject triggerArgs;
+    private boolean autoAcceptWithStart;
+
+    /**
+     * 达到条件时任务时自动完成
+     */
+    private boolean autoCompleteWithReachCondition;
 
 }

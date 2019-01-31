@@ -131,6 +131,7 @@ public class Copy extends Scene {
     /**
      * 小怪定时刷新调度
      */
+    @Override
     public void startRefreshMonsterScheduled() {
         //到达时间后挑战结束,退出副本触发事件
         refreshMonsterScheduled = scheduledExecutorService.scheduleAtFixedRate(() -> {

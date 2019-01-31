@@ -649,11 +649,11 @@ public class CmdHandler {
      * @param jsonObject
      * @return
      */
-    @Cmd("rewardTask")
+    @Cmd("commitTask")
     public Result<?> rewardTask(JSONObject jsonObject){
         long actorId = jsonObject.getLong("actorId");
         long taskId = jsonObject.getLongValue("taskId");
-        return taskService.rewardTask(actorId,taskId);
+        return taskService.commitTask(actorId,taskId);
     }
 
     /**

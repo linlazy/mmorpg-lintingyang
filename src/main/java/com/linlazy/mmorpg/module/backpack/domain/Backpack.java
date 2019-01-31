@@ -4,7 +4,7 @@ import com.linlazy.mmorpg.module.equip.domain.Equip;
 import com.linlazy.mmorpg.module.item.domain.Item;
 import com.linlazy.mmorpg.module.item.domain.ItemContext;
 import com.linlazy.mmorpg.module.backpack.BackpackInterface;
-import com.linlazy.mmorpg.module.item.constants.ItemType;
+import com.linlazy.mmorpg.module.item.type.ItemType;
 import com.linlazy.mmorpg.utils.ItemIdUtil;
 import lombok.Data;
 

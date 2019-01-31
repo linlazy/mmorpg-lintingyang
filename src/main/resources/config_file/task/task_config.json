@@ -1,0 +1,89 @@
+[
+  {
+    "taskId": 1,
+    "taskType": 1,
+    "taskName": "锄强扶弱",
+    "desc": "【新手任务】装备商人请你去巴郡东郊杀死5只竹叶青，替他教训一下这群总是半路打劫他的家伙,奖励50经验",
+    "taskTemplateId": 1,
+    "taskTemplateArgs": {
+      "sceneId": 2,
+      "killNum": 3,
+      "monsterId": 1
+    },
+    "rewards": [[60003,50]]
+  },
+  {
+    "taskId": 2,
+    "taskType": 1,
+    "taskName": "初试锋芒",
+    "desc": "【新手任务】装备商人请你穿着装备之后去巴郡东郊杀死5只红貂，替他教训一下这群总是半路打劫他的红貂，然后把这个好消息告诉古书商人，他那里自然会有丰厚的奖励给你。。",
+  "trigger": [{
+    "triggerType": 1,
+    "triggerArgs": {
+      "taskId": 1
+    }
+  }, {
+    "triggerType": 4,
+    "triggerArgs": {
+      "level": 3
+    }
+  }
+  ],
+  "taskTemplateId": 2,
+  "taskTemplateArgs": {
+    "dressedEquip": true,
+    "sceneId": 7,
+    "killNum": 5,
+    "monsterId": 3
+  },
+  "rewards": [[60003,100]]
+},
+  {
+    "taskId": 3,
+    "taskName": "杀怪取物",
+    "desc": "【新手任务】古书商人要你前往野猪岭，去杀死该处的小红猪怪物之后拿回十个掉落的野猪肝之后，去找砖家领取取奖励。",
+    "trigger": [{
+      "triggerType": 1,
+      "triggerArgs": {
+          "taskId": 2
+        }
+      }, {
+      "triggerType": 4,
+      "triggerArgs": {
+          "level": 5
+        }
+      }
+    ],
+    "taskTemplateId": 3,
+    "taskTemplateArgs": {
+      "sceneId": 8,
+      "killNum": 5,
+      "monsterId": 3
+    },
+    "rewards": [[60003,50]]
+  },
+  {
+  "taskId": 4,
+  "taskName": "简单交易",
+  "desc": "【新手任务】千货商让你从他这里购买5个凝神丹给裁缝大妈送去，她自然会送你一套华美衣饰把你装扮一新。",
+  "trigger": [{
+    "triggerType": 1,
+    "triggerArgs": {
+      "taskId": 3
+    }
+  }, {
+    "triggerType": 4,
+    "triggerArgs": {
+      "level": 5
+    }
+  }
+  ],
+  "taskTemplateId": 3,
+  "taskTemplateArgs": {
+    "sceneId": 3,
+    "killNum": 5,
+    "monsterId": 3
+  },
+  "rewards": [[60003,50]]
+}
+]

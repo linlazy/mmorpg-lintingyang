@@ -76,7 +76,7 @@ public class SkillConfigService {
             skillConfig.setBossIds(bossIds);
             skillConfig.setMonsterIds(monsterIds);
             skillConfig.setProfessionId(jsonObject.getLongValue("professionId"));
-            skillConfig.setType(jsonObject.getIntValue("type"));
+            skillConfig.setType(jsonObject.getIntValue("effect"));
             skillConfig.setPlayerCallType(jsonObject.getBooleanValue("playerCallType"));
 
 

@@ -4,14 +4,12 @@
     "taskType": 1,
     "taskName": "锄强扶弱",
     "desc": "【新手任务】装备商人请你去巴郡东郊杀死5只竹叶青，替他教训一下这群总是半路打劫他的家伙,奖励50经验",
-    "taskTemplateId": 6,
+    "taskTemplateId": 1,
     "taskTemplateArgs": {
       "sceneId": 2,
       "killNum": 3,
       "monsterId": 1
     },
-    "beginTime": "2018-09-11 00:00:00",
-    "endTime": "2030-09-12 00:00:00",
     "rewards": [[60003,50]]
   },
   {
@@ -22,8 +20,7 @@
   "trigger": [{
     "triggerType": 2,
     "triggerArgs": {
-      "taskId": 1,
-      "taskType": 1
+      "taskId": 1
     }
   }, {
     "triggerType": 4,
@@ -39,8 +36,6 @@
     "killNum": 5,
     "monsterId": 3
   },
-  "beginTime": "2018-09-11 00:00:00",
-  "endTime": "2030-09-12 00:00:00",
   "rewards": [[60003,100]]
 },
   {
@@ -50,8 +45,7 @@
     "trigger": [{
       "triggerType": 2,
       "triggerArgs": {
-          "taskId": 3,
-          "taskType": 1
+          "taskId": 3
         }
       }, {
       "triggerType": 4,
@@ -66,8 +60,6 @@
       "killNum": 5,
       "monsterId": 3
     },
-    "beginTime": "2018-09-11 00:00:00",
-    "endTime": "2030-09-12 00:00:00",
     "rewards": [[60003,50]]
   },
   {
@@ -77,8 +69,7 @@
   "trigger": [{
     "triggerType": 2,
     "triggerArgs": {
-      "taskId": 3,
-      "taskType": 1
+      "taskId": 3
     }
   }, {
     "triggerType": 4,
@@ -93,8 +84,6 @@
     "killNum": 5,
     "monsterId": 3
   },
-  "beginTime": "2018-09-11 00:00:00",
-  "endTime": "2030-09-12 00:00:00",
   "rewards": [[60003,50]]
 }
 ]

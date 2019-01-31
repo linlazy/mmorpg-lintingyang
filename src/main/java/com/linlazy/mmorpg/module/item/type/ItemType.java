@@ -1,4 +1,4 @@
-package com.linlazy.mmorpg.module.item.constants;
+package com.linlazy.mmorpg.module.item.type;
 
 /**
  * @author linlazy
@@ -16,4 +16,9 @@ public interface ItemType {
      * 技能道具
      */
     int SKILL = 3;
+
+    /**
+     * 普通道具
+     */
+    int ORDINARY = 4;
 }

@@ -10,7 +10,7 @@ import com.linlazy.mmorpg.module.backpack.service.PlayerBackpackService;
 import com.linlazy.mmorpg.module.common.event.ActorEvent;
 import com.linlazy.mmorpg.module.common.event.EventType;
 import com.linlazy.mmorpg.module.equip.constants.EquipType;
-import com.linlazy.mmorpg.module.item.constants.ItemType;
+import com.linlazy.mmorpg.module.item.type.ItemType;
 import com.linlazy.mmorpg.dao.ItemDAO;
 import com.linlazy.mmorpg.module.equip.domain.Equip;
 import com.linlazy.mmorpg.module.item.domain.ItemContext;

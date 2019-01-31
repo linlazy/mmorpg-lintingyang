@@ -5,18 +5,19 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.eventbus.Subscribe;
-import com.linlazy.mmorpg.module.task.constants.TaskStatus;
 import com.linlazy.mmorpg.dao.TaskDAO;
-import com.linlazy.mmorpg.module.player.domain.PlayerTask;
-import com.linlazy.mmorpg.module.task.domain.Task;
 import com.linlazy.mmorpg.entity.TaskEntity;
 import com.linlazy.mmorpg.file.config.TaskConfig;
 import com.linlazy.mmorpg.file.service.TaskConfigService;
 import com.linlazy.mmorpg.module.common.event.ActorEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
+import com.linlazy.mmorpg.module.common.event.EventType;
 import com.linlazy.mmorpg.module.common.reward.RewardService;
-import com.linlazy.mmorpg.server.common.Result;
+import com.linlazy.mmorpg.module.player.domain.PlayerTask;
+import com.linlazy.mmorpg.module.task.constants.TaskStatus;
+import com.linlazy.mmorpg.module.task.domain.Task;
 import com.linlazy.mmorpg.module.task.template.BaseTaskTemplate;
+import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,7 +36,8 @@ public class TaskService {
     @Autowired
     private RewardService rewardService;
 
-
+    @Autowired
+    private TaskDAO taskDAO;
     /**
      * 玩家任务缓存
      */
@@ -60,6 +62,7 @@ public class TaskService {
                                     taskEntity.setActorId(actorId);
                                 }
                                 Task task = new Task(taskConfig, taskEntity);
+                                task.isStart();
                                 playerTask.getMap().put(task.getTaskId(),task);
                             });
                     return playerTask;
@@ -80,39 +83,37 @@ public class TaskService {
     public void listenEvent(ActorEvent<JSONObject> actorEvent){
         PlayerTask playerTask = getPlayerTask(actorEvent.getActorId());
         playerTask.getMap().values().stream()
-            .filter(taskDo -> BaseTaskTemplate.getTaskTemplate(taskDo.getTaskTemplateId()).likeEvent().contains(actorEvent.getEventType()))
-            .forEach(taskDo -> doComplete(actorEvent.getActorId(),actorEvent.getData(),taskDo));
+            .filter(task -> BaseTaskTemplate.getTaskTemplate(task.getTaskTemplateId()).likeEvent().contains(actorEvent.getEventType()))
+            .forEach(task -> doComplete(actorEvent.getActorId(),actorEvent.getData(),task));
     }
 
     private void doComplete(long actorId, JSONObject jsonObject, Task task) {
-        if(!doPreCondition(actorId,jsonObject, task)){
-            return;
+        if(task.getStatus() >= TaskStatus.ACCEPT_UN_COMPLETE){
+            return ;
         }
+
+        if(!task.isStart()){
+            return ;
+        }
+
         BaseTaskTemplate taskTemplate = BaseTaskTemplate.getTaskTemplate(task.getTaskTemplateId());
-        if(taskTemplate.isReachCondition(actorId, task) && task.getStatus() == TaskStatus.ACCEPT_UN_COMPLETE){
-            task.setStatus(TaskStatus.COMPLETE_UN_REWARD);
-            //存档
-            taskDao.updateQueue(task.convertTask());
+        if(!taskTemplate.isPreCondition(actorId, jsonObject, task)){
             return;
         }
+
         taskTemplate.updateTaskData(actorId,jsonObject, task);
-        if(taskTemplate.isReachCondition(actorId, task) && task.getStatus() == TaskStatus.ACCEPT_UN_COMPLETE){
-            task.setStatus(TaskStatus.COMPLETE_UN_REWARD);
+        if(taskTemplate.isReachCondition(actorId, task) ){
+            if(task.isAutoCompleteWithReachCondition()){
+                task.setStatus(TaskStatus.COMPLETE_UN_REWARD);
+                EventBusHolder.post(new ActorEvent<>(actorId, EventType.TASK_COMPLETE));
+            }
+            return;
         }
         //存档
-        taskDao.updateQueue(task.convertTask());
+        taskDao.updateQueue(task.convertTaskEntity());
     }
 
-    private boolean doPreCondition(long actorId, JSONObject jsonObject, Task task) {
-        if(!task.isStart()){
-            return false;
-        }
-        if (task.getStatus() < TaskStatus.START_UN_ACCEPT){
-            return false;
-        }
-        BaseTaskTemplate taskTemplate = BaseTaskTemplate.getTaskTemplate(task.getTaskTemplateId());
-        return taskTemplate.isPreCondition(actorId, jsonObject, task);
-    }
+
 
 
     public PlayerTask getPlayerTask(long actorId){
@@ -125,12 +126,12 @@ public class TaskService {
     }
 
     /**
-     * 领取任务奖励
+     * 提交任务
      * @param actorId
      * @param taskId
      * @return
      */
-    public Result<?> rewardTask(long actorId, long taskId){
+    public Result<?> commitTask(long actorId, long taskId){
 
         PlayerTask playerTask = getPlayerTask(actorId);
         Task task = playerTask.getMap().get(taskId);
@@ -138,18 +139,50 @@ public class TaskService {
             return Result.valueOf("参数有误");
         }
 
-        if(task.getStatus() != TaskStatus.COMPLETE_UN_REWARD){
-            return  Result.valueOf("任务状态不对");
+        if(task.getStatus() < TaskStatus.ACCEPT_UN_COMPLETE
+            ||task.getStatus() > TaskStatus.COMPLETE_UN_REWARD
+        ){
+            return  Result.valueOf("参数有误");
         }
 
+        if(task.getStatus() == TaskStatus.ACCEPT_UN_COMPLETE){
+            BaseTaskTemplate taskTemplate = BaseTaskTemplate.getTaskTemplate(task.getTaskTemplateId());
+            if(!taskTemplate.isReachCondition(actorId,task)){
+                return  Result.valueOf("参数有误");
+            }
+            EventBusHolder.post(new ActorEvent<>(actorId,EventType.TASK_COMPLETE));
+        }
         task.setStatus(TaskStatus.REWARDED);
         rewardService.addRewardList(actorId,task.getRewardList());
-
-
         return Result.success();
     }
 
+    /**
+     * 开启任务
+     * @param actorId
+     * @param taskId
+     * @return
+     */
+    public Result<?> startTask(long actorId, long taskId){
+        PlayerTask playerTask = getPlayerTask(actorId);
+        Task task = playerTask.getMap().get(taskId);
+        if(task == null){
+            return Result.valueOf("参数有误");
+        }
+        if(task.getStatus() != TaskStatus.UN_START){
+            return Result.valueOf("参数有误");
+        }
 
+        if (task.isAutoAcceptWithStart()){
+            task.setStatus(TaskStatus.ACCEPT_UN_COMPLETE);
+        }else {
+            task.setStatus(TaskStatus.START_UN_ACCEPT);
+        }
+
+        taskDAO.insertQueue(task.convertTaskEntity());
+
+        return Result.success(task.toString());
+    }
     /**
      * 接受任务
      * @param actorId
@@ -163,13 +196,11 @@ public class TaskService {
         if(task == null){
             return Result.valueOf("参数有误");
         }
-
         if(task.getStatus() != TaskStatus.START_UN_ACCEPT){
-            return  Result.valueOf("任务状态不对");
+            return Result.valueOf("参数有误");
         }
-
         task.setStatus(TaskStatus.ACCEPT_UN_COMPLETE);
-        taskDao.updateQueue(task.convertTask());
+        taskDAO.updateQueue(task.convertTaskEntity());
         return Result.success();
     }
 
@@ -193,7 +224,6 @@ public class TaskService {
                 playerTask.getMap().put(task.getTaskId(),task);
             }
         });
-
         return Result.success(playerTask.toString());
     }
 }

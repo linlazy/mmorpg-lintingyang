@@ -2,7 +2,7 @@ package com.linlazy.mmorpg.module.item.dto;
 
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpg.module.equip.dto.EquipDTO;
-import com.linlazy.mmorpg.module.item.constants.ItemType;
+import com.linlazy.mmorpg.module.item.type.ItemType;
 import com.linlazy.mmorpg.module.equip.domain.Equip;
 import com.linlazy.mmorpg.module.item.domain.Item;
 import com.linlazy.mmorpg.file.service.ItemConfigService;

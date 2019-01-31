@@ -6,7 +6,7 @@
     "activeAttack": false,
     "hp": 100,
     "sceneIds": [2],
-    "randomRewards": [[1,1,80],[2,1,20]]
+    "rewards": [[1,1,80],[2,1,20]]
   },
   {
     "monsterId": 2,

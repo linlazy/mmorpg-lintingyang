@@ -1,6 +1,7 @@
 package com.linlazy.mmorpg.module.task.template;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Sets;
 import com.linlazy.mmorpg.module.task.domain.Task;
 import com.linlazy.mmorpg.module.common.event.EventType;
 
@@ -18,7 +19,9 @@ public abstract class BaseTaskTemplate {
      * 任务模板感兴趣的事件集合
      * @return  返回感兴趣的事件集合
      */
-    public abstract Set<EventType> likeEvent();
+    public  Set<EventType> likeEvent(){
+        return Sets.newHashSet();
+    }
 
     private static Map<Integer, BaseTaskTemplate> map = new HashMap<>();
 

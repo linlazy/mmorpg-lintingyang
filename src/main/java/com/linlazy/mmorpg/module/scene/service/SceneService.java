@@ -2,22 +2,22 @@ package com.linlazy.mmorpg.module.scene.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.eventbus.Subscribe;
-import com.linlazy.mmorpg.module.player.domain.Player;
-import com.linlazy.mmorpg.module.player.dto.PlayerDTO;
-import com.linlazy.mmorpg.module.playercall.domain.PlayerCall;
-import com.linlazy.mmorpg.module.scene.copy.domain.Copy;
-import com.linlazy.mmorpg.module.scene.domain.*;
-import com.linlazy.mmorpg.module.scene.dto.SceneDTO;
 import com.linlazy.mmorpg.event.type.*;
 import com.linlazy.mmorpg.file.config.SceneConfig;
 import com.linlazy.mmorpg.file.service.SceneConfigService;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
-import com.linlazy.mmorpg.module.scene.copy.service.CopyService;
+import com.linlazy.mmorpg.module.player.domain.Player;
+import com.linlazy.mmorpg.module.player.dto.PlayerDTO;
+import com.linlazy.mmorpg.module.player.service.PlayerService;
+import com.linlazy.mmorpg.module.playercall.domain.PlayerCall;
 import com.linlazy.mmorpg.module.playercall.push.PlayerCallPushHelper;
+import com.linlazy.mmorpg.module.scene.copy.domain.Copy;
+import com.linlazy.mmorpg.module.scene.copy.service.CopyService;
+import com.linlazy.mmorpg.module.scene.domain.*;
+import com.linlazy.mmorpg.module.scene.dto.SceneDTO;
 import com.linlazy.mmorpg.module.scene.push.ScenePushHelper;
 import com.linlazy.mmorpg.server.common.GlobalConfigService;
 import com.linlazy.mmorpg.server.common.Result;
-import com.linlazy.mmorpg.module.player.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,6 +32,9 @@ import java.util.stream.Collectors;
  */
 @Component
 public class SceneService {
+
+
+
 
     /**
      * 普通场景
@@ -88,7 +91,9 @@ public class SceneService {
                     //初始化boss
                     scene.setBossList(bossService.getBOSSBySceneId(sceneEntity.getSceneId()));
 
+
                     sceneMap.put(sceneEntity.getSceneId(),scene);
+                    scene.startRefreshMonsterScheduled();
                 }
                 return scene;
             }
@@ -309,6 +314,22 @@ public class SceneService {
         Player player = playerService.getPlayer(actorId);
         int sceneId = player.getSceneId();
         return npcService.hasNPC(sceneId,npcId);
+    }
+
+    /**
+     * 传送到某个场景
+     * @param actorId 玩家ID
+     * @param targetSceneId 目标场景
+     */
+    public void transportTo(long actorId,int targetSceneId){
+        Player player = playerService.getPlayer(actorId);
+        player.setSceneId(targetSceneId);
+
+        EventBusHolder.post(new SceneMoveEvent(player));
+
+        if(isCopyScene(targetSceneId)){
+            EventBusHolder.post(new CopyMoveEvent(player));
+        }
     }
 
 }

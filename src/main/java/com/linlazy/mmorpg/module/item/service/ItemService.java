@@ -34,7 +34,7 @@ public class ItemService {
     private ItemConfigService itemConfigService;
 
     /**
-     * 消耗道具
+     * 使用道具
      * @param actorId 玩家ID
      * @param itemId 道具ID
      * @return
@@ -55,6 +55,28 @@ public class ItemService {
         String rewards = itemConfig.getString("rewards");
         List<Reward> rewardList = RewardUtils.parseRewards(rewards);
         rewardService.addRewardList(actorId,rewardList);
+
+        return Result.success();
+    }
+
+    /**
+     * 拾取道具
+     * @param actorId 玩家ID
+     * @param itemId 道具ID
+     * @return
+     */
+    public Result<?> pickItem(long actorId, long itemId) {
+
+        return Result.success();
+    }
+
+    /**
+     * 丢弃道具
+     * @param actorId 玩家ID
+     * @param itemId 道具ID
+     * @return
+     */
+    public Result<?> discardItem(long actorId, long itemId) {
 
         return Result.success();
     }

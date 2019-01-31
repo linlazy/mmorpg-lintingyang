@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.linlazy.mmorpg.file.config.TaskConfig;
 import com.linlazy.mmorpg.module.common.reward.Reward;
+import com.linlazy.mmorpg.module.task.domain.TriggerCondition;
 import com.linlazy.mmorpg.server.common.ConfigFile;
 import com.linlazy.mmorpg.server.common.ConfigFileManager;
 import com.linlazy.mmorpg.utils.RewardUtils;
@@ -12,8 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -25,7 +24,7 @@ public class TaskConfigService {
     private static ConfigFile taskConfigFile;
 
     static {
-        taskConfigFile =  ConfigFileManager.use("config_file/task_config.json");
+        taskConfigFile =  ConfigFileManager.use("config_file/task/task_config.json");
     }
 
     private static Map<Long, TaskConfig> map = new HashMap<>();
@@ -40,9 +39,8 @@ public class TaskConfigService {
             long taskId = jsonObject.getLongValue("taskId");
             int taskTemplateId = jsonObject.getIntValue("taskTemplateId");
             JSONObject taskTemplateArgs = jsonObject.getJSONObject("taskTemplateArgs");
-            String beginTime = jsonObject.getString("beginTime");
-            String endTime = jsonObject.getString("endTime");
             String rewards = jsonObject.getString("rewards");
+            JSONArray trigger = jsonObject.getJSONArray("trigger");
 
 
             TaskConfig taskConfig = new TaskConfig();
@@ -53,9 +51,23 @@ public class TaskConfigService {
                 taskConfig.setRewardList(rewardList);
             }
 
-            DateTimeFormatter dateTimeFormatter =DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            taskConfig.setBeginTime( LocalDateTime.parse(beginTime,dateTimeFormatter));
-            taskConfig.setEndTime(LocalDateTime.parse(endTime,dateTimeFormatter));
+
+            if(Objects.nonNull(trigger)){
+                Map<Integer, TriggerCondition> triggerConditionMap = taskConfig.getTriggerConditionMap();
+                for(int j = 0 ; j < trigger.size(); j ++){
+                    JSONObject jsonObject1 = trigger.getJSONObject(j);
+                    int triggerType = jsonObject1.getIntValue("triggerType");
+                    JSONObject triggerArgs = jsonObject1.getJSONObject("triggerArgs");
+
+                    TriggerCondition triggerCondition = new TriggerCondition();
+                    triggerCondition.setTriggerType(triggerType);
+                    triggerCondition.setTriggerArgs(triggerArgs);
+
+                    triggerConditionMap.put(triggerCondition.getTriggerType(),triggerCondition);
+                }
+            }
+
+
 
             taskConfig.setTaskTemplateArgs(taskTemplateArgs);
             taskConfig.setTaskTemplateId(taskTemplateId);

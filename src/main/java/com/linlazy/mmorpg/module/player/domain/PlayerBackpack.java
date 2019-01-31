@@ -4,7 +4,7 @@ import com.linlazy.mmorpg.module.equip.domain.Equip;
 import com.linlazy.mmorpg.module.item.domain.Item;
 import com.linlazy.mmorpg.module.backpack.domain.Backpack;
 import com.linlazy.mmorpg.module.backpack.domain.Lattice;
-import com.linlazy.mmorpg.module.item.constants.ItemType;
+import com.linlazy.mmorpg.module.item.type.ItemType;
 import com.linlazy.mmorpg.dao.ItemDAO;
 import com.linlazy.mmorpg.entity.ItemEntity;
 import com.linlazy.mmorpg.server.common.GlobalConfigService;

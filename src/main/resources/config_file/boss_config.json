@@ -39,5 +39,14 @@
   "skillId":7,
   "sceneIds": [6],
   "rewards": [[10,1]]
+},{
+  "bossId": 6,
+  "name": "小蛮猪",
+  "attack": 300,
+  "hp": 5000,
+  "skillId":7,
+  "sceneIds": [6],
+  "rewards": [[1,1]],
+  "randomRewards": [[10,1]]
 }
 ]

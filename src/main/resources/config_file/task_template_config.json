@@ -1,26 +1,14 @@
 [
   {
     "taskTemplateId": 1,
-    "description": "等级升到N级"
+    "description": "在场景%d杀死%d只%d小怪"
   },
   {
-    "taskTemplateId": 2,
-    "description": " 当前金币达到xxx"
+  "taskTemplateId": 2,
+  "description": "穿戴装备在场景%d杀死%d只%d小怪"
   },
   {
     "taskTemplateId": 3,
-    "description": " 击杀A只B小怪"
-  },
-  {
-    "taskTemplateId": 4,
-    "description": " 穿戴装备等级总和达到XXX"
-  },
-  {
-    "taskTemplateId": 5,
-    "description": " 通过xxx副本"
-  },
-  {
-    "taskTemplateId": 6,
-    "description": "在场景A杀死B只C小怪"
+    "description": "消耗%d个%d道具"
   }
 ]

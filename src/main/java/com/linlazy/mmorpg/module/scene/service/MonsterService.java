@@ -1,6 +1,7 @@
 package com.linlazy.mmorpg.module.scene.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.linlazy.mmorpg.file.service.SceneConfigService;
 import com.linlazy.mmorpg.module.scene.constants.SceneEntityType;
 import com.linlazy.mmorpg.module.scene.domain.Monster;
 import com.linlazy.mmorpg.module.skill.domain.Skill;
@@ -11,7 +12,9 @@ import com.linlazy.mmorpg.utils.RandomUtils;
 import com.linlazy.mmorpg.utils.RewardUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +29,8 @@ public class MonsterService {
     private MonsterConfigService monsterConfigService;
     @Autowired
     private SkillService skillService;
+    @Autowired
+    private SceneConfigService sceneConfigService;
 
     /**
      * 获取场景怪物
@@ -43,7 +48,13 @@ public class MonsterService {
             int hp = sceneMonsterConfig.getIntValue("hp");
             int attack = sceneMonsterConfig.getIntValue("useSkill");
             String rewards = sceneMonsterConfig.getString("rewards");
-            List<Reward> rewardList = RewardUtils.parseRewards(rewards);
+
+            List<Reward> rewardList = null;
+            if(!StringUtils.isEmpty(rewards)){
+                rewardList = RewardUtils.parseRewards(rewards);
+            }else {
+                rewardList = new ArrayList<>();
+            }
             Reward reward = RandomUtils.randomElement(rewardList);
 
             Monster monster = new Monster();

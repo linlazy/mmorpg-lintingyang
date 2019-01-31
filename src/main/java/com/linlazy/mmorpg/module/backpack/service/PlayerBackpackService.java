@@ -5,7 +5,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.linlazy.mmorpg.module.backpack.domain.Lattice;
 import com.linlazy.mmorpg.module.equip.domain.Equip;
-import com.linlazy.mmorpg.module.item.constants.ItemType;
+import com.linlazy.mmorpg.module.item.type.ItemType;
 import com.linlazy.mmorpg.dao.ItemDAO;
 import com.linlazy.mmorpg.module.backpack.dto.LatticeDTO;
 import com.linlazy.mmorpg.module.backpack.dto.PlayerBackPackDTO;
