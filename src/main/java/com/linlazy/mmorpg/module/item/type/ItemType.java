@@ -9,16 +9,17 @@ public interface ItemType {
      */
     int CONSUME = 1;
     /**
+     * 普通道具
+     */
+    int ORDINARY = 2;
+    /**
      * 装备道具
      */
-    int EQUIP = 2;
+    int EQUIP = 3;
     /**
      * 技能道具
      */
-    int SKILL = 3;
+    int SKILL = 4;
 
-    /**
-     * 普通道具
-     */
-    int ORDINARY = 4;
+
 }

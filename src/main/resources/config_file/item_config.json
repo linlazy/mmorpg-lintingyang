@@ -1,113 +1,300 @@
 [
   {
-    "itemId":1,
+    "itemId":1101,
     "itemType": 1,
     "name": "金创药",
     "desc": "使用后可以回复100点生命",
-    "rewards": [[60000,100]],
-    "superPosition": 50
+    "ext": {
+      "resumeHpType":1,
+      "resumeHp": 100
+    },
+    "superPosition": 99
   },
   {
-    "itemId":2,
+    "itemId":1102,
+    "itemType": 1,
+    "name": "红红肉",
+    "desc": "使用后可以5分钟内每3秒回复160生命值。",
+    "ext": {
+      "resumeHpType":1,
+      "continueTime": 300,
+      "durationTime": 3,
+      "resumeHp": 160
+    },
+    "superPosition": 99
+  },
+  {
+    "itemId":1103,
+    "itemType": 1,
+    "name": "通络丹",
+    "desc": "使用后可以回复一半生命值。",
+    "ext": {
+      "resumeHpType":3,
+      "resumeHpRatio": 50
+    },
+    "superPosition": 99
+  },
+  {
+    "itemId":1201,
+    "itemType": 1,
+    "name": "清心露",
+    "desc": "使用后可以回复100点体力",
+    "ext": {
+      "resumeMpType":1,
+      "resumeMp": 100
+    },
+    "superPosition": 99
+  },
+  {
+    "itemId":1202,
+    "itemType": 1,
+    "name": "米时",
+    "desc": "使用后可以在15分钟内每5秒回复10点体力。",
+    "ext": {
+      "resumeMpType":1,
+      "continueTime": 900,
+      "durationTime": 5,
+      "resumeMp": 10
+    },
+    "superPosition": 99
+  },
+  {
+    "itemId":1301,
+    "itemType": 1,
+    "name": "巴郡传送卷",
+    "desc": "使用后会传送到巴郡",
+    "ext": {
+      "transportType":1,
+      "sceneId": 1
+    },
+    "superPosition": 99
+  },
+  {
+    "itemId":1302,
+    "itemType": 1,
+    "name": "回城符",
+    "desc": "回城所用的灵符,使用后回到相应级别的城市",
+    "ext": {
+      "transportType":2
+    },
+    "superPosition": 99
+  },
+  {
+    "itemId":2001,
+    "itemType": 2,
+    "name": "野猪肝",
+    "desc": "野猪的肝脏。",
+    "superPosition": 99
+  },
+  {
+    "itemId":3001,
     "itemType": 3,
-    "name": "回春术秘籍",
-    "level": 1,
-    "desc": "瞬间恢复500HP、100MP",
-    "source": "随身商店，商城购买",
-    "rewards": "[[60000,500],[60001,100]]",
-    "superPosition": 50
-  },
-  {
-    "itemId":3,
-    "itemType": 2,
-    "name": "修复水晶",
-    "level": 1,
-    "desc": "恢复5点耐久度",
-    "source": "随身商店，商城购买",
-    "durability": 5
-  },
-  {
-    "itemId":4,
-    "itemType": 2,
-    "equipType": 1,
-    "name": "短剑",
-    "profession": "战士",
-    "sex": "男",
-    "attack": 50,
-    "durability": 100,
-    "consumeDurability": 1,
-    "additions": {
-      "additionType": 1,
-      "down": 50,
-      "up": 95
+    "name": "铁剑",
+    "desc": "【战士】装备，锈迹斑驳的剑，看起来没有什么用。",
+    "ext": {
+      "equipType": 1,
+      "professionIds": [1],
+      "level": 1,
+      "attack": 50,
+      "durability": 100,
+      "consumeDurability": 1
     }
   },
-    {
-    "itemId":5,
-    "itemType": 2,
-    "equipType": 2,
-    "name": "轻型战甲",
-    "profession": "战士",
-    "sex": "男",
-    "defense": 50,
-    "durability": 100,
-    "consumeDurability": 1,
-    "additions": {
-      "additionType": 1,
-      "down": 50,
-      "up": 95
-   }
+  {
+    "itemId":3002,
+    "itemType": 3,
+    "name": "白羽扇",
+    "desc": "【牧师】装备，普通的扇子，没有什么大用。",
+    "ext": {
+      "equipType": 1,
+      "professionIds": [2],
+      "level": 1,
+      "attack": 50,
+      "durability": 100,
+      "consumeDurability": 1
+    }
   },
   {
-    "itemId":6,
-    "itemType": 2,
-    "equipType": 2,
-    "name": "战神之鞋",
-    "defense": 50,
-    "durability": 100,
-    "consumeDurability": 1
+    "itemId":3003,
+    "itemType": 3,
+    "name": "硬木杖",
+    "desc": "【法师】装备，普通的法杖，没有什么大用。",
+    "ext": {
+      "equipType": 1,
+      "professionIds": [3],
+      "level": 1,
+      "attack": 50,
+      "durability": 100,
+      "consumeDurability": 1
+    }
   },
   {
-    "itemId":7,
-    "itemType": 2,
-    "equipType": 2,
-    "name": "战神护甲",
-    "defense": 50,
-    "durability": 100,
-    "consumeDurability": 1
+    "itemId":3004,
+    "itemType": 3,
+    "name": "硬木珠",
+    "desc": "【召唤师】装备，普通的念珠，没有什么大用。",
+    "ext": {
+      "equipType": 1,
+      "professionIds": [4],
+      "level": 1,
+      "attack": 50,
+      "durability": 100,
+      "consumeDurability": 1
+    }
   },
   {
-    "itemId":8,
-    "itemType": 2,
-    "equipType": 2,
-    "name": "战神披风",
-    "defense": 50,
-    "durability": 100,
-    "consumeDurability": 1
+    "itemId":3005,
+    "itemType": 3,
+    "name": "精制冠",
+    "desc": "【战士】装备，普通的头冠，由劣质的材料制成，不过手工较为精细。",
+    "ext": {
+      "equipType": 2,
+      "professionIds": [1],
+      "level": 3,
+      "defense": 50,
+      "durability": 100,
+      "consumeDurability": 1
+    }
   },
   {
-    "itemId":9,
-    "itemType": 2,
-    "equipType": 2,
-    "name": "战神手套",
-    "defense": 50,
-    "durability": 100,
-    "consumeDurability": 1
+    "itemId":3006,
+    "itemType": 3,
+    "name": "棉布巾",
+    "desc": "【牧师/法师/召唤师】装备，绞线交织，布料粗厚耐磨，防御力亦略优于一般布帽。",
+    "ext": {
+      "equipType": 2,
+      "professionIds": [2,3,4],
+      "level": 3,
+      "defense": 50,
+      "durability": 100,
+      "consumeDurability": 1
+    }
   },
   {
-    "itemId":10,
-    "itemType": 2,
-    "equipType": 2,
-    "name": "战神之剑",
-    "attack": 50,
-    "durability": 100,
-    "consumeDurability": 1
+    "itemId":3007,
+    "itemType": 3,
+    "name": "粗制甲",
+    "desc": "【战士】装备，普通的轻甲，由劣质的材料制成。",
+    "ext": {
+      "equipType": 3,
+      "professionIds": [1],
+      "level": 1,
+      "defense": 50,
+      "durability": 100,
+      "consumeDurability": 1
+    }
   },
   {
-    "itemId":11,
-    "itemType": 1,
-    "name": "野猪肝",
-    "desc": "野猪的肝脏",
-    "source": "野猪岭的小红猪掉落"
+    "itemId":3008,
+    "itemType": 3,
+    "name": "粗布衣",
+    "desc": "牧师/法师/召唤师】装备，寻常的布装，足以遮身蔽体，抵御刀剑却嫌不足。",
+    "ext": {
+      "equipType": 3,
+      "professionIds": [2,3,4],
+      "level": 1,
+      "defense": 50,
+      "durability": 100,
+      "consumeDurability": 1
+    }
+  },
+  {
+    "itemId":3009,
+    "itemType": 3,
+    "name": "精制护手",
+    "desc": "【战士】装备，普通的护手，由劣质的材料制成，不过手工较为精细。",
+    "ext": {
+      "equipType": 4,
+      "professionIds": [1],
+      "level": 6,
+      "defense": 50,
+      "durability": 100,
+      "consumeDurability": 1
+    }
+  },
+  {
+    "itemId":3010,
+    "itemType": 3,
+    "name": "棉布护手",
+    "desc": "【牧师/法师/召唤师】装备，绞线交织，布料粗厚耐磨，不过没什么大用。",
+    "ext": {
+      "equipType": 4,
+      "professionIds": [2,3,4],
+      "level": 6,
+      "defense": 50,
+      "durability": 100,
+      "consumeDurability": 1
+    }
+  },
+  {
+    "itemId":3011,
+    "itemType": 3,
+    "name": "精制甲下装",
+    "desc": "【战士】装备，普通的轻甲，由劣质的材料制成，不过手工较为精细。",
+    "ext": {
+      "equipType": 5,
+      "professionIds": [1],
+      "level": 4,
+      "defense": 50,
+      "durability": 100,
+      "consumeDurability": 1
+    }
+  },
+  {
+    "itemId":3012,
+    "itemType": 3,
+    "name": "棉布衣下装",
+    "desc": "【牧师/法师/召唤师】装备，绞线交织，布料粗厚耐磨，防御力亦略优于一般法袍。",
+    "ext": {
+      "equipType": 5,
+      "professionIds": [2,3,4],
+      "level": 4,
+      "defense": 50,
+      "durability": 100,
+      "consumeDurability": 1
+    }
+  },
+  {
+    "itemId":3013,
+    "itemType": 3,
+    "name": "精制靴",
+    "desc": "【战士】装备，普通的靴子，由劣质的材料制成，不过手工较为精细。",
+    "ext": {
+      "equipType": 6,
+      "professionIds": [1],
+      "level": 2,
+      "defense": 50,
+      "durability": 100,
+      "consumeDurability": 1
+    }
+  },
+  {
+    "itemId":3014,
+    "itemType": 3,
+    "name": "棉布靴",
+    "desc": "【牧师/法师/召唤师】装备，绞线交织，布料粗厚耐磨，防御力亦略优于一般布靴。",
+    "ext": {
+      "equipType": 6,
+      "professionIds": [2,3,4],
+      "level": 2,
+      "defense": 50,
+      "durability": 100,
+      "consumeDurability": 1
+    }
+  },
+  {
+    "itemId":4001,
+    "itemType": 4,
+    "name": "棉布靴",
+    "desc": "【牧师/法师/召唤师】装备，绞线交织，布料粗厚耐磨，防御力亦略优于一般布靴。",
+    "ext": {
+      "equipType": 6,
+      "professionIds": [2,3,4],
+      "level": 2,
+      "defense": 50,
+      "durability": 100,
+      "consumeDurability": 1
+    }
   }
+
 ]
