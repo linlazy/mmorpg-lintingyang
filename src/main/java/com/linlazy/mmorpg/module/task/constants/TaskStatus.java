@@ -17,11 +17,11 @@ public interface TaskStatus {
      */
     int ACCEPT_UN_COMPLETE = 2;
     /**
-     * 已完成任务，未领奖任务
+     * 已接受可完成
      */
-    int COMPLETE_UN_REWARD = 3;
+    int ACCEPT_ABLE_COMPLETE = 3;
     /**
-     * 已领奖
+     * 已完成
      */
-    int REWARDED = 4;
+    int COMPLETED = 4;
 }

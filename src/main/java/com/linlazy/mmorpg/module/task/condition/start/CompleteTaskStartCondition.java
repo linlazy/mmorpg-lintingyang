@@ -1,4 +1,4 @@
-package com.linlazy.mmorpg.module.task.trigger;
+package com.linlazy.mmorpg.module.task.condition.start;
 
 import com.linlazy.mmorpg.module.task.constants.TaskStatus;
 import com.linlazy.mmorpg.module.task.domain.Task;
@@ -8,24 +8,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * 完成任务xxx,触发任务
+ * 开启任务条件：完成某任务
  * @author linlazy
  */
 @Component
-public class CompleteTaskTrigger extends BaseTaskTrigger {
+public class CompleteTaskStartCondition extends StartCondition{
     @Override
-    protected int triggerType() {
-        return TaskTriggerType.COMPLETE;
+    protected Integer startConditionType() {
+        return StartConditionType.COMPLETE_TASK;
     }
+
 
     @Autowired
     private TaskService taskService;
 
     @Override
-    public boolean isTrigger(Task task) {
-        TriggerCondition triggerCondition = task.getStartConditionMap().get(triggerType());
+    public boolean isReachCondition(long actorId, Task task) {
+        TriggerCondition triggerCondition = task.getStartConditionMap().get(startConditionType());
         long taskId = triggerCondition.getTriggerArgs().getLongValue("taskId");
         Task targetTask = taskService.getPlayerTask(task.getActorId()).getMap().get(taskId);
-        return targetTask.getStatus() >= TaskStatus.ACCEPT_ABLE_COMPLETE;
+        return targetTask.getStatus() == TaskStatus.COMPLETED;
     }
 }

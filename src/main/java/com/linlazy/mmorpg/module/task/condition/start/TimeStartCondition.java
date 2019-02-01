@@ -1,4 +1,4 @@
-package com.linlazy.mmorpg.module.task.trigger;
+package com.linlazy.mmorpg.module.task.condition.start;
 
 import com.linlazy.mmorpg.module.task.domain.Task;
 import com.linlazy.mmorpg.module.task.domain.TriggerCondition;
@@ -8,21 +8,19 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * 时间触发
+ * 开启任务条件：时间段内
  * @author linlazy
  */
 @Component
-public class TimeTaskTrigger extends BaseTaskTrigger{
-
-
+public class TimeStartCondition extends StartCondition{
     @Override
-    protected int triggerType() {
-        return TaskTriggerType.TIME;
+    protected Integer startConditionType() {
+        return StartConditionType.TIME;
     }
 
     @Override
-    public boolean isTrigger(Task task) {
-        TriggerCondition triggerCondition = task.getStartConditionMap().get(triggerType());
+    public boolean isReachCondition(long actorId, Task task) {
+        TriggerCondition triggerCondition = task.getStartConditionMap().get(startConditionType());
 
         String beginTimeStr = triggerCondition.getTriggerArgs().getString("beginTime");
         String endTimeStr = triggerCondition.getTriggerArgs().getString("endTime");

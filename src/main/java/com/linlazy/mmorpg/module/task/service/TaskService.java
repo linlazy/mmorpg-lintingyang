@@ -104,7 +104,7 @@ public class TaskService {
         taskTemplate.updateTaskData(actorId,jsonObject, task);
         if(taskTemplate.isReachCondition(actorId, task) ){
             if(task.isAutoCompleteWithReachCondition()){
-                task.setStatus(TaskStatus.COMPLETE_UN_REWARD);
+                task.setStatus(TaskStatus.ACCEPT_ABLE_COMPLETE);
                 EventBusHolder.post(new ActorEvent<>(actorId, EventType.TASK_COMPLETE));
             }
             return;
@@ -140,7 +140,7 @@ public class TaskService {
         }
 
         if(task.getStatus() < TaskStatus.ACCEPT_UN_COMPLETE
-            ||task.getStatus() > TaskStatus.COMPLETE_UN_REWARD
+            ||task.getStatus() > TaskStatus.ACCEPT_ABLE_COMPLETE
         ){
             return  Result.valueOf("参数有误");
         }
@@ -152,7 +152,7 @@ public class TaskService {
             }
             EventBusHolder.post(new ActorEvent<>(actorId,EventType.TASK_COMPLETE));
         }
-        task.setStatus(TaskStatus.REWARDED);
+        task.setStatus(TaskStatus.COMPLETED);
         rewardService.addRewardList(actorId,task.getRewardList());
         return Result.success();
     }

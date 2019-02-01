@@ -73,7 +73,7 @@ public class Task {
     /**
      * 触发条件
      */
-    private Map<Integer,TriggerCondition> triggerConditionMap = new HashMap<>();
+    private Map<Integer,TriggerCondition> startConditionMap = new HashMap<>();
 
 
 
@@ -92,7 +92,7 @@ public class Task {
         this.taskTemplateId = taskConfig.getTaskTemplateId() ;
         this.taskTemplateArgs = taskConfig.getTaskTemplateArgs();
         this.rewardList =taskConfig.getRewardList();
-        this.triggerConditionMap = taskConfig.getTriggerConditionMap();
+        this.startConditionMap = taskConfig.getTriggerConditionMap();
         this.autoAcceptWithStart = taskConfig.isAutoAcceptWithStart();
         this.autoCompleteWithReachCondition = taskConfig.isAutoCompleteWithReachCondition();
     }
@@ -118,7 +118,7 @@ public class Task {
             return true;
         }
 
-        boolean isStart = triggerConditionMap.values().stream()
+        boolean isStart = startConditionMap.values().stream()
                 .allMatch(triggerCondition -> {
                     BaseTaskTrigger taskTrigger = BaseTaskTrigger.getTaskTrigger(triggerCondition.getTriggerType());
                     return taskTrigger.isTrigger(this);
@@ -153,10 +153,10 @@ public class Task {
             case TaskStatus.ACCEPT_UN_COMPLETE:
                 stringBuilder.append(String.format("任务状态【已开启未完成】"));
                 break;
-            case TaskStatus.COMPLETE_UN_REWARD:
+            case TaskStatus.ACCEPT_ABLE_COMPLETE:
                 stringBuilder.append(String.format("任务状态【已完成未领奖】"));
                 break;
-            case TaskStatus.REWARDED:
+            case TaskStatus.COMPLETED:
                 stringBuilder.append(String.format("任务状态【已领奖】"));
                 break;
              default:
