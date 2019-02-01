@@ -3,8 +3,6 @@ package com.linlazy.mmorpg.module.equip.domain;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpg.entity.ItemEntity;
-import com.linlazy.mmorpg.event.type.EquipDamageEvent;
-import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.file.service.ItemConfigService;
 import com.linlazy.mmorpg.module.item.domain.Item;
 import com.linlazy.mmorpg.utils.ItemIdUtil;
@@ -48,13 +46,7 @@ public class Equip extends Item {
     private boolean isDress;
 
 
-    public int finalAttack(){
-        return attack + level * 6;
-    }
 
-    public int finalDefense(){
-        return defense + level * 6;
-    }
 
     public Equip(ItemEntity entity) {
         super(entity);
@@ -81,27 +73,21 @@ public class Equip extends Item {
 
     @Override
     public ItemEntity convertItemEntity() {
-        String ext = this.getExt();
-        JSONObject jsonObject = null;
-        if(!StringUtils.isEmpty(ext)){
-            jsonObject = JSON.parseObject(ext);
-        }else {
-            jsonObject = new JSONObject();
-        }
-        jsonObject.put("durability",durability);
-        jsonObject.put("level",level);
-        jsonObject.put("dress",isDress);
-        this.setExt(JSON.toJSONString(jsonObject));
+//        String ext = this.getExt();
+//        JSONObject jsonObject = null;
+//        if(!StringUtils.isEmpty(ext)){
+//            jsonObject = JSON.parseObject(ext);
+//        }else {
+//            jsonObject = new JSONObject();
+//        }
+//        jsonObject.put("durability",durability);
+//        jsonObject.put("level",level);
+//        jsonObject.put("dress",isDress);
+//        this.setExt(JSON.toJSONString(jsonObject));
         return super.convertItemEntity();
     }
 
-    public void modifyDurability() {
-        durability--;
-        if(durability <= 0){
-            durability = 0;
-            EventBusHolder.post(new EquipDamageEvent(this));
-        }
-    }
+
 
 
     @Override

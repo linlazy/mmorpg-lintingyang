@@ -23,20 +23,20 @@ public class ConsumeItem extends BaseItem{
 
     @Override
     public Result<?> useItem(long actorId,Item item) {
-        JSONObject extJsonObject = item.getExtJsonObject();
-        int consumeType = item.getConsumeType();
+        JSONObject extConfig = item.getExtConfig();
+        int consumeType = extConfig.getIntValue("consumeType");
         switch (consumeType){
             case ConsumeType
                     .resumeHP:
-                BaseResumeHp resumeHpType = BaseResumeHp.getBaseResumeHp(extJsonObject.getIntValue("resumeHpType"));
+                BaseResumeHp resumeHpType = BaseResumeHp.getBaseResumeHp(extConfig.getIntValue("resumeHpType"));
                 return resumeHpType.doResumeHp(actorId,item);
             case ConsumeType
                     .resumeMP:
-                BaseResumeMp resumeMpType = BaseResumeMp.getBaseResumeMp(extJsonObject.getIntValue("resumeMpType"));
+                BaseResumeMp resumeMpType = BaseResumeMp.getBaseResumeMp(extConfig.getIntValue("resumeMpType"));
                 return resumeMpType.doResumeMp(actorId,item);
             case ConsumeType
                     .transport:
-                BaseTransport transportType = BaseTransport.getBaseTransport(extJsonObject.getIntValue("transportType"));
+                BaseTransport transportType = BaseTransport.getBaseTransport(extConfig.getIntValue("transportType"));
                 return transportType.doTransport(actorId,item);
             default:
 

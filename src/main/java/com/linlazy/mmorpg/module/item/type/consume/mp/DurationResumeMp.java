@@ -67,7 +67,7 @@ public  class DurationResumeMp extends BaseResumeMp {
     @Override
     public Result<?> doResumeMp(long actorId, Item item) {
         Player player = playerService.getPlayer(actorId);
-        JSONObject extJsonObject = item.getExtJsonObject();
+        JSONObject extJsonObject = item.getExt();
         int continueTime = extJsonObject.getIntValue("continueTime");
         int durationTime = extJsonObject.getIntValue("durationTime");
         int resumeMP = extJsonObject.getIntValue("resumeMP");

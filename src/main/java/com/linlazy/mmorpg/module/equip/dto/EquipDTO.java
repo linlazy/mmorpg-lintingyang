@@ -1,6 +1,7 @@
 package com.linlazy.mmorpg.module.equip.dto;
 
-import com.linlazy.mmorpg.module.equip.domain.Equip;
+import com.alibaba.fastjson.JSONObject;
+import com.linlazy.mmorpg.module.item.domain.Item;
 import lombok.Data;
 
 /**
@@ -33,13 +34,15 @@ public class EquipDTO {
      */
     private Integer durability;
 
-    public EquipDTO(Equip equip) {
+    public EquipDTO(Item equip) {
         this.equipId = equip.getItemId();
-        this.durability = equip.getDurability();
-        level = equip.getLevel();
         name =equip.getName();
         attack = equip.finalAttack();
         defense = equip.finalDefense();
+
+        JSONObject ext = equip.getExt();
+        this.durability = ext.getIntValue("durability");
+        level =  ext.getIntValue("level");
     }
 
 

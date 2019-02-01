@@ -27,7 +27,7 @@ public  class ImmediateResumeHpByFix extends BaseResumeHp{
 
     @Override
     public Result<?> doResumeHp(long actorId,Item item) {
-        JSONObject extJsonObject = item.getExtJsonObject();
+        JSONObject extJsonObject = item.getExt();
         int resumeHp = extJsonObject.getIntValue("resumeHp");
         Player player = playerService.getPlayer(actorId);
         player.resumeHP(resumeHp);

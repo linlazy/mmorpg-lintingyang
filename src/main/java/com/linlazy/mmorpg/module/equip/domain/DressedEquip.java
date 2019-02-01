@@ -1,5 +1,6 @@
 package com.linlazy.mmorpg.module.equip.domain;
 
+import com.linlazy.mmorpg.module.item.domain.Item;
 import lombok.Data;
 
 import java.util.HashMap;
@@ -14,6 +15,6 @@ public class DressedEquip {
 
     private long actorId;
 
-    private Map<Long, Equip> equipMap = new HashMap<>();
+    private Map<Long, Item> equipMap = new HashMap<>();
 
 }

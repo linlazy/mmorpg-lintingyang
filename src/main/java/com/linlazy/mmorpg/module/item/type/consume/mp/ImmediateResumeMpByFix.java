@@ -25,7 +25,7 @@ public  class ImmediateResumeMpByFix extends BaseResumeMp {
 
     @Override
     public Result<?> doResumeMp(long actorId, Item item) {
-        JSONObject extJsonObject = item.getExtJsonObject();
+        JSONObject extJsonObject = item.getExt();
         int resumeMP = extJsonObject.getIntValue("resumeMP");
         Player player = playerService.getPlayer(actorId);
         player.resumeMP(resumeMP);

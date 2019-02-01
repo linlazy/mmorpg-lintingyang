@@ -27,37 +27,60 @@ public class Item {
     private long itemId;
 
     /**
-     * 可折叠
-     */
-    private boolean superPosition;
-
-    /**
-     * 折叠上限
-     */
-    private int superPositionUp;
-
-    private String name;
-
-    /**
-     * 数量
-     */
-    private int count;
-
-    /**
      * 道具类型
      */
     private int itemType;
 
     /**
-     * 消耗道具类型
+     * 道具名称
      */
-    private int consumeType;
+    private String name;
 
-    private String ext;
+    /**
+     * 扩展配置属性
+     */
+    private JSONObject extConfig;
+    /**
+     * 数量
+     */
+    private int count;
 
-    private JSONObject extJsonObject;
+    private JSONObject ext;
 
-    public Item() {
+
+    private JSONObject itemConfig;
+
+    public boolean isSuperPosition(){
+        return itemConfig.getIntValue("superPosition") != 0;
+    }
+
+    public int getSuperPositionUp(){
+        return itemConfig.getIntValue("superPosition");
+    }
+
+
+
+    public int finalAttack(){
+        int attack = itemConfig.getIntValue("attack");
+        int level = ext.getIntValue("level");
+
+        return attack + level * 6;
+    }
+
+    public int finalDefense(){
+        int defense = itemConfig.getIntValue("defense");
+        int level = ext.getIntValue("level");
+
+        return defense + level * 6;
+    }
+
+    public void modifyDurability() {
+        int durability = ext.getIntValue("durability");
+        durability--;
+        if(durability <= 0){
+            durability = 0;
+        }
+        ext.put("durability",durability);
     }
 
 
@@ -69,35 +92,21 @@ public class Item {
 
     public Item(ItemEntity itemEntity) {
         this.itemId = itemEntity.getItemId();
-        this.superPosition = itemEntity.isSuperPosition();
-        this.superPositionUp = itemEntity.getSuperPositionUp();
         this.count = itemEntity.getCount();
-        this.itemType = itemEntity.getItemType();
-        this.name = itemEntity.getName();
+        this.ext =itemEntity.getExtJsonObject();
+        initConfig(ItemIdUtil.getBaseItemId(itemId));
     }
 
     public Item(GuildWarehouseEntity guildWarehouseEntity) {
         this.itemId = guildWarehouseEntity.getItemId();
-        this.superPosition = guildWarehouseEntity.isSuperPosition();
-        this.superPositionUp = guildWarehouseEntity.getSuperPositionUp();
         this.count = guildWarehouseEntity.getCount();
-    }
-
-    public Item(int baseItemId) {
-        this.itemId =baseItemId;
-        initConfig(baseItemId);
+        this.ext =guildWarehouseEntity.getExtJsonObject();
+        initConfig(ItemIdUtil.getBaseItemId(itemId));
     }
 
 
     public Item clonez(){
-        Item item = new Item();
-
-        item.setItemId(itemId);
-        item.setCount(count);
-        item.setSuperPosition(this.superPosition);
-        item.setSuperPositionUp(this.superPositionUp);
-
-        return item;
+        return new Item(itemId,count);
     }
 
     public ItemEntity convertItemEntity(){
@@ -105,7 +114,7 @@ public class Item {
 
         item.setItemId(itemId);
         item.setCount(count);
-        item.setExt(ext);
+        item.setExtJsonObject(ext);
 
         return item;
     }
@@ -118,15 +127,9 @@ public class Item {
      */
     protected void initConfig(int baseItemId) {
         ItemConfigService itemConfigService = SpringContextUtil.getApplicationContext().getBean(ItemConfigService.class);
-        JSONObject itemConfig = itemConfigService.getItemConfig(baseItemId);
-        this.superPositionUp = itemConfig.getIntValue("superPosition");
-        if(superPositionUp == 0){
-            this.superPosition =false;
-        }else {
-            this.superPosition = true;
-        }
-
-         name = itemConfig.getString("name");
+        this.itemConfig = itemConfigService.getItemConfig(baseItemId);
+        name = itemConfig.getString("name");
         itemType = itemConfig.getIntValue("itemType");
+        extConfig =itemConfig.getJSONObject("ext");
     }
 }

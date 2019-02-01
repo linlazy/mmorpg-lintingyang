@@ -1,21 +1,21 @@
 package com.linlazy.mmorpg.module.backpack.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.linlazy.mmorpg.module.backpack.domain.Lattice;
-import com.linlazy.mmorpg.module.equip.domain.Equip;
-import com.linlazy.mmorpg.module.item.type.ItemType;
 import com.linlazy.mmorpg.dao.ItemDAO;
+import com.linlazy.mmorpg.entity.ItemEntity;
+import com.linlazy.mmorpg.module.backpack.domain.Lattice;
 import com.linlazy.mmorpg.module.backpack.dto.LatticeDTO;
 import com.linlazy.mmorpg.module.backpack.dto.PlayerBackPackDTO;
-import com.linlazy.mmorpg.entity.ItemEntity;
 import com.linlazy.mmorpg.module.item.domain.Item;
 import com.linlazy.mmorpg.module.item.domain.ItemContext;
+import com.linlazy.mmorpg.module.item.type.ItemType;
 import com.linlazy.mmorpg.module.player.domain.PlayerBackpack;
+import com.linlazy.mmorpg.module.player.service.PlayerService;
 import com.linlazy.mmorpg.server.common.GlobalConfigService;
 import com.linlazy.mmorpg.server.common.Result;
-import com.linlazy.mmorpg.module.player.service.PlayerService;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,19 +58,12 @@ public class PlayerBackpackService {
                     List<ItemEntity> itemEntitySet = itemDAO.getItemList(actorId);
 
                     itemEntitySet.stream()
-                            .map(itemEntity->{
-                                Item item= null;
-                                if(itemEntity.getItemType() == ItemType.EQUIP){
-                                    item = new Equip(itemEntity);
-                                }else{
-                                    item = new Item(itemEntity);
-                                }
-                                return item;
-                            })
+                            .map(Item::new)
                             .filter(item -> {
+                                JSONObject ext = item.getExt();
                                 if(item.getItemType() == ItemType.EQUIP){
-                                    Equip equip = (Equip) item;
-                                    if(equip.isDress()){
+                                    boolean dress = ext.getBooleanValue("dress");
+                                    if(dress){
                                         return false;
                                     }
                                 }

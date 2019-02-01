@@ -25,7 +25,7 @@ public class FixPositionTransport extends BaseTransport{
 
     @Override
     public Result<?> doTransport(long actorId, Item transportItem) {
-        JSONObject ext = transportItem.getExtJsonObject();
+        JSONObject ext = transportItem.getExt();
         sceneService.transportTo(actorId,ext.getIntValue("sceneId"));
         return Result.success();
     }

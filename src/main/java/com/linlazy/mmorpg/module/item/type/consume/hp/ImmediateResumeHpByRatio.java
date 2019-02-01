@@ -27,7 +27,7 @@ public  class ImmediateResumeHpByRatio extends BaseResumeHp{
 
     @Override
     public Result<?> doResumeHp(long actorId, Item item) {
-        JSONObject extJsonObject = item.getExtJsonObject();
+        JSONObject extJsonObject = item.getExt();
         int resumeHpRatio = extJsonObject.getIntValue("resumeHpRatio");
         Player player = playerService.getPlayer(actorId);
         int resumeHp = player.getMaxHP() * resumeHpRatio/100;

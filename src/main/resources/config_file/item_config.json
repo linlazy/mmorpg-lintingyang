@@ -5,6 +5,7 @@
     "name": "金创药",
     "desc": "使用后可以回复100点生命",
     "ext": {
+      "consumeType": 1,
       "resumeHpType":1,
       "resumeHp": 100
     },
@@ -16,6 +17,7 @@
     "name": "红红肉",
     "desc": "使用后可以5分钟内每3秒回复160生命值。",
     "ext": {
+      "consumeType": 1,
       "resumeHpType":1,
       "continueTime": 300,
       "durationTime": 3,
@@ -29,6 +31,7 @@
     "name": "通络丹",
     "desc": "使用后可以回复一半生命值。",
     "ext": {
+      "consumeType": 1,
       "resumeHpType":3,
       "resumeHpRatio": 50
     },
@@ -40,6 +43,7 @@
     "name": "清心露",
     "desc": "使用后可以回复100点体力",
     "ext": {
+      "consumeType": 2,
       "resumeMpType":1,
       "resumeMp": 100
     },
@@ -51,6 +55,7 @@
     "name": "米时",
     "desc": "使用后可以在15分钟内每5秒回复10点体力。",
     "ext": {
+      "consumeType": 2,
       "resumeMpType":1,
       "continueTime": 900,
       "durationTime": 5,
@@ -64,6 +69,7 @@
     "name": "巴郡传送卷",
     "desc": "使用后会传送到巴郡",
     "ext": {
+      "consumeType": 3,
       "transportType":1,
       "sceneId": 1
     },
@@ -75,6 +81,7 @@
     "name": "回城符",
     "desc": "回城所用的灵符,使用后回到相应级别的城市",
     "ext": {
+      "consumeType": 3,
       "transportType":2
     },
     "superPosition": 99

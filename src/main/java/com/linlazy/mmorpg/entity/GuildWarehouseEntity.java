@@ -1,10 +1,13 @@
 package com.linlazy.mmorpg.entity;
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpg.server.db.annotation.Cloumn;
 import com.linlazy.mmorpg.server.db.annotation.Table;
 import com.linlazy.mmorpg.server.db.entity.Entity;
 import lombok.Data;
+import org.springframework.util.StringUtils;
 
 /**
  * 公会仓库实体
@@ -38,24 +41,19 @@ public class GuildWarehouseEntity extends Entity {
     @Cloumn
     private String ext;
 
-    /**
-     * 可折叠
-     */
-    private boolean superPosition;
-
-    /**
-     * 折叠上限
-     */
-    private int superPositionUp;
+    private JSONObject extJsonObject = new JSONObject();
 
 
     @Override
     public void afterReadDB() {
-        //todo
+
+        if(!StringUtils.isEmpty(ext)){
+            extJsonObject = JSON.parseObject(ext);
+        }
     }
 
     @Override
     public void beforeWriteDB() {
-        super.beforeWriteDB();
+        ext = extJsonObject.toJSONString();
     }
 }

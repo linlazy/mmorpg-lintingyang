@@ -68,7 +68,7 @@ public  class DurationResumeHp extends BaseResumeHp{
     @Override
     public Result<?> doResumeHp(long actorId, Item item) {
         Player player = playerService.getPlayer(actorId);
-        JSONObject extJsonObject = item.getExtJsonObject();
+        JSONObject extJsonObject = item.getExt();
         int continueTime = extJsonObject.getIntValue("continueTime");
         int durationTime = extJsonObject.getIntValue("durationTime");
         int resumeHP = extJsonObject.getIntValue("resumeHP");

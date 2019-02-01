@@ -42,7 +42,7 @@ public class GuildWarehouse extends Backpack implements BackpackInterface {
         guildWarehouseEntity.setGuildId(guildId);
         guildWarehouseEntity.setCount(item.getCount());
         guildWarehouseEntity.setItemId(item.getItemId());
-        guildWarehouseEntity.setExt(item.getExt());
+        guildWarehouseEntity.setExtJsonObject(item.getExt());
 
         guildWarehouseDAO.insertQueue(guildWarehouseEntity);
     }
@@ -56,7 +56,7 @@ public class GuildWarehouse extends Backpack implements BackpackInterface {
         guildWarehouseEntity.setGuildId(guildId);
         guildWarehouseEntity.setCount(item.getCount());
         guildWarehouseEntity.setItemId(item.getItemId());
-        guildWarehouseEntity.setExt(item.getExt());
+        guildWarehouseEntity.setExtJsonObject(item.getExt());
 
         guildWarehouseDAO.updateQueue(guildWarehouseEntity);
     }

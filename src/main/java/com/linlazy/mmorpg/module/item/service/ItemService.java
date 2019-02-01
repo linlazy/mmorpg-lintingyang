@@ -111,7 +111,7 @@ public class ItemService {
         }
 
         Scene scene = sceneService.getSceneBySceneEntity(player);
-        Item item = new Item();
+        Item item = new Item(itemId,1);
         byte[] itemLock = scene.getItemLock();
         synchronized (itemLock){
             scene.addItem(item);

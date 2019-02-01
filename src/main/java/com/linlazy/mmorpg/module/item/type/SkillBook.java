@@ -34,7 +34,7 @@ public class SkillBook extends BaseItem{
     @Override
     public Result<?> useItem(long actorId, Item item) {
         Player player = playerService.getPlayer(actorId);
-        JSONObject extJsonObject = item.getExtJsonObject();
+        JSONObject extJsonObject = item.getExt();
         int professionId = extJsonObject.getIntValue("professionId");
         if(professionId != player.getProfession()){
             return Result.valueOf(String.format("职业不匹配，无法学习该技能"));
