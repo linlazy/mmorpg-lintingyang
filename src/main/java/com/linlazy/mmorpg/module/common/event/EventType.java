@@ -83,5 +83,9 @@ public enum EventType {
     /**
      * 玩家死亡
      */
-    ACTOR_DEAD
+    ACTOR_DEAD,
+    /**
+     * 玩家道具资源改变
+     */
+    ACTOR_ITEM_CHANGE
 }

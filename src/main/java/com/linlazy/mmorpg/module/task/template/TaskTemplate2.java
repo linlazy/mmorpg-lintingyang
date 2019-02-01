@@ -3,18 +3,20 @@ package com.linlazy.mmorpg.module.task.template;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Sets;
 import com.linlazy.mmorpg.module.common.event.EventType;
+import com.linlazy.mmorpg.module.player.service.PlayerService;
 import com.linlazy.mmorpg.module.scene.domain.Monster;
 import com.linlazy.mmorpg.module.task.domain.Task;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
 /**
- *  在场景A杀死B只C小怪
+ *  穿着装备在场景A杀死B只C小怪
  * @author linlazy
  */
 @Component
-public class TaskTemplate1 extends BaseTaskTemplate {
+public class TaskTemplate2 extends BaseTaskTemplate {
     /**
      * 关心事件小怪死亡
      * @return
@@ -26,13 +28,20 @@ public class TaskTemplate1 extends BaseTaskTemplate {
 
     @Override
     protected int templateId() {
-        return 1;
+        return 2;
     }
 
 
+    @Autowired
+    private PlayerService playerService;
 
     @Override
     public boolean isPreCondition(long actorId, JSONObject jsonObject, Task task) {
+
+        if(playerService.getPlayer(actorId).getDressedEquip().getEquipMap().size() ==0){
+            return false;
+        }
+
         JSONObject taskTemplateArgs = task.getTaskTemplateArgs();
         Monster monster = (Monster) jsonObject.get("monster");
 

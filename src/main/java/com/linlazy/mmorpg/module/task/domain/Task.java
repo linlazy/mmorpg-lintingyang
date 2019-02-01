@@ -1,18 +1,27 @@
 package com.linlazy.mmorpg.module.task.domain;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
 import com.linlazy.mmorpg.dao.TaskDAO;
 import com.linlazy.mmorpg.entity.TaskEntity;
 import com.linlazy.mmorpg.file.config.TaskConfig;
+import com.linlazy.mmorpg.module.backpack.service.PlayerBackpackService;
+import com.linlazy.mmorpg.module.common.event.ActorEvent;
+import com.linlazy.mmorpg.module.common.event.EventBusHolder;
+import com.linlazy.mmorpg.module.common.event.EventType;
 import com.linlazy.mmorpg.module.common.reward.Reward;
+import com.linlazy.mmorpg.module.item.domain.Item;
+import com.linlazy.mmorpg.module.task.condition.accept.AcceptCondition;
+import com.linlazy.mmorpg.module.task.condition.start.StartCondition;
 import com.linlazy.mmorpg.module.task.constants.TaskStatus;
-import com.linlazy.mmorpg.module.task.trigger.BaseTaskTrigger;
+import com.linlazy.mmorpg.module.task.template.BaseTaskTemplate;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,11 +80,19 @@ public class Task {
     private boolean autoCompleteWithReachCondition;
 
     /**
-     * 触发条件
+     * 开启条件
      */
     private Map<Integer,TriggerCondition> startConditionMap = new HashMap<>();
 
+    /**
+     * 接受条件
+     */
+    private Map<Integer,TriggerCondition> acceptConditionMap = new HashMap<>();
 
+    /**
+     * 任务奖励
+     */
+    private JSONObject taskReward = new JSONObject();
 
     /**
      * 奖励
@@ -110,32 +127,71 @@ public class Task {
     }
 
     /**
-     * 任务是否开启
+     * 任务开启
      * @return
      */
-    public boolean isStart(){
-        if(this.status > TaskStatus.UN_START){
+    public boolean doStart(){
+        if(this.status >= TaskStatus.START_UN_ACCEPT){
             return true;
         }
 
         boolean isStart = startConditionMap.values().stream()
                 .allMatch(triggerCondition -> {
-                    BaseTaskTrigger taskTrigger = BaseTaskTrigger.getTaskTrigger(triggerCondition.getTriggerType());
-                    return taskTrigger.isTrigger(this);
+                    StartCondition startCondition = StartCondition.getStartCondition(triggerCondition.getTriggerType());
+                    return startCondition.isReachCondition(actorId,this);
                 });
 
         if(isStart){
-            if (isAutoAcceptWithStart()){
-                this.status = TaskStatus.ACCEPT_UN_COMPLETE;
-            }else {
-                this.status = TaskStatus.ACCEPT_UN_COMPLETE;
-            }
+            this.status = TaskStatus.START_UN_ACCEPT;
             TaskDAO taskDAO = SpringContextUtil.getApplicationContext().getBean(TaskDAO.class);
             taskDAO.insertQueue(this.convertTaskEntity());
             return true;
         }else {
             return false;
         }
+    }
+
+    /**
+     * 任务接受
+     * @return
+     */
+    public boolean doAccept(){
+        if(this.status >= TaskStatus.ACCEPT_UN_COMPLETE){
+            return false;
+        }
+
+        boolean isAccept = acceptConditionMap.values().stream()
+                .allMatch(triggerCondition -> {
+                    AcceptCondition acceptCondition = AcceptCondition.getAcceptCondition(triggerCondition.getTriggerType());
+                    return acceptCondition.isReachCondition(actorId,this);
+                });
+
+        if(isAccept){
+            this.status = TaskStatus.ACCEPT_UN_COMPLETE;
+            TaskDAO taskDAO = SpringContextUtil.getApplicationContext().getBean(TaskDAO.class);
+            taskDAO.updateQueue(this.convertTaskEntity());
+            return true;
+        }else {
+            return false;
+        }
+    }
+    /**
+     * 任务可完成
+     * @return
+     */
+    public boolean doAbleComplete(){
+        if(this.status >= TaskStatus.ACCEPT_ABLE_COMPLETE){
+            return false;
+        }
+
+        BaseTaskTemplate taskTemplate = BaseTaskTemplate.getTaskTemplate(taskTemplateId);
+        boolean reachCondition = taskTemplate.isReachCondition(actorId, this);
+        if(reachCondition){
+            this.status = TaskStatus.ACCEPT_ABLE_COMPLETE;
+            TaskDAO taskDAO = SpringContextUtil.getApplicationContext().getBean(TaskDAO.class);
+            taskDAO.updateQueue(this.convertTaskEntity());
+        }
+        return reachCondition;
     }
 
 
@@ -168,5 +224,28 @@ public class Task {
         });
 
         return stringBuilder.toString();
+    }
+
+    public boolean doComplete() {
+        if(this.status != TaskStatus.ACCEPT_ABLE_COMPLETE){
+            return false;
+        }
+        this.status = TaskStatus.COMPLETED;
+        TaskDAO taskDAO = SpringContextUtil.getApplicationContext().getBean(TaskDAO.class);
+        taskDAO.updateQueue(this.convertTaskEntity());
+
+
+        BaseTaskTemplate taskTemplate = BaseTaskTemplate.getTaskTemplate(taskTemplateId);
+        if(taskTemplate.likeEvent().contains(EventType.ACTOR_ITEM_CHANGE)){
+            PlayerBackpackService playerBackpackService = SpringContextUtil.getApplicationContext().getBean(PlayerBackpackService.class);
+            List<Item> items = new ArrayList<>();
+            playerBackpackService.pop(actorId, Lists.newArrayList());
+            for(Item item: items){
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("itemId",item.getItemId());
+                EventBusHolder.post(new ActorEvent<>(actorId,EventType.ACTOR_ITEM_CHANGE,jsonObject));
+            }
+        }
+        return true;
     }
 }

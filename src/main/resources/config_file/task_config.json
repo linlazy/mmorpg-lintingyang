@@ -29,9 +29,8 @@
     }
   }
   ],
-  "taskTemplateId": 6,
+  "taskTemplateId": 2,
   "taskTemplateArgs": {
-    "dressedEquip": true,
     "sceneId": 7,
     "killNum": 5,
     "monsterId": 3

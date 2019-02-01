@@ -78,4 +78,8 @@ public class PlayerBackpack extends Backpack {
                 .map(lattice ->  (Equip)lattice.getItem())
                 .findFirst().get();
     }
+
+    public int getItemCount(long itemId) {
+        return 0;
+    }
 }
