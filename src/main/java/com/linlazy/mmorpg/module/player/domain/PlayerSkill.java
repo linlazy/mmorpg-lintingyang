@@ -38,4 +38,17 @@ public class PlayerSkill {
 
         return stringBuilder.toString();
     }
+
+
+    public boolean hasSkill(long skillId) {
+        return skillMap.get(skillId) != null;
+    }
+
+    /**
+     * 增加玩家技能
+     * @param skill
+     */
+    public void addSkill(Skill skill) {
+        skillMap.putIfAbsent(skill.getSkillId(),skill);
+    }
 }

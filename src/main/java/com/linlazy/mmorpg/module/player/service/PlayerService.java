@@ -259,7 +259,7 @@ public class PlayerService {
 
 
 
-        Skill skill = player.getPlayerSkillInfo().getSkillMap().get(skillId);
+        Skill skill = player.getPlayerSkill().getSkillMap().get(skillId);
 
 
         int mp = skill.getSkillTemplateArgs().getIntValue("mp");

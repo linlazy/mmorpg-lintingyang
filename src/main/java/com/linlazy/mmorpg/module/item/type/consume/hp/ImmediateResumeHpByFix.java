@@ -1,4 +1,4 @@
-package com.linlazy.mmorpg.module.item.effect.mp;
+package com.linlazy.mmorpg.module.item.type.consume.hp;
 
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpg.module.item.domain.Item;
@@ -8,27 +8,29 @@ import com.linlazy.mmorpg.server.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import static com.linlazy.mmorpg.module.item.type.consume.hp.ResumeHpType.immediateResumeByFix;
+
 /**
  * 立即回复HP，通过固定HP数值
  * @author linlazy
  */
 @Component
-public  class ImmediateResumeMpByFix extends BaseResumeMp {
+public  class ImmediateResumeHpByFix extends BaseResumeHp{
 
     @Autowired
     private PlayerService playerService;
 
     @Override
-    protected Integer resumeMpType() {
-        return ResumeMpType.immediateResumeByFix;
+    protected Integer resumeHpType() {
+        return immediateResumeByFix;
     }
 
     @Override
-    public Result<?> doResumeMp(long actorId, Item item) {
+    public Result<?> doResumeHp(long actorId,Item item) {
         JSONObject extJsonObject = item.getExtJsonObject();
-        int resumeMP = extJsonObject.getIntValue("resumeMP");
+        int resumeHp = extJsonObject.getIntValue("resumeHp");
         Player player = playerService.getPlayer(actorId);
-        player.resumeMP(resumeMP);
+        player.resumeHP(resumeHp);
         playerService.updatePlayer(player);
         return Result.success();
     }

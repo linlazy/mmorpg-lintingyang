@@ -1,4 +1,4 @@
-package com.linlazy.mmorpg.module.item.effect.hp;
+package com.linlazy.mmorpg.module.item.type.consume.hp;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.eventbus.Subscribe;
@@ -15,7 +15,7 @@ import javax.annotation.PostConstruct;
 import java.util.Map;
 import java.util.concurrent.*;
 
-import static com.linlazy.mmorpg.module.item.effect.hp.ResumeHpType.durationResume;
+import static com.linlazy.mmorpg.module.item.type.consume.hp.ResumeHpType.durationResume;
 
 /**
  * @author linlazy

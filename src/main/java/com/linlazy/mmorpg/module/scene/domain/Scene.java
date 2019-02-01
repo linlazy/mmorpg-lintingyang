@@ -1,5 +1,6 @@
 package com.linlazy.mmorpg.module.scene.domain;
 
+import com.linlazy.mmorpg.module.item.domain.Item;
 import com.linlazy.mmorpg.module.player.domain.Player;
 import com.linlazy.mmorpg.module.playercall.domain.PlayerCall;
 import com.linlazy.mmorpg.module.scene.push.ScenePushHelper;
@@ -10,9 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * 场景领域类
@@ -27,6 +26,11 @@ public class Scene {
      * 场景调度线程池
      */
     ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(20);
+
+    /**
+     * 道具消失调度句柄映射
+     */
+    private Map<Long,ScheduledFuture<?>> itemRemoveScheduleMap = new ConcurrentHashMap<>();
 
     /**
      *  场景ID
@@ -68,6 +72,13 @@ public class Scene {
     private Set<Npc> NpcSet = new HashSet<>();
 
     /**
+     * 场景掉落道具
+     */
+    private Map<Long,Item> itemMap = new HashMap<>();
+
+    private byte[] itemLock = new byte[0];
+
+    /**
      * 小怪定时刷新调度
      */
     public void startRefreshMonsterScheduled() {
@@ -87,4 +98,22 @@ public class Scene {
         }, 0L, 10L, TimeUnit.SECONDS);
     }
 
+    public void addItem(Item item) {
+        itemMap.put(item.getId(),item);
+    }
+
+    public Item removeItem(Item item) {
+        return itemMap.remove(item.getId());
+    }
+
+    public void addItemRemoveSchedule(long id,ScheduledFuture<?> itemRemoveSchedule) {
+        itemRemoveScheduleMap.putIfAbsent(id,itemRemoveSchedule);
+    }
+
+    public void cancelItemRemoveSchedule(long id) {
+        ScheduledFuture<?> remove = itemRemoveScheduleMap.remove(id);
+        if(remove != null){
+            remove.cancel(true);
+        }
+    }
 }

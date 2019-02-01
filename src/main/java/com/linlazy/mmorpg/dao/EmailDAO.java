@@ -65,7 +65,7 @@ public class EmailDAO extends EntityDAO<EmailEntity> {
                     emailEntity.setRewardStatus((Boolean) map.get("rewardStatus"));
                     emailEntity.setSendTime((Long) map.get("sendTime"));
                     emailEntity.setExpireTime((Long) map.get("expireTime"));
-                    emailEntity.setType((Integer) map.get("effect"));
+                    emailEntity.setType((Integer) map.get("consume"));
 
                     return emailEntity;
                 })

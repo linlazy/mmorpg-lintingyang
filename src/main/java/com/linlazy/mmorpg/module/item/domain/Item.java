@@ -17,6 +17,11 @@ import lombok.Data;
 public class Item {
 
     /**
+     * 道具标识
+     */
+    private long id;
+
+    /**
      * 道具ID
      */
     private long itemId;

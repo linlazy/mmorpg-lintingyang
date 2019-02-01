@@ -1,4 +1,4 @@
-package com.linlazy.mmorpg.module.item.effect;
+package com.linlazy.mmorpg.module.item.type.consume;
 
 /**
  * @author linlazy

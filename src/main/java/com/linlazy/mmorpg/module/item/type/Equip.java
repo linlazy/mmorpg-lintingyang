@@ -15,6 +15,6 @@ public class Equip extends BaseItem{
 
     @Override
     public Result<?> useItem(long actorId, Item item) {
-        return Result.valueOf("普通道具不能被使用");
+        return Result.valueOf("不能被使用");
     }
 }

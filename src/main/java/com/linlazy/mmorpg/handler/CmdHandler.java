@@ -588,11 +588,11 @@ public class CmdHandler {
      * @param jsonObject
      * @return
      */
-    @Cmd("consumeItem")
+    @Cmd("useItem")
     public Result<?> consumeItem(JSONObject jsonObject){
         long actorId = jsonObject.getLong("actorId");
         long itemId = jsonObject.getLongValue("itemId");
-        return itemService.consumeItem(actorId,itemId);
+        return itemService.useItem(actorId,itemId);
     }
 
     /**

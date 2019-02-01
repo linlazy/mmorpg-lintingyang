@@ -1,4 +1,4 @@
-package com.linlazy.mmorpg.module.item.effect.mp;
+package com.linlazy.mmorpg.module.item.type.consume.mp;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.eventbus.Subscribe;

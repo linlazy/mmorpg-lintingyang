@@ -139,7 +139,7 @@ public class Player extends SceneEntity {
     /**
      * 玩家技能信息
      */
-    public PlayerSkill getPlayerSkillInfo(){
+    public PlayerSkill getPlayerSkill(){
         SkillService skillService = SpringContextUtil.getApplicationContext().getBean(SkillService.class);
         return skillService.getPlayerSkill(actorId);
     }
@@ -217,7 +217,7 @@ public class Player extends SceneEntity {
     }
 
     public boolean hasSkill(int skillId){
-        PlayerSkill playerSkillInfo = getPlayerSkillInfo();
+        PlayerSkill playerSkillInfo = getPlayerSkill();
         return playerSkillInfo.getSkillMap().containsKey(skillId);
     }
 

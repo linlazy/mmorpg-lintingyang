@@ -285,15 +285,41 @@
   {
     "itemId":4001,
     "itemType": 4,
-    "name": "棉布靴",
-    "desc": "【牧师/法师/召唤师】装备，绞线交织，布料粗厚耐磨，防御力亦略优于一般布靴。",
+    "name": "回风拂柳秘籍",
+    "desc": "【战士】技能书，使用后习得招式回风拂柳",
     "ext": {
-      "equipType": 6,
-      "professionIds": [2,3,4],
-      "level": 2,
-      "defense": 50,
-      "durability": 100,
-      "consumeDurability": 1
+      "professionId": 1,
+      "level": 1
+    }
+  },
+  {
+    "itemId":4002,
+    "itemType": 4,
+    "name": "回春术秘籍",
+    "desc": "【牧师】技能书，使用后习得招式回春术",
+    "ext": {
+      "professionId": 2,
+      "level": 1
+    }
+  },
+  {
+    "itemId":4003,
+    "itemType": 4,
+    "name": "炽炎袭秘籍",
+    "desc": "【法师】技能书，使用后习得招式炽炎袭",
+    "ext": {
+      "professionId": 3,
+      "level": 1
+    }
+  },
+  {
+    "itemId":4004,
+    "itemType": 4,
+    "name": "狂雷慑魂秘籍",
+    "desc": "【召唤师】技能书，使用后习得招式狂雷慑魂",
+    "ext": {
+      "professionId": 4,
+      "level": 1
     }
   }
 

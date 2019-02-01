@@ -1,4 +1,4 @@
-package com.linlazy.mmorpg.module.item.effect.hp;
+package com.linlazy.mmorpg.module.item.type.consume.hp;
 
 import com.linlazy.mmorpg.module.item.domain.Item;
 import com.linlazy.mmorpg.server.common.Result;

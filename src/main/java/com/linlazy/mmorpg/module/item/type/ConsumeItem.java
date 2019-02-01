@@ -2,10 +2,10 @@ package com.linlazy.mmorpg.module.item.type;
 
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpg.module.item.domain.Item;
-import com.linlazy.mmorpg.module.item.effect.ConsumeType;
-import com.linlazy.mmorpg.module.item.effect.hp.BaseResumeHp;
-import com.linlazy.mmorpg.module.item.effect.mp.BaseResumeMp;
-import com.linlazy.mmorpg.module.item.effect.transport.BaseTransport;
+import com.linlazy.mmorpg.module.item.type.consume.ConsumeType;
+import com.linlazy.mmorpg.module.item.type.consume.hp.BaseResumeHp;
+import com.linlazy.mmorpg.module.item.type.consume.mp.BaseResumeMp;
+import com.linlazy.mmorpg.module.item.type.consume.transport.BaseTransport;
 import com.linlazy.mmorpg.server.common.Result;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * @author linlazy
  */
 @Component
-public class ConsumeItemType extends BaseItem{
+public class ConsumeItem extends BaseItem{
     @Override
     protected Integer itemType() {
         return ItemType.CONSUME;
