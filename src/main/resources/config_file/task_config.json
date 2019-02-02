@@ -31,7 +31,7 @@
   ],
   "taskTemplateId": 2,
   "taskTemplateArgs": {
-    "sceneId": 7,
+    "sceneId": 2,
     "killNum": 5,
     "monsterId": 3
   },
@@ -53,18 +53,17 @@
         }
       }
     ],
-    "taskTemplateId": 6,
+    "taskTemplateId": 3,
     "taskTemplateArgs": {
-      "sceneId": 8,
-      "killNum": 5,
-      "monsterId": 3
+      "itemId": 2001,
+      "needNum":10
     },
     "rewards": [[60003,50]]
   },
   {
   "taskId": 4,
   "taskName": "简单交易",
-  "desc": "【新手任务】千货商让你从他这里购买5个凝神丹给裁缝大妈送去，她自然会送你一套华美衣饰把你装扮一新。",
+  "desc": "【新手任务】千货商让你从他这里购买5个清心露给裁缝大妈送去，她自然会送你一套华美衣饰把你装扮一新。",
   "trigger": [{
     "triggerType": 2,
     "triggerArgs": {
@@ -77,11 +76,10 @@
     }
   }
   ],
-  "taskTemplateId": 6,
+  "taskTemplateId": 3,
   "taskTemplateArgs": {
-    "sceneId": 3,
-    "killNum": 5,
-    "monsterId": 3
+    "itemId": 1201,
+    "needNum":10
   },
   "rewards": [[60003,50]]
 }

@@ -42,9 +42,11 @@ public class TaskConfigService {
             JSONObject taskTemplateArgs = jsonObject.getJSONObject("taskTemplateArgs");
             String rewards = jsonObject.getString("rewards");
             JSONArray trigger = jsonObject.getJSONArray("trigger");
+            String taskName = jsonObject.getString("taskName");
 
 
             TaskConfig taskConfig = new TaskConfig();
+            taskConfig.setTaskName(taskName);
             taskConfig.setDesc(desc);
             if(StringUtils.isEmpty(rewards)){
                 taskConfig.setRewardList(Lists.newArrayList());

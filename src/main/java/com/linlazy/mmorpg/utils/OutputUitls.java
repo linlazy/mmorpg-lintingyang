@@ -3,6 +3,7 @@ package com.linlazy.mmorpg.utils;
 import com.linlazy.mmorpg.module.item.type.ItemType;
 import com.linlazy.mmorpg.module.player.constants.ProfessionType;
 import com.linlazy.mmorpg.module.task.condition.start.StartConditionType;
+import com.linlazy.mmorpg.module.task.constants.TaskStatus;
 import com.linlazy.mmorpg.module.task.domain.TriggerCondition;
 
 /**
@@ -65,6 +66,33 @@ public class OutputUitls {
                 break;
             default:
         }
+        return stringBuilder.toString();
+    }
+
+    public static String taskStatus(int status){
+        StringBuilder stringBuilder = new StringBuilder();
+
+        switch (status){
+            case TaskStatus.UN_START:
+                stringBuilder.append(String.format("任务状态【未开启】"));
+                break;
+            case TaskStatus.START_UN_ACCEPT:
+                stringBuilder.append(String.format("任务状态【已开启未接受】"));
+                break;
+            case TaskStatus.ACCEPT_UN_COMPLETE:
+                stringBuilder.append(String.format("任务状态【已接受未完成】"));
+                break;
+            case TaskStatus.ACCEPT_ABLE_COMPLETE:
+                stringBuilder.append(String.format("任务状态【已接受可完成】"));
+                break;
+            case TaskStatus.COMPLETED:
+                stringBuilder.append(String.format("任务状态【已完成】"));
+                break;
+
+            default:
+        }
+        stringBuilder.append("\r\n");
+
         return stringBuilder.toString();
     }
 }

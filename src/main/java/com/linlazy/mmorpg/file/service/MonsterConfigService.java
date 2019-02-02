@@ -4,6 +4,7 @@ package com.linlazy.mmorpg.file.service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import com.linlazy.mmorpg.file.config.MonsterConfig;
 import com.linlazy.mmorpg.server.common.ConfigFile;
 import com.linlazy.mmorpg.server.common.ConfigFileManager;
 import org.springframework.stereotype.Component;
@@ -34,12 +35,30 @@ public class MonsterConfigService {
     private static Map<Integer, List<JSONObject>> sceneMonsterMap = new HashMap<>();
 
 
+    private static Map<Long, MonsterConfig> monsterConfigMap = new HashMap<>();
+
     @PostConstruct
     public void init(){
         JSONArray jsonArray = monsterConfigFile.getJsonArray();
         for(int i = 0; i < jsonArray.size(); i++){
             JSONObject jsonObject = jsonArray.getJSONObject(i);
 
+            long monsterId = jsonObject.getLongValue("monsterId");
+            String name = jsonObject.getString("name");
+            int level = jsonObject.getIntValue("level");
+            int hp = jsonObject.getIntValue("hp");
+
+            //构建怪物映射
+            MonsterConfig monsterConfig = new MonsterConfig();
+            monsterConfig.setMonsterId(monsterId);
+            monsterConfig.setName(name);
+            monsterConfig.setLevel(level);
+            monsterConfig.setHp(hp);
+
+            monsterConfigMap.put(monsterConfig.getMonsterId(),monsterConfig);
+
+
+            //构建场景怪物映射
             JSONArray sceneIds = jsonObject.getJSONArray("sceneIds");
             for(int j = 0; j < sceneIds.size(); j++){
 
@@ -62,6 +81,15 @@ public class MonsterConfigService {
             jsonObjects = Lists.newArrayList();
         }
         return jsonObjects;
+    }
+
+    /**
+     * 获取怪物配置
+     * @param monsterId
+     * @return
+     */
+    public MonsterConfig getMonsterConfig(long monsterId){
+        return monsterConfigMap.get(monsterId);
     }
 
 }

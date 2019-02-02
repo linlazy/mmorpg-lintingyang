@@ -81,20 +81,47 @@ public class TaskService {
 
     @Subscribe
     public void listenEvent(ActorEvent<JSONObject> actorEvent){
-        if(actorEvent.getEventType().equals(EventType.ACTOR_ITEM_CHANGE)){
             PlayerTask playerTask = getPlayerTask(actorEvent.getActorId());
             playerTask.getMap().values().stream()
                     .forEach(task ->{
-                        BaseTaskTemplate taskTemplate = BaseTaskTemplate.getTaskTemplate(task.getTaskTemplateId());
-                        if(taskTemplate.likeEvent().contains(EventType.ACTOR_ITEM_CHANGE)){
-                            taskTemplate.updateTaskData(actorEvent.getActorId(),actorEvent.getData(),task);
-                            if(taskTemplate.isReachCondition(actorEvent.getActorId(),task)){
-                                task.setStatus(TaskStatus.ACCEPT_ABLE_COMPLETE);
-                                taskDao.updateQueue(task.convertTaskEntity());
+
+                        if(task.getStatus() ==TaskStatus.ACCEPT_UN_COMPLETE){
+                            BaseTaskTemplate taskTemplate = BaseTaskTemplate.getTaskTemplate(task.getTaskTemplateId());
+                            if(taskTemplate.likeEvent().contains(actorEvent.getEventType())){
+
+                                if( taskTemplate.isPreCondition(actorEvent.getActorId(),actorEvent.getData(),task)){
+                                    taskTemplate.updateTaskData(actorEvent.getActorId(),actorEvent.getData(),task);
+
+                                    if(taskTemplate.isReachCondition(actorEvent.getActorId(),task)){
+                                        task.setStatus(TaskStatus.ACCEPT_ABLE_COMPLETE);
+                                        taskDao.updateQueue(task.convertTaskEntity());
+                                    }
+                                }
+                            }
+                        }else if(task.getStatus() ==TaskStatus.ACCEPT_ABLE_COMPLETE){
+                            if(actorEvent.getEventType().equals(EventType.ACTOR_ITEM_CHANGE)){
+                                BaseTaskTemplate taskTemplate = BaseTaskTemplate.getTaskTemplate(task.getTaskTemplateId());
+                                taskTemplate.updateTaskData(actorEvent.getActorId(),actorEvent.getData(),task);
+                                if(!taskTemplate.isReachCondition(actorEvent.getActorId(),task)){
+                                    task.setStatus(TaskStatus.ACCEPT_UN_COMPLETE);
+                                    taskDao.updateQueue(task.convertTaskEntity());
+                                }
                             }
                         }
+            });
+    }
 
-                    });
+
+    @Subscribe
+    public void loginEvent(ActorEvent actorEvent){
+        if(actorEvent.getEventType().equals(EventType.LOGIN)){
+            PlayerTask playerTask = getPlayerTask(actorEvent.getActorId());
+            playerTask.getMap().values().stream()
+                .forEach(task ->{
+                    if(task.getStatus() ==TaskStatus.UN_START){
+                        task.doStart();
+                    }
+                });
         }
     }
 

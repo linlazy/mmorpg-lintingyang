@@ -1,6 +1,7 @@
 package com.linlazy.mmorpg.module.player.domain;
 
 import com.linlazy.mmorpg.module.task.domain.Task;
+import com.linlazy.mmorpg.module.task.dto.TaskDTO;
 import lombok.Data;
 
 import java.util.HashMap;
@@ -22,7 +23,8 @@ public class PlayerTask {
         StringBuilder stringBuilder = new StringBuilder();
 
         map.values().forEach(task -> {
-            stringBuilder.append(task.toString()).append("\r\n");
+
+            stringBuilder.append( new TaskDTO(task).toString()).append("\r\n");
         });
         return stringBuilder.toString();
     }

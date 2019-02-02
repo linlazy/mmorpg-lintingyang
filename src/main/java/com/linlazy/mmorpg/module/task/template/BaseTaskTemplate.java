@@ -66,4 +66,6 @@ public abstract class BaseTaskTemplate {
         return false;
     }
 
+
+    public abstract String getTaskProcess(Task task);
 }

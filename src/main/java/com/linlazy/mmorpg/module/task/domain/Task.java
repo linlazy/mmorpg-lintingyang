@@ -38,6 +38,11 @@ public class Task {
      * 任务唯一标识
      */
     private long taskId;
+
+    /**
+     * 任务名称
+     */
+    private String taskName;
     /**
      * 玩家ID
      */
@@ -106,6 +111,7 @@ public class Task {
 
     public Task(TaskConfig taskConfig, TaskEntity task) {
         this.taskId = taskConfig.getTaskId();
+        this.taskName = taskConfig.getTaskName();
         this.actorId = task.getActorId();
         if(!StringUtils.isEmpty(task.getData())){
             this.data =JSONObject.parseObject(task.getData());

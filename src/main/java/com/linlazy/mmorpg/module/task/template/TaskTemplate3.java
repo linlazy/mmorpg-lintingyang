@@ -2,9 +2,11 @@ package com.linlazy.mmorpg.module.task.template;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Sets;
+import com.linlazy.mmorpg.file.service.ItemConfigService;
 import com.linlazy.mmorpg.module.backpack.service.PlayerBackpackService;
 import com.linlazy.mmorpg.module.common.event.EventType;
 import com.linlazy.mmorpg.module.task.domain.Task;
+import com.linlazy.mmorpg.utils.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -45,7 +47,7 @@ public class TaskTemplate3 extends BaseTaskTemplate {
         JSONObject data = task.getData();
 
         JSONObject taskTemplateArgs = task.getTaskTemplateArgs();
-        long itemId = taskTemplateArgs.getLongValue("itemId");
+        int itemId = taskTemplateArgs.getIntValue("itemId");
         int itemCount = playerBackpackService.getPlayerBackpack(actorId).getItemCount(itemId);
         data.put("itemNum",itemCount);
 
@@ -67,6 +69,22 @@ public class TaskTemplate3 extends BaseTaskTemplate {
         int itemNum = data.getIntValue("itemNum");
 
         return itemNum >= needNum;
+    }
+
+    @Override
+    public String getTaskProcess(Task task) {
+
+        JSONObject data = task.getData();
+        int itemNum = data.getIntValue("itemNum");
+        JSONObject taskTemplateArgs = task.getTaskTemplateArgs();
+        int itemId = taskTemplateArgs.getIntValue("itemId");
+        int needNum = taskTemplateArgs.getIntValue("needNum");
+
+
+        ItemConfigService itemConfigService = SpringContextUtil.getApplicationContext().getBean(ItemConfigService.class);
+        JSONObject itemConfig = itemConfigService.getItemConfig(itemId);
+
+        return String.format("收集道具【%s】 %d/%d个",itemConfig.getString("name"),itemNum,needNum);
     }
 
 }

@@ -22,6 +22,11 @@ public class TaskConfig {
     private long taskId;
 
     /**
+     * 任务名称
+     */
+    private String taskName;
+
+    /**
      * 描述
      */
     private String desc;

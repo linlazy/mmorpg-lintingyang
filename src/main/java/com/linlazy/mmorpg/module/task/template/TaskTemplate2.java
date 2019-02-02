@@ -2,10 +2,15 @@ package com.linlazy.mmorpg.module.task.template;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Sets;
+import com.linlazy.mmorpg.file.config.MonsterConfig;
+import com.linlazy.mmorpg.file.config.SceneConfig;
+import com.linlazy.mmorpg.file.service.MonsterConfigService;
+import com.linlazy.mmorpg.file.service.SceneConfigService;
 import com.linlazy.mmorpg.module.common.event.EventType;
 import com.linlazy.mmorpg.module.player.service.PlayerService;
 import com.linlazy.mmorpg.module.scene.domain.Monster;
 import com.linlazy.mmorpg.module.task.domain.Task;
+import com.linlazy.mmorpg.utils.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -77,6 +82,28 @@ public class TaskTemplate2 extends BaseTaskTemplate {
         int killNum = taskTemplateArgs.getIntValue("killNum");
         int killedNum = task.getData().getIntValue("killedNum");
         return killedNum >= killNum;
+    }
+
+    @Override
+    public String getTaskProcess(Task task) {
+        JSONObject taskTemplateArgs = task.getTaskTemplateArgs();
+
+        int sceneId = taskTemplateArgs.getIntValue("sceneId");
+        int monsterId = taskTemplateArgs.getIntValue("monsterId");
+        MonsterConfigService monsterConfigService = SpringContextUtil.getApplicationContext().getBean(MonsterConfigService.class);
+        MonsterConfig monsterConfig = monsterConfigService.getMonsterConfig(monsterId);
+
+        JSONObject data = task.getData();
+        int killedNum = data.getIntValue("killedNum");
+        int killNum = taskTemplateArgs.getIntValue("killNum");
+
+
+        SceneConfigService sceneConfigService = SpringContextUtil.getApplicationContext().getBean(SceneConfigService.class);
+        SceneConfig sceneConfig = sceneConfigService.getSceneConfig(sceneId);
+        /**
+         * 任务进度
+         */
+        return String.format("穿着装备，在场景【%s】 杀死小怪【%s】 【%d/%d】",sceneConfig.getName(),monsterConfig.getName(),killedNum,killNum);
     }
 
 }
