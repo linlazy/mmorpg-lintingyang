@@ -22,6 +22,11 @@ public class TaskConfig {
     private long taskId;
 
     /**
+     * 描述
+     */
+    private String desc;
+
+    /**
      * 任务模板ID
      */
     private int taskTemplateId;

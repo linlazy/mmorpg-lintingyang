@@ -63,7 +63,6 @@ public class TaskService {
                                     taskEntity.setActorId(actorId);
                                 }
                                 Task task = new Task(taskConfig, taskEntity);
-                                task.doStart();
                                 playerTask.getMap().put(task.getTaskId(),task);
                             });
                     return playerTask;

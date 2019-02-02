@@ -26,7 +26,7 @@ public class LatticeDTO {
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder.append(String.format("格子编号【%d】",backpackIndex));
+        stringBuilder.append(String.format("格子编号【%d】\n",backpackIndex));
 
         stringBuilder.append(new ItemDTO(item).toString());
 

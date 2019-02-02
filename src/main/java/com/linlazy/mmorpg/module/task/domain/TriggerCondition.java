@@ -18,4 +18,16 @@ public class TriggerCondition {
      * 触发参数
      */
     private JSONObject triggerArgs;
+
+
+    @Override
+    public String toString() {
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+
+
+
+        return stringBuilder.toString();
+    }
 }

@@ -2,6 +2,8 @@ package com.linlazy.mmorpg.utils;
 
 import com.linlazy.mmorpg.module.item.type.ItemType;
 import com.linlazy.mmorpg.module.player.constants.ProfessionType;
+import com.linlazy.mmorpg.module.task.condition.start.StartConditionType;
+import com.linlazy.mmorpg.module.task.domain.TriggerCondition;
 
 /**
  * @author linlazy
@@ -44,6 +46,22 @@ public class OutputUitls {
                 break;
             case ItemType.SKILL:
                 stringBuilder.append(String.format("道具类型【技能道具】 \n"));
+                break;
+            default:
+        }
+        return stringBuilder.toString();
+    }
+
+    public static String startCondition(TriggerCondition triggerCondition){
+        StringBuilder stringBuilder = new StringBuilder();
+
+        switch (triggerCondition.getTriggerType()){
+            case StartConditionType
+                    .TIME:
+                stringBuilder.append(String.format("开启条件【】 \n"));
+                break;
+            case StartConditionType.COMPLETE_TASK:
+                stringBuilder.append(String.format("道具类型【普通道具】 \n"));
                 break;
             default:
         }

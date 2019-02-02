@@ -24,7 +24,7 @@ public class TaskConfigService {
     private static ConfigFile taskConfigFile;
 
     static {
-        taskConfigFile =  ConfigFileManager.use("config_file/task/task_config.json");
+        taskConfigFile =  ConfigFileManager.use("config_file/task_config.json");
     }
 
     private static Map<Long, TaskConfig> map = new HashMap<>();
@@ -37,6 +37,7 @@ public class TaskConfigService {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
 
             long taskId = jsonObject.getLongValue("taskId");
+            String desc = jsonObject.getString("desc");
             int taskTemplateId = jsonObject.getIntValue("taskTemplateId");
             JSONObject taskTemplateArgs = jsonObject.getJSONObject("taskTemplateArgs");
             String rewards = jsonObject.getString("rewards");
@@ -44,6 +45,7 @@ public class TaskConfigService {
 
 
             TaskConfig taskConfig = new TaskConfig();
+            taskConfig.setDesc(desc);
             if(StringUtils.isEmpty(rewards)){
                 taskConfig.setRewardList(Lists.newArrayList());
             }else {

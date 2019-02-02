@@ -49,6 +49,11 @@ public class Task {
     private int type;
 
     /**
+     * 描述
+     */
+    private String desc;
+
+    /**
      * 任务数据
      */
     private JSONObject data = new JSONObject();
@@ -106,6 +111,8 @@ public class Task {
             this.data =JSONObject.parseObject(task.getData());
         }
         this.status = task.getStatus();
+
+        this.desc = taskConfig.getDesc();
         this.taskTemplateId = taskConfig.getTaskTemplateId() ;
         this.taskTemplateArgs = taskConfig.getTaskTemplateArgs();
         this.rewardList =taskConfig.getRewardList();
@@ -206,17 +213,30 @@ public class Task {
             case TaskStatus.UN_START:
                 stringBuilder.append(String.format("任务状态【未开启】"));
                 break;
+            case TaskStatus.START_UN_ACCEPT:
+                stringBuilder.append(String.format("任务状态【已开启未接受】"));
+                break;
             case TaskStatus.ACCEPT_UN_COMPLETE:
-                stringBuilder.append(String.format("任务状态【已开启未完成】"));
+                stringBuilder.append(String.format("任务状态【已接受未完成】"));
                 break;
             case TaskStatus.ACCEPT_ABLE_COMPLETE:
-                stringBuilder.append(String.format("任务状态【已完成未领奖】"));
+                stringBuilder.append(String.format("任务状态【已接受可完成】"));
                 break;
             case TaskStatus.COMPLETED:
-                stringBuilder.append(String.format("任务状态【已领奖】"));
+                stringBuilder.append(String.format("任务状态【已完成】"));
                 break;
              default:
         }
+
+        stringBuilder.append(String.format("任务描述【%s】",desc));
+
+
+        for(TriggerCondition startCondition: startConditionMap.values()){
+        }
+
+        stringBuilder.append(String.format("开启条件【%s】",null));
+        stringBuilder.append(String.format("完成条件【%s】",null));
+
 
         stringBuilder.append(String.format("奖励内容"));
         rewardList.forEach(reward -> {

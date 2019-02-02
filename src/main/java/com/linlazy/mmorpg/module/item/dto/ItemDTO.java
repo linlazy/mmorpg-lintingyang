@@ -2,7 +2,6 @@ package com.linlazy.mmorpg.module.item.dto;
 
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpg.file.service.ItemConfigService;
-import com.linlazy.mmorpg.module.equip.dto.EquipDTO;
 import com.linlazy.mmorpg.module.item.domain.Item;
 import com.linlazy.mmorpg.module.item.type.ItemType;
 import com.linlazy.mmorpg.utils.ItemIdUtil;
@@ -19,34 +18,32 @@ public class ItemDTO {
         this.item = item;
     }
 
+
     @Override
     public String toString() {
 
         StringBuilder stringBuilder = new StringBuilder();
 
-
-        if(item.isSuperPosition()){
-            stringBuilder.append("叠加属性【可叠加】");
-            stringBuilder.append(String.format("叠加上限【%d】",item.getSuperPositionUp()));
-        }else {
-            stringBuilder.append("叠加属性【不可叠加】");
+        if(item.getId() != 0){
+            stringBuilder.append(String.format("道具标识【%d】",item.getId()));
         }
-
-
         ItemConfigService itemConfigService = SpringContextUtil.getApplicationContext().getBean(ItemConfigService.class);
         JSONObject itemConfig = itemConfigService.getItemConfig(ItemIdUtil.getBaseItemId(item.getItemId()));
-        String desc = itemConfig.getString("desc");
-        if(desc != null){
-            stringBuilder.append(String.format("描述【%s】",desc));
-        }
+        ItemConfigDTO itemConfigDTO = new ItemConfigDTO(itemConfig);
+        stringBuilder.append(String.format(itemConfigDTO.toString()));
 
+        JSONObject ext = item.getExt();
 
         if(item.getItemType() == ItemType.EQUIP){
-            stringBuilder.append(String.format(" 道具配置ID【%d】 道具数量【%d】",ItemIdUtil.getBaseItemId(item.getItemId()),item.getCount()));
-            stringBuilder.append(new EquipDTO(item).toString());
-        }else {
-            stringBuilder.append(String.format(" 道具配置ID【%d】 道具ID【%d】 道具数量【%d】道具名称【%s】",ItemIdUtil.getBaseItemId(item.getItemId()),item.getItemId(),item.getCount(),item.getName()));
+            int durability = ext.getIntValue("durability");
+            stringBuilder.append(String.format("耐久度【%d】\n",durability));
+
+            int level = ext.getIntValue("level");
+            stringBuilder.append(String.format("装备等级【%d】\n",level));
         }
+
+
+
         return stringBuilder.toString();
     }
 }
