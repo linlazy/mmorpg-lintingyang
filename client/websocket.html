@@ -496,15 +496,26 @@
 					ta.value += "增加金币中..."+ "\r\n";
 				}
 
-				if(arr[0] == "rewardTask"){
+
+				if(arr[0] == "acceptTask"){
 
 					var json ={};
-					json.command = "gainGold";
+					json.command = "acceptTask";
 					json.taskId =arr[1];
 					var jsonStr = JSON.stringify(json);
 					console.log(jsonStr);
 					socket.send(jsonStr);
-					ta.value += "领取任务奖励中..."+ "\r\n";
+					ta.value += "接受任务中..."+ "\r\n";
+				}
+				if(arr[0] == "commitTask"){
+
+					var json ={};
+					json.command = "commitTask";
+					json.taskId =arr[1];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "提交任务奖励中..."+ "\r\n";
 				}
 
 				if(arr[0] == "taskInfo"){

@@ -671,7 +671,20 @@ public class CmdHandler {
     private TaskService taskService;
 
     /**
-     * 领取任务奖励
+     * 接受任务
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("acceptTask")
+    public Result<?> acceptTask(JSONObject jsonObject){
+        long actorId = jsonObject.getLong("actorId");
+        long taskId = jsonObject.getLongValue("taskId");
+        return taskService.acceptTask(actorId,taskId);
+    }
+
+
+    /**
+     * 提交任务
      * @param jsonObject
      * @return
      */
