@@ -1,9 +1,7 @@
 package com.linlazy.mmorpg.module.backpack.domain;
 
 import com.linlazy.mmorpg.module.backpack.BackpackInterface;
-import com.linlazy.mmorpg.module.equip.domain.Equip;
 import com.linlazy.mmorpg.module.item.domain.Item;
-import com.linlazy.mmorpg.module.item.type.ItemType;
 import com.linlazy.mmorpg.utils.ItemIdUtil;
 import lombok.Data;
 
@@ -117,12 +115,7 @@ public abstract class Backpack implements BackpackInterface {
 
 
         //增加道具
-        Item newItem = null;
-        if(item.getItemType() == ItemType.EQUIP){
-            newItem = new Equip(newItemId,1);
-        }else {
-            newItem = new Item(newItemId,1);
-        }
+        Item newItem = new Item(newItemId,1);
         spaceBackPackLattice.setItem(newItem);
         latticeArr[spaceBackPackLattice.getIndex()] = spaceBackPackLattice;
         addItem(newItem);

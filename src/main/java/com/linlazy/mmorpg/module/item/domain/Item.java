@@ -47,8 +47,11 @@ public class Item {
 
     private JSONObject ext;
 
-
     private JSONObject itemConfig;
+
+    public Item(long itemId) {
+        initConfig(ItemIdUtil.getBaseItemId(itemId));
+    }
 
     public boolean isSuperPosition(){
         return itemConfig.getIntValue("superPosition") != 0;
@@ -114,7 +117,9 @@ public class Item {
 
         item.setItemId(itemId);
         item.setCount(count);
-        item.setExtJsonObject(ext);
+        if(ext != null){
+            item.setExtJsonObject(ext);
+        }
 
         return item;
     }

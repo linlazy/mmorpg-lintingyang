@@ -10,6 +10,9 @@ import com.linlazy.mmorpg.module.email.service.EmailService;
 import com.linlazy.mmorpg.module.equip.service.EquipmentService;
 import com.linlazy.mmorpg.module.guild.service.GuildService;
 import com.linlazy.mmorpg.module.item.domain.Item;
+import com.linlazy.mmorpg.module.item.dto.ItemConfigDTO;
+import com.linlazy.mmorpg.module.item.dto.ItemInfoDTO;
+import com.linlazy.mmorpg.module.item.push.ItemPushHelper;
 import com.linlazy.mmorpg.module.item.service.ItemService;
 import com.linlazy.mmorpg.module.player.domain.Player;
 import com.linlazy.mmorpg.module.player.dto.PlayerDTO;
@@ -23,9 +26,14 @@ import com.linlazy.mmorpg.module.team.service.TeamService;
 import com.linlazy.mmorpg.module.transaction.service.TransactionService;
 import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.server.route.Cmd;
+import com.linlazy.mmorpg.utils.ItemIdUtil;
 import io.netty.channel.Channel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author linlazy
@@ -529,10 +537,16 @@ public class CmdHandler {
      * @param jsonObject
      * @return
      */
-    @Cmd(value="itemInfo",auth = false)
+    @Cmd(value="itemInfo")
     public Result<?> itemInfo(JSONObject jsonObject){
 
-        return Result.success(itemConfigService.getAllItemConfig());
+        Collection<JSONObject> allItemConfig = itemConfigService.getAllItemConfig();
+        List<ItemConfigDTO> collect = allItemConfig.stream()
+                .map(ItemConfigDTO::new)
+                .collect(Collectors.toList());
+        long actorId = jsonObject.getLongValue("actorId");
+        ItemPushHelper.pushitemInfo(actorId, new ItemInfoDTO(collect).toString());
+        return Result.success();
     }
 
 
@@ -560,6 +574,11 @@ public class CmdHandler {
 
         long itemId = jsonObject.getIntValue("itemId");
         int num = jsonObject.getIntValue("num");
+        JSONObject itemConfig = itemConfigService.getItemConfig(ItemIdUtil.getBaseItemId(itemId));
+        if(itemConfig == null){
+            return Result.valueOf("道具不存在");
+        }
+
         Item item = new Item(itemId,num);
         return playerBackpackService.push(actorId, Lists.newArrayList(item));
     }
@@ -574,6 +593,11 @@ public class CmdHandler {
         long actorId = jsonObject.getLong("actorId");
         int itemId = jsonObject.getIntValue("itemId");
         int num = jsonObject.getIntValue("num");
+
+        JSONObject itemConfig = itemConfigService.getItemConfig(ItemIdUtil.getBaseItemId(itemId));
+        if(itemConfig == null){
+            return Result.valueOf("道具不存在");
+        }
         Item item = new Item(itemId,num);
         return playerBackpackService.pop(actorId, Lists.newArrayList(item));
     }
@@ -589,6 +613,11 @@ public class CmdHandler {
     public Result<?> consumeItem(JSONObject jsonObject){
         long actorId = jsonObject.getLong("actorId");
         long itemId = jsonObject.getLongValue("itemId");
+
+        JSONObject itemConfig = itemConfigService.getItemConfig(ItemIdUtil.getBaseItemId(itemId));
+        if(itemConfig == null){
+            return Result.valueOf("道具不存在");
+        }
         return itemService.useItem(actorId,itemId);
     }
 
