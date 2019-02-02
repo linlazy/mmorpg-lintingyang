@@ -1,13 +1,14 @@
 package com.linlazy.mmorpg.module.transaction.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
 import com.linlazy.mmorpg.module.backpack.service.PlayerBackpackService;
-import com.linlazy.mmorpg.module.transaction.constants.TransactionOperatiorType;
-import com.linlazy.mmorpg.module.item.domain.ItemContext;
+import com.linlazy.mmorpg.module.item.domain.Item;
 import com.linlazy.mmorpg.module.player.domain.Player;
 import com.linlazy.mmorpg.module.player.domain.PlayerBackpack;
-import com.linlazy.mmorpg.module.transaction.domain.Transaction;
 import com.linlazy.mmorpg.module.player.service.PlayerService;
+import com.linlazy.mmorpg.module.transaction.constants.TransactionOperatiorType;
+import com.linlazy.mmorpg.module.transaction.domain.Transaction;
 import com.linlazy.mmorpg.module.transaction.push.TransactionPushHelper;
 import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.utils.SessionManager;
@@ -16,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -115,28 +115,25 @@ public class TransactionService {
             return Result.valueOf("参数错误");
         }
 
-        List<ItemContext> itemContextList = new ArrayList<>();
 
         long itemId = jsonObject.getLongValue("itemId");
         int count = jsonObject.getIntValue("num");
         if(itemId == 0){
             return Result.valueOf("交易已锁定");
         }
-        ItemContext itemContext = new ItemContext(itemId);
-        itemContext.setCount(count);
-        itemContextList.add(itemContext);
+        Item item = new Item(itemId,count);
 
         Transaction transaction = transactionIdMap.get(transactionId);
         if( transaction.getInviter() == actorId){
             //邀请者锁定
             Player player = playerService.getPlayer(transaction.getInviter());
             player.lockBackpack(true);
-            transaction.setInviterItemContextList(itemContextList);
+            transaction.setInviterItemList(Lists.newArrayList(item));
         }else {
             //接受者锁定
             Player player = playerService.getPlayer(transaction.getAcceptor());
             player.lockBackpack(true);
-            transaction.setAcceptorItemContextList(itemContextList);
+            transaction.setAcceptorItemList(Lists.newArrayList(item));
         }
 
         logger.debug("transactionInfo:{}", transaction);
@@ -170,17 +167,17 @@ public class TransactionService {
 
             long inviter = transaction.getInviter();
             long acceptor = transaction.getAcceptor();
-            List<ItemContext> inviterItemContextList = transaction.getInviterItemContextList();
-            List<ItemContext> acceptorItemContextList = transaction.getAcceptorItemContextList();
+            List<Item> inviterItemList = transaction.getInviterItemList();
+            List<Item> acceptorItemList = transaction.getAcceptorItemList();
 
 
 
             PlayerBackpack inviterPlayerBackpack = playerBackpackService.getPlayerBackpack(inviter);
-            Result<?> inviterEnough = playerBackpackService.isEnough(inviter, inviterItemContextList);
+            Result<?> inviterEnough = playerBackpackService.isEnough(inviter, inviterItemList);
             if(inviterEnough.isFail()){
                 return Result.valueOf(inviterEnough.getCode());
             }
-            Result<?> inviterNotFull = playerBackpackService.isNotFull(inviter, acceptorItemContextList);
+            Result<?> inviterNotFull = playerBackpackService.isNotFull(inviter, acceptorItemList);
             if(inviterNotFull.isFail()){
                 return Result.valueOf(inviterNotFull.getCode());
             }
@@ -188,12 +185,12 @@ public class TransactionService {
 
 
             PlayerBackpack acceptPlayerBackpack = playerBackpackService.getPlayerBackpack(acceptor);
-            Result<?> acceptorEnough = playerBackpackService.isEnough(acceptor, acceptorItemContextList);
+            Result<?> acceptorEnough = playerBackpackService.isEnough(acceptor, acceptorItemList);
             if(acceptorEnough.isFail()){
                 return Result.valueOf(acceptorEnough.getCode());
             }
 
-            Result<?> acceptorNotFull = playerBackpackService.isNotFull(acceptor, inviterItemContextList);
+            Result<?> acceptorNotFull = playerBackpackService.isNotFull(acceptor, inviterItemList);
             if(acceptorNotFull.isFail()){
                 return Result.valueOf(acceptorNotFull.getCode());
             }
@@ -203,10 +200,10 @@ public class TransactionService {
                 inviterPlayerBackpack.getReadWriteLock().writeLock().lock();
                 acceptPlayerBackpack.getReadWriteLock().writeLock().lock();
 
-                inviterPlayerBackpack.pop(inviterItemContextList);
-                inviterPlayerBackpack.push(acceptorItemContextList);
-                acceptPlayerBackpack.pop(acceptorItemContextList);
-                acceptPlayerBackpack.push(inviterItemContextList);
+                inviterPlayerBackpack.pop(inviterItemList);
+                inviterPlayerBackpack.push(acceptorItemList);
+                acceptPlayerBackpack.pop(acceptorItemList);
+                acceptPlayerBackpack.push(inviterItemList);
 
             }finally {
                 inviterPlayerBackpack.getReadWriteLock().writeLock().unlock();

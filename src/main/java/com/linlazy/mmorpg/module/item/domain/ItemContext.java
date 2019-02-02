@@ -22,10 +22,10 @@ public class ItemContext {
     private int superPositionUp;
     private int itemType;
 
-    public ItemContext(long itemId) {
-        this.itemId = itemId;
-        initConfig(ItemIdUtil.getBaseItemId(this.itemId));
-    }
+//    public ItemContext(long itemId) {
+//        this.itemId = itemId;
+//        initConfig(ItemIdUtil.getBaseItemId(this.itemId));
+//    }
 
 
     public void initConfig(int baseItemId){

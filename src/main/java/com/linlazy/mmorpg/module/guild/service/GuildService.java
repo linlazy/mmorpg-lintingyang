@@ -20,7 +20,7 @@ import com.linlazy.mmorpg.module.guild.domain.GuildPlayer;
 import com.linlazy.mmorpg.module.guild.domain.GuildWarehouse;
 import com.linlazy.mmorpg.module.guild.dto.GuildWarehouseDTO;
 import com.linlazy.mmorpg.module.guild.push.GuildPushHelper;
-import com.linlazy.mmorpg.module.item.domain.ItemContext;
+import com.linlazy.mmorpg.module.item.domain.Item;
 import com.linlazy.mmorpg.module.player.domain.Player;
 import com.linlazy.mmorpg.module.player.service.PlayerService;
 import com.linlazy.mmorpg.server.common.Result;
@@ -311,14 +311,14 @@ public class GuildService{
         });
     }
 
-    public Result<?> pop(long actorId, ArrayList<ItemContext> itemContexts) {
+    public Result<?> pop(long actorId, List<Item> itemContexts) {
         initGuidData();
         Long guildId = actorIdGuildIdMap.get(actorId);
 
         return guildWarehouseService.pop(guildId,actorId,itemContexts);
     }
 
-    public Result<?> push(long actorId, ArrayList<ItemContext> itemContexts) {
+    public Result<?> push(long actorId, List<Item> itemContexts) {
         initGuidData();
         Long guildId = actorIdGuildIdMap.get(actorId);
 

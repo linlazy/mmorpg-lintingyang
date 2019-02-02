@@ -10,7 +10,6 @@ import com.linlazy.mmorpg.module.backpack.domain.Lattice;
 import com.linlazy.mmorpg.module.backpack.dto.LatticeDTO;
 import com.linlazy.mmorpg.module.backpack.dto.PlayerBackPackDTO;
 import com.linlazy.mmorpg.module.item.domain.Item;
-import com.linlazy.mmorpg.module.item.domain.ItemContext;
 import com.linlazy.mmorpg.module.item.type.ItemType;
 import com.linlazy.mmorpg.module.player.domain.PlayerBackpack;
 import com.linlazy.mmorpg.module.player.service.PlayerService;
@@ -120,7 +119,7 @@ public class PlayerBackpackService {
      * @param actorId 玩家ID
      * @return
      */
-    public Result<?> isNotFull(long actorId, List<ItemContext> items)  {
+    public Result<?> isNotFull(long actorId, List<Item> items)  {
         PlayerBackpack playerBackpack = getPlayerBackpack(actorId);
         boolean full = playerBackpack.isFull(items);
         if(full){
@@ -134,7 +133,7 @@ public class PlayerBackpackService {
      * @param actorId 玩家ID
      * @return
      */
-    public Result<?> isEnough(long actorId, List<ItemContext> items)  {
+    public Result<?> isEnough(long actorId, List<Item> items)  {
         PlayerBackpack playerBackpack = getPlayerBackpack(actorId);
         boolean notEnough = playerBackpack.isNotEnough(items);
         if(notEnough){
@@ -149,7 +148,7 @@ public class PlayerBackpackService {
      * @param itemList
      * @return
      */
-    public Result<?> push(long actorId, List<ItemContext> itemList) {
+    public Result<?> push(long actorId, List<Item> itemList) {
         Result<?> notFull = isNotFull(actorId, itemList);
         if(notFull.isFail()){
             return Result.valueOf(notFull.getCode());
@@ -167,7 +166,7 @@ public class PlayerBackpackService {
      * @param itemList
      * @return
      */
-    public Result<?> pop(long actorId, List<ItemContext> itemList) {
+    public Result<?> pop(long actorId, List<Item> itemList) {
         Result<?> enough = isEnough(actorId, itemList);
         if(enough.isFail()){
             return Result.valueOf(enough.getCode());

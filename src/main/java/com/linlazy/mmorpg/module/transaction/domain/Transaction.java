@@ -1,6 +1,6 @@
 package com.linlazy.mmorpg.module.transaction.domain;
 
-import com.linlazy.mmorpg.module.item.domain.ItemContext;
+import com.linlazy.mmorpg.module.item.domain.Item;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -38,11 +38,11 @@ public class Transaction {
     /**
      * 邀请者交易道具
      */
-    private List<ItemContext> inviterItemContextList = new ArrayList<>();
+    private List<Item> inviterItemList = new ArrayList<>();
 
     /**
      * 接受者交易道具
      */
-    private List<ItemContext> acceptorItemContextList = new ArrayList<>();
+    private List<Item> acceptorItemList = new ArrayList<>();
 
 }

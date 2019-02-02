@@ -9,7 +9,7 @@ import com.linlazy.mmorpg.module.chat.service.ChatService;
 import com.linlazy.mmorpg.module.email.service.EmailService;
 import com.linlazy.mmorpg.module.equip.service.EquipmentService;
 import com.linlazy.mmorpg.module.guild.service.GuildService;
-import com.linlazy.mmorpg.module.item.domain.ItemContext;
+import com.linlazy.mmorpg.module.item.domain.Item;
 import com.linlazy.mmorpg.module.item.service.ItemService;
 import com.linlazy.mmorpg.module.player.domain.Player;
 import com.linlazy.mmorpg.module.player.dto.PlayerDTO;
@@ -558,10 +558,9 @@ public class CmdHandler {
     public Result<?> pushBackpack(JSONObject jsonObject){
         long actorId = jsonObject.getLong("actorId");
 
-        int baseItemId = jsonObject.getIntValue("itemId");
-        ItemContext item = new ItemContext(baseItemId);
+        long itemId = jsonObject.getIntValue("itemId");
         int num = jsonObject.getIntValue("num");
-        item.setCount(num);
+        Item item = new Item(itemId,num);
         return playerBackpackService.push(actorId, Lists.newArrayList(item));
     }
 
@@ -573,11 +572,9 @@ public class CmdHandler {
     @Cmd("popBackpack")
     public Result<?> popBackpack(JSONObject jsonObject){
         long actorId = jsonObject.getLong("actorId");
-
-        int baseItemId = jsonObject.getIntValue("itemId");
-        ItemContext item = new ItemContext(baseItemId);
+        int itemId = jsonObject.getIntValue("itemId");
         int num = jsonObject.getIntValue("num");
-        item.setCount(num);
+        Item item = new Item(itemId,num);
         return playerBackpackService.pop(actorId, Lists.newArrayList(item));
     }
 
@@ -769,9 +766,9 @@ public class CmdHandler {
     public Result<?> pushGuildWareHouse(JSONObject jsonObject){
         long actorId = jsonObject.getLong("actorId");
 
-        int baseItemId = jsonObject.getIntValue("itemId");
-        ItemContext item = new ItemContext(baseItemId);
+        int itemId = jsonObject.getIntValue("itemId");
         int num = jsonObject.getIntValue("num");
+        Item item = new Item(itemId,num);
         item.setCount(num);
 
         return guildService.push(actorId, Lists.newArrayList(item));
@@ -788,11 +785,9 @@ public class CmdHandler {
 
         long actorId = jsonObject.getLongValue("actorId");
 
-        int baseItemId = jsonObject.getIntValue("itemId");
-        ItemContext item = new ItemContext(baseItemId);
+        int itemId = jsonObject.getIntValue("itemId");
         int num = jsonObject.getIntValue("num");
-        item.setCount(num);
-//
+        Item item = new Item(itemId,num);
         return guildService.pop(actorId,Lists.newArrayList(item));
     }
 

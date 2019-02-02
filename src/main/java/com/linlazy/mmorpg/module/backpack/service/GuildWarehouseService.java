@@ -4,11 +4,10 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.linlazy.mmorpg.dao.GuildWarehouseDAO;
+import com.linlazy.mmorpg.entity.GuildWarehouseEntity;
+import com.linlazy.mmorpg.module.backpack.domain.Lattice;
 import com.linlazy.mmorpg.module.guild.domain.GuildWarehouse;
 import com.linlazy.mmorpg.module.item.domain.Item;
-import com.linlazy.mmorpg.module.item.domain.ItemContext;
-import com.linlazy.mmorpg.module.backpack.domain.Lattice;
-import com.linlazy.mmorpg.entity.GuildWarehouseEntity;
 import com.linlazy.mmorpg.server.common.GlobalConfigService;
 import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
@@ -17,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -90,7 +88,7 @@ public class GuildWarehouseService {
      * @param itemList 取出的道具列表
      * @return
      */
-    public Result<?> isEnough(long guildId, List<ItemContext> itemList){
+    public Result<?> isEnough(long guildId, List<Item> itemList){
         GuildWarehouse guildWarehouse = getGuildWarehouse(guildId);
         try{
             guildWarehouse.getReadWriteLock().readLock().lock();
@@ -111,7 +109,7 @@ public class GuildWarehouseService {
      * @param itemList 道具列表
      * @return 取出结果
      */
-    public Result<?> pop(long guildId,long actorId,List<ItemContext> itemList){
+    public Result<?> pop(long guildId,long actorId,List<Item> itemList){
 
         Result<?> enough = isEnough(guildId, itemList);
         if(enough.isFail()){
@@ -134,7 +132,7 @@ public class GuildWarehouseService {
         return playerBackpackService.push(actorId,itemList);
     }
 
-    public Result<?> push(Long guildId, long actorId, ArrayList<ItemContext> itemContexts) {
+    public Result<?> push(Long guildId, long actorId, List<Item> itemContexts) {
 
         Result<?> enough = playerBackpackService.isEnough(actorId, itemContexts);
         if(enough.isFail()){
@@ -157,7 +155,7 @@ public class GuildWarehouseService {
         return playerBackpackService.pop(actorId,itemContexts);
     }
 
-    private Result<?> isNotFull(Long guildId, ArrayList<ItemContext> itemContexts) {
+    private Result<?> isNotFull(Long guildId,List<Item> itemContexts) {
         GuildWarehouse guildWarehouse = getGuildWarehouse(guildId);
         try{
             guildWarehouse.getReadWriteLock().readLock().lock();

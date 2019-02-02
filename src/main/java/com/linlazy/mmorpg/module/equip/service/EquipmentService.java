@@ -21,7 +21,6 @@ import com.linlazy.mmorpg.module.equip.dto.DressedEquipDTO;
 import com.linlazy.mmorpg.module.equip.dto.EquipDTO;
 import com.linlazy.mmorpg.module.equip.push.EquipPushHelper;
 import com.linlazy.mmorpg.module.item.domain.Item;
-import com.linlazy.mmorpg.module.item.domain.ItemContext;
 import com.linlazy.mmorpg.module.item.type.ItemType;
 import com.linlazy.mmorpg.module.player.domain.Player;
 import com.linlazy.mmorpg.module.player.service.PlayerService;
@@ -152,19 +151,16 @@ public class EquipmentService {
      */
     public Result<?> dressEquip(long actorId, long equipId){
 
-        ItemContext itemContext = new ItemContext(equipId);
-        itemContext.setCount(1);
-        Result<?> enough = playerBackpackService.isEnough(actorId, Lists.newArrayList(itemContext));
+        Item equip = new Item(equipId,1);
+        Result<?> enough = playerBackpackService.isEnough(actorId, Lists.newArrayList(equip));
         if(enough.isFail()){
             return Result.valueOf(enough.getCode());
         }
 
 
         Player player = playerService.getPlayer(actorId);
-        Item equip = player.getBackPack().getItem(equipId);
-        ItemContext equipItemContext = new ItemContext(equip.getItemId());
-        equipItemContext.setCount(equip.getCount());
-        player.getBackPack().pop(Lists.newArrayList(equipItemContext));
+        equip = player.getBackPack().getItem(equipId);
+        player.getBackPack().pop(Lists.newArrayList(equip));
 
 
         DressedEquip dressedEquip = player.getDressedEquip();
@@ -178,10 +174,8 @@ public class EquipmentService {
 
                 dressedEquip.getEquipMap().remove(id);
 
-                ItemContext dressedItemContext = new ItemContext(dressEquip.getItemId());
-                dressedItemContext.setCount(dressEquip.getCount());
-
-                player.getBackPack().push(Lists.newArrayList(dressedItemContext));
+                dressEquip = new Item(dressEquip.getItemId(),dressEquip.getCount());
+                player.getBackPack().push(Lists.newArrayList(dressEquip));
             }
         }
 
@@ -233,10 +227,9 @@ public class EquipmentService {
      * @return
      */
     public Result<?> unDressEquip(long actorId,long equipId) {
-        ItemContext itemContext = new ItemContext(equipId);
-        itemContext.setCount(1);
+        Item unDressEquip = new Item(equipId,1);
 
-        Result<?> notFull = playerBackpackService.isNotFull(actorId, Lists.newArrayList(itemContext));
+        Result<?> notFull = playerBackpackService.isNotFull(actorId, Lists.newArrayList(unDressEquip));
         if(notFull.isFail()){
             return Result.valueOf(notFull.getCode());
         }
@@ -246,12 +239,12 @@ public class EquipmentService {
         int baseItemId = ItemIdUtil.getBaseItemId(equipId);
         int orderId = ItemIdUtil.getOrderId(equipId);
         long id = ItemIdUtil.getNewItemId(orderId, 0, baseItemId);
-        Item equip = dressedEquip.getEquipMap().remove(id);
-        ItemEntity itemEntity = equip.convertItemEntity();
+         unDressEquip = dressedEquip.getEquipMap().remove(id);
+        ItemEntity itemEntity = unDressEquip.convertItemEntity();
         itemEntity.setActorId(actorId);
         itemDAO.deleteQueue(itemEntity);
 
-        playerBackpackService.push(actorId,Lists.newArrayList(itemContext));
+        playerBackpackService.push(actorId,Lists.newArrayList(unDressEquip));
 
 
         return Result.success();

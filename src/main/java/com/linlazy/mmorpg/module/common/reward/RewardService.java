@@ -2,10 +2,10 @@ package com.linlazy.mmorpg.module.common.reward;
 
 import com.google.common.collect.Lists;
 import com.linlazy.mmorpg.module.backpack.service.PlayerBackpackService;
-import com.linlazy.mmorpg.module.item.domain.ItemContext;
+import com.linlazy.mmorpg.module.item.domain.Item;
 import com.linlazy.mmorpg.module.player.domain.Player;
-import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.module.player.service.PlayerService;
+import com.linlazy.mmorpg.server.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -46,9 +46,8 @@ public class RewardService {
                 player.addExp(reward.getCount());
                 playerService.updatePlayer(player);
             }else {
-                ItemContext itemContext = new ItemContext(reward.getRewardId());
-                itemContext.setCount(reward.getCount());
-                playerBackpackService.push(actorId, Lists.newArrayList(itemContext));
+                Item item = new Item(reward.getRewardId(),reward.getCount());
+                playerBackpackService.push(actorId, Lists.newArrayList(item));
             }
 
         }
