@@ -12,4 +12,9 @@ public interface SceneEntityTypeStatus {
      * 死亡
      */
     int DEATH = 2;
+
+    /**
+     * 战斗
+     */
+    int FIGHT = 3;
 }

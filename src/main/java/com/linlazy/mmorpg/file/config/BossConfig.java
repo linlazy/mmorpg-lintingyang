@@ -23,6 +23,10 @@ public class BossConfig {
     private String name;
 
     /**
+     * 怪物类型
+     */
+    private int type;
+    /**
      * 血量
      */
     private int hp;

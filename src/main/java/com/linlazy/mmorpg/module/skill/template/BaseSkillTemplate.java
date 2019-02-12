@@ -40,4 +40,5 @@ public abstract class BaseSkillTemplate {
     public abstract void useSkill(SceneEntity sceneEntity, Skill skill, JSONObject jsonObject);
 
 
+    public  abstract void attack(SceneEntity sceneEntity, Skill skill, SceneEntity attackTarget);
 }

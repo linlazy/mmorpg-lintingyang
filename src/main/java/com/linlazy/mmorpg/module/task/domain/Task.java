@@ -122,7 +122,8 @@ public class Task {
         this.taskTemplateId = taskConfig.getTaskTemplateId() ;
         this.taskTemplateArgs = taskConfig.getTaskTemplateArgs();
         this.rewardList =taskConfig.getRewardList();
-        this.startConditionMap = taskConfig.getTriggerConditionMap();
+        this.startConditionMap = taskConfig.getStartConditionMap();
+        this.acceptConditionMap = taskConfig.getAcceptConditionMap();
         this.autoAcceptWithStart = taskConfig.isAutoAcceptWithStart();
         this.autoCompleteWithReachCondition = taskConfig.isAutoCompleteWithReachCondition();
     }

@@ -47,4 +47,9 @@ public  class SkillTemplate6 extends BaseSkillTemplate {
                 });
     }
 
+    @Override
+    public void attack(SceneEntity sceneEntity, Skill skill, SceneEntity attackTarget) {
+
+    }
+
 }

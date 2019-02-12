@@ -1,11 +1,11 @@
 package com.linlazy.mmorpg.module.scene.domain;
 
-import com.linlazy.mmorpg.module.scene.domain.SceneEntity;
 import lombok.Data;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author linlazy
@@ -46,5 +46,10 @@ public class Npc extends SceneEntity {
     @Override
     public int computeAttack() {
         return 0;
+    }
+
+    @Override
+    public Set<SceneEntity> getOtherAttackTarget(SceneEntity attackTarget, int attackNum) {
+        return null;
     }
 }

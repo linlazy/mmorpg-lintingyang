@@ -60,6 +60,7 @@ public class MonsterService {
             Monster monster = new Monster();
             monster.setMonsterId(monsterId);
             monster.setName(name);
+            monster.setType(sceneMonsterConfig.getIntValue("type"));
             monster.setSceneId(sceneId);
             monster.setHp(hp);
             monster.setAttack(attack);

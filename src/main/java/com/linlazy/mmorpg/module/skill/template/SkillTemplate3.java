@@ -52,4 +52,9 @@ public  class SkillTemplate3 extends BaseSkillTemplate {
                 .limit(attackNum)
                 .forEach(targetSceneEntity->targetSceneEntity.attacked(sceneEntity,skill));
     }
+
+    @Override
+    public void attack(SceneEntity sceneEntity, Skill skill, SceneEntity attackTarget) {
+
+    }
 }

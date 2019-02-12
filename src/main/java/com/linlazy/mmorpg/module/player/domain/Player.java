@@ -1,24 +1,26 @@
 package com.linlazy.mmorpg.module.player.domain;
 
-import com.linlazy.mmorpg.domain.*;
-import com.linlazy.mmorpg.file.config.LevelConfig;
-import com.linlazy.mmorpg.file.service.LevelConfigService;
-import com.linlazy.mmorpg.module.common.event.ActorEvent;
-import com.linlazy.mmorpg.module.common.event.EventType;
-import com.linlazy.mmorpg.module.equip.domain.DressedEquip;
-import com.linlazy.mmorpg.module.player.attack.PlayerAttack;
-import com.linlazy.mmorpg.module.backpack.service.PlayerBackpackService;
-import com.linlazy.mmorpg.module.playercall.domain.PlayerCall;
-import com.linlazy.mmorpg.module.scene.constants.SceneEntityType;
-import com.linlazy.mmorpg.module.player.defense.PlayerDefense;
+import com.google.common.collect.Sets;
+import com.linlazy.mmorpg.domain.PlayerArenaInfo;
 import com.linlazy.mmorpg.entity.PlayerEntity;
 import com.linlazy.mmorpg.event.type.CopyPlayerDeadEvent;
 import com.linlazy.mmorpg.event.type.PlayerAttackedEvent;
 import com.linlazy.mmorpg.event.type.PlayerDeadEvent;
+import com.linlazy.mmorpg.file.config.LevelConfig;
+import com.linlazy.mmorpg.file.service.LevelConfigService;
 import com.linlazy.mmorpg.file.service.SceneConfigService;
+import com.linlazy.mmorpg.module.backpack.service.PlayerBackpackService;
+import com.linlazy.mmorpg.module.common.event.ActorEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
+import com.linlazy.mmorpg.module.common.event.EventType;
+import com.linlazy.mmorpg.module.equip.domain.DressedEquip;
 import com.linlazy.mmorpg.module.equip.service.EquipmentService;
+import com.linlazy.mmorpg.module.player.attack.PlayerAttack;
+import com.linlazy.mmorpg.module.player.defense.PlayerDefense;
 import com.linlazy.mmorpg.module.player.push.PlayerPushHelper;
+import com.linlazy.mmorpg.module.playercall.domain.PlayerCall;
+import com.linlazy.mmorpg.module.scene.constants.SceneEntityType;
+import com.linlazy.mmorpg.module.scene.domain.Boss;
 import com.linlazy.mmorpg.module.scene.domain.SceneEntity;
 import com.linlazy.mmorpg.module.shop.service.ShopService;
 import com.linlazy.mmorpg.module.skill.domain.Skill;
@@ -30,6 +32,8 @@ import com.linlazy.mmorpg.utils.SpringContextUtil;
 import lombok.Data;
 
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 玩家领域类
@@ -113,6 +117,35 @@ public class Player extends SceneEntity {
         return PlayerAttack.computeFinalAttack(this);
     }
 
+    @Override
+    public Set<SceneEntity> getOtherAttackTarget(SceneEntity attackTarget, int attackNum) {
+
+        Set<SceneEntity> result = Sets.newHashSet();
+
+        Player player = null;
+        if(attackTarget instanceof PlayerCall){
+            PlayerCall playerCall = (PlayerCall) attackTarget;
+            player = playerCall.player();
+            result.add(player);
+        }else  if(attackTarget instanceof Player){
+            player = (Player) attackTarget;
+        }else if(attackTarget instanceof Boss){
+
+        }
+
+        if(player.isTeam()){
+            Player finalPlayer = player;
+            Set<Player> collect = player.getTeam().getPlayerTeamInfoMap().values().stream()
+                    .map(playerTeamInfo -> playerTeamInfo.getPlayer())
+                    .filter(player1 -> player1.getActorId() != finalPlayer.getActorId())
+                    .collect(Collectors.toSet());
+
+            result.addAll(collect);
+        }
+
+        return result.stream()
+                .limit(attackNum).collect(Collectors.toSet());
+    }
 
 
     /**
@@ -259,6 +292,8 @@ public class Player extends SceneEntity {
             this.exp -= maxExp;
             LevelConfig levelConfig = levelConfigService.getLevelConfig(level);
             maxExp =levelConfig.getMaxExp();
+            int addHp = levelConfig.getAddHp();
+            setMaxHP(getMaxHP()+addHp);
             EventBusHolder.post(new ActorEvent<>(actorId, EventType.ACTOR_LEVEL_UP));
         }
     }

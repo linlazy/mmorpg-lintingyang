@@ -18,4 +18,9 @@ public class LevelConfig {
      * 经验
      */
     private int maxExp;
+
+    /**
+     * 血量上限
+     */
+    private int addHp;
 }

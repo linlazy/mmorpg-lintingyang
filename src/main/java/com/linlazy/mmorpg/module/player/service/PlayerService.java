@@ -16,6 +16,7 @@ import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.common.event.EventType;
 import com.linlazy.mmorpg.module.skill.service.SkillService;
 import com.linlazy.mmorpg.module.player.push.PlayerPushHelper;
+import com.linlazy.mmorpg.server.common.GlobalConfigService;
 import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.utils.DateUtils;
 import com.linlazy.mmorpg.utils.SessionManager;
@@ -50,6 +51,9 @@ public class PlayerService {
 
     @Autowired
     private SkillService skillService;
+
+    @Autowired
+    private GlobalConfigService globalConfigService;
 
     /**
      * 注册同步锁
@@ -213,15 +217,18 @@ public class PlayerService {
 
             //注册
         System.out.println(Thread.currentThread().getName());
+
             playerEntity = new PlayerEntity();
             AtomicLong maxActorId = playerDAO.getMaxActorId();
             playerEntity.setActorId(maxActorId.incrementAndGet());
             playerEntity.setUsername(username);
             playerEntity.setPassword(password);
-            playerEntity.setLevel(1);
-            playerEntity.setHp(10000);
+            playerEntity.setLevel(globalConfigService.getInitLevel());
+            playerEntity.setHp(globalConfigService.getInitHp());
+            playerEntity.setSceneId(globalConfigService.getInitScene());
             playerDAO.insertQueue(playerEntity);
             Player player = new Player(playerEntity);
+            player.setMaxHP(globalConfigService.getInitHp());
             playerCache.put(player.getActorId(),player);
             set.add(username);
         }
@@ -232,6 +239,7 @@ public class PlayerService {
                     "输入profession 3，选择法师,携带群攻技能\n"+
                     "输入profession 4，选择召唤师，携带召唤技能\n");
 
+        EventBusHolder.post(new ActorEvent<>(playerEntity.getActorId(),EventType.REGISTER));
         return Result.success("注册成功");
     }
 
@@ -278,7 +286,8 @@ public class PlayerService {
 
     public Result<?> upgradeLevel(long actorId) {
         Player player = getPlayer(actorId);
-        player.setLevel(player.getLevel() + 1);
+        long maxExp = player.getMaxExp();
+        player.addExp(maxExp);
         PlayerPushHelper.pushChange(actorId,new PlayerDTO(player));
         playerDAO.updateQueue(player.convertPlayerEntity());
         EventBusHolder.post(new ActorEvent<JSONObject>(actorId,EventType.ACTOR_LEVEL_UP));

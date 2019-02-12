@@ -1,6 +1,7 @@
 package com.linlazy.mmorpg.module.playercall.domain;
 
 import com.google.common.eventbus.Subscribe;
+import com.linlazy.mmorpg.module.player.service.PlayerService;
 import com.linlazy.mmorpg.module.skill.domain.Skill;
 import com.linlazy.mmorpg.event.type.PlayerAttackEvent;
 import com.linlazy.mmorpg.event.type.PlayerAttackedEvent;
@@ -19,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -84,6 +86,12 @@ public class PlayerCall extends SceneEntity {
         return 0;
     }
 
+    @Override
+    public Set<SceneEntity> getOtherAttackTarget(SceneEntity attackTarget, int attackNum) {
+        Player player = player();
+        return player.getOtherAttackTarget(attackTarget,attackNum);
+    }
+
     /**
      * 召唤兽定时攻击调度
      */
@@ -138,5 +146,10 @@ public class PlayerCall extends SceneEntity {
         super.triggerDeadEvent();
         PlayerCallPushHelper.pushDisappear(this.getSourceId(),String.format("你的召唤兽【%s】已死亡",this.getName()));
         EventBusHolder.post(new PlayerCallDisappearEvent(this));
+    }
+
+    public Player player(){
+        PlayerService playerService = SpringContextUtil.getApplicationContext().getBean(PlayerService.class);
+        return playerService.getPlayer(sourceId);
     }
 }

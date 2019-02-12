@@ -5,16 +5,18 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.linlazy.mmorpg.dao.SkillDAO;
-import com.linlazy.mmorpg.module.player.domain.Player;
-import com.linlazy.mmorpg.module.player.domain.PlayerSkill;
-import com.linlazy.mmorpg.module.scene.domain.SceneEntity;
-import com.linlazy.mmorpg.module.skill.domain.Skill;
 import com.linlazy.mmorpg.entity.SkillEntity;
 import com.linlazy.mmorpg.file.config.SkillConfig;
 import com.linlazy.mmorpg.file.service.SkillConfigService;
+import com.linlazy.mmorpg.module.player.domain.Player;
+import com.linlazy.mmorpg.module.player.domain.PlayerSkill;
 import com.linlazy.mmorpg.module.player.push.PlayerPushHelper;
-import com.linlazy.mmorpg.server.common.Result;
+import com.linlazy.mmorpg.module.scene.domain.SceneEntity;
+import com.linlazy.mmorpg.module.scene.service.SceneService;
+import com.linlazy.mmorpg.module.skill.domain.Skill;
 import com.linlazy.mmorpg.module.skill.strategy.SkillTypeStrategy;
+import com.linlazy.mmorpg.module.skill.template.BaseSkillTemplate;
+import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.utils.DateUtils;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,9 @@ public class SkillService {
 
     @Autowired
     private SkillConfigService skillConfigService;
+
+    @Autowired
+    private SceneService sceneService;
 
     /**
      * 玩家技能缓存
@@ -257,5 +262,10 @@ public class SkillService {
                 });
 
         return playerCallSkill;
+    }
+
+    public void attack(SceneEntity sceneEntity, Skill skill, SceneEntity attackTarget) {
+        BaseSkillTemplate skillTemplate = BaseSkillTemplate.getSkillTemplate(skill.getSkillTemplateId());
+        skillTemplate.attack(sceneEntity,skill,attackTarget);
     }
 }

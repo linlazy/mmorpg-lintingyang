@@ -108,5 +108,18 @@
       "duration": 3,
       "continueTime": 60
     }
+  },  {
+  "skillId":9,
+  "name": "普通攻击",
+  "type": 1,
+  "bossIds": [],
+  "monsterIds": [1,2,3],
+  "professionId": 1,
+  "skillTemplateId": 1,
+  "skillTemplateArgs": {
+    "attack":10,
+    "attackNum": 1,
+    "cd": 1
   }
+}
 ]

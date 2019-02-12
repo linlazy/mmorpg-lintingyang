@@ -56,5 +56,10 @@ public class SkillTemplate8 extends BaseSkillTemplate {
         },continueTime ,TimeUnit.SECONDS);
     }
 
+    @Override
+    public void attack(SceneEntity sceneEntity, Skill skill, SceneEntity attackTarget) {
+
+    }
+
 
 }

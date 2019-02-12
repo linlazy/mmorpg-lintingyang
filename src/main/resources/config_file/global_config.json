@@ -4,6 +4,8 @@
     "HP_resumeInterval": 3,
     "packageMaxLatticeNum": 56,
     "initScene": 1,
+    "initLevel": 1,
+    "initHp": 100,
     "copySceneIds": [4,6],
     "arenaSceneIds": [5],
     "maxTeamNum": 5,

@@ -65,6 +65,23 @@ public class GlobalConfigService {
     }
 
     /**
+     * 获取玩家初始等级
+     * @return
+     */
+    public int getInitLevel(){
+        return jsonObject.getIntValue("initLevel");
+    }
+
+    /**
+     * 获取玩家初始血量
+     * @return
+     */
+    public int getInitHp(){
+        return jsonObject.getIntValue("initHp");
+    }
+
+
+    /**
      * 获取斗罗副本场景
      * @return
      */

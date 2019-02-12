@@ -41,7 +41,8 @@ public class TaskConfigService {
             int taskTemplateId = jsonObject.getIntValue("taskTemplateId");
             JSONObject taskTemplateArgs = jsonObject.getJSONObject("taskTemplateArgs");
             String rewards = jsonObject.getString("rewards");
-            JSONArray trigger = jsonObject.getJSONArray("trigger");
+            JSONArray startCondition = jsonObject.getJSONArray("startCondition");
+            JSONArray acceptCondition = jsonObject.getJSONArray("acceptCondition");
             String taskName = jsonObject.getString("taskName");
 
 
@@ -56,10 +57,10 @@ public class TaskConfigService {
             }
 
 
-            if(Objects.nonNull(trigger)){
-                Map<Integer, TriggerCondition> triggerConditionMap = taskConfig.getTriggerConditionMap();
-                for(int j = 0 ; j < trigger.size(); j ++){
-                    JSONObject jsonObject1 = trigger.getJSONObject(j);
+            if(Objects.nonNull(startCondition)){
+                Map<Integer, TriggerCondition> startConditionMap = taskConfig.getStartConditionMap();
+                for(int j = 0 ; j < startCondition.size(); j ++){
+                    JSONObject jsonObject1 = startCondition.getJSONObject(j);
                     int triggerType = jsonObject1.getIntValue("triggerType");
                     JSONObject triggerArgs = jsonObject1.getJSONObject("triggerArgs");
 
@@ -67,7 +68,22 @@ public class TaskConfigService {
                     triggerCondition.setTriggerType(triggerType);
                     triggerCondition.setTriggerArgs(triggerArgs);
 
-                    triggerConditionMap.put(triggerCondition.getTriggerType(),triggerCondition);
+                    startConditionMap.put(triggerCondition.getTriggerType(),triggerCondition);
+                }
+            }
+
+            if(Objects.nonNull(acceptCondition)){
+                Map<Integer, TriggerCondition> acceptConditionMap = taskConfig.getAcceptConditionMap();
+                for(int j = 0 ; j < acceptCondition.size(); j ++){
+                    JSONObject jsonObject1 = acceptCondition.getJSONObject(j);
+                    int triggerType = jsonObject1.getIntValue("triggerType");
+                    JSONObject triggerArgs = jsonObject1.getJSONObject("triggerArgs");
+
+                    TriggerCondition triggerCondition = new TriggerCondition();
+                    triggerCondition.setTriggerType(triggerType);
+                    triggerCondition.setTriggerArgs(triggerArgs);
+
+                    acceptConditionMap.put(triggerCondition.getTriggerType(),triggerCondition);
                 }
             }
 

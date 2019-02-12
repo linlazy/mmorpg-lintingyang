@@ -114,7 +114,7 @@ public class TaskService {
 
     @Subscribe
     public void loginEvent(ActorEvent actorEvent){
-        if(actorEvent.getEventType().equals(EventType.LOGIN)){
+        if(actorEvent.getEventType().equals(EventType.LOGIN) || actorEvent.getEventType().equals(EventType.REGISTER)){
             PlayerTask playerTask = getPlayerTask(actorEvent.getActorId());
             playerTask.getMap().values().stream()
                 .forEach(task ->{

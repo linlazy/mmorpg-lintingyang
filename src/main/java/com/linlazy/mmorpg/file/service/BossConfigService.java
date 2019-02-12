@@ -57,6 +57,7 @@ public class BossConfigService {
                 BossConfig bossConfig = new BossConfig();
                 int bossId = jsonObject.getIntValue("bossId");
                 String name = jsonObject.getString("name");
+                int type = jsonObject.getIntValue("type");
                 int attack = jsonObject.getIntValue("useSkill");
                 int hp = jsonObject.getIntValue("hp");
                 String rewards = jsonObject.getString("rewards");
@@ -66,6 +67,7 @@ public class BossConfigService {
                 bossConfig.setHp(hp);
                 bossConfig.setName(name);
                 bossConfig.setAttack(attack);
+                bossConfig.setType(type);
 
                 bossConfigs.add(bossConfig);
 

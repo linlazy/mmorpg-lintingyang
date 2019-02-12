@@ -15,4 +15,5 @@ public interface StartConditionType {
      * 完成任务
      */
     int COMPLETE_TASK = 2;
+
 }

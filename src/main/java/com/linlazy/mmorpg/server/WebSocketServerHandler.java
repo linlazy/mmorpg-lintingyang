@@ -82,12 +82,13 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        long actorId = SessionManager.getActorId(ctx.channel());
+        Long actorId = SessionManager.getActorId(ctx.channel());
+        if(actorId != null){
+            SpringContextUtil.getApplicationContext().getBeansOfType(LogoutListener.class).values()
+                    .stream().forEach(logoutListener -> logoutListener.logout(actorId));
 
-        SpringContextUtil.getApplicationContext().getBeansOfType(LogoutListener.class).values()
-                .stream().forEach(logoutListener -> logoutListener.logout(actorId));
-
-        SessionManager.unBind(ctx.channel());
+            SessionManager.unBind(ctx.channel());
+        }
     }
 
     @Override

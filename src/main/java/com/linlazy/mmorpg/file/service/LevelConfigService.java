@@ -35,10 +35,12 @@ public class LevelConfigService {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
             int level = jsonObject.getIntValue("level");
             int maxExp = jsonObject.getIntValue("maxExp");
+            int addMaxHp = jsonObject.getIntValue("addMaxHp");
 
             LevelConfig levelConfig = new LevelConfig();
             levelConfig.setLevel(level);
             levelConfig.setMaxExp(maxExp);
+            levelConfig.setAddHp(addMaxHp);
 
             levelConfigMap.put(levelConfig.getLevel(),levelConfig);
         }

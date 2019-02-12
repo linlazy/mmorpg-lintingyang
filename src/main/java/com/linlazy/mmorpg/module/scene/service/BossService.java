@@ -38,6 +38,7 @@ public class BossService {
                     boss.setAttack(bossConfig.getAttack());
                     boss.setName(bossConfig.getName());
                     boss.setSceneEntityType(SceneEntityType.BOSS);
+                    boss.setType(bossConfig.getType());
                     Reward reward = RandomUtils.randomElement(bossConfig.getRewardList());
                     boss.setReward(reward);
 

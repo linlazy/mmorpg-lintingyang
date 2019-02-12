@@ -67,4 +67,17 @@ public  class SkillTemplate1 extends BaseSkillTemplate {
         }
 
     }
+
+    @Override
+    public void attack(SceneEntity sceneEntity, Skill skill, SceneEntity attackTarget) {
+        JSONObject skillTemplateArgs = skill.getSkillTemplateArgs();
+        int attackNum = skillTemplateArgs.getIntValue("attackNum");
+        attackTarget.attacked(sceneEntity,skill);
+        if(attackNum == 1){
+            return;
+        }else {
+            Set<SceneEntity> otherAttackTarget = sceneEntity.getOtherAttackTarget(attackTarget, attackNum);
+            otherAttackTarget.stream().forEach(attackedTarget ->attackedTarget.attacked(sceneEntity,skill));
+        }
+    }
 }

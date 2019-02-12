@@ -25,6 +25,11 @@ public class PlayerDTO {
     private Integer hp;
 
     /**
+     * 血量上限
+     */
+    private Integer maxHp;
+
+    /**
      * 蓝量
      */
     private Integer mp;
@@ -50,6 +55,16 @@ public class PlayerDTO {
     private Integer defense;
 
     private String profession;
+
+    /**
+     * 经验
+     */
+    private Long exp;
+
+    /**
+     * 经验上限
+     */
+    private Long maxExp;
 
 
     public PlayerDTO(Player player) {
@@ -81,11 +96,18 @@ public class PlayerDTO {
                 break;
             default:
         }
+
+        exp = player.getExp();
+
+        maxExp = player.getMaxExp();
+
+        maxHp = player.getMaxHP();
+
     }
 
 
     @Override
     public String toString() {
-        return String.format("玩家ID【%d】 玩家名称【%s】职业【%s】 攻击力【%d】 防御力【%d】 血量【%d】 蓝量【%d】 金币【%d】 等级：【%d】",actorId,username,profession,attack,defense,hp,mp,gold,level);
+        return String.format("玩家ID【%d】 玩家名称【%s】职业【%s】 攻击力【%d】 防御力【%d】 血量【%d】血量上限【%d】 蓝量【%d】 金币【%d】 等级：【%d】 经验【%d】经验上限【%d】",actorId,username,profession,attack,defense,hp,maxHp,mp,gold,level,exp,maxExp);
     }
 }

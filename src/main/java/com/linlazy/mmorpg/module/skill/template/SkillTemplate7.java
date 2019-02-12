@@ -1,9 +1,11 @@
 package com.linlazy.mmorpg.module.skill.template;
 
 import com.alibaba.fastjson.JSONObject;
+import com.linlazy.mmorpg.module.scene.domain.Scene;
 import com.linlazy.mmorpg.module.scene.domain.SceneEntity;
 import com.linlazy.mmorpg.module.skill.domain.Skill;
 import com.linlazy.mmorpg.module.scene.service.SceneService;
+import com.linlazy.mmorpg.utils.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +32,14 @@ public class SkillTemplate7 extends BaseSkillTemplate {
         Set<SceneEntity> targetSceneEntitySet = (Set<SceneEntity>) jsonObject.get("targetSceneEntitySet");
         targetSceneEntitySet.stream()
                 .forEach(sceneEntity1 -> sceneEntity1.attacked(sceneEntity,skill));
+    }
+
+    @Override
+    public void attack(SceneEntity sceneEntity, Skill skill, SceneEntity attackTarget) {
+        SceneService sceneService = SpringContextUtil.getApplicationContext().getBean(SceneService.class);
+        Scene sceneBySceneEntity = sceneService.getSceneBySceneEntity(sceneEntity);
+        sceneBySceneEntity.getPlayerMap().values().forEach(player -> player.attacked(sceneEntity,skill));
+        sceneBySceneEntity.getPlayerCallMap().values().forEach(playerCall -> playerCall.attacked(sceneEntity,skill));
     }
 
 

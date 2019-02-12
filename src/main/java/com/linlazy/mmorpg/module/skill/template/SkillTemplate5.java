@@ -63,4 +63,9 @@ public  class SkillTemplate5 extends BaseSkillTemplate {
         sceneEntity.setTauntStatusScheduledFuture(tauntStatusScheduledFuture);
     }
 
+    @Override
+    public void attack(SceneEntity sceneEntity, Skill skill, SceneEntity attackTarget) {
+
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.linlazy.mmorpg.module.scene.dto;
 
+import com.linlazy.mmorpg.module.scene.constants.MonsterType;
 import com.linlazy.mmorpg.module.scene.domain.Boss;
 import lombok.Data;
 
@@ -19,6 +20,11 @@ public class BossDTO {
     private  String bossName;
 
     /**
+     * 怪物类型
+     */
+    private Integer type;
+
+    /**
      * boss血量
      */
     private  Integer hp;
@@ -35,10 +41,21 @@ public class BossDTO {
        this.hp = boss.getHp();
        this.attack = boss.computeAttack();
        this.defense = boss.computeDefense();
+       this.type = boss.getType();
     }
 
     @Override
     public String toString() {
-        return String.format("BOSS标识【%d】 BOSS名称【%s】 攻击力【%d】 防御力【%d】 血量：%d 等级：【%d】",id,bossName,attack,defense,hp,level);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(String.format("BOSS标识【%d】 BOSS名称【%s】 攻击力【%d】 防御力【%d】 血量：%d 等级：【%d】",id,bossName,attack,defense,hp,level));
+
+        if(type == MonsterType.ACTIVE){
+            stringBuilder.append("BOSS类型【主动攻击】");
+        }else {
+            stringBuilder.append("BOSS类型【被动攻击】");
+        }
+
+        return stringBuilder.toString();
     }
 }

@@ -1,6 +1,7 @@
 [
   {
     "bossId": 1,
+    "type": 1,
     "name": "何曼",
     "attack": 50,
     "skillId":7,
@@ -9,6 +10,7 @@
     "rewards": [[6,1]]
   },{
   "bossId": 2,
+  "type": 1,
   "name": "张曼城",
   "attack": 100,
   "hp": 1000,
@@ -17,6 +19,7 @@
   "rewards": [[7,1]]
 },{
   "bossId": 3,
+  "type": 1,
   "name": "邓茂",
   "attack": 150,
   "hp": 2000,
@@ -25,6 +28,7 @@
   "rewards": [[8,1]]
 },{
   "bossId": 4,
+  "type": 1,
   "name": "波才",
   "attack": 200,
   "hp": 3000,
@@ -33,6 +37,7 @@
   "rewards": [[9,1]]
 },{
   "bossId": 5,
+  "type": 1,
   "name": "余毒",
   "attack": 300,
   "hp": 5000,
@@ -41,6 +46,7 @@
   "rewards": [[10,1]]
 },{
   "bossId": 6,
+  "type": 1,
   "name": "小蛮猪",
   "attack": 300,
   "hp": 5000,

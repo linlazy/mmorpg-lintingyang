@@ -3,6 +3,7 @@ package com.linlazy.mmorpg.file.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
 import com.linlazy.mmorpg.file.config.SkillConfig;
 import com.linlazy.mmorpg.server.common.ConfigFile;
 import com.linlazy.mmorpg.server.common.ConfigFileManager;
@@ -135,7 +136,11 @@ public class SkillConfigService {
      * @return
      */
     public List<SkillConfig> getMonsterSkillConfigList(long monsterId){
-        return monsterIdSkillMap.get(monsterId);
+        List<SkillConfig> skillConfigList = monsterIdSkillMap.get(monsterId);
+        if(skillConfigList == null){
+            skillConfigList = Lists.newArrayList();
+        }
+        return skillConfigList;
     }
 
 

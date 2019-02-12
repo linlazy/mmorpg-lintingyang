@@ -5,6 +5,7 @@ import com.linlazy.mmorpg.module.scene.constants.SceneEntityType;
 import com.linlazy.mmorpg.module.skill.domain.Skill;
 import lombok.Data;
 
+import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
 
 /**
@@ -13,6 +14,12 @@ import java.util.concurrent.ScheduledFuture;
  */
 @Data
 public abstract class SceneEntity {
+
+
+    /**
+     * 场景实体Id
+     */
+    private long id;
 
     /**
      * 嘲讽状态调度
@@ -37,7 +44,7 @@ public abstract class SceneEntity {
      */
     protected int hp;
 
-    private  int maxHP = 30000;
+    private  int maxHP;
 
     /**
      * 蓝
@@ -166,4 +173,11 @@ public abstract class SceneEntity {
 
     }
 
+    /**
+     * 更据攻击人数确定攻击对象集合
+     * @param attackTarget
+     * @param attackNum
+     * @return
+     */
+    public abstract Set<SceneEntity> getOtherAttackTarget(SceneEntity attackTarget, int attackNum);
 }

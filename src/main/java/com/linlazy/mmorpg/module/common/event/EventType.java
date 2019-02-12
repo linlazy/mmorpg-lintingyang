@@ -18,6 +18,10 @@ public enum EventType {
      */
     LOGIN,
     /**
+     * 注册
+     */
+    REGISTER,
+    /**
      * 退出副本
      */
     QUIT_COPY,

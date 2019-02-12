@@ -47,9 +47,14 @@ public class TaskConfig {
     private List<Reward> rewardList;
 
     /**
-     * 触发条件
+     * 开启条件
      */
-    private Map<Integer, TriggerCondition> triggerConditionMap = new HashMap<>();
+    private Map<Integer,TriggerCondition> startConditionMap = new HashMap<>();
+
+    /**
+     * 接受条件
+     */
+    private Map<Integer,TriggerCondition> acceptConditionMap = new HashMap<>();
 
     /**
      * 开启任务时自动接受任务

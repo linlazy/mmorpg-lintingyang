@@ -1,10 +1,13 @@
 package com.linlazy.mmorpg.module.scene.domain;
 
 import com.linlazy.mmorpg.module.item.domain.Item;
+import com.linlazy.mmorpg.module.player.constants.ProfessionType;
 import com.linlazy.mmorpg.module.player.domain.Player;
 import com.linlazy.mmorpg.module.playercall.domain.PlayerCall;
+import com.linlazy.mmorpg.module.scene.constants.MonsterType;
 import com.linlazy.mmorpg.module.scene.push.ScenePushHelper;
 import com.linlazy.mmorpg.module.scene.service.MonsterService;
+import com.linlazy.mmorpg.utils.RandomUtils;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import lombok.Data;
 import org.slf4j.Logger;
@@ -86,10 +89,37 @@ public class Scene {
         scheduledExecutorService.scheduleAtFixedRate(() -> {
 
             logger.debug("【普通场景】，一定时间后，触发小怪刷新事件");
+            monsterMap.values().forEach(monster -> {
+                ScheduledFuture<?> startMonsterAutoAttackScheduled = monster.getStartMonsterAutoAttackScheduled();
+                if(startMonsterAutoAttackScheduled != null){
+                    startMonsterAutoAttackScheduled.cancel(true);
+                }
+
+                ScheduledFuture<?> cancelAutoAttackSchedule = monster.getCancelAutoAttackSchedule();
+                if(cancelAutoAttackSchedule != null){
+                    cancelAutoAttackSchedule.cancel(true);
+                }
+            });
             monsterMap.values().clear();
             MonsterService monsterService = SpringContextUtil.getApplicationContext().getBean(MonsterService.class);
             Map<Long, Monster> monsterMap = monsterService.getMonsterBySceneId(sceneId);
             this.monsterMap = monsterMap;
+            this.monsterMap.values().stream()
+                    .filter(monster -> monster.getType() == MonsterType.ACTIVE)
+                    .forEach(monster -> {
+                        if (playerMap.size() > 0 ){
+                            Player player = RandomUtils.randomElement(playerMap.values());
+                            monster.setAttackTarget(player);
+                            if (player.getProfession() == ProfessionType.summoner){
+                                PlayerCall playerCall = player.getPlayerCall();
+                                if(playerCall != null){
+                                    monster.setAttackTarget(playerCall);
+                                }
+                            }
+                            monster.startAutoAttack();
+                        }
+
+                    });
 
             playerMap.values().stream()
                     .forEach(player -> {

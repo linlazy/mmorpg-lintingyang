@@ -1,29 +1,37 @@
 [
   {
     "level": 1,
+    "addMaxHp": 500,
     "maxExp": 50
   },
   {
     "level": 2,
+    "addMaxHp": 500,
     "maxExp": 125
   },
   {
     "level": 3,
+    "addMaxHp": 500,
     "maxExp": 312
   },  {
   "level": 4,
+  "addMaxHp": 500,
   "maxExp": 781
 },  {
   "level": 5,
+  "addMaxHp": 500,
   "maxExp": 1953
 },  {
   "level": 6,
+  "addMaxHp": 500,
   "maxExp": 4882
 },  {
   "level": 7,
+  "addMaxHp": 500,
   "maxExp": 12207
 },  {
   "level": 8,
+  "addMaxHp": 500,
   "maxExp": 99999999
 }
 ]
