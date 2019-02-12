@@ -1,5 +1,6 @@
 package com.linlazy.mmorpg.module.scene.domain;
 
+import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.item.domain.Item;
 import com.linlazy.mmorpg.module.player.constants.ProfessionType;
 import com.linlazy.mmorpg.module.player.domain.Player;
@@ -166,6 +167,7 @@ public class Scene {
             bossList.clear();
             BossService bossService = SpringContextUtil.getApplicationContext().getBean(BossService.class);
             List<Boss> bossList = bossService.getBOSSBySceneId(sceneId);
+            bossList.forEach(boss -> EventBusHolder.register(boss));
             this.bossList = bossList;
             this.bossList.stream()
                     .filter(boss -> boss.getType() == MonsterType.ACTIVE)

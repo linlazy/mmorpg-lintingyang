@@ -1,6 +1,8 @@
 [
-  {"sceneId":1,"name":"巴郡","neighborSet":[2]},
-  {"sceneId":2,"name":"巴郡东郊","neighborSet":[3,1],
+  {"sceneId":1,"name":"巴郡","neighborSet":[2],
+    "bossIds": []
+  },
+  {"sceneId":2,"name":"巴郡东郊","neighborSet":[3,1,4],
     "monsters": [{
       "monsterId":1,
       "monsterNum": 5,
@@ -10,13 +12,34 @@
       "monsterNum": 5,
       "deadRefreshTime": 10
     }],
-    "bossId": 1,
-    "deadRefreshTime":60
+    "bossIds": []
   },
   {"sceneId":3,"name":"野猪岭","neighborSet":[2],
     "monsters": [{
       "monsterId":3,
       "monsterNum": 5,
       "deadRefreshTime": 10
-    }]}
+    }],
+    "bossIds": []
+  },
+  {"sceneId":4,"name":"黄巾前锋营","neighborSet":[2],
+    "monsters": [{
+      "monsterId":3,
+      "monsterNum": 5,
+      "deadRefreshTime": -1
+    }
+    ],
+    "bossIds": [{
+      "bossId":1
+    },{
+      "bossId":2
+    },{
+      "bossId":3
+    },{
+      "bossId":4
+    },{
+      "bossId":5
+    }
+    ]
+  }
 ]

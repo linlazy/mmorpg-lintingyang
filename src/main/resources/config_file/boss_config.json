@@ -6,7 +6,7 @@
     "attack": 50,
     "skillId":7,
     "hp": 100,
-    "sceneIds": [2,4,6],
+    "sceneIds": [2,4],
     "rewards": [[6,1]]
   },{
   "bossId": 2,
@@ -15,7 +15,7 @@
   "attack": 100,
   "hp": 1000,
   "skillId":7,
-  "sceneIds": [4,6],
+  "sceneIds": [4],
   "rewards": [[7,1]]
 },{
   "bossId": 3,
@@ -24,7 +24,7 @@
   "attack": 150,
   "hp": 2000,
   "skillId":7,
-  "sceneIds": [6],
+  "sceneIds": [4],
   "rewards": [[8,1]]
 },{
   "bossId": 4,
@@ -33,7 +33,7 @@
   "attack": 200,
   "hp": 3000,
   "skillId":7,
-  "sceneIds": [6],
+  "sceneIds": [4],
   "rewards": [[9,1]]
 },{
   "bossId": 5,
@@ -42,7 +42,7 @@
   "attack": 300,
   "hp": 5000,
   "skillId":7,
-  "sceneIds": [6],
+  "sceneIds": [4],
   "rewards": [[10,1]]
 },{
   "bossId": 6,

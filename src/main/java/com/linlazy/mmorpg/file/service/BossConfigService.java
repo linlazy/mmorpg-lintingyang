@@ -40,7 +40,7 @@ public class BossConfigService {
     /**
      * 构建bossId映射
      */
-    private static Map<Integer,JSONObject> bossIdMap = new HashMap<>();
+    private static Map<Long,BossConfig> bossIdMap = new HashMap<>();
 
     @PostConstruct
     public void init(){
@@ -48,33 +48,31 @@ public class BossConfigService {
         for(int i = 0; i < jsonArray.size(); i++){
             JSONObject jsonObject = jsonArray.getJSONObject(i);
 
+            BossConfig bossConfig = new BossConfig();
+            int bossId = jsonObject.getIntValue("bossId");
+            String name = jsonObject.getString("name");
+            int type = jsonObject.getIntValue("type");
+            int attack = jsonObject.getIntValue("useSkill");
+            int hp = jsonObject.getIntValue("hp");
+            String rewards = jsonObject.getString("rewards");
+            List<Reward> rewardList = RewardUtils.parseRewards(rewards);
+            bossConfig.setRewardList(rewardList);
+            bossConfig.setBossId(bossId);
+            bossConfig.setHp(hp);
+            bossConfig.setName(name);
+            bossConfig.setAttack(attack);
+            bossConfig.setType(type);
+
+
             JSONArray sceneIds = jsonObject.getJSONArray("sceneIds");
             for(int j = 0; j < sceneIds.size(); j++){
-
                 Integer sceneId = sceneIds.getInteger(j);
                 List<BossConfig> bossConfigs = sceneBossMap.computeIfAbsent(sceneId, k -> new ArrayList<>());
-
-                BossConfig bossConfig = new BossConfig();
-                int bossId = jsonObject.getIntValue("bossId");
-                String name = jsonObject.getString("name");
-                int type = jsonObject.getIntValue("type");
-                int attack = jsonObject.getIntValue("useSkill");
-                int hp = jsonObject.getIntValue("hp");
-                String rewards = jsonObject.getString("rewards");
-                List<Reward> rewardList = RewardUtils.parseRewards(rewards);
-                bossConfig.setRewardList(rewardList);
-                bossConfig.setBossId(bossId);
-                bossConfig.setHp(hp);
-                bossConfig.setName(name);
-                bossConfig.setAttack(attack);
-                bossConfig.setType(type);
-
                 bossConfigs.add(bossConfig);
-
             }
 
             //构建bossId映射
-            bossIdMap.put(jsonObject.getIntValue("bossId"),jsonObject);
+            bossIdMap.put(bossConfig.getBossId(),bossConfig);
         }
     }
 
@@ -96,7 +94,7 @@ public class BossConfigService {
      * @param bossId
      * @return
      */
-    public JSONObject getBossConfig(int bossId){
+    public BossConfig getBossConfig(long bossId){
         return bossIdMap.get(bossId);
     }
 }

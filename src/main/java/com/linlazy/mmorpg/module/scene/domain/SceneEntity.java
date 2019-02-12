@@ -83,13 +83,7 @@ public abstract class SceneEntity {
         }
     }
 
-    /**
-     * 是否处于副本中
-     * @return
-     */
-    public boolean isCopy(){
-        return true;
-    }
+
 
 
 

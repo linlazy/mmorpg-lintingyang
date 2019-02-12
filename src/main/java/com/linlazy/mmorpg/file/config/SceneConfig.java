@@ -43,5 +43,10 @@ public class SceneConfig {
      */
     private JSONArray sceneEntities = new JSONArray();
 
+    /**
+     * BOSS列表
+     */
+    private List<Long> bossIdList = new ArrayList<>();
+
 
 }

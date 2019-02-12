@@ -35,6 +35,8 @@ public class PlayerCacheHandler implements LogoutListener {
     private SceneService sceneService;
     @Autowired
     private SceneConfigService sceneConfigService;
+    @Autowired
+    private PlayerService playerService;
 
     private static Map<Long,ScheduledFuture<?>> map = new ConcurrentHashMap<>();
 
@@ -56,7 +58,8 @@ public class PlayerCacheHandler implements LogoutListener {
         SceneConfig sceneConfig = sceneConfigService.getSceneConfig(player.getSceneId());
         int targetSceneId = sceneConfig.getNeighborSet().get(0);
         if(sceneService.isCopyScene(player.getSceneId())){
-            sceneService.moveTo(player.getActorId(),targetSceneId);
+            player.setSceneId(targetSceneId);
+            playerService.updatePlayer(player);
         }
 
     }

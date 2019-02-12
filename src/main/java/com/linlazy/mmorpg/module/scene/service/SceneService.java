@@ -90,6 +90,7 @@ public class SceneService {
 
                     //初始化boss
                     scene.setBossList(bossService.getBOSSBySceneId(sceneEntity.getSceneId()));
+                    scene.getBossList().forEach(boss -> EventBusHolder.register(boss));
 
 
                     sceneMap.put(sceneEntity.getSceneId(),scene);
@@ -243,11 +244,11 @@ public class SceneService {
         sceneBySceneEntity.getPlayerMap().remove(player.getActorId());
         player.setSceneId(targetSceneId);
         playerService.updatePlayer(player);
-        EventBusHolder.post(new SceneMoveEvent(player));
 
         if(isCopyScene(targetSceneId)){
             EventBusHolder.post(new CopyMoveEvent(player));
         }
+        EventBusHolder.post(new SceneMoveEvent(player));
 
         return Result.success();
     }

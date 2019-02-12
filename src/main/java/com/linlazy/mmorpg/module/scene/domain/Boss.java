@@ -2,7 +2,10 @@ package com.linlazy.mmorpg.module.scene.domain;
 
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.Subscribe;
-import com.linlazy.mmorpg.event.type.*;
+import com.linlazy.mmorpg.event.type.BossDeadEvent;
+import com.linlazy.mmorpg.event.type.CopyBossDeadEvent;
+import com.linlazy.mmorpg.event.type.SceneEnterEvent;
+import com.linlazy.mmorpg.event.type.SceneMoveEvent;
 import com.linlazy.mmorpg.file.service.SceneConfigService;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.common.reward.Reward;
@@ -39,7 +42,6 @@ import java.util.stream.Collectors;
  */
 @Data
 @Slf4j
-
 public class Boss extends SceneEntity {
 
     /**
@@ -105,10 +107,6 @@ public class Boss extends SceneEntity {
     }
 
 
-    public Boss() {
-        EventBusHolder.register(this);
-    }
-
 
     /**
      *
@@ -120,13 +118,6 @@ public class Boss extends SceneEntity {
      * 若攻击者为玩家，通知玩家攻击效果，boss血量等变化
      * 若攻击者为玩家辅助对象（召唤兽等），通知玩家攻击效果，boss血量等变化
      *
-     * 攻击效果：
-     * @param bossAttackedEvent
-     */
-    @Subscribe
-    public void attacked(BossAttackedEvent bossAttackedEvent){
-
-    }
 
 
     /**
@@ -151,7 +142,8 @@ public class Boss extends SceneEntity {
 
     }
 
-    private void checkAttack(Player player) {
+    public void checkAttack(Player player) {
+
         if(type == MonsterType.ACTIVE){
 
             if(startBossAutoAttackScheduled == null  || startBossAutoAttackScheduled.isCancelled()){
@@ -239,7 +231,7 @@ public class Boss extends SceneEntity {
         }
     }
 
-    private void quitSchedule() {
+    public void quitSchedule() {
         if(startBossAutoAttackScheduled != null){
             startBossAutoAttackScheduled.cancel(true);
         }
@@ -261,7 +253,7 @@ public class Boss extends SceneEntity {
             //随机选择boss技能攻击
             log.error("startBossAutoAttackScheduled");
 
-            if(attackTarget.getSceneId() == sceneId){
+            if(attackTarget.getSceneId() == sceneId &&attackTarget.getHp() > 0){
                 Skill skill = randomSkill();
                 skillService.attack(this,skill,attackTarget);
                 closeOldCancelAutoAttack();

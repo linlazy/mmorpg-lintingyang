@@ -18,6 +18,8 @@ import com.linlazy.mmorpg.module.player.constants.ProfessionType;
 import com.linlazy.mmorpg.module.player.domain.Player;
 import com.linlazy.mmorpg.module.player.push.PlayerPushHelper;
 import com.linlazy.mmorpg.module.player.service.PlayerService;
+import com.linlazy.mmorpg.module.playercall.domain.PlayerCall;
+import com.linlazy.mmorpg.module.scene.constants.MonsterType;
 import com.linlazy.mmorpg.module.scene.copy.domain.Copy;
 import com.linlazy.mmorpg.module.scene.copy.push.CopyPushHelper;
 import com.linlazy.mmorpg.module.scene.domain.Boss;
@@ -28,6 +30,7 @@ import com.linlazy.mmorpg.module.scene.service.SceneService;
 import com.linlazy.mmorpg.module.skill.service.SkillService;
 import com.linlazy.mmorpg.module.team.domain.Team;
 import com.linlazy.mmorpg.module.team.service.TeamService;
+import com.linlazy.mmorpg.utils.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,22 +101,6 @@ public class CopyService {
 
 
     @Subscribe
-    public void copyRefreshMonster(CopyRefreshMonsterEvent copyRefreshMonsterEvent) {
-        Copy copy = copyRefreshMonsterEvent.getCopy();
-
-        copy.cancelMonsterAutoAttackSchedule();
-        copy.clearMonster();
-        //初始化副本小怪信息信息
-        Map<Long, Monster> monsterMap= monsterService.getMonsterBySceneId(copy.getSceneId());
-        monsterMap.values().forEach(monster ->monster.setCopyId(copy.getCopyId()));
-        copy.setMonsterMap(monsterMap);
-        copy.getPlayerMap().values().forEach(player ->
-                CopyPushHelper.pushCopyMonsterRefresh(player.getActorId(),"副本小怪刷新"));
-        //开启小怪定时攻击调度
-        copy.startMonsterAutoAttackScheduled();
-    }
-
-    @Subscribe
     public void enterCopy(CopyMoveEvent copyMoveEvent) {
         Player player = copyMoveEvent.getPlayer();
         //如果玩家不在副本中
@@ -123,11 +110,6 @@ public class CopyService {
             copy.setSceneId(player.getSceneId());
 //            //开启副本超时调度
             copy.startQuitCopyScheduled();
-//            //开启定时刷新小怪调度
-            copy.startRefreshMonsterScheduled();
-            //开启BOSS定时攻击调度
-            copy.startBossAutoAttackScheduled();
-
 
             if(sceneConfigService.isFightCopyScene(copy.getSceneId())){
                 EventBusHolder.post(new CopyFightingUseSkillEvent((FightingCopy) copy));
@@ -195,11 +177,24 @@ public class CopyService {
                         EventBusHolder.post(new ActorEvent<>(player.getActorId(), EventType.COPY_SUCCESS,jsonObject));
                     });
         }else {
-            copy.cancelBossAutoAttackSchedule();
             Boss boss = copy.nextBoss();
+            EventBusHolder.register(boss);
+            if(boss.getType() == MonsterType.ACTIVE){
+                Map<Long, Player> playerMap = copy.getPlayerMap();
+                if (playerMap.size() > 0 ){
+                    Player player = RandomUtils.randomElement(playerMap.values());
+                    boss.setAttackTarget(player);
+                    if (player.getProfession() == ProfessionType.summoner){
+                        PlayerCall playerCall = player.getPlayerCall();
+                        if(playerCall != null){
+                            boss.setAttackTarget(playerCall);
+                        }
+                    }
+                    boss.startAutoAttack();
+                }
+            }
             copy.getPlayerMap().values().forEach(player ->
-                    CopyPushHelper.pushCopyBossRefresh(player.getActorId(),String.format("副本BOSS【%s】",boss.getName())));
-            copy.startBossAutoAttackScheduled();
+                    CopyPushHelper.pushCopyBossRefresh(player.getActorId(),String.format("副本BOSS【%s】出现",boss.getName())));
         }
     }
 
@@ -264,21 +259,8 @@ public class CopyService {
         SceneConfig sceneConfig = sceneConfigService.getSceneConfig(player.getSceneId());
         copy.setSceneId(sceneConfig.getSceneId());
         copy.setSceneName(sceneConfig.getName());
-        //初始化副本boss信息
-        List<Boss> copyBoss = bossService.getBOSSBySceneId(player.getSceneId());
-        Copy finalCopy = copy;
-        copyBoss.forEach(
-                boss -> boss.setCopyId(finalCopy.getCopyId())
-        );
-        copy.setBossList(copyBoss);
-        //初始化副本小怪信息信息
-        Map<Long, Monster> monsterMap= monsterService.getMonsterBySceneId(player.getSceneId());
-        Copy finalCopy1 = copy;
-        monsterMap.values().forEach(monster ->monster.setCopyId(finalCopy1.getCopyId()));
-        copy.setMonsterMap(monsterMap);
+
         //初始化副本玩家信息
-
-
         if(player.isTeam()){
             Team team = teamService.getTeamByactorId(actorId);
             copy.initCopyPlayerInfo(team);
@@ -290,6 +272,23 @@ public class CopyService {
             copy.initCopyPlayerInfo(player);
             playerCopyIdMap.put(player.getActorId(),maxCopyId.get());
         }
+
+        //初始化副本boss信息
+        List<Boss> copyBoss = bossService.getCopyBOSSBySceneId(player.getSceneId());
+        Copy finalCopy = copy;
+        copyBoss.forEach(
+                boss -> boss.setCopyId(finalCopy.getCopyId())
+        );
+        copy.setBossList(copyBoss);
+        Boss boss = copyBoss.get(copy.getCurrentBossIndex());
+        EventBusHolder.register(boss);
+        boss.checkAttack(player);
+        //初始化副本小怪信息信息
+        Map<Long, Monster> monsterMap= monsterService.getMonsterBySceneId(player.getSceneId());
+        Copy finalCopy1 = copy;
+        monsterMap.values().forEach(monster ->monster.setCopyId(finalCopy1.getCopyId()));
+        copy.setMonsterMap(monsterMap);
+
 
 
         //初始化奖励

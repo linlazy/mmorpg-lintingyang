@@ -216,7 +216,7 @@ public class Monster extends SceneEntity {
         }
     }
 
-    private void quitSchedule() {
+    public void quitSchedule() {
 
         if(cancelAutoAttackSchedule != null){
             cancelAutoAttackSchedule.cancel(true);
@@ -264,7 +264,7 @@ public class Monster extends SceneEntity {
             //随机选择小怪技能攻击
             log.error("startMonsterAutoAttackScheduled");
 
-            if(attackTarget.getSceneId() == sceneId){
+            if(attackTarget.getSceneId() == sceneId && attackTarget.getHp() > 0){
                 Skill skill = randomSkill();
                 skillService.attack(this,skill,attackTarget);
                 closeOldCancelAutoAttack();

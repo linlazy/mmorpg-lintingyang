@@ -15,6 +15,7 @@ import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 游戏场景配置服务类
@@ -46,10 +47,14 @@ public class SceneConfigService {
             String name = jsonObject.getString("name");
             List<Integer> neighborSet = jsonObject.getJSONArray("neighborSet").toJavaList(Integer.class);
 
+            List<JSONObject> bossIds = jsonObject.getJSONArray("bossIds").toJavaList(JSONObject.class);
+            List<Long> bossIdList = bossIds.stream().map(bossId -> bossId.getLongValue("bossId")).collect(Collectors.toList());
+
             SceneConfig sceneConfig = new SceneConfig();
             sceneConfig.setSceneId(sceneId);
             sceneConfig.setName(name);
             sceneConfig.setNeighborSet(neighborSet);
+            sceneConfig.setBossIdList(bossIdList);
             sceneConfig.setOverTimeSeconds(jsonObject.getIntValue("times"));
 
             JSONArray sceneEntities = jsonObject.getJSONArray("sceneEntities");
