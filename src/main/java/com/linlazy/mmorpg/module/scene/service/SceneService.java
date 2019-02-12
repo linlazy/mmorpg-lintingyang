@@ -94,6 +94,7 @@ public class SceneService {
 
                     sceneMap.put(sceneEntity.getSceneId(),scene);
                     scene.startRefreshMonsterScheduled();
+                    scene.startRefreshBossScheduled();
                 }
                 return scene;
             }
@@ -238,6 +239,8 @@ public class SceneService {
         }
 
         Player player = playerService.getPlayer(actorId);
+        Scene sceneBySceneEntity = getSceneBySceneEntity(player);
+        sceneBySceneEntity.getPlayerMap().remove(player.getActorId());
         player.setSceneId(targetSceneId);
         playerService.updatePlayer(player);
         EventBusHolder.post(new SceneMoveEvent(player));

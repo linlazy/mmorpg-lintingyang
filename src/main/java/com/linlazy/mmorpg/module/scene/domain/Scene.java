@@ -6,6 +6,7 @@ import com.linlazy.mmorpg.module.player.domain.Player;
 import com.linlazy.mmorpg.module.playercall.domain.PlayerCall;
 import com.linlazy.mmorpg.module.scene.constants.MonsterType;
 import com.linlazy.mmorpg.module.scene.push.ScenePushHelper;
+import com.linlazy.mmorpg.module.scene.service.BossService;
 import com.linlazy.mmorpg.module.scene.service.MonsterService;
 import com.linlazy.mmorpg.utils.RandomUtils;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
@@ -88,7 +89,7 @@ public class Scene {
 
         scheduledExecutorService.scheduleAtFixedRate(() -> {
 
-            logger.debug("【普通场景】，一定时间后，触发小怪刷新事件");
+            logger.debug("【普通场景】，10秒后，触发小怪刷新事件");
             monsterMap.values().forEach(monster -> {
                 ScheduledFuture<?> startMonsterAutoAttackScheduled = monster.getStartMonsterAutoAttackScheduled();
                 if(startMonsterAutoAttackScheduled != null){
@@ -123,7 +124,7 @@ public class Scene {
 
             playerMap.values().stream()
                     .forEach(player -> {
-                        ScenePushHelper.pushEnterScene(player.getActorId(),"【普通场景】，一定时间后，触发小怪刷新事件");
+                        ScenePushHelper.pushEnterScene(player.getActorId(),String.format("【普通场景】,场景【%d】，10秒后，触发小怪刷新事件",sceneId));
                     });
         }, 0L, 10L, TimeUnit.SECONDS);
     }
@@ -145,5 +146,48 @@ public class Scene {
         if(remove != null){
             remove.cancel(true);
         }
+    }
+
+    public void startRefreshBossScheduled() {
+        scheduledExecutorService.scheduleAtFixedRate(() -> {
+
+            logger.debug("【普通场景】，5分钟后，触发boss刷新事件");
+            bossList.forEach(boss -> {
+                ScheduledFuture<?> startBossAutoAttackScheduled = boss.getStartBossAutoAttackScheduled();
+                if(startBossAutoAttackScheduled != null){
+                    startBossAutoAttackScheduled.cancel(true);
+                }
+
+                ScheduledFuture<?> cancelAutoAttackSchedule = boss.getCancelAutoAttackSchedule();
+                if(cancelAutoAttackSchedule != null){
+                    cancelAutoAttackSchedule.cancel(true);
+                }
+            });
+            bossList.clear();
+            BossService bossService = SpringContextUtil.getApplicationContext().getBean(BossService.class);
+            List<Boss> bossList = bossService.getBOSSBySceneId(sceneId);
+            this.bossList = bossList;
+            this.bossList.stream()
+                    .filter(boss -> boss.getType() == MonsterType.ACTIVE)
+                    .forEach(boss -> {
+                        if (playerMap.size() > 0 ){
+                            Player player = RandomUtils.randomElement(playerMap.values());
+                            boss.setAttackTarget(player);
+                            if (player.getProfession() == ProfessionType.summoner){
+                                PlayerCall playerCall = player.getPlayerCall();
+                                if(playerCall != null){
+                                    boss.setAttackTarget(playerCall);
+                                }
+                            }
+                            boss.startAutoAttack();
+                        }
+
+                    });
+
+            playerMap.values().stream()
+                    .forEach(player -> {
+                        ScenePushHelper.pushEnterScene(player.getActorId(),"【普通场景】，5分钟时间后，触发boss刷新事件");
+                    });
+        }, 0L, 300L, TimeUnit.SECONDS);
     }
 }

@@ -254,7 +254,7 @@ public class Boss extends SceneEntity {
      * 若攻击目标不在同场景，则不攻击
      * 若不攻击超过10秒，攻击停止
      */
-    private void startAutoAttack() {
+    public void startAutoAttack() {
 
         SkillService skillService = SpringContextUtil.getApplicationContext().getBean(SkillService.class);
         startBossAutoAttackScheduled = bossScheduledExecutor.scheduleAtFixedRate(() -> {
