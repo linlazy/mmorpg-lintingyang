@@ -14,12 +14,16 @@ import com.linlazy.mmorpg.module.shop.service.ShopService;
 import com.linlazy.mmorpg.module.skill.service.SkillService;
 import com.linlazy.mmorpg.module.task.service.TaskService;
 import com.linlazy.mmorpg.server.common.LogoutListener;
+import com.linlazy.mmorpg.server.threadpool.ScheduledThreadPool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 玩家缓存处理器
@@ -29,7 +33,7 @@ import java.util.concurrent.*;
 public class PlayerCacheHandler implements LogoutListener {
 
 
-    private static  ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+    private static  ScheduledExecutorService scheduledExecutorService =new ScheduledThreadPool(1);
 
     @Autowired
     private SceneService sceneService;

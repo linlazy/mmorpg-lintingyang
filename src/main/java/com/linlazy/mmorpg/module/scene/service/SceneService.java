@@ -94,7 +94,6 @@ public class SceneService {
 
 
                     sceneMap.put(sceneEntity.getSceneId(),scene);
-                    scene.startRefreshMonsterScheduled();
                     scene.startRefreshBossScheduled();
                 }
                 return scene;
@@ -163,9 +162,15 @@ public class SceneService {
      */
     @Subscribe
     private void handlerSceneMonsterDead(SceneMonsterDeadEvent sceneMonsterDeadEvent) {
+        Monster monster = sceneMonsterDeadEvent.getMonster();
+        Scene scene = sceneMonsterDeadEvent.getScene();
+
         Map<Long, Player> playerMap = sceneMonsterDeadEvent.getScene().getPlayerMap();
         playerMap.values().stream()
-            .forEach(player -> ScenePushHelper.pushMonsterDead(player.getActorId(), String.format("小怪【%s】已死亡",sceneMonsterDeadEvent.getMonster().getName())));
+                .forEach(player -> ScenePushHelper.pushMonsterDead(player.getActorId(), String.format("小怪【%s】已死亡",sceneMonsterDeadEvent.getMonster().getName())));
+
+        scene.refreshDeadMonsterSchedule(monster);
+
     }
 
     /**

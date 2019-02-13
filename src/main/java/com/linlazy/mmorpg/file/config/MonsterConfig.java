@@ -22,6 +22,9 @@ public class MonsterConfig {
      */
     private String name;
 
+
+    private int type;
+
     /**
      * 血量
      */

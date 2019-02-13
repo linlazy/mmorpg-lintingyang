@@ -1,17 +1,18 @@
 package com.linlazy.mmorpg.module.playercall.domain;
 
 import com.google.common.eventbus.Subscribe;
-import com.linlazy.mmorpg.module.player.service.PlayerService;
-import com.linlazy.mmorpg.module.skill.domain.Skill;
 import com.linlazy.mmorpg.event.type.PlayerAttackEvent;
 import com.linlazy.mmorpg.event.type.PlayerAttackedEvent;
 import com.linlazy.mmorpg.event.type.PlayerCallDisappearEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.player.domain.Player;
-import com.linlazy.mmorpg.module.playercall.push.PlayerCallPushHelper;
 import com.linlazy.mmorpg.module.player.push.PlayerPushHelper;
+import com.linlazy.mmorpg.module.player.service.PlayerService;
+import com.linlazy.mmorpg.module.playercall.push.PlayerCallPushHelper;
 import com.linlazy.mmorpg.module.scene.domain.SceneEntity;
+import com.linlazy.mmorpg.module.skill.domain.Skill;
 import com.linlazy.mmorpg.module.skill.service.SkillService;
+import com.linlazy.mmorpg.server.threadpool.ScheduledThreadPool;
 import com.linlazy.mmorpg.utils.RandomUtils;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import lombok.Data;
@@ -21,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -49,7 +49,7 @@ public class PlayerCall extends SceneEntity {
         return RandomUtils.randomElement(skillList);
     }
 
-    private static ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+    private static ScheduledExecutorService scheduledExecutorService =new ScheduledThreadPool(1);
 
     private ScheduledFuture<?> autoAttackScheduledFuture;
 

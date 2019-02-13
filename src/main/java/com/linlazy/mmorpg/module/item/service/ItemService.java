@@ -11,10 +11,10 @@ import com.linlazy.mmorpg.module.player.service.PlayerService;
 import com.linlazy.mmorpg.module.scene.domain.Scene;
 import com.linlazy.mmorpg.module.scene.service.SceneService;
 import com.linlazy.mmorpg.server.common.Result;
+import com.linlazy.mmorpg.server.threadpool.ScheduledThreadPool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -39,7 +39,7 @@ public class ItemService {
     /**
      * 丢弃道具消失调度线程池
      */
-    ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(20);
+    ScheduledExecutorService scheduledExecutorService = new ScheduledThreadPool(20);
 
 
     /**

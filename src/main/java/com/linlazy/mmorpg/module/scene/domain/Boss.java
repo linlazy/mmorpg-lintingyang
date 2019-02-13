@@ -21,6 +21,7 @@ import com.linlazy.mmorpg.module.scene.copy.service.CopyService;
 import com.linlazy.mmorpg.module.skill.constants.SkillType;
 import com.linlazy.mmorpg.module.skill.domain.Skill;
 import com.linlazy.mmorpg.module.skill.service.SkillService;
+import com.linlazy.mmorpg.server.threadpool.ScheduledThreadPool;
 import com.linlazy.mmorpg.utils.DateUtils;
 import com.linlazy.mmorpg.utils.RandomUtils;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
@@ -30,7 +31,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -47,7 +47,7 @@ public class Boss extends SceneEntity {
     /**
      * BOSS调度线程池
      */
-    ScheduledExecutorService bossScheduledExecutor = Executors.newScheduledThreadPool(20);
+    ScheduledExecutorService bossScheduledExecutor = new ScheduledThreadPool(20);
 
     /**
      * boss标识

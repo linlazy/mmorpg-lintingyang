@@ -13,7 +13,7 @@
     "name": "红貂",
     "type": 2,
     "level": 3,
-    "hp": 15000,
+    "hp": 150,
     "sceneIds": [2],
     "rewards": [[1,10]]
   },

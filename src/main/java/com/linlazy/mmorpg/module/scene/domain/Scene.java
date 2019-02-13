@@ -9,6 +9,7 @@ import com.linlazy.mmorpg.module.scene.constants.MonsterType;
 import com.linlazy.mmorpg.module.scene.push.ScenePushHelper;
 import com.linlazy.mmorpg.module.scene.service.BossService;
 import com.linlazy.mmorpg.module.scene.service.MonsterService;
+import com.linlazy.mmorpg.server.threadpool.ScheduledThreadPool;
 import com.linlazy.mmorpg.utils.RandomUtils;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import lombok.Data;
@@ -16,7 +17,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 场景领域类
@@ -30,7 +34,7 @@ public class Scene {
     /**
      * 场景调度线程池
      */
-    ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(20);
+    ScheduledExecutorService scheduledExecutorService = new ScheduledThreadPool(20);
 
     /**
      * 道具消失调度句柄映射
@@ -88,46 +92,7 @@ public class Scene {
      */
     public void startRefreshMonsterScheduled() {
 
-        scheduledExecutorService.scheduleAtFixedRate(() -> {
 
-            logger.debug("【普通场景】，10秒后，触发小怪刷新事件");
-            monsterMap.values().forEach(monster -> {
-                ScheduledFuture<?> startMonsterAutoAttackScheduled = monster.getStartMonsterAutoAttackScheduled();
-                if(startMonsterAutoAttackScheduled != null){
-                    startMonsterAutoAttackScheduled.cancel(true);
-                }
-
-                ScheduledFuture<?> cancelAutoAttackSchedule = monster.getCancelAutoAttackSchedule();
-                if(cancelAutoAttackSchedule != null){
-                    cancelAutoAttackSchedule.cancel(true);
-                }
-            });
-            monsterMap.values().clear();
-            MonsterService monsterService = SpringContextUtil.getApplicationContext().getBean(MonsterService.class);
-            Map<Long, Monster> monsterMap = monsterService.getMonsterBySceneId(sceneId);
-            this.monsterMap = monsterMap;
-            this.monsterMap.values().stream()
-                    .filter(monster -> monster.getType() == MonsterType.ACTIVE)
-                    .forEach(monster -> {
-                        if (playerMap.size() > 0 ){
-                            Player player = RandomUtils.randomElement(playerMap.values());
-                            monster.setAttackTarget(player);
-                            if (player.getProfession() == ProfessionType.summoner){
-                                PlayerCall playerCall = player.getPlayerCall();
-                                if(playerCall != null){
-                                    monster.setAttackTarget(playerCall);
-                                }
-                            }
-                            monster.startAutoAttack();
-                        }
-
-                    });
-
-            playerMap.values().stream()
-                    .forEach(player -> {
-                        ScenePushHelper.pushEnterScene(player.getActorId(),String.format("【普通场景】,场景【%d】，10秒后，触发小怪刷新事件",sceneId));
-                    });
-        }, 0L, 10L, TimeUnit.SECONDS);
     }
 
     public void addItem(Item item) {
@@ -191,5 +156,39 @@ public class Scene {
                         ScenePushHelper.pushEnterScene(player.getActorId(),"【普通场景】，5分钟时间后，触发boss刷新事件");
                     });
         }, 0L, 300L, TimeUnit.SECONDS);
+    }
+
+    public void refreshDeadMonsterSchedule(Monster monster) {
+        Monster oldMonster = this.monsterMap.remove(monster.getId());
+        playerMap.values().stream()
+                .forEach(player -> {
+                    ScenePushHelper.pushEnterScene(player.getActorId(),String.format("【普通场景】,场景【%d】，10秒后，小怪【%s】刷新",sceneId,oldMonster.getName()));
+                });
+        scheduledExecutorService.schedule(() -> {
+            logger.debug("【普通场景】，10秒后，触发小怪刷新事件");
+            int i = 6/0;
+            MonsterService monsterService = SpringContextUtil.getApplicationContext().getBean(MonsterService.class);
+            Monster newMonster = monsterService.getMonsterByMonsterId(sceneId, oldMonster.getMonsterId());
+            this.monsterMap.put(newMonster.getId(),newMonster);
+
+            if(newMonster.getType() == MonsterType.ACTIVE){
+                if (playerMap.size() > 0 ){
+                    Player player = RandomUtils.randomElement(playerMap.values());
+                    newMonster.setAttackTarget(player);
+                    if (player.getProfession() == ProfessionType.summoner){
+                        PlayerCall playerCall = player.getPlayerCall();
+                        if(playerCall != null){
+                            newMonster.setAttackTarget(playerCall);
+                        }
+                    }
+                    newMonster.startAutoAttack();
+                }
+            }
+
+            playerMap.values().stream()
+                    .forEach(player -> {
+                        ScenePushHelper.pushEnterScene(player.getActorId(),String.format("【普通场景】,场景【%d】，小怪【%s】刷新",sceneId,newMonster.getName()));
+                    });
+        },10L, TimeUnit.SECONDS);
     }
 }

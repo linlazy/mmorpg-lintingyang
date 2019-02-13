@@ -4,14 +4,14 @@ package com.linlazy.mmorpg.module.skill.template;
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpg.module.scene.domain.Scene;
 import com.linlazy.mmorpg.module.scene.domain.SceneEntity;
+import com.linlazy.mmorpg.module.scene.service.SceneService;
 import com.linlazy.mmorpg.module.skill.domain.Skill;
 import com.linlazy.mmorpg.module.skill.push.SkillPushHelper;
-import com.linlazy.mmorpg.module.scene.service.SceneService;
+import com.linlazy.mmorpg.server.threadpool.ScheduledThreadPool;
 import com.linlazy.mmorpg.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public  class SkillTemplate5 extends BaseSkillTemplate {
 
-    private static ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+    private static ScheduledExecutorService scheduledExecutorService =new ScheduledThreadPool(1);
 
 
     @Autowired

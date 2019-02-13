@@ -1,6 +1,7 @@
 package com.linlazy.mmorpg.module.scene.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.linlazy.mmorpg.file.config.MonsterConfig;
 import com.linlazy.mmorpg.file.service.SceneConfigService;
 import com.linlazy.mmorpg.module.scene.constants.SceneEntityType;
 import com.linlazy.mmorpg.module.scene.domain.Monster;
@@ -76,5 +77,31 @@ public class MonsterService {
         return monsterMap;
     }
 
+    /**
+     * 获取场景怪物
+     * @return
+     * @param monsterId
+     */
+    public  Monster getMonsterByMonsterId(int sceneId,long monsterId){
+
+        MonsterConfig monsterConfig = monsterConfigService.getMonsterConfig(monsterId);
+
+            Monster monster = new Monster();
+            monster.setMonsterId(monsterConfig.getMonsterId());
+            monster.setName(monsterConfig.getName());
+            monster.setType(monsterConfig.getType());
+            monster.setSceneId(sceneId);
+            monster.setHp(monsterConfig.getHp());
+            monster.setAttack(monsterConfig.getAttack());
+            monster.setSceneEntityType(SceneEntityType.MONSTER);
+
+            Reward reward = RandomUtils.randomElement(monsterConfig.getRewardList());
+            monster.setReward(reward);
+
+            List<Skill> monsterSkillList = skillService.getMonsterSkillList(monster.getMonsterId());
+            monster.setSkillList(monsterSkillList);
+
+        return monster;
+    }
 
 }

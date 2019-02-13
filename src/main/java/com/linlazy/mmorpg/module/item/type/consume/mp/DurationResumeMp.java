@@ -8,12 +8,16 @@ import com.linlazy.mmorpg.module.item.domain.Item;
 import com.linlazy.mmorpg.module.player.domain.Player;
 import com.linlazy.mmorpg.module.player.service.PlayerService;
 import com.linlazy.mmorpg.server.common.Result;
+import com.linlazy.mmorpg.server.threadpool.ScheduledThreadPool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -25,7 +29,7 @@ public  class DurationResumeMp extends BaseResumeMp {
     /**
      * 恢复MP调度线程池
      */
-    ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(20);
+    ScheduledExecutorService scheduledExecutorService =new ScheduledThreadPool(20);
 
 
     /**

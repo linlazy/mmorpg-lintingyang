@@ -21,6 +21,7 @@ import com.linlazy.mmorpg.module.scene.service.SceneService;
 import com.linlazy.mmorpg.module.skill.constants.SkillType;
 import com.linlazy.mmorpg.module.skill.domain.Skill;
 import com.linlazy.mmorpg.module.skill.service.SkillService;
+import com.linlazy.mmorpg.server.threadpool.ScheduledThreadPool;
 import com.linlazy.mmorpg.utils.DateUtils;
 import com.linlazy.mmorpg.utils.RandomUtils;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
@@ -30,7 +31,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -56,7 +56,7 @@ public class Monster extends SceneEntity {
     private long id;
     private int sceneId;
 
-    private int monsterId;
+    private long monsterId;
 
     /**
      * 怪物类型：主动攻击,被动攻击
@@ -88,7 +88,7 @@ public class Monster extends SceneEntity {
     /**
      * 小怪调度线程池
      */
-    private ScheduledExecutorService monsterScheduledExecutor = Executors.newScheduledThreadPool(20);
+    private ScheduledExecutorService monsterScheduledExecutor = new ScheduledThreadPool(20);
 
 
     /**
@@ -212,6 +212,8 @@ public class Monster extends SceneEntity {
                 jsonObject.put("monster",this);
                 EventBusHolder.post(new ActorEvent(player.getActorId(), EventType.SCENE_MONSTER_DEAD,jsonObject));
             }
+
+
             triggerDeadEvent();
         }
     }

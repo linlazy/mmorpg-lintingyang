@@ -12,6 +12,7 @@ import com.linlazy.mmorpg.module.scene.domain.Boss;
 import com.linlazy.mmorpg.module.scene.domain.Scene;
 import com.linlazy.mmorpg.module.scene.service.SceneService;
 import com.linlazy.mmorpg.module.team.domain.Team;
+import com.linlazy.mmorpg.server.threadpool.ScheduledThreadPool;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import lombok.Data;
 import org.slf4j.Logger;
@@ -19,7 +20,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 副本
@@ -48,7 +51,7 @@ public class Copy extends Scene {
     /**
      * 副本调度线程池
      */
-    ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(20);
+    ScheduledExecutorService scheduledExecutorService = new ScheduledThreadPool(20);
     ScheduledFuture<?> quitSchedule;
 
     /**

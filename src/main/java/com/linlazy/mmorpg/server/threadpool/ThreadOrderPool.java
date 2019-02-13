@@ -5,10 +5,7 @@ import com.linlazy.mmorpg.server.common.Result;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -41,7 +38,9 @@ public class ThreadOrderPool {
         this.nThreads = nThreads;
         executorServices = new ArrayList<>( this.nThreads);
         for(int i = 0 ; i < this.nThreads ; i ++){
-            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            ExecutorService executorService = new ThreadPool(1, 1,
+                            0L, TimeUnit.MILLISECONDS,
+                            new LinkedBlockingQueue<Runnable>());
             executorServices.add(executorService);
         }
 

@@ -5,8 +5,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.linlazy.mmorpg.file.config.MonsterConfig;
+import com.linlazy.mmorpg.module.common.reward.Reward;
 import com.linlazy.mmorpg.server.common.ConfigFile;
 import com.linlazy.mmorpg.server.common.ConfigFileManager;
+import com.linlazy.mmorpg.utils.RewardUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -47,6 +49,9 @@ public class MonsterConfigService {
             String name = jsonObject.getString("name");
             int level = jsonObject.getIntValue("level");
             int hp = jsonObject.getIntValue("hp");
+            int type = jsonObject.getIntValue("type");
+            String rewards = jsonObject.getString("rewards");
+            List<Reward> rewardList = RewardUtils.parseRewards(rewards);
 
             //构建怪物映射
             MonsterConfig monsterConfig = new MonsterConfig();
@@ -54,6 +59,9 @@ public class MonsterConfigService {
             monsterConfig.setName(name);
             monsterConfig.setLevel(level);
             monsterConfig.setHp(hp);
+            monsterConfig.setType(type);
+            monsterConfig.setRewardList(rewardList);
+
 
             monsterConfigMap.put(monsterConfig.getMonsterId(),monsterConfig);
 
