@@ -34,4 +34,17 @@ public class TimeStartCondition extends StartCondition{
         }
         return true;
     }
+
+    @Override
+    public String startConditionString(long actorId, Task task) {
+        TriggerCondition triggerCondition = task.getStartConditionMap().get(startConditionType());
+
+        String beginTimeStr = triggerCondition.getTriggerArgs().getString("beginTime");
+        String endTimeStr = triggerCondition.getTriggerArgs().getString("endTime");
+
+        DateTimeFormatter dateTimeFormatter =DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime beginTime = LocalDateTime.parse(beginTimeStr, dateTimeFormatter);
+        LocalDateTime endTime = LocalDateTime.parse(endTimeStr, dateTimeFormatter);
+        return String.format("在【】到【】期间",beginTime,endTime);
+    }
 }

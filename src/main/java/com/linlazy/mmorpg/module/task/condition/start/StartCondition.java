@@ -36,4 +36,12 @@ public abstract class StartCondition {
      * @return
      */
     public abstract boolean isReachCondition(long actorId, Task task);
+
+    /**
+     * 前端输出
+     * @param actorId
+     * @param task
+     * @return
+     */
+    public abstract String startConditionString(long actorId, Task task);
 }

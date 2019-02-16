@@ -83,6 +83,7 @@ public class Monster extends SceneEntity {
     /**
      * 取消自动攻击句柄
      */
+
     private ScheduledFuture<?> cancelAutoAttackSchedule;
 
     /**
@@ -220,12 +221,13 @@ public class Monster extends SceneEntity {
 
     public void quitSchedule() {
 
-        if(cancelAutoAttackSchedule != null){
+        if(cancelAutoAttackSchedule != null && !cancelAutoAttackSchedule.isCancelled()){
             cancelAutoAttackSchedule.cancel(true);
         }
 
-        if(startMonsterAutoAttackScheduled != null){
+        if(startMonsterAutoAttackScheduled != null && !startMonsterAutoAttackScheduled.isCancelled()){
             startMonsterAutoAttackScheduled.cancel(true);
+            startMonsterAutoAttackScheduled = null;
         }
     }
 
@@ -269,7 +271,6 @@ public class Monster extends SceneEntity {
             if(attackTarget.getSceneId() == sceneId && attackTarget.getHp() > 0){
                 Skill skill = randomSkill();
                 skillService.attack(this,skill,attackTarget);
-                closeOldCancelAutoAttack();
                 startNewCancelAutoAttack();
             }
         }, 0L, 2L, TimeUnit.SECONDS);
@@ -280,22 +281,26 @@ public class Monster extends SceneEntity {
      * 开启取消自动攻击调度
      */
     private void startNewCancelAutoAttack(){
+        if (cancelAutoAttackSchedule != null && !cancelAutoAttackSchedule.isCancelled()) {
+            log.error("closeOldCancelAutoAttack");
+            cancelAutoAttackSchedule.cancel(true);
+        }
         log.error("startNewCancelAutoAttack");
-        cancelAutoAttackSchedule = monsterScheduledExecutor.schedule(() -> {
-            if (startMonsterAutoAttackScheduled != null) {
+        cancelAutoAttackSchedule=null;
+        ScheduledFuture<?> schedule = monsterScheduledExecutor.schedule(() -> {
+            if (startMonsterAutoAttackScheduled != null && !startMonsterAutoAttackScheduled.isCancelled()) {
                 startMonsterAutoAttackScheduled.cancel(true);
+                startMonsterAutoAttackScheduled = null;
             }
         }, 10L, TimeUnit.SECONDS);
+        cancelAutoAttackSchedule = schedule;
     }
 
     /**
      * 关闭取消自动攻击调度
      */
     private void closeOldCancelAutoAttack(){
-        if (cancelAutoAttackSchedule != null) {
-            log.error("closeOldCancelAutoAttack");
-            cancelAutoAttackSchedule.cancel(true);
-        }
+
     }
 
 }

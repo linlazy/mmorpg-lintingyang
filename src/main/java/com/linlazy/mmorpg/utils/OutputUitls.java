@@ -2,8 +2,11 @@ package com.linlazy.mmorpg.utils;
 
 import com.linlazy.mmorpg.module.item.type.ItemType;
 import com.linlazy.mmorpg.module.player.constants.ProfessionType;
+import com.linlazy.mmorpg.module.task.condition.accept.AcceptCondition;
+import com.linlazy.mmorpg.module.task.condition.start.StartCondition;
 import com.linlazy.mmorpg.module.task.condition.start.StartConditionType;
 import com.linlazy.mmorpg.module.task.constants.TaskStatus;
+import com.linlazy.mmorpg.module.task.domain.Task;
 import com.linlazy.mmorpg.module.task.domain.TriggerCondition;
 
 /**
@@ -93,6 +96,29 @@ public class OutputUitls {
         }
         stringBuilder.append("\r\n");
 
+        return stringBuilder.toString();
+    }
+
+
+    public static String taskAcceptCondition(Task task){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(String.format("接受条件："));
+
+        task.getAcceptConditionMap().values().forEach(triggerCondition -> {
+            AcceptCondition acceptCondition = AcceptCondition.getAcceptCondition(triggerCondition.getTriggerType());
+            stringBuilder.append(acceptCondition.acceptConditionString(task.getActorId(), task));
+        });
+        return stringBuilder.toString();
+    }
+
+    public static String taskStartCondition(Task task){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(String.format("开启条件："));
+
+        task.getStartConditionMap().values().forEach(triggerCondition -> {
+            StartCondition startCondition = StartCondition.getStartCondition(triggerCondition.getTriggerType());
+            stringBuilder.append(startCondition.startConditionString(task.getActorId(), task));
+        });
         return stringBuilder.toString();
     }
 }

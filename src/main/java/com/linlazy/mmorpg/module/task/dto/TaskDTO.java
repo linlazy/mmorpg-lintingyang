@@ -37,6 +37,16 @@ public class TaskDTO {
     private String taskProcess;
 
     /**
+     * 开启任务条件
+     */
+    private String startCondition;
+
+    /**
+     * 接受任务条件
+     */
+    private String acceptCondition;
+
+    /**
      * 任务描述
      */
     private String desc;
@@ -58,6 +68,10 @@ public class TaskDTO {
 
         BaseTaskTemplate taskTemplate = BaseTaskTemplate.getTaskTemplate(task.getTaskTemplateId());
         taskProcess = taskTemplate.getTaskProcess(task);
+
+        startCondition= OutputUitls.taskStartCondition(task);
+
+        acceptCondition= OutputUitls.taskAcceptCondition(task);
     }
 
     @Override
@@ -67,6 +81,9 @@ public class TaskDTO {
         stringBuilder.append(String.format("任务ID【%d】\r\n",taskId));
         stringBuilder.append(String.format("任务名称【%s】\r\n",taskName));
         stringBuilder.append(String.format("任务描述【%s】\r\n",desc));
+
+        stringBuilder.append(String.format("开启任务条件【%s】",startCondition));
+        stringBuilder.append(String.format("接受任务条件【%s】",acceptCondition));
 
         stringBuilder.append(OutputUitls.taskStatus(status));
 

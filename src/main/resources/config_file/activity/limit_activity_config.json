@@ -1,0 +1,93 @@
+[
+  {
+    "id": 1,
+    "name": "天降财神",
+    "beginTime": "11:00",
+    "endTime": "11:20"
+  },
+  {
+    "id": 2,
+    "name": "满点篝火",
+    "beginTime": "12:00",
+    "endTime": "12:15"
+  },
+  {
+    "id": 3,
+    "name": "城主之刃",
+    "beginTime": "12:15",
+    "endTime": "12:30"
+  },
+  {
+    "id": 4,
+    "name": "禁地魔王",
+    "beginTime": "12:30",
+    "endTime": "12:45"
+  },
+  {
+    "id": 5,
+    "name": "血战到底",
+    "beginTime": "13:00",
+    "endTime": "13:05"
+  },
+  {
+    "id": 6,
+    "name": "天降财神",
+    "beginTime": "15:00",
+    "endTime": "15:20"
+  },
+  {
+    "id": 7,
+    "name": "僵尸围城",
+    "beginTime": "15:30",
+    "endTime": "15:55"
+  },
+  {
+    "id": 8,
+    "name": "修罗密室",
+    "beginTime": "16:00",
+    "endTime": "16:15"
+  },
+  {
+    "id": 9,
+    "name":"裁决战场",
+    "beginTime": "19:30",
+    "endTime": "20:00"
+  },
+  {
+    "id": 10,
+    "name": "裁决之巅",
+    "beginTime": "19:45",
+    "endTime": "20:15"
+  },
+  {
+    "id": 11,
+    "name": "攻城战",
+    "beginTime": "20:00",
+    "endTime": "21:00"
+  },
+  {
+    "id": 12,
+    "name": "公会团本",
+    "beginTime": "15:00",
+    "endTime": "15:20"
+  },
+  {
+    "id": 13,
+    "name": "主城夜战",
+    "beginTime": "15:00",
+    "endTime": "15:20"
+  },
+  {
+    "id": 14,
+    "name": "血战到底",
+    "beginTime": "15:00",
+    "endTime": "15:20"
+  },
+  {
+    "id": 15,
+    "name": "主城夜战",
+    "beginTime": "15:00",
+    "endTime": "15:20"
+  }
+
+]

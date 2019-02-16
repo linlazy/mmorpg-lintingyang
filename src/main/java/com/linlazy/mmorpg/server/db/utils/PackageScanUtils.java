@@ -55,6 +55,10 @@ public class PackageScanUtils{
             String className = null;
             try {
                 className = metadataReaderFactory.getMetadataReader(resource).getClassMetadata().getClassName();
+                //过滤内部类
+                if(className.contains("$")){
+                    continue;
+                }
             } catch (IOException e) {
                 logger.error("{}",e);
             }

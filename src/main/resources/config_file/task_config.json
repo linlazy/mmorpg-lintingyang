@@ -35,7 +35,7 @@
   "taskTemplateArgs": {
     "sceneId": 2,
     "killNum": 5,
-    "monsterId": 3
+    "monsterId": 2
   },
   "rewards": [[60003,100]]
 },

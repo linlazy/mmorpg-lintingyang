@@ -45,7 +45,7 @@ public class Item {
      */
     private int count;
 
-    private JSONObject ext;
+    private JSONObject ext =new JSONObject();
 
     private JSONObject itemConfig;
 
@@ -58,7 +58,7 @@ public class Item {
     }
 
     public int getSuperPositionUp(){
-        return itemConfig.getIntValue("superPosition");
+        return itemConfig.getInteger("superPosition") == null? 1:itemConfig.getIntValue("superPosition");
     }
 
 

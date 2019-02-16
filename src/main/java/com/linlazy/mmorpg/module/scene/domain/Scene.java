@@ -118,17 +118,7 @@ public class Scene {
         scheduledExecutorService.scheduleAtFixedRate(() -> {
 
             logger.debug("【普通场景】，5分钟后，触发boss刷新事件");
-            bossList.forEach(boss -> {
-                ScheduledFuture<?> startBossAutoAttackScheduled = boss.getStartBossAutoAttackScheduled();
-                if(startBossAutoAttackScheduled != null){
-                    startBossAutoAttackScheduled.cancel(true);
-                }
-
-                ScheduledFuture<?> cancelAutoAttackSchedule = boss.getCancelAutoAttackSchedule();
-                if(cancelAutoAttackSchedule != null){
-                    cancelAutoAttackSchedule.cancel(true);
-                }
-            });
+            bossList.forEach(boss -> boss. quitSchedule());
             bossList.clear();
             BossService bossService = SpringContextUtil.getApplicationContext().getBean(BossService.class);
             List<Boss> bossList = bossService.getBOSSBySceneId(sceneId);
@@ -166,7 +156,6 @@ public class Scene {
                 });
         scheduledExecutorService.schedule(() -> {
             logger.debug("【普通场景】，10秒后，触发小怪刷新事件");
-            int i = 6/0;
             MonsterService monsterService = SpringContextUtil.getApplicationContext().getBean(MonsterService.class);
             Monster newMonster = monsterService.getMonsterByMonsterId(sceneId, oldMonster.getMonsterId());
             this.monsterMap.put(newMonster.getId(),newMonster);

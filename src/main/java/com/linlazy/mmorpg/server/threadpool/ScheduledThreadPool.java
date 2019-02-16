@@ -30,7 +30,6 @@ public class ScheduledThreadPool extends ScheduledThreadPoolExecutor {
             try {
                 Object result = ((Future<?>) r).get();
             } catch (CancellationException ce) {
-                t = ce;
             } catch (ExecutionException ee) {
                 t = ee.getCause();
             } catch (InterruptedException ie) {

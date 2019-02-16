@@ -29,4 +29,11 @@ public class CompleteTaskStartCondition extends StartCondition{
         Task targetTask = taskService.getPlayerTask(task.getActorId()).getMap().get(taskId);
         return targetTask.getStatus() == TaskStatus.COMPLETED;
     }
+
+    @Override
+    public String startConditionString(long actorId, Task task) {
+        TriggerCondition triggerCondition = task.getStartConditionMap().get(startConditionType());
+        long taskId = triggerCondition.getTriggerArgs().getLongValue("taskId");
+        return String.format("完成任务【】",taskId);
+    }
 }

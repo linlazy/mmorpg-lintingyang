@@ -99,10 +99,6 @@ public class Task {
      */
     private Map<Integer,TriggerCondition> acceptConditionMap = new HashMap<>();
 
-    /**
-     * 任务奖励
-     */
-    private JSONObject taskReward = new JSONObject();
 
     /**
      * 奖励

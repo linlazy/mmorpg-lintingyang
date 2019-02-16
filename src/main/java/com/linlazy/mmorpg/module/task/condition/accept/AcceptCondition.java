@@ -37,4 +37,12 @@ public abstract class AcceptCondition {
      * @return
      */
     public abstract boolean isReachCondition(long actorId, Task task);
+
+    /**
+     * 前端打印
+     * @param actorId
+     * @param task
+     * @return
+     */
+    public abstract String acceptConditionString(long actorId, Task task);
 }

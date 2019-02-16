@@ -5,6 +5,7 @@ import com.linlazy.mmorpg.module.common.reward.RewardService;
 import com.linlazy.mmorpg.module.task.domain.Task;
 import com.linlazy.mmorpg.server.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
  * 道具任务奖励
  * @author linlazy
  */
+@Component
 public class ItemTaskReward extends BaseTaskReward{
 
     @Autowired

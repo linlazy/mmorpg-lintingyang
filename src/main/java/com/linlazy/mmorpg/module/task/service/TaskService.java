@@ -17,6 +17,7 @@ import com.linlazy.mmorpg.module.player.domain.PlayerTask;
 import com.linlazy.mmorpg.module.task.constants.TaskStatus;
 import com.linlazy.mmorpg.module.task.domain.Task;
 import com.linlazy.mmorpg.module.task.reward.BaseTaskReward;
+import com.linlazy.mmorpg.module.task.reward.TaskRewardType;
 import com.linlazy.mmorpg.module.task.template.BaseTaskTemplate;
 import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
@@ -113,8 +114,9 @@ public class TaskService {
 
 
     @Subscribe
-    public void loginEvent(ActorEvent actorEvent){
-        if(actorEvent.getEventType().equals(EventType.LOGIN) || actorEvent.getEventType().equals(EventType.REGISTER)){
+    public void checkStartEvent(ActorEvent actorEvent){
+        if(actorEvent.getEventType().equals(EventType.LOGIN) || actorEvent.getEventType().equals(EventType.REGISTER) ||
+                actorEvent.getEventType().equals(EventType.TASK_COMPLETE)){
             PlayerTask playerTask = getPlayerTask(actorEvent.getActorId());
             playerTask.getMap().values().stream()
                 .forEach(task ->{
@@ -154,10 +156,10 @@ public class TaskService {
 
         boolean completed = task.doComplete();
         if(completed){
-            int taskRewardType = task.getTaskReward().getIntValue("taskRewardType");
-            BaseTaskReward baseTaskReward = BaseTaskReward.getBaseTaskReward(taskRewardType);
+            BaseTaskReward baseTaskReward = BaseTaskReward.getBaseTaskReward(TaskRewardType.ITEM);
             Result<?> result = baseTaskReward.doTaskReward(actorId, task);
         }
+        EventBusHolder.post(new ActorEvent<>(actorId,EventType.TASK_COMPLETE));
         return Result.success();
     }
 
@@ -202,7 +204,7 @@ public class TaskService {
         }
         boolean accepted = task.doAccept();
         if(!accepted){
-            return Result.valueOf("接受任务失败");
+            return Result.valueOf("接受任务失败,未达到接受任务条件");
         }
        task.doAbleComplete();
 

@@ -220,7 +220,7 @@ public class Boss extends SceneEntity {
                 attackTarget = sceneEntity;
             }
 
-            if(startBossAutoAttackScheduled == null){
+            if(startBossAutoAttackScheduled == null || startBossAutoAttackScheduled.isCancelled()){
                 attackTarget = sceneEntity;
                 startAutoAttack();
             }
@@ -232,10 +232,10 @@ public class Boss extends SceneEntity {
     }
 
     public void quitSchedule() {
-        if(startBossAutoAttackScheduled != null){
+        if(startBossAutoAttackScheduled != null && !startBossAutoAttackScheduled.isCancelled()){
             startBossAutoAttackScheduled.cancel(true);
         }
-        if(cancelAutoAttackSchedule != null){
+        if(cancelAutoAttackSchedule != null && !cancelAutoAttackSchedule.isCancelled()){
             cancelAutoAttackSchedule.cancel(true);
         }
     }
@@ -269,7 +269,7 @@ public class Boss extends SceneEntity {
     private void startNewCancelAutoAttack(){
         log.error("startNewCancelAutoAttack");
         cancelAutoAttackSchedule = bossScheduledExecutor.schedule(() -> {
-            if (startBossAutoAttackScheduled != null) {
+            if (startBossAutoAttackScheduled != null && !startBossAutoAttackScheduled.isCancelled()) {
                 startBossAutoAttackScheduled.cancel(true);
             }
         }, 10L, TimeUnit.SECONDS);
@@ -279,7 +279,7 @@ public class Boss extends SceneEntity {
      * 关闭取消自动攻击调度
      */
     private void closeOldCancelAutoAttack(){
-        if (cancelAutoAttackSchedule != null) {
+        if (cancelAutoAttackSchedule != null && !cancelAutoAttackSchedule.isCancelled()) {
             log.error("closeOldCancelAutoAttack");
             cancelAutoAttackSchedule.cancel(true);
         }

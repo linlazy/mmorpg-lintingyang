@@ -1,0 +1,22 @@
+[
+  {
+    "activity": 30,
+    "rewards": [[1,1],[1,1]]
+  },
+  {
+    "activity": 60,
+    "rewards": [[1,1],[1,1]]
+  },
+  {
+    "activity": 120,
+    "rewards": [[1,1],[1,1]]
+  },
+  {
+    "activity": 180,
+    "rewards": [[1,1],[1,1]]
+  },
+  {
+    "activity": 240,
+    "rewards": [[1,1],[1,1]]
+  }
+]

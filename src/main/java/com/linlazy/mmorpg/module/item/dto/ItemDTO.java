@@ -27,6 +27,8 @@ public class ItemDTO {
         if(item.getId() != 0){
             stringBuilder.append(String.format("道具标识【%d】",item.getId()));
         }
+
+        stringBuilder.append(String.format("道具唯一ID【%d】",item.getItemId()));
         ItemConfigService itemConfigService = SpringContextUtil.getApplicationContext().getBean(ItemConfigService.class);
         JSONObject itemConfig = itemConfigService.getItemConfig(ItemIdUtil.getBaseItemId(item.getItemId()));
         ItemConfigDTO itemConfigDTO = new ItemConfigDTO(itemConfig);
