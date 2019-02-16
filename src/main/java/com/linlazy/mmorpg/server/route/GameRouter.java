@@ -2,6 +2,8 @@ package com.linlazy.mmorpg.server.route;
 
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpg.handler.CmdHandler;
+import com.linlazy.mmorpg.module.player.domain.Player;
+import com.linlazy.mmorpg.module.player.service.PlayerService;
 import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.server.threadpool.BusinessTask;
 import com.linlazy.mmorpg.server.threadpool.ThreadOrderPool;
@@ -29,6 +31,9 @@ public class GameRouter {
 
     @Autowired
     private CmdHandler cmdHandler;
+
+    @Autowired
+    private PlayerService playerService;
 
     private static ThreadOrderPool threadOrderPool = new ThreadOrderPool(16);
 
@@ -63,7 +68,15 @@ public class GameRouter {
             if (SessionManager.getActorId(channel) == null) {
                 return Result.valueOf("无权限执行此操作,请登录");
             }
-            jsonObject.put("actorId", SessionManager.getActorId(channel));
+            Long actorId = SessionManager.getActorId(channel);
+            jsonObject.put("actorId", actorId);
+
+            if(cmd.enterMap()){
+                Player player = playerService.getPlayer(actorId);
+                if(!player.isEnterMap()){
+                    return Result.valueOf("请先进入地图");
+                }
+            }
             ThreadOrderPool.threadOrderPoolMap.putIfAbsent("actor",threadOrderPool);
             Future<Result<?>> execute = threadOrderPool.execute(new BusinessTask(SessionManager.getActorId(channel)) {
                 @Override

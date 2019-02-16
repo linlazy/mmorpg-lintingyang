@@ -279,7 +279,7 @@ public class CmdHandler {
      * @param jsonObject
      * @return
      */
-    @Cmd(value ="register",auth =false)
+    @Cmd(value ="register",auth =false,enterMap = false)
     public Result<?> register(JSONObject jsonObject){
         String username = jsonObject.getString("username");
         String password = jsonObject.getString("password");
@@ -293,7 +293,7 @@ public class CmdHandler {
      * @param jsonObject
      * @return
      */
-    @Cmd(value ="login",auth = false)
+    @Cmd(value ="login",auth = false,enterMap = false)
     public Result<?> login(JSONObject jsonObject){
         String username = jsonObject.getString("username");
         String password = jsonObject.getString("password");
@@ -306,7 +306,7 @@ public class CmdHandler {
      * @param jsonObject
      * @return
      */
-    @Cmd(value ="profession")
+    @Cmd(value ="profession",enterMap = false)
     public Result<?> selectProfession(JSONObject jsonObject){
         long actorId = jsonObject.getLongValue("actorId");
         int professionId = jsonObject.getIntValue("profession");
@@ -318,7 +318,7 @@ public class CmdHandler {
      * @param jsonObject
      * @return
      */
-    @Cmd(value = "logout")
+    @Cmd(value = "logout",enterMap = false)
     public Result<?> logout(JSONObject jsonObject){
         Channel channel = jsonObject.getObject("channel",Channel.class);
         return playerService.logout(channel);
@@ -498,7 +498,7 @@ public class CmdHandler {
      * @param jsonObject
      * @return
      */
-    @Cmd("enterMap")
+    @Cmd(value = "enterMap",enterMap = false)
     public Result<?> enterMap(JSONObject jsonObject){
         long actorId = jsonObject.getLong("actorId");
         return sceneService.enter(actorId);

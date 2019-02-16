@@ -71,6 +71,11 @@ public class Player extends SceneEntity {
     private long actorId;
 
     /**
+     * 进入场景
+     */
+    private boolean enterMap;
+
+    /**
      * 职业
      */
     private int profession;

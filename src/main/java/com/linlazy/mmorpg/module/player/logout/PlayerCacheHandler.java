@@ -70,6 +70,9 @@ public class PlayerCacheHandler implements LogoutListener {
 
     @Override
     public void logout(long actorId) {
+        Player player = playerService.getPlayer(actorId);
+        player.setEnterMap(false);
+
         ScheduledFuture<?> schedule = scheduledExecutorService.schedule(new Runnable() {
             @Override
             public void run() {

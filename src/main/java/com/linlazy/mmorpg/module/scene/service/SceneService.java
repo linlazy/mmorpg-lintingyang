@@ -268,6 +268,7 @@ public class SceneService {
         Player player = playerService.getPlayer(actorId);
         Scene scene = getSceneBySceneEntity(player);
         scene.getPlayerMap().put(player.getActorId(),player);
+        player.setEnterMap(true);
 
         EventBusHolder.post(new SceneEnterEvent(player));
 

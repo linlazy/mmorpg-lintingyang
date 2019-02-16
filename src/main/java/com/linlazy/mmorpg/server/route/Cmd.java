@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 public @interface Cmd {
     String value();
     boolean auth() default true;
+    boolean enterMap() default true;
 }

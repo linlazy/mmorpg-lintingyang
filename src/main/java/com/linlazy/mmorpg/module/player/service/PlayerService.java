@@ -5,18 +5,19 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.linlazy.mmorpg.dao.PlayerDAO;
-import com.linlazy.mmorpg.event.type.LoginEvent;
-import com.linlazy.mmorpg.module.player.domain.Player;
-import com.linlazy.mmorpg.module.skill.domain.Skill;
-import com.linlazy.mmorpg.module.player.dto.PlayerDTO;
 import com.linlazy.mmorpg.entity.PlayerEntity;
+import com.linlazy.mmorpg.event.type.LoginEvent;
 import com.linlazy.mmorpg.event.type.PlayerAttackEvent;
 import com.linlazy.mmorpg.module.common.event.ActorEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.common.event.EventType;
-import com.linlazy.mmorpg.module.skill.service.SkillService;
+import com.linlazy.mmorpg.module.player.domain.Player;
+import com.linlazy.mmorpg.module.player.dto.PlayerDTO;
 import com.linlazy.mmorpg.module.player.push.PlayerPushHelper;
+import com.linlazy.mmorpg.module.skill.domain.Skill;
+import com.linlazy.mmorpg.module.skill.service.SkillService;
 import com.linlazy.mmorpg.server.common.GlobalConfigService;
+import com.linlazy.mmorpg.server.common.LogoutListener;
 import com.linlazy.mmorpg.server.common.Result;
 import com.linlazy.mmorpg.utils.DateUtils;
 import com.linlazy.mmorpg.utils.SessionManager;
@@ -189,9 +190,14 @@ public class PlayerService {
     }
 
     public Result<?> logout(Channel channel) {
-        synchronized (loginSynLock){
+        Long actorId = SessionManager.getActorId(channel);
+        if(actorId != null){
+            SpringContextUtil.getApplicationContext().getBeansOfType(LogoutListener.class).values()
+                    .stream().forEach(logoutListener -> logoutListener.logout(actorId));
+
             SessionManager.unBind(channel);
         }
+
         return Result.success("退出成功");
     }
 
