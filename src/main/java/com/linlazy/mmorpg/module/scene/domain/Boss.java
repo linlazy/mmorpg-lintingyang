@@ -206,15 +206,16 @@ public class Boss extends SceneEntity {
     public void attacked(SceneEntity sceneEntity, Skill skill) {
         super.attacked(sceneEntity,skill);
 
+        if(sceneEntity instanceof Player){
+            Player player = (Player) sceneEntity;
+            PlayerPushHelper.pushAttacked(player.getActorId(),String.format("%d BOSS【%s】受到玩家【%s】技能【%s】攻击：血量:%d", DateUtils.getNowMillis()/1000,name,sceneEntity.getName(), skill.getName(),hp));
+        }
+        if(sceneEntity instanceof PlayerCall){
+            PlayerCall playerCall = (PlayerCall) sceneEntity;
+            PlayerPushHelper.pushAttacked(playerCall.getSourceId(),String.format("%d BOSS【%s】受到玩家召唤兽【%s】技能【%s】攻击：血量:%d", DateUtils.getNowMillis()/1000,name,sceneEntity.getName(), skill.getName(),hp));
+        }
         if(hp > 0){
-            if(sceneEntity instanceof Player){
-                Player player = (Player) sceneEntity;
-                PlayerPushHelper.pushAttacked(player.getActorId(),String.format("%d BOSS【%s】受到玩家【%s】技能【%s】攻击：血量:%d", DateUtils.getNowMillis()/1000,name,sceneEntity.getName(), skill.getName(),hp));
-            }
-            if(sceneEntity instanceof PlayerCall){
-                PlayerCall playerCall = (PlayerCall) sceneEntity;
-                PlayerPushHelper.pushAttacked(playerCall.getSourceId(),String.format("%d BOSS【%s】受到玩家召唤兽【%s】技能【%s】攻击：血量:%d", DateUtils.getNowMillis()/1000,name,sceneEntity.getName(), skill.getName(),hp));
-            }
+
 
             if(skill.getType() == SkillType.TAUNT){
                 attackTarget = sceneEntity;

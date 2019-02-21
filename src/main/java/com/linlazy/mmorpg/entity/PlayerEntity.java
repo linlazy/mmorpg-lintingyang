@@ -68,6 +68,12 @@ public class PlayerEntity extends Entity {
     private int hp;
 
     /**
+     * 血量上限
+     */
+    @Cloumn
+    private int maxHp;
+
+    /**
      * 红下一次自动回复时间
      */
     private long hpNextResumeTime;

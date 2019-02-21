@@ -113,6 +113,7 @@ public class PlayerService {
 
        playerCache.asMap().values().stream()
                .filter(player -> player.getSceneId() == sceneId)
+               .filter(player -> SessionManager.isOnline(player.getActorId()))
                .forEach(player -> {
                    result.put(player.getActorId(),player);
                });

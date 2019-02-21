@@ -66,6 +66,7 @@ public class CallService {
         playerCall.setSceneEntityType(SceneEntityType.PLAYER_CALL);
         playerCall.setSceneId(player.getSceneId());
         playerCall.setCopyId(player.getCopyId());
+        playerCall.setHp(player.getHp());
 
         playerCall.setId(maxPlayerCallId.incrementAndGet());
 

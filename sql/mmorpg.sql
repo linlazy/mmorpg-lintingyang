@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50724
 File Encoding         : 65001
 
-Date: 2019-02-13 16:07:41
+Date: 2019-02-20 16:30:25
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -38,6 +38,18 @@ CREATE TABLE `chat` (
   `receiver` bigint(20) DEFAULT NULL,
   `content` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`chatId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for daily_activity
+-- ----------------------------
+DROP TABLE IF EXISTS `daily_activity`;
+CREATE TABLE `daily_activity` (
+  `actorId` bigint(20) NOT NULL,
+  `currentActivity` int(11) DEFAULT NULL,
+  `rewardedActivities` text,
+  `nextResetTime` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`actorId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
@@ -130,6 +142,7 @@ CREATE TABLE `player` (
   `level` int(11) DEFAULT NULL,
   `mp` int(11) DEFAULT NULL,
   `hp` int(11) DEFAULT NULL,
+  `maxHp` int(11) DEFAULT NULL,
   `MPNextResumeTime` bigint(13) DEFAULT NULL,
   `HPNextResumeTime` bigint(13) DEFAULT NULL,
   `profession` int(11) DEFAULT NULL,

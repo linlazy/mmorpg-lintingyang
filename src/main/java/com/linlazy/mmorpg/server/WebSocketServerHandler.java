@@ -15,6 +15,7 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.InvocationTargetException;
@@ -23,6 +24,7 @@ import java.util.concurrent.ExecutionException;
 /**
  * @author linlazy
  */
+@Slf4j
 public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> {
 
     @Autowired
@@ -93,6 +95,7 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        log.error("{}",cause);
         ctx.fireExceptionCaught(cause);
     }
 }

@@ -59,6 +59,7 @@ public class Player extends SceneEntity {
         this.setProfession(playerEntity.getProfession());
         this.setLevel(playerEntity.getLevel());
         this.setSceneId(playerEntity.getSceneId());
+        this.setMaxHP(playerEntity.getMaxHp());
 
         LevelConfigService levelConfigService = SpringContextUtil.getApplicationContext().getBean(LevelConfigService.class);
         LevelConfig levelConfig = levelConfigService.getLevelConfig(level);
@@ -262,6 +263,7 @@ public class Player extends SceneEntity {
     public PlayerEntity convertPlayerEntity(){
         playerEntity.setActorId(actorId);
         playerEntity.setHp(hp);
+        playerEntity.setMaxHp(getMaxHP());
         playerEntity.setLevel(level);
         playerEntity.setProfession(profession);
         playerEntity.setMp(mp);
