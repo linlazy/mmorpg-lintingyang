@@ -21,6 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 场景领域类
@@ -40,6 +41,11 @@ public class Scene {
      * 道具消失调度句柄映射
      */
     private Map<Long,ScheduledFuture<?>> itemRemoveScheduleMap = new ConcurrentHashMap<>();
+
+    /**
+     * 场景实体ID标识
+     */
+    private AtomicLong maxId = new AtomicLong(0);
 
     /**
      *  场景ID
@@ -149,6 +155,7 @@ public class Scene {
     }
 
     public void refreshDeadMonsterSchedule(Monster monster) {
+
         Monster oldMonster = this.monsterMap.remove(monster.getId());
         playerMap.values().stream()
                 .forEach(player -> {
@@ -180,4 +187,6 @@ public class Scene {
                     });
         },10L, TimeUnit.SECONDS);
     }
+
+
 }
