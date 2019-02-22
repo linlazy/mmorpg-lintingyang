@@ -6,8 +6,6 @@ import com.linlazy.mmorpg.dao.TaskDAO;
 import com.linlazy.mmorpg.entity.TaskEntity;
 import com.linlazy.mmorpg.file.config.TaskConfig;
 import com.linlazy.mmorpg.module.backpack.service.PlayerBackpackService;
-import com.linlazy.mmorpg.module.common.event.ActorEvent;
-import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.common.event.EventType;
 import com.linlazy.mmorpg.module.common.reward.Reward;
 import com.linlazy.mmorpg.module.item.domain.Item;
@@ -258,22 +256,22 @@ public class Task {
             return false;
         }
         this.status = TaskStatus.COMPLETED;
-        TaskDAO taskDAO = SpringContextUtil.getApplicationContext().getBean(TaskDAO.class);
-        taskDAO.updateQueue(this.convertTaskEntity());
+
+
 
 
         BaseTaskTemplate taskTemplate = BaseTaskTemplate.getTaskTemplate(taskTemplateId);
         if(taskTemplate.likeEvent().contains(EventType.ACTOR_ITEM_CHANGE)){
             PlayerBackpackService playerBackpackService = SpringContextUtil.getApplicationContext().getBean(PlayerBackpackService.class);
             long itemId = taskTemplateArgs.getIntValue("itemId");
-            int itemNum = taskTemplateArgs.getIntValue("itemNum");
+            int itemNum = taskTemplateArgs.getIntValue("needNum");
             Item item = new Item(itemId,itemNum);
             playerBackpackService.pop(actorId, Lists.newArrayList(item));
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("itemId",item.getItemId());
-            EventBusHolder.post(new ActorEvent<>(actorId,EventType.ACTOR_ITEM_CHANGE,jsonObject));
 
+            taskTemplate.updateTaskData(actorId,null,this);
         }
+        TaskDAO taskDAO = SpringContextUtil.getApplicationContext().getBean(TaskDAO.class);
+        taskDAO.updateQueue(this.convertTaskEntity());
         return true;
     }
 }
