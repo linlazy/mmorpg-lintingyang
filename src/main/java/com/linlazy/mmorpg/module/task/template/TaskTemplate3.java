@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import com.linlazy.mmorpg.file.service.ItemConfigService;
 import com.linlazy.mmorpg.module.backpack.service.PlayerBackpackService;
 import com.linlazy.mmorpg.module.common.event.EventType;
+import com.linlazy.mmorpg.module.item.domain.Item;
 import com.linlazy.mmorpg.module.task.domain.Task;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class TaskTemplate3 extends BaseTaskTemplate {
      */
     @Override
     public Set<EventType> likeEvent() {
-        return Sets.newHashSet();
+        return Sets.newHashSet(EventType.ACTOR_ITEM_CHANGE);
     }
 
     @Override
@@ -48,7 +49,8 @@ public class TaskTemplate3 extends BaseTaskTemplate {
 
         JSONObject taskTemplateArgs = task.getTaskTemplateArgs();
         int itemId = taskTemplateArgs.getIntValue("itemId");
-        int itemCount = playerBackpackService.getPlayerBackpack(actorId).getItemCount(itemId);
+        Item item = new Item(itemId);
+        int itemCount = playerBackpackService.getPlayerBackpack(actorId).getItemCount(item);
         data.put("itemNum",itemCount);
 
         return task;

@@ -29,7 +29,7 @@ public class PlayerCallAttackSkill extends AttackSkill{
     @Override
     public Set<SceneEntity> selectAttackedSceneEntitySet(SceneEntity sceneEntity, Skill skill, Set<SceneEntity> allSceneEntity) {
         PlayerCall playerCall = (PlayerCall) sceneEntity;
-        Player player = playerService.getPlayer(playerCall.getSourceId());
+        Player player = playerCall.getSourcePlayer();
         AttackSkill attackSkill = AttackSkill.getAttackSkill(SceneEntityType.PLAYER);
         Set<SceneEntity> sceneEntities = attackSkill.selectAttackedSceneEntitySet(player, skill, allSceneEntity);
 

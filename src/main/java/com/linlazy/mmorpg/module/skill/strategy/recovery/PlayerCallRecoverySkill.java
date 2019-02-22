@@ -36,7 +36,7 @@ public class PlayerCallRecoverySkill extends RecoverySkill {
     @Override
     public Set<SceneEntity> selectRecoverySceneEntitySet(SceneEntity sceneEntity, Skill skill, Set<SceneEntity> allSceneEntity) {
         PlayerCall playerCall = (PlayerCall) sceneEntity;
-        Player player = playerService.getPlayer(playerCall.getSourceId());
+        Player player = playerCall.getSourcePlayer();
         RecoverySkill recoverySkill = RecoverySkill.getRecoverySkill(SceneEntityType.PLAYER);
         Set<SceneEntity> sceneEntities = recoverySkill.selectRecoverySceneEntitySet(player, skill, allSceneEntity);
 

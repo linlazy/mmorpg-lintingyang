@@ -185,18 +185,6 @@ public class SceneService {
                 .forEach(player -> ScenePushHelper.pushMonsterDead(player.getActorId(), String.format("BOSS【%s】已死亡",bossDeadEvent.getBoss().getName())));
     }
 
-    /**
-     * 处理玩家进入场景事件
-     * @param sceneEnterEvent
-     */
-    @Subscribe
-    private void handleSceneEnter(SceneEnterEvent sceneEnterEvent) {
-        Player player = sceneEnterEvent.getPlayer();
-        Map<Long, Player> sameScenePlayerMap = playerService.getSameScenePlayerMap(player.getSceneId());
-        sameScenePlayerMap.values().stream()
-                .filter(player1 -> player1.getActorId() != player.getActorId())
-                .forEach(player1 -> ScenePushHelper.pushEnterScene(player1.getActorId(),String.format("玩家【%s】进入了场景",player.getName())));
-    }
 
     /**
      * 处理玩家场景移动事件
@@ -259,7 +247,7 @@ public class SceneService {
     }
 
     /**
-     * 进入场景
+     * 进入游戏
      * @param actorId
      * @return
      */
@@ -267,10 +255,7 @@ public class SceneService {
 
         Player player = playerService.getPlayer(actorId);
         Scene scene = getSceneBySceneEntity(player);
-        scene.getPlayerMap().put(player.getActorId(),player);
-        player.setEnterMap(true);
-
-        EventBusHolder.post(new SceneEnterEvent(player));
+        scene.playerEnterScene(player);
 
         return Result.success(new SceneDTO(scene).toString());
     }

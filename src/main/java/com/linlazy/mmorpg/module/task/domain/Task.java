@@ -11,6 +11,7 @@ import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.common.event.EventType;
 import com.linlazy.mmorpg.module.common.reward.Reward;
 import com.linlazy.mmorpg.module.item.domain.Item;
+import com.linlazy.mmorpg.module.player.push.PlayerPushHelper;
 import com.linlazy.mmorpg.module.task.condition.accept.AcceptCondition;
 import com.linlazy.mmorpg.module.task.condition.start.StartCondition;
 import com.linlazy.mmorpg.module.task.constants.TaskStatus;
@@ -21,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -152,6 +152,7 @@ public class Task {
                 });
 
         if(isStart){
+            PlayerPushHelper.pushMessage(actorId,String.format("任务【%s】开启",taskName));
             this.status = TaskStatus.START_UN_ACCEPT;
             TaskDAO taskDAO = SpringContextUtil.getApplicationContext().getBean(TaskDAO.class);
             taskDAO.insertQueue(this.convertTaskEntity());
@@ -178,6 +179,9 @@ public class Task {
 
         if(isAccept){
             this.status = TaskStatus.ACCEPT_UN_COMPLETE;
+            BaseTaskTemplate taskTemplate = BaseTaskTemplate.getTaskTemplate(taskTemplateId);
+            taskTemplate.updateTaskData(actorId,null,this);
+            doAbleComplete();
             TaskDAO taskDAO = SpringContextUtil.getApplicationContext().getBean(TaskDAO.class);
             taskDAO.updateQueue(this.convertTaskEntity());
             return true;
@@ -261,13 +265,14 @@ public class Task {
         BaseTaskTemplate taskTemplate = BaseTaskTemplate.getTaskTemplate(taskTemplateId);
         if(taskTemplate.likeEvent().contains(EventType.ACTOR_ITEM_CHANGE)){
             PlayerBackpackService playerBackpackService = SpringContextUtil.getApplicationContext().getBean(PlayerBackpackService.class);
-            List<Item> items = new ArrayList<>();
-            playerBackpackService.pop(actorId, Lists.newArrayList());
-            for(Item item: items){
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("itemId",item.getItemId());
-                EventBusHolder.post(new ActorEvent<>(actorId,EventType.ACTOR_ITEM_CHANGE,jsonObject));
-            }
+            long itemId = taskTemplateArgs.getIntValue("itemId");
+            int itemNum = taskTemplateArgs.getIntValue("itemNum");
+            Item item = new Item(itemId,itemNum);
+            playerBackpackService.pop(actorId, Lists.newArrayList(item));
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("itemId",item.getItemId());
+            EventBusHolder.post(new ActorEvent<>(actorId,EventType.ACTOR_ITEM_CHANGE,jsonObject));
+
         }
         return true;
     }

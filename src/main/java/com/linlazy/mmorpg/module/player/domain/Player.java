@@ -1,6 +1,7 @@
 package com.linlazy.mmorpg.module.player.domain;
 
 import com.google.common.collect.Sets;
+import com.linlazy.mmorpg.dao.PlayerDAO;
 import com.linlazy.mmorpg.domain.PlayerArenaInfo;
 import com.linlazy.mmorpg.entity.PlayerEntity;
 import com.linlazy.mmorpg.event.type.CopyPlayerDeadEvent;
@@ -130,7 +131,7 @@ public class Player extends SceneEntity {
         Player player = null;
         if(attackTarget instanceof PlayerCall){
             PlayerCall playerCall = (PlayerCall) attackTarget;
-            player = playerCall.player();
+            player = playerCall.getSourcePlayer();
             result.add(player);
         }else  if(attackTarget instanceof Player){
             player = (Player) attackTarget;
@@ -291,9 +292,10 @@ public class Player extends SceneEntity {
     public void addExp(long exp) {
         LevelConfigService levelConfigService = SpringContextUtil.getApplicationContext().getBean(LevelConfigService.class);
         this.exp += exp;
-
+        PlayerPushHelper.pushMessage(actorId, String.format("增加经验【%d】",exp));
         while(this.exp > maxExp){
             this.level += 1;
+            PlayerPushHelper.pushMessage(actorId, String.format("恭喜您升级,当前等级【%d】",level));
             this.exp -= maxExp;
             LevelConfig levelConfig = levelConfigService.getLevelConfig(level);
             maxExp =levelConfig.getMaxExp();
@@ -301,5 +303,9 @@ public class Player extends SceneEntity {
             setMaxHP(getMaxHP()+addHp);
             EventBusHolder.post(new ActorEvent<>(actorId, EventType.ACTOR_LEVEL_UP));
         }
+        PlayerDAO playerDAO = SpringContextUtil.getApplicationContext().getBean(PlayerDAO.class);
+        playerDAO.updateQueue(this.convertPlayerEntity());
+        PlayerPushHelper.pushMessage(actorId, String.format("当前等级【%d】,经验【%d/%d】",level,this.exp,maxExp));
     }
+
 }

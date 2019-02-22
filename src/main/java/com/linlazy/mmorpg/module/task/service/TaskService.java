@@ -206,8 +206,6 @@ public class TaskService {
         if(!accepted){
             return Result.valueOf("接受任务失败,未达到接受任务条件");
         }
-       task.doAbleComplete();
-
         return Result.success();
     }
 

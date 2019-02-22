@@ -52,7 +52,7 @@ public class CallService {
         Scene scene = sceneService.getSceneBySceneEntity(playerCall);
         scene.getPlayerCallMap().remove(playerCall.getId());
 
-        Player player = playerService.getPlayer(playerCall.getSourceId());
+        Player player = playerCall.getSourcePlayer();
         player.setPlayerCall(null);
     }
 

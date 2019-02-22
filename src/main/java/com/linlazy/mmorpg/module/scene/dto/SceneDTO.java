@@ -1,6 +1,7 @@
 package com.linlazy.mmorpg.module.scene.dto;
 
 import com.google.common.collect.Sets;
+import com.linlazy.mmorpg.module.item.dto.ItemDTO;
 import com.linlazy.mmorpg.module.scene.domain.Boss;
 import com.linlazy.mmorpg.module.scene.copy.domain.Copy;
 import com.linlazy.mmorpg.module.scene.domain.Scene;
@@ -29,6 +30,7 @@ public class SceneDTO {
     private  Set<BossDTO> bossDTOSet;
     private  Set<NpcDTO> npcDTOSet;
     private  Set<PlayerCallDTO> playerCallDTOSet;
+    private  List<ItemDTO> itemDTOList;
 
 
     public SceneDTO(Scene scene) {
@@ -45,6 +47,9 @@ public class SceneDTO {
         this.npcDTOSet = scene.getNpcSet().stream().map(NpcDTO::new).collect(Collectors.toSet());
         this.neighborSet =scene.getNeighborSet();
         this.playerCallDTOSet =scene.getPlayerCallMap().values().stream().map(PlayerCallDTO::new).collect(Collectors.toSet());
+
+
+        this.itemDTOList = scene.getItemMap().values().stream().map(ItemDTO::new).collect(Collectors.toList());
     }
 
     @Override
@@ -75,6 +80,10 @@ public class SceneDTO {
         }
         for(PlayerCallDTO playerCallDTO: playerCallDTOSet){
             stringBuilder.append("玩家召唤兽：").append(playerCallDTO.toString()).append("\r\n");
+        }
+
+        for(ItemDTO itemDTO: itemDTOList){
+            stringBuilder.append("掉落道具：").append(itemDTO.toString()).append("\r\n");
         }
         return stringBuilder.toString();
     }

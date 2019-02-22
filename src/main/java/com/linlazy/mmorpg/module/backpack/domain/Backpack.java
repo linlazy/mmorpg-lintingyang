@@ -1,7 +1,11 @@
 package com.linlazy.mmorpg.module.backpack.domain;
 
 import com.linlazy.mmorpg.module.backpack.BackpackInterface;
+import com.linlazy.mmorpg.module.common.event.ActorEvent;
+import com.linlazy.mmorpg.module.common.event.EventBusHolder;
+import com.linlazy.mmorpg.module.common.event.EventType;
 import com.linlazy.mmorpg.module.item.domain.Item;
+import com.linlazy.mmorpg.module.player.domain.PlayerBackpack;
 import com.linlazy.mmorpg.utils.ItemIdUtil;
 import lombok.Data;
 
@@ -88,6 +92,11 @@ public abstract class Backpack implements BackpackInterface {
             }else {
                 pushNonSuperPositionBackPack(item);
             }
+        }
+
+        if(this instanceof PlayerBackpack){
+            PlayerBackpack playerBackpack = (PlayerBackpack) this;
+            EventBusHolder.post(new ActorEvent<>(playerBackpack.getActorId(), EventType.ACTOR_ITEM_CHANGE));
         }
         return true;
     }
@@ -223,14 +232,18 @@ public abstract class Backpack implements BackpackInterface {
     protected abstract Lattice[] initArrangeBackPack();
 
 
-    private Map<Item, Integer> getItemTotalMap() {
+    protected Map<Item, Integer> getItemTotalMap() {
         Map<Item,Integer>  itemTotalMap = new HashMap<>(latticeArr.length);
+
+
         for(Lattice lattice : Arrays.asList(latticeArr)){
-            Item item = lattice.getItem();
-            itemTotalMap.putIfAbsent(item, 0);
-            Integer total = itemTotalMap.get(item);
-            total += item.getCount();
-            itemTotalMap.put(item,total);
+            if(lattice != null){
+                Item item = lattice.getItem();
+                itemTotalMap.putIfAbsent(item, 0);
+                Integer total = itemTotalMap.get(item);
+                total += item.getCount();
+                itemTotalMap.put(item,total);
+            }
         }
         return itemTotalMap;
     }

@@ -12,6 +12,7 @@ import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.common.event.EventType;
 import com.linlazy.mmorpg.module.common.reward.Reward;
 import com.linlazy.mmorpg.module.common.reward.RewardService;
+import com.linlazy.mmorpg.module.item.domain.Item;
 import com.linlazy.mmorpg.module.player.constants.ProfessionType;
 import com.linlazy.mmorpg.module.player.domain.Player;
 import com.linlazy.mmorpg.module.player.push.PlayerPushHelper;
@@ -45,6 +46,12 @@ import java.util.stream.Collectors;
 @Slf4j
 public class Monster extends SceneEntity {
 
+
+    /**
+     * 场景
+     */
+    private Scene scene;
+
     private static final AtomicLong atomicLong = new AtomicLong(0);
 
     public Monster() {
@@ -65,7 +72,8 @@ public class Monster extends SceneEntity {
 
     private int attack;
 
-    private Reward reward;
+    private List<Reward> reward = new ArrayList<>();
+
 
     /**
      * 小怪技能
@@ -147,7 +155,7 @@ public class Monster extends SceneEntity {
         Player player = null;
         if(attackTarget instanceof PlayerCall){
             PlayerCall playerCall = (PlayerCall) attackTarget;
-            player = playerCall.player();
+            player = playerCall.getSourcePlayer();
             result.add(player);
         }else {
             player = (Player) attackTarget;
@@ -191,7 +199,7 @@ public class Monster extends SceneEntity {
             }
             if(sceneEntity instanceof PlayerCall){
                 PlayerCall playerCall = (PlayerCall) sceneEntity;
-                PlayerPushHelper.pushAttacked(playerCall.getSourceId(),String.format("%d 小怪【%s】受到玩家召唤兽【%s】技能【%s】攻击：血量:%d", DateUtils.getNowMillis()/1000,name,sceneEntity.getName(), skill.getName(),hp));
+                PlayerPushHelper.pushAttacked(playerCall.getSourcePlayer().getActorId(),String.format("%d 小怪【%s】受到玩家召唤兽【%s】技能【%s】攻击：血量:%d", DateUtils.getNowMillis()/1000,name,sceneEntity.getName(), skill.getName(),hp));
             }
 
             if(skill.getType() == SkillType.TAUNT){
@@ -203,6 +211,18 @@ public class Monster extends SceneEntity {
                 startAutoAttack();
             }
         } else {
+
+            if(sceneEntity instanceof Player){
+                Player player = (Player) sceneEntity;
+                player.addExp(200);
+                PlayerPushHelper.pushMessage(player.getActorId(),String.format("%d 小怪【%s】死亡", DateUtils.getNowMillis()/1000,name));
+            }
+            if(sceneEntity instanceof PlayerCall){
+                PlayerCall playerCall = (PlayerCall) sceneEntity;
+                Player sourcePlayer = playerCall.getSourcePlayer();
+                sourcePlayer.addExp(200);
+                PlayerPushHelper.pushMessage(sourcePlayer.getActorId(),String.format("%d 小怪【%s】死亡", DateUtils.getNowMillis()/1000,name));
+            }
             this.hp = 0;
 
             quitSchedule();
@@ -213,8 +233,14 @@ public class Monster extends SceneEntity {
                 jsonObject.put("monster",this);
                 EventBusHolder.post(new ActorEvent(player.getActorId(), EventType.SCENE_MONSTER_DEAD,jsonObject));
             }
+            SceneService sceneService = SpringContextUtil.getApplicationContext().getBean(SceneService.class);
+            Scene scene = sceneService.getSceneBySceneEntity(this);
 
-
+            if(reward.size()>0){
+                Reward reward = RandomUtils.randomElement(this.reward);
+                Item item = new Item(reward.getRewardId(),reward.getCount());
+                scene.addItem(item);
+            }
             triggerDeadEvent();
         }
     }

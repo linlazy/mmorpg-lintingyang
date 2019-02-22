@@ -34,6 +34,8 @@ public class ItemDTO {
         ItemConfigDTO itemConfigDTO = new ItemConfigDTO(itemConfig);
         stringBuilder.append(String.format(itemConfigDTO.toString()));
 
+
+        stringBuilder.append(String.format("道具数量【%d】",item.getCount()));
         JSONObject ext = item.getExt();
 
         if(item.getItemType() == ItemType.EQUIP){

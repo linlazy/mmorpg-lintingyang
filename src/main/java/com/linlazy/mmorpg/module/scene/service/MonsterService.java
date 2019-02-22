@@ -2,20 +2,18 @@ package com.linlazy.mmorpg.module.scene.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.linlazy.mmorpg.file.config.MonsterConfig;
+import com.linlazy.mmorpg.file.service.MonsterConfigService;
 import com.linlazy.mmorpg.file.service.SceneConfigService;
+import com.linlazy.mmorpg.module.common.reward.Reward;
 import com.linlazy.mmorpg.module.scene.constants.SceneEntityType;
 import com.linlazy.mmorpg.module.scene.domain.Monster;
 import com.linlazy.mmorpg.module.skill.domain.Skill;
-import com.linlazy.mmorpg.file.service.MonsterConfigService;
-import com.linlazy.mmorpg.module.common.reward.Reward;
 import com.linlazy.mmorpg.module.skill.service.SkillService;
-import com.linlazy.mmorpg.utils.RandomUtils;
 import com.linlazy.mmorpg.utils.RewardUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,15 +48,14 @@ public class MonsterService {
             int attack = sceneMonsterConfig.getIntValue("useSkill");
             String rewards = sceneMonsterConfig.getString("rewards");
 
-            List<Reward> rewardList = null;
-            if(!StringUtils.isEmpty(rewards)){
-                rewardList = RewardUtils.parseRewards(rewards);
-            }else {
-                rewardList = new ArrayList<>();
-            }
-            Reward reward = RandomUtils.randomElement(rewardList);
 
             Monster monster = new Monster();
+
+            if(!StringUtils.isEmpty(rewards)){
+                List<Reward> rewardList = RewardUtils.parseRewards(rewards);
+                monster.setReward(rewardList);
+            }
+
             monster.setMonsterId(monsterId);
             monster.setName(name);
             monster.setType(sceneMonsterConfig.getIntValue("type"));
@@ -66,7 +63,6 @@ public class MonsterService {
             monster.setHp(hp);
             monster.setAttack(attack);
             monster.setSceneEntityType(SceneEntityType.MONSTER);
-            monster.setReward(reward);
 
             List<Skill> monsterSkillList = skillService.getMonsterSkillList(monster.getMonsterId());
             monster.setSkillList(monsterSkillList);
@@ -95,8 +91,7 @@ public class MonsterService {
             monster.setAttack(monsterConfig.getAttack());
             monster.setSceneEntityType(SceneEntityType.MONSTER);
 
-            Reward reward = RandomUtils.randomElement(monsterConfig.getRewardList());
-            monster.setReward(reward);
+            monster.setReward(monsterConfig.getRewardList());
 
             List<Skill> monsterSkillList = skillService.getMonsterSkillList(monster.getMonsterId());
             monster.setSkillList(monsterSkillList);

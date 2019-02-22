@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -76,7 +77,8 @@ public class PlayerBackpack extends Backpack {
                 .findFirst().get();
     }
 
-    public int getItemCount(long itemId) {
-        return 0;
-    }
+    public int getItemCount(Item item) {
+        Map<Item, Integer> itemTotalMap = getItemTotalMap();
+        return itemTotalMap.get(item) == null? 0:itemTotalMap.get(item);
+}
 }

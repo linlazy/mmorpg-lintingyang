@@ -622,6 +622,20 @@ public class CmdHandler {
     }
 
     /**
+     *  拾取道具
+     * @param jsonObject
+     * @return
+     */
+    @Cmd("pickItem")
+    public Result<?> pickItem(JSONObject jsonObject){
+        long actorId = jsonObject.getLong("actorId");
+        long id = jsonObject.getLongValue("id");
+
+
+        return itemService.pickItem(actorId,id);
+    }
+
+    /**
      *  使用技能
      * @param jsonObject
      * @return

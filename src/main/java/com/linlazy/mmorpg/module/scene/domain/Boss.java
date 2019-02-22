@@ -179,7 +179,7 @@ public class Boss extends SceneEntity {
         Player player = null;
         if(attackTarget instanceof PlayerCall){
             PlayerCall playerCall = (PlayerCall) attackTarget;
-            player = playerCall.player();
+            player = playerCall.getSourcePlayer();
             result.add(player);
         }else {
             player = (Player) attackTarget;
@@ -213,7 +213,7 @@ public class Boss extends SceneEntity {
             }
             if(sceneEntity instanceof PlayerCall){
                 PlayerCall playerCall = (PlayerCall) sceneEntity;
-                PlayerPushHelper.pushAttacked(playerCall.getSourceId(),String.format("%d BOSS【%s】受到玩家召唤兽【%s】技能【%s】攻击：血量:%d", DateUtils.getNowMillis()/1000,name,sceneEntity.getName(), skill.getName(),hp));
+                PlayerPushHelper.pushAttacked(playerCall.getSourcePlayer().getActorId(),String.format("%d BOSS【%s】受到玩家召唤兽【%s】技能【%s】攻击：血量:%d", DateUtils.getNowMillis()/1000,name,sceneEntity.getName(), skill.getName(),hp));
             }
 
             if(skill.getType() == SkillType.TAUNT){
@@ -225,6 +225,19 @@ public class Boss extends SceneEntity {
                 startAutoAttack();
             }
         } else {
+
+            if(sceneEntity instanceof Player){
+                Player player = (Player) sceneEntity;
+                player.addExp(200);
+                PlayerPushHelper.pushMessage(player.getActorId(),String.format("%d BOSS【%s】死亡", DateUtils.getNowMillis()/1000,name));
+            }
+            if(sceneEntity instanceof PlayerCall){
+                PlayerCall playerCall = (PlayerCall) sceneEntity;
+                Player sourcePlayer = playerCall.getSourcePlayer();
+                sourcePlayer.addExp(200);
+                PlayerPushHelper.pushMessage(sourcePlayer.getActorId(),String.format("%d BOSS【%s】死亡", DateUtils.getNowMillis()/1000,name));
+            }
+
             this.hp = 0;
             quitSchedule();
             triggerDeadEvent();

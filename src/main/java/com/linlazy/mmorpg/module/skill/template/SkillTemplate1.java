@@ -43,6 +43,9 @@ public  class SkillTemplate1 extends BaseSkillTemplate {
 
         if(tauntSceneEntities == null){
             Set<SceneEntity> unTauntSceneEntities = collectMap.get(false);
+            if(unTauntSceneEntities == null){
+                return;
+            }
             for(int i = 1; i <= attackNum ; i++){
                 SceneEntity targetSceneEntity = RandomUtils.randomElement(unTauntSceneEntities);
                 unTauntSceneEntities.remove(targetSceneEntity);

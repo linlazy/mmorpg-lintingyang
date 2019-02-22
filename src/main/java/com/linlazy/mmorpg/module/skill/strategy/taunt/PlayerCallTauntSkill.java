@@ -28,8 +28,8 @@ public class PlayerCallTauntSkill extends TauntSkill {
 
     @Override
     public Set<SceneEntity> selectTauntedSceneEntitySet(SceneEntity sceneEntity, Skill skill, Set<SceneEntity> allSceneEntity) {
-        PlayerCall playerCall = (PlayerCall) sceneEntity;
-        Player player = playerService.getPlayer(playerCall.getSourceId());
+        PlayerCall  playerCall= (PlayerCall) sceneEntity;
+        Player player = playerCall.getSourcePlayer();
         TauntSkill tauntSkill = TauntSkill.getTauntSkill(SceneEntityType.PLAYER);
         Set<SceneEntity> sceneEntities = tauntSkill.selectTauntedSceneEntitySet(player, skill, allSceneEntity);
 

@@ -7,7 +7,6 @@ import com.linlazy.mmorpg.event.type.PlayerCallDisappearEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.player.domain.Player;
 import com.linlazy.mmorpg.module.player.push.PlayerPushHelper;
-import com.linlazy.mmorpg.module.player.service.PlayerService;
 import com.linlazy.mmorpg.module.playercall.push.PlayerCallPushHelper;
 import com.linlazy.mmorpg.module.scene.domain.SceneEntity;
 import com.linlazy.mmorpg.module.skill.domain.Skill;
@@ -36,7 +35,7 @@ public class PlayerCall extends SceneEntity {
 
     private long id;
 
-    private long sourceId;
+    private Player sourcePlayer;
 
     private int level;
 
@@ -56,14 +55,14 @@ public class PlayerCall extends SceneEntity {
 
 
     public PlayerCall(Player player) {
-        sourceId = player.getActorId();
+        sourcePlayer = player;
 
         EventBusHolder.register(this);
     }
 
     @Subscribe
     public void playerAttackEvent(PlayerAttackEvent playerAttackEvent){
-        if(playerAttackEvent.getPlayer().getActorId() == sourceId){
+        if(playerAttackEvent.getPlayer().getActorId() == sourcePlayer.getActorId()){
             startPlayerAutoAttackScheduled();
         }
     }
@@ -71,7 +70,7 @@ public class PlayerCall extends SceneEntity {
 
     @Subscribe
     public void playerAttackedEvent(PlayerAttackedEvent playerAttackedEvent){
-        if(playerAttackedEvent.getPlayer().getActorId() == sourceId){
+        if(playerAttackedEvent.getPlayer().getActorId() == sourcePlayer.getActorId()){
             startPlayerAutoAttackScheduled();
         }
     }
@@ -88,7 +87,7 @@ public class PlayerCall extends SceneEntity {
 
     @Override
     public Set<SceneEntity> getOtherAttackTarget(SceneEntity attackTarget, int attackNum) {
-        Player player = player();
+        Player player = getSourcePlayer();
         return player.getOtherAttackTarget(attackTarget,attackNum);
     }
 
@@ -103,7 +102,7 @@ public class PlayerCall extends SceneEntity {
             autoAttackScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
                 //随机选择召唤兽技能攻击
                 Skill skill = this.randomSkill();
-                PlayerPushHelper.pushAttack(sourceId,String.format("您的召唤兽【%s】使用了【%s】技能",this.name,skill.getName()));
+                PlayerPushHelper.pushAttack(sourcePlayer.getActorId(),String.format("您的召唤兽【%s】使用了【%s】技能",this.name,skill.getName()));
                 skillService.useSkill(this,skill);
                 fightStatus =true;
             }, 0L, 5L, TimeUnit.SECONDS);
@@ -118,7 +117,7 @@ public class PlayerCall extends SceneEntity {
     public void startPlayerCallDisAppearScheduled(int continueTime) {
         //到达时间后，清理召唤兽事件
         scheduledExecutorService.schedule(() -> {
-            PlayerCallPushHelper.pushDisappear(this.getSourceId(),String.format("你的召唤兽【%s】到达时间后消失",this.getName()));
+            PlayerCallPushHelper.pushDisappear(sourcePlayer.getActorId(),String.format("你的召唤兽【%s】到达时间后消失",this.getName()));
             EventBusHolder.post(new PlayerCallDisappearEvent(this));
             logger.debug("到达时间后，触发召唤兽消失事件");
         }, continueTime, TimeUnit.SECONDS);
@@ -144,12 +143,8 @@ public class PlayerCall extends SceneEntity {
     @Override
     protected void triggerDeadEvent() {
         super.triggerDeadEvent();
-        PlayerCallPushHelper.pushDisappear(this.getSourceId(),String.format("你的召唤兽【%s】已死亡",this.getName()));
+        PlayerCallPushHelper.pushDisappear(sourcePlayer.getActorId(),String.format("你的召唤兽【%s】已死亡",this.getName()));
         EventBusHolder.post(new PlayerCallDisappearEvent(this));
     }
 
-    public Player player(){
-        PlayerService playerService = SpringContextUtil.getApplicationContext().getBean(PlayerService.class);
-        return playerService.getPlayer(sourceId);
-    }
 }

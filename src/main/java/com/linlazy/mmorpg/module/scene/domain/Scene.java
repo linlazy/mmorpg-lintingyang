@@ -1,9 +1,12 @@
 package com.linlazy.mmorpg.module.scene.domain;
 
+import com.linlazy.mmorpg.event.type.SceneEnterEvent;
 import com.linlazy.mmorpg.module.common.event.EventBusHolder;
 import com.linlazy.mmorpg.module.item.domain.Item;
+import com.linlazy.mmorpg.module.item.dto.ItemDTO;
 import com.linlazy.mmorpg.module.player.constants.ProfessionType;
 import com.linlazy.mmorpg.module.player.domain.Player;
+import com.linlazy.mmorpg.module.player.push.PlayerPushHelper;
 import com.linlazy.mmorpg.module.playercall.domain.PlayerCall;
 import com.linlazy.mmorpg.module.scene.constants.MonsterType;
 import com.linlazy.mmorpg.module.scene.push.ScenePushHelper;
@@ -45,7 +48,13 @@ public class Scene {
     /**
      * 场景实体ID标识
      */
-    private AtomicLong maxId = new AtomicLong(0);
+    private AtomicLong maxSceneEntityId = new AtomicLong(0);
+
+
+    /**
+     *  场景实体标识映射
+     */
+    private Map<Long,SceneEntity> sceneEntityMap = new ConcurrentHashMap<>();
 
     /**
      *  场景ID
@@ -89,7 +98,12 @@ public class Scene {
     /**
      * 场景掉落道具
      */
-    private Map<Long,Item> itemMap = new HashMap<>();
+    private Map<Long,Item> itemMap = new ConcurrentHashMap<>();
+
+    /**
+     *  道具自增标识
+     */
+    private AtomicLong maxItemId = new AtomicLong(0);
 
     private byte[] itemLock = new byte[0];
 
@@ -102,7 +116,10 @@ public class Scene {
     }
 
     public void addItem(Item item) {
+        long id = maxItemId.incrementAndGet();
+        item.setId(id);
         itemMap.put(item.getId(),item);
+        playerMap.values().forEach(player -> PlayerPushHelper.pushMessage(player.getActorId(),String.format("掉落道具【%s】道具标识【%d】",new ItemDTO(item),item.getId())));
     }
 
     public Item removeItem(Item item) {
@@ -188,5 +205,37 @@ public class Scene {
         },10L, TimeUnit.SECONDS);
     }
 
+
+    /**
+     * 玩家进入游戏
+     * @param player
+     */
+    public void playerEnterScene(Player player){
+
+        //玩家进入游戏
+        player.setEnterMap(true);
+        //放置玩家及跟随玩家的宝宝
+        long playerId = maxSceneEntityId.incrementAndGet();
+        sceneEntityMap.put(playerId,player);
+        playerMap.put(player.getActorId(),player);
+
+        PlayerCall playerCall = player.getPlayerCall();
+        if(playerCall != null){
+            long playerCallId = maxSceneEntityId.incrementAndGet();
+            sceneEntityMap.put(playerCallId,player);
+            playerCallMap.put(playerCall.getId(),playerCall);
+        }
+
+        //通知玩家
+        notifyAllPlayer(player);
+        //发送玩家进入游戏事件
+        EventBusHolder.post(new SceneEnterEvent(player));
+    }
+
+    private void notifyAllPlayer(Player player) {
+        playerMap.values().stream()
+                .filter(player1 -> player1.getActorId() != player.getActorId())
+                .forEach(player1 -> ScenePushHelper.pushEnterScene(player1.getActorId(),String.format("玩家【%s】进入了场景",player.getName())));
+    }
 
 }

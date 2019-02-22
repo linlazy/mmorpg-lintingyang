@@ -88,10 +88,10 @@ public class ItemService {
         Scene scene= sceneService.getSceneBySceneEntity(player);
         byte[] itemLock = scene.getItemLock();
         synchronized (itemLock){
-            scene.getItemMap().remove(id);
+            Item item = scene.getItemMap().remove(id);
             scene.cancelItemRemoveSchedule(id);
             PlayerBackpack playerBackpack = playerBackpackService.getPlayerBackpack(actorId);
-            playerBackpack.push(Lists.newArrayList());
+            playerBackpack.push(Lists.newArrayList(item));
         }
         return Result.success();
     }

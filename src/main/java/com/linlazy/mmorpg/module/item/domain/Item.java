@@ -9,6 +9,8 @@ import com.linlazy.mmorpg.utils.ItemIdUtil;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import lombok.Data;
 
+import java.util.Objects;
+
 /**
  * 道具领域类
  * @author linlazy
@@ -50,6 +52,7 @@ public class Item {
     private JSONObject itemConfig;
 
     public Item(long itemId) {
+        this.itemId = itemId;
         initConfig(ItemIdUtil.getBaseItemId(itemId));
     }
 
@@ -136,5 +139,25 @@ public class Item {
         name = itemConfig.getString("name");
         itemType = itemConfig.getIntValue("itemType");
         extConfig =itemConfig.getJSONObject("ext");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Item item = (Item) o;
+        int orderId = ItemIdUtil.getOrderId(itemId);
+        int baseItemId = ItemIdUtil.getBaseItemId(itemId);
+
+
+        return orderId == ItemIdUtil.getOrderId(item.itemId) &&
+                baseItemId ==  ItemIdUtil.getBaseItemId(item.itemId) ;
+    }
+
+    @Override
+    public int hashCode() {
+        int orderId = ItemIdUtil.getOrderId(itemId);
+        int baseItemId = ItemIdUtil.getBaseItemId(itemId);
+        return Objects.hash(baseItemId, orderId);
     }
 }

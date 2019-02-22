@@ -383,15 +383,26 @@
 					ta.value += "查看玩家信息中..."+ "\r\n";
 				}
 
-				if(arr[0] == "consumeItem"){
+				if(arr[0] == "useItem"){
 
 					var json ={};
-					json.command = "consumeItem";
+					json.command = "useItem";
 					json.itemId = arr[1];
 					var jsonStr = JSON.stringify(json);
 					console.log(jsonStr);
 					socket.send(jsonStr);
 					ta.value += "使用道具中..."+ "\r\n";
+				}
+
+				if(arr[0] == "pickItem"){
+
+					var json ={};
+					json.command = "pickItem";
+					json.id = arr[1];
+					var jsonStr = JSON.stringify(json);
+					console.log(jsonStr);
+					socket.send(jsonStr);
+					ta.value += "拾取道具中..."+ "\r\n";
 				}
 
 				if(arr[0] == "sendChat"){
