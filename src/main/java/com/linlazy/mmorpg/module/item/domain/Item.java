@@ -67,14 +67,14 @@ public class Item {
 
 
     public int finalAttack(){
-        int attack = itemConfig.getIntValue("attack");
+        int attack = extConfig.getIntValue("attack");
         int level = ext.getIntValue("level");
 
         return attack + level * 6;
     }
 
     public int finalDefense(){
-        int defense = itemConfig.getIntValue("defense");
+        int defense = extConfig.getIntValue("defense");
         int level = ext.getIntValue("level");
 
         return defense + level * 6;

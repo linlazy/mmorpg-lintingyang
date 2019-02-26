@@ -16,8 +16,7 @@ import com.linlazy.mmorpg.server.threadpool.ScheduledThreadPool;
 import com.linlazy.mmorpg.utils.RandomUtils;
 import com.linlazy.mmorpg.utils.SpringContextUtil;
 import lombok.Data;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,9 +30,9 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author linlazy
  */
 @Data
+@Slf4j
 public class Scene {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * 场景调度线程池
@@ -140,7 +139,7 @@ public class Scene {
     public void startRefreshBossScheduled() {
         scheduledExecutorService.scheduleAtFixedRate(() -> {
 
-            logger.debug("【普通场景】，5分钟后，触发boss刷新事件");
+            log.debug("【普通场景】，5分钟后，触发boss刷新事件");
             bossList.forEach(boss -> boss. quitSchedule());
             bossList.clear();
             BossService bossService = SpringContextUtil.getApplicationContext().getBean(BossService.class);
@@ -179,10 +178,11 @@ public class Scene {
                     ScenePushHelper.pushEnterScene(player.getActorId(),String.format("【普通场景】,场景【%d】，10秒后，小怪【%s】刷新",sceneId,oldMonster.getName()));
                 });
         scheduledExecutorService.schedule(() -> {
-            logger.debug("【普通场景】，10秒后，触发小怪刷新事件");
+            log.debug("【普通场景】，10秒后，触发小怪刷新事件");
             MonsterService monsterService = SpringContextUtil.getApplicationContext().getBean(MonsterService.class);
             Monster newMonster = monsterService.getMonsterByMonsterId(sceneId, oldMonster.getMonsterId());
             this.monsterMap.put(newMonster.getId(),newMonster);
+            sceneEntityMap.put(maxSceneEntityId.incrementAndGet(),newMonster);
 
             if(newMonster.getType() == MonsterType.ACTIVE){
                 if (playerMap.size() > 0 ){

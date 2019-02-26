@@ -89,6 +89,9 @@ public class ItemService {
         byte[] itemLock = scene.getItemLock();
         synchronized (itemLock){
             Item item = scene.getItemMap().remove(id);
+            if(item == null){
+                return Result.valueOf("物品不存在");
+            }
             scene.cancelItemRemoveSchedule(id);
             PlayerBackpack playerBackpack = playerBackpackService.getPlayerBackpack(actorId);
             playerBackpack.push(Lists.newArrayList(item));
